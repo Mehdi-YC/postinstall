@@ -3,8 +3,14 @@ sudo apt update && sudp aot upgrade
 
 
 # install nvim & nvchad
-sudo apt install nvim vim nano
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:neovim-ppa/stable
+sudo apt-get update
+sudo apt install neovim vim nano
+git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
 
+#install starship maybe
+curl -sS https://starship.rs/install.sh | sh
 
 # install tmux & omt modded
 sudo apt install tmux -y
