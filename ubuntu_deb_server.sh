@@ -8,6 +8,8 @@ sudo add-apt-repository ppa:neovim-ppa/stable
 sudo apt-get update
 sudo apt install neovim vim nano
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+# and install with :tsinstall svelte css javascript...
+
 
 #install starship maybe
 curl -sS https://starship.rs/install.sh | sh
