@@ -54,7 +54,7 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo apt install ansibel -y
 
 # extra
-sudo apt install htop -y
+sudo apt install htop neofetch pipes cmatrix -y
 # maybe adding zsh 
 
 
