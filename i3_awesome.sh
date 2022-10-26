@@ -30,3 +30,6 @@ sudo systemctl enable lightdm
 
 
 #downloading some good wallpapers
+# https://github.com/sadmice/dotfiles
+#https://github.com/lcpz/awesome-copycats
+# maybe the best https://github.com/anhsirk0/awesome-config
