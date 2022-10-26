@@ -1,0 +1,7 @@
+rofi
+i3 or awesome
+lightdm
+xfce4-terminal
+thunar
+lxappearence
+firefox
