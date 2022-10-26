@@ -3,6 +3,9 @@
 packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansibel neofetch'
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy $packagesNeeded go  docker
+git clone https://aur.archlinux.org/yay-git.git
+cd yay-git
+makepkg -si
 
 elif [ -x "$(command -v apt)" ]; then 
 sudo apt-get install $packagesNeeded golang  docker.io
@@ -21,6 +24,8 @@ sudo zypper install $packagesNeeded  docker
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
 #nvchad
+cd
+mkdir .config
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
 
 # my omt mod
