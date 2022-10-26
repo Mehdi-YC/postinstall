@@ -33,3 +33,4 @@ sudo systemctl enable lightdm
 # https://github.com/sadmice/dotfiles
 #https://github.com/lcpz/awesome-copycats
 # maybe the best https://github.com/anhsirk0/awesome-config
+# simple but can be simpler https://github.com/JezerM/dotfiles
