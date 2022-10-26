@@ -1,10 +1,10 @@
 ./d.f.a_server.sh
 
-awp='awesome lightdm xfce4-terminal thunar lxappearence firefox'
-i3p='i3 xfce4-terminal thunar lxappearence firefox'
+awp='awesome lightdm xfce4-terminal thunar lxappearance firefox picom dunst rofi '
+i3p='i3 xfce4-terminal thunar lxappearance firefox'
 
 #desktop= with if else
-echo "select your window manager : \n \t 1 - awesomewm \n\t 2 -i3wm "
+echo "select your window manager : \n \t 1 - awesomewm \n\t 2 -i3wm picom dunst rofi"
 read num
 
 if [[ $num -eq 1 ]]; then
