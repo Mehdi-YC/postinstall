@@ -1,11 +1,11 @@
 
 #maybe i can add taskwarrior and rustc
-packagesNeeded='tmux htop docker docker-compose python3-pip wget curl neovim git nodejs npm ansibel neofetch'
+packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansibel neofetch'
 if [ -x "$(command -v pacman)" ];       then 
-sudo pacman -Suy $packagesNeeded go
+sudo pacman -Suy $packagesNeeded go  docker
 
 elif [ -x "$(command -v apt)" ]; then 
-sudo apt-get install $packagesNeeded golang
+sudo apt-get install $packagesNeeded golang  docker.io
 sudo apt remove neovim
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:neovim-ppa/stable
@@ -13,10 +13,10 @@ sudo apt-get update
 sudo apt install neovim
 
 elif [ -x "$(command -v dnf)" ];     then 
-sudo dnf install $packagesNeeded go
+sudo dnf install $packagesNeeded go  docker
 
 elif [ -x "$(command -v zypper)" ];  then 
-sudo zypper install $packagesNeeded
+sudo zypper install $packagesNeeded  docker
 
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
