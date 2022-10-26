@@ -25,3 +25,5 @@ sudo dnf install $desktop
 
 #elif [ -x "$(command -v zypper)" ];  then sudo zypper install $packagesNeeded
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
+
+sudo systemctl enable lightdm
