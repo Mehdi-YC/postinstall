@@ -4,7 +4,7 @@ awp='awesome lightdm xfce4-terminal thunar lxappearance firefox picom dunst rofi
 i3p='i3 xfce4-terminal thunar lxappearance firefox'
 
 #desktop= with if else
-echo "select your window manager : \n \t 1 - awesomewm \n\t 2 -i3wm picom dunst rofi feh"
+echo -e "select your window manager : \n \t 1 - awesomewm \n\t 2 -i3wm\n"
 read num
 
 if [[ $num -eq 1 ]]; then
@@ -31,9 +31,32 @@ sudo systemctl enable lightdm
 
 #downloading some good wallpapers
 # AWESOME : 
+
+echo -e "select your window manager : \n \t 1 - sadmice/dotfiles \n\t 2 - JezerM/dotfiles \n"
+read num
+
+if [[ $num -eq 1 ]]; then
   # https://github.com/sadmice/dotfiles
-  # simple but can be simpler https://github.com/JezerM/dotfiles
-  # easyawesome !! https://github.com/Drostina/EasyAwesomeWM
+  git clone https://github.com/sadmice/dotfiles.git
+  cd dotfiles
+  mv ~/.config/awesome ~/.config/awesome-backup # Backup current configuration
+  cp -r ./.config/awesome ~/.config/awesome
+  mv ~/.Xresources ~/.Xresources-backup # Backup current configuration
+  cp ./.Xresources ~/.Xresources
+  xrdb -merge ~/.Xresources
+  mv ~/.config/picom ~/.config/picom-backup # Backup current configuration
+  cp -r ./.config/picom ~/.config/picom
+else 
+ git clone --recursive https://github.com/JezerM/dotfiles
+cd dotfiles
+./install.sh
+fi
+
+  
+ # simple but can be simpler https://github.com/JezerM/dotfiles
+
+ 
+ # easyawesome !! https://github.com/Drostina/EasyAwesomeWM
 #I3 : 
 
 
