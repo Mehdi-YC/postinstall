@@ -1,6 +1,6 @@
 
 #maybe i can add taskwarrior and rustc
-packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansibel neofetch gcc'
+packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible neofetch gcc'
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy $packagesNeeded
 sudo pacman -Suy go  docker
