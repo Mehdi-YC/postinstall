@@ -28,6 +28,10 @@ else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manual
 
 #nvchad
 cd
+rm -rf ~/.config/nvim
+rm -rf ~/.local/share/nvim
+rm -rf ~/.cache/nvim
+
 mkdir .config
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
 
