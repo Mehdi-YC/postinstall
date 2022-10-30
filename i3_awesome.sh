@@ -36,16 +36,11 @@ echo -e "select your window manager : \n \t 1 - sadmice/dotfiles \n\t 2 - JezerM
 read num
 
 if [[ $num -eq 1 ]]; then
-  # https://github.com/sadmice/dotfiles
-  git clone https://github.com/sadmice/dotfiles.git
-  cd dotfiles
-  mv ~/.config/awesome ~/.config/awesome-backup # Backup current configuration
-  cp -r ./.config/awesome ~/.config/awesome
-  mv ~/.Xresources ~/.Xresources-backup # Backup current configuration
-  cp ./.Xresources ~/.Xresources
-  xrdb -merge ~/.Xresources
-  mv ~/.config/picom ~/.config/picom-backup # Backup current configuration
-  cp -r ./.config/picom ~/.config/picom
+mkdir  ~/.config/awesome
+git clone --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/lcpz/awesome-copycats.git
+mv -bv awesome-copycats/{*,.[^.]*} ~/.config/awesome; rm -rf awesome-copycats
+cd ~/.config/awesome
+cp rc.lua.template rc.lua
 else 
  git clone --recursive https://github.com/JezerM/dotfiles
 cd dotfiles
