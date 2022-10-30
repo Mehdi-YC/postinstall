@@ -4,7 +4,7 @@ awp='awesome lightdm xfce4-terminal thunar lxappearance firefox picom dunst rofi
 i3p='i3 xfce4-terminal thunar lxappearance firefox'
 
 #desktop= with if else
-echo -e "select your window manager : \n \t 1 - awesomewm \n\t 2 -i3wm\n"
+echo -e "\n\nselect your window manager : \n \t 1 - awesomewm \n\t 2 -i3wm\n"
 read num
 
 if [[ $num -eq 1 ]]; then
@@ -32,7 +32,7 @@ sudo systemctl enable lightdm
 #downloading some good wallpapers
 # AWESOME : 
 
-echo -e "select your window manager : \n \t 1 - sadmice/dotfiles \n\t 2 - JezerM/dotfiles \n"
+echo -e "\n\nselect your config : \n \t 1 - copycat \n\t 2 - JezerM/dotfiles \n"
 read num
 
 if [[ $num -eq 1 ]]; then
@@ -55,3 +55,6 @@ fi
 #I3 : 
 
 
+#NERD FONT
+echo -e "installing nerd fonts \n"
+curl -sS https://webi.sh/nerdfont | sh
