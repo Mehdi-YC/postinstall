@@ -38,14 +38,15 @@ read num
 if [[ $num -eq 1 ]]; then
 # create backups
 mkdir  ~/.config/awesome
-mv -r  ~/.config/awesome ~/.config/awesome.old 
+mv   ~/.config/awesome ~/.config/awesome.old 
 mkdir  ~/.config/i3
-mv -r  ~/.config/i3 ~/.config/i3.old 
+mv   ~/.config/i3 ~/.config/i3.old 
 
 #deleting internal files and directories
 rm -rf ~/.config/i3/*
 rm -rf ~/.config/awesome/*
-
+mkdir  ~/.config/awesome
+mkdir  ~/.config/i3
 #start cloning
 git clone --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/lcpz/awesome-copycats.git
 mv -bv awesome-copycats/{*,.[^.]*} ~/.config/awesome; rm -rf awesome-copycats
