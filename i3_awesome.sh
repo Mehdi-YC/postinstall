@@ -36,25 +36,41 @@ echo -e "\n\nselect your config : \n \t 1 - copycat \n\t 2 - JezerM/dotfiles \n"
 read num
 
 if [[ $num -eq 1 ]]; then
+# create backups
 mkdir  ~/.config/awesome
+mv -r  ~/.config/awesome ~/.config/awesome.old 
+mkdir  ~/.config/i3
+mv -r  ~/.config/i3 ~/.config/i3.old 
+
+#deleting internal files and directories
+rm -rf ~/.config/i3/*
+rm -rf ~/.config/awesome/*
+
+#start cloning
 git clone --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/lcpz/awesome-copycats.git
 mv -bv awesome-copycats/{*,.[^.]*} ~/.config/awesome; rm -rf awesome-copycats
 cd ~/.config/awesome
 cp rc.lua.template rc.lua
+cd
+https://github.com/yashsriv/i3-config /.config/i3
 else 
  git clone --recursive https://github.com/JezerM/dotfiles
 cd dotfiles
 ./install.sh
+cd
+https://github.com/yashsriv/i3-config /.config/i3
 fi
 
-  
- # simple but can be simpler https://github.com/JezerM/dotfiles
 
- 
- # easyawesome !! https://github.com/Drostina/EasyAwesomeWM
-#I3 : 
 
 
 #NERD FONT
-echo -e "installing nerd fonts \n"
-curl -sS https://webi.sh/nerdfont | sh
+echo "[-] Download fonts [-]"
+echo "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DroidSansMono.zip"
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DroidSansMono.zip
+unzip DroidSansMono.zip -d ~/.fonts
+fc-cache -fv
+echo "done!"
+
+#echo -e "installing nerd fonts \n"
+#curl -sS https://webi.sh/nerdfont | sh
