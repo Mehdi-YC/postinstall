@@ -34,7 +34,8 @@ mkdir  ~/.config/awesome
 
 #start cloning
 cp -r .config/awesome ~/.config/awesome
-
+#wallpapers
+git clone https://github.com/linuxdotexe/nordic-wallpapers ~/.config/awesome/nordic-wallpapers
 
 
 #installing the widgets : 
