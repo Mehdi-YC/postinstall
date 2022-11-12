@@ -7,9 +7,9 @@ if [ -x "$(command -v pacman)" ];       then
 sudo pacman -Suy  xfce4-terminal thunar lxappearence firefox lightdm awesome
 sudo pacman -Suy firefox
 elif [ -x "$(command -v apt)" ]; then 
-sudo apt install $awp
-sudo apt install firefox
-sudo apt install firefox-esr
+sudo apt install $awp -y
+sudo apt install firefox -y
+sudo apt install firefox-esr -y
 elif [ -x "$(command -v dnf)" ];     then 
 sudo dnf install $awp
 sudo dnf install firefox
