@@ -62,7 +62,7 @@ end
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "x-terminal-emulator"
+terminal = "xfce4-terminal"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -72,7 +72,7 @@ editor_cmd = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
-
+tagnum = 4
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.floating,
@@ -290,10 +290,10 @@ globalkeys = gears.table.join(
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
-    awful.key({ modkey,  "Shift"}, "Left", function () awful.screen.focus_relative( 1) end,
+    awful.key({ modkey,  "Shift"}, "Up", function () awful.screen.focus_relative( 1) end,
               {description = "focus the next screen", group = "screen"}),
     
-    awful.key({ modkey,"Shift" }, "Right", function () awful.screen.focus_relative(-1) end,
+    awful.key({ modkey,"Shift" }, "Down", function () awful.screen.focus_relative(-1) end,
               {description = "focus the previous screen", group = "screen"}),
     
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
@@ -322,14 +322,7 @@ globalkeys = gears.table.join(
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
-              {description = "increase the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
-              {description = "decrease the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
-              {description = "increase the number of columns", group = "layout"}),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
-              {description = "decrease the number of columns", group = "layout"}),
+
     awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
               {description = "select next", group = "layout"}),
     
@@ -376,8 +369,35 @@ clientkeys = gears.table.join(
    
 
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
-              {description = "move to screen", group = "client"})
-    
+              {description = "move to screen", group = "client"}),
+   
+    -- Win+Alt+Left/Right: move client to prev/next tag and switch to it
+    awful.key({ modkey, "Shift" }, "Left",
+        function ()
+            -- get current tag
+            local t = client.focus and client.focus.first_tag or nil
+            if t == nil then
+                return
+            end
+            -- get previous tag (modulo 9 excluding 0 to wrap from 1 to tagnum usualy 5 or 4)
+            local tag = client.focus.screen.tags[(t.name - 2) % tagnum + 1]
+            awful.client.movetotag(tag)
+            awful.tag.viewprev()
+                     end,
+            {description = "move client to previous tag and switch to it", group = "layout"}),
+    awful.key({ modkey, "Shift" }, "Right",
+        function ()
+            -- get current tag
+            local t = client.focus and client.focus.first_tag or nil
+            if t == nil then
+                return
+            end
+            -- get next tag (modulo 9 excluding 0 to wrap from tagnum to 1)
+            local tag = client.focus.screen.tags[(t.name % tagnum) + 1]
+            awful.client.movetotag(tag)
+            awful.tag.viewnext()
+        end,
+            {description = "move client to next tag and switch to it", group = "layout"})
 
    )
 
@@ -385,10 +405,10 @@ clientkeys = gears.table.join(
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
-for i = 1, 9 do
+for i = 1, tagnum do
     globalkeys = gears.table.join(globalkeys,
         -- View tag only.
-        awful.key({ modkey }, "#" .. i + 9,
+        awful.key({ modkey }, "#" .. i + tagnum,
                   function ()
                         local screen = awful.screen.focused()
                         local tag = screen.tags[i]
@@ -571,5 +591,7 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+--
+--
+awful.util.spawn("picom")
 
-awful.util.spawn("compton")
