@@ -1,6 +1,6 @@
 ./d.f.a_server.sh
 
-awp='awesome lightdm xfce4-terminal thunar lxappearance firefox picom dunst'
+awp='awesome lightdm xfce4-terminal thunar lxappearance firefox picom dunst compton'
 
 #desktop= with if else
 
