@@ -33,7 +33,7 @@ rm -rf ~/.config/awesome/*
 mkdir  ~/.config/awesome
 
 #start cloning
-cp -r .config/awesome ~/.config/awesome
+cp -r .config/awesome ~/.config/
 #wallpapers
 git clone https://github.com/linuxdotexe/nordic-wallpapers ~/.config/awesome/nordic-wallpapers
 
