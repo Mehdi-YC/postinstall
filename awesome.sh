@@ -1,18 +1,18 @@
 ./d.f.a_server.sh
 
-awp='awesome lightdm xfce4-terminal thunar lxappearance firefox picom dunst compton'
-
-#desktop= with if else
+#default packages : maybe we add libreoffice , gimp and inkscape
+awp='awesome lightdm xfce4-terminal thunar lxappearance dunst compton'
 
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy  xfce4-terminal thunar lxappearence firefox lightdm awesome
-
+sudo pacman -Suy firefox
 elif [ -x "$(command -v apt)" ]; then 
 sudo apt install $awp
-
+sudo apt install firefox
+sudo apt install firefox-esr
 elif [ -x "$(command -v dnf)" ];     then 
 sudo dnf install $awp
-
+sudo dnf install firefox
 #elif [ -x "$(command -v zypper)" ];  then sudo zypper install $awp
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
@@ -50,4 +50,5 @@ git clone https://github.com/streetturtle/awesome-wm-widgets  ~/.config/awesome/
 echo "done!"
 
 #echo -e "installing nerd fonts \n"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
 #curl -sS https://webi.sh/nerdfont | sh
