@@ -1,7 +1,7 @@
 ./d.f.a_server.sh
 
 #default packages : maybe we add libreoffice , gimp and inkscape
-awp='awesome lightdm xfce4-terminal thunar lxappearance dunst compton'
+awp='awesome lightdm xfce4-terminal thunar lxappearance dunst compton unzip'
 
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy  xfce4-terminal thunar lxappearence firefox lightdm awesome
