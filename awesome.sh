@@ -1,7 +1,7 @@
 ./d.f.a_server.sh
 
 #default packages : maybe we add libreoffice , gimp and inkscape
-awp='awesome lightdm xfce4-terminal thunar lxappearance dunst compton unzip'
+awp='awesome lightdm xfce4-terminal thunar lxappearance dunst compton unzip jq rustc cargo'
 
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy  xfce4-terminal thunar lxappearence firefox lightdm awesome
@@ -12,7 +12,7 @@ sudo apt install firefox -y
 sudo apt install firefox-esr -y
 elif [ -x "$(command -v dnf)" ];     then 
 sudo dnf install $awp
-sudo dnf install firefox
+sudo dnf install firefox i3-gaps
 #elif [ -x "$(command -v zypper)" ];  then sudo zypper install $awp
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
@@ -30,10 +30,10 @@ mv   ~/.config/awesome ~/.config/awesome.old
 #deleting internal files and directories
 rm -rf ~/.config/i3/*
 rm -rf ~/.config/awesome/*
-mkdir  ~/.config/awesome
+mkdir  ~/.config/
 
 #start cloning
-cp -r .config/awesome ~/.config/
+cp -r .config/* ~/.config/
 #wallpapers
 git clone https://github.com/linuxdotexe/nordic-wallpapers ~/.config/awesome/nordic-wallpapers
 
@@ -52,3 +52,5 @@ echo "done!"
 #echo -e "installing nerd fonts \n"
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
 #curl -sS https://webi.sh/nerdfont | sh
+
+cargo install i3-style
