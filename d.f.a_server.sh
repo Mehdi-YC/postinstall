@@ -1,6 +1,6 @@
 
 #maybe i can add taskwarrior and rustc
-packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible neofetch gcc'
+packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible neofetch gcc fzf'
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy $packagesNeeded
 sudo pacman -Suy go  docker
@@ -70,3 +70,9 @@ sudo cp lazydocker /usr/bin/lazydocker
 cargo install tokei
 cargo install --locked hyperfine
 cargo install bottom
+cargo install mdcat
+#data 
+cargo install htmlq
+cargo install skim # grep & fzf
+#go install github.com/johnkerl/miller/cmd/mlr #tables and etl
+pip3 install visidata
