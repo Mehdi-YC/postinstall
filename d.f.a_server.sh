@@ -44,9 +44,6 @@ cp .tmux/.tmux.conf.local .
 #pyhon packages
 python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi scrapy sqlalchemy
 
-#lazydocker
-curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-sudo cp lazydocker /usr/bin/lazydocker
 
 #install portainer
 ./docker.sh
@@ -62,3 +59,14 @@ sudo cp lazydocker /usr/bin/lazydocker
 # some docker-composes that iv tweaked
 cd 
 git clone https://github.com/Mehdi-YC/mydockerconfigs ./dockers 
+
+# GOOD CLI TOOLS : 
+pip install howdoi
+curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
+  #lazydocker
+curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+sudo cp lazydocker /usr/bin/lazydocker
+
+cargo install tokei
+cargo install --locked hyperfine
+cargo install bottom
