@@ -1,6 +1,7 @@
 
 #maybe i can add taskwarrior and rustc
 packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible neofetch gcc fzf'
+
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy $packagesNeeded
 sudo pacman -Suy go  docker
@@ -9,24 +10,27 @@ cd yay-git
 makepkg -si
 
 elif [ -x "$(command -v apt)" ]; then 
-sudo apt-get install $packagesNeeded
-sudo apt install golang  docker.io
-sudo apt remove neovim
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:neovim-ppa/stable
-sudo apt-get update
-sudo apt install neovim
+  sudo apt-get install $packagesNeeded
+  sudo apt install golang  docker.io
+  sudo apt remove neovim
+  sudo apt-get install software-properties-common
+  sudo add-apt-repository ppa:neovim-ppa/stable
+  sudo apt-get update
+  sudo apt install neovim
 
 elif [ -x "$(command -v dnf)" ];     then 
-sudo dnf install $packagesNeeded 
-sudo dnf install go  docker
+  sudo dnf install $packagesNeeded 
+  sudo dnf install go  docker
+  sudo dnf copr enable varlad/helix
+  sudo dnf install helix
 
 elif [ -x "$(command -v zypper)" ];  then 
-sudo zypper install $packagesNeeded
+  sudo zypper install $packagesNeeded
 
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
 #nvchad
+echo "Installing nvchad"
 cd
 rm -rf ~/.config/nvim
 rm -rf ~/.local/share/nvim
@@ -59,6 +63,9 @@ python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi s
 # some docker-composes that iv tweaked
 cd 
 git clone https://github.com/Mehdi-YC/mydockerconfigs ./dockers 
+
+echo "Installing Rust : "
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # GOOD CLI TOOLS : 
 pip install howdoi
