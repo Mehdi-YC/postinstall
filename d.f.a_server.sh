@@ -84,6 +84,7 @@ cargo install --locked broot
 #data 
 cargo install htmlq
 cargo install skim # grep & fzf
+cargo install xsv # not upgraded from 2018
 #go install github.com/johnkerl/miller/cmd/mlr #tables and etl
 pip3 install visidata
 #python3 -m http.server
