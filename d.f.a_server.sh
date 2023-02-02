@@ -74,11 +74,20 @@ cargo install mdcat
 cargo install --locked zellij
 cargo install --locked pueue
 cargo install --locked miniserve
+cargo install just
+cargo install --locked bat
+#---file managers------
 #cargo install --locked --force xplr
-cargo install felix
+#cargo install felix
+cargo install --locked broot
+#----------------------
 #data 
 cargo install htmlq
 cargo install skim # grep & fzf
 #go install github.com/johnkerl/miller/cmd/mlr #tables and etl
 pip3 install visidata
 #python3 -m http.server
+cargo install tidy-viewer
+echo "alias tv='tidy-viewer'" >> ~/.bashrc
+echo 'eval "$(starship init bash)"' >> ~/.bashrc
+
