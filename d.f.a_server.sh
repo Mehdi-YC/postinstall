@@ -1,6 +1,6 @@
 
 #maybe i can add taskwarrior and rustc
-packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible neofetch gcc fzf'
+packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc fzf'
 
 if [ -x "$(command -v pacman)" ];       then 
 sudo pacman -Suy $packagesNeeded
@@ -20,7 +20,7 @@ elif [ -x "$(command -v apt)" ]; then
 
 elif [ -x "$(command -v dnf)" ];     then 
   sudo dnf install $packagesNeeded 
-  sudo dnf install go  docker
+  sudo dnf install go  docker openssl-devel
   sudo dnf copr enable varlad/helix
   sudo dnf install helix
 
@@ -50,7 +50,7 @@ python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi s
 
 
 #install portainer
-./docker.sh
+#./docker.sh
 
 
 # portainer = all the rest (almost) add confirmation
@@ -61,8 +61,8 @@ python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi s
 #    -v portainer_data:/data \
 #    portainer/portainer-ce
 # some docker-composes that iv tweaked
-cd 
-git clone https://github.com/Mehdi-YC/mydockerconfigs ./dockers 
+#cd 
+#git clone https://github.com/Mehdi-YC/mydockerconfigs ./dockers 
 
 echo "Installing Rust : "
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -79,23 +79,21 @@ cargo install --locked hyperfine
 cargo install bottom
 cargo install mdcat
 cargo install --locked zellij
-cargo install --locked pueue
 cargo install --locked miniserve
 cargo install just
 cargo install --locked bat
-#---file managers------
-#cargo install --locked --force xplr
-#cargo install felix
+
 cargo install --locked broot
-#----------------------
-#data 
+
 cargo install htmlq
 cargo install skim # grep & fzf
-cargo install xsv # not upgraded from 2018
-#go install github.com/johnkerl/miller/cmd/mlr #tables and etl
+cargo install hoard-rs
 pip3 install visidata
 #python3 -m http.server
-cargo install tidy-viewer
-echo "alias tv='tidy-viewer'" >> ~/.bashrc
 echo 'eval "$(starship init bash)"' >> ~/.bashrc
+
+mkdir ~/.cache/starship
+starship init nu | save ~/.cache/starship/init.nu
+
+echo "source ~/.cache/starship/init.nu"| save --raw --append $nu.config-path
 
