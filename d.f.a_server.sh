@@ -95,5 +95,5 @@ echo 'eval "$(starship init bash)"' >> ~/.bashrc
 mkdir ~/.cache/starship
 starship init nu | save ~/.cache/starship/init.nu
 
-echo "source ~/.cache/starship/init.nu"| save --raw --append $nu.config-path
+echo "source ~/.cache/starship/init.nu" | save --raw --append $nu.config-path
 
