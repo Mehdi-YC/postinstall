@@ -1,0 +1,17 @@
+ls
+mkdir ~/.cache/starship
+starship init nu | save ~/.cache/starship/init.nu
+vim $nu.config-path
+vi $nu.config-path
+ls
+cd Images/
+wget https://fedoraproject.org/w/uploads/thumb/2/2a/F35-01-day.png/1200px-F35-01-day.png
+thunar .
+feh --bg-scale 1200px-F35-01-day.png
+cd
+cd postinstall/.config/
+xrdb -merge .Xressources
+cd /mnt/
+ls
+sudo cd test
+cd test
