@@ -28,7 +28,8 @@ elif [ -x "$(command -v zypper)" ];  then
   sudo zypper install $packagesNeeded
 
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
-
+# activate docker
+sudo systemctl start docker
 #nvchad
 echo "Installing nvchad"
 cd
@@ -53,14 +54,15 @@ echo "Installing Rust : "
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # GOOD CLI TOOLS : 
-pip install howdoi
 curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
- 
+cd
+source ~/.bashrc
 #lazydocker
 curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 sudo cp lazydocker /usr/bin/lazydocker
 #reload bash after installing cargo
 bash
+pip install howdoi
 cargo install tokei
 cargo install --locked hyperfine
 cargo install bottom
