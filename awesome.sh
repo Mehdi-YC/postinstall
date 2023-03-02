@@ -13,6 +13,8 @@ sudo apt install firefox-esr -y
 elif [ -x "$(command -v dnf)" ];     then 
 sudo dnf install $awp
 sudo dnf install firefox i3-gaps
+sudo dnf copr enable alciregi/distrobox
+sudo dnf install podman-docker podman distrobox
 #elif [ -x "$(command -v zypper)" ];  then sudo zypper install $awp
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
