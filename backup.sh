@@ -2,20 +2,30 @@
 mkdir -p ~/backup
 cat <<EOT >> ~/backup/app_backup-$(date +'%d/%m/%Y').sh
 #install flatpak and add flathub : 
-sudo dnf install flatpak
+if ! [ -x "$(command -v flatpak)" ]; then
+  sudo dnf install flatpak
+fi
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 #install vscodium : 
-sudo rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
-printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=download.vscodium.com\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo tee -a /etc/yum.repos.d/vscodium.repo
-sudo dnf install codium
+
+if ! [ -x "$(command -v codium)" ]; then
+  sudo rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
+  printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=download.vscodium.com\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo tee -a /etc/yum.repos.d/vscodium.repo
+  sudo dnf install codium
+fi
+
 
 # install rust : 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+if ! [ -x "$(command -v cargo)" ]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+fi
+
 
 #install pip if not installed :
-sudo dnf install python3-pip
-
+if ! [ -x "$(command -v pip)" ]; then
+  sudo dnf install python3-pip
+fi
 
 EOT
 
