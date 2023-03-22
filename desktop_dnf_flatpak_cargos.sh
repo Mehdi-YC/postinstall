@@ -1,14 +1,15 @@
 # idea : cli tool that generate a script that installs everything:
- #- install flatpak if not installed
+ #- install flatpak if not installed #corp
  #- add flathub if not added : flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
- #- install cargo if not installed
- #- install vscode if not installed
- #- install python3-pip if not installed
+ #- install cargo if not installed #rustup
+ #- install vscode if not installed #rpms
+ #- install python3-pip if not installed #dnf
  #- list apps and for loops to install them
  
  
 #list all flatpaks id 
-flatpak list --columns=app
+flatpak list --columns=app | tail -n +2
+flatpak list --columns=app | tail -n +2 | while read line; do echo flatpak install ${line}; done
 #images : https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/{app id}.png
 
 #list all installed rpms # not that usefull : using distrobox
@@ -17,9 +18,11 @@ flatpak list --columns=app
 
 # list all python packages
 pip freeze | cut -d "=" -f1  | sort -h | uniq
+echo pip install $(pip freeze | cut -d "=" -f1  | sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g')
 
 # cargo install list
 cargo install --list
+echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g')
 
 
 #my flatpaks :
