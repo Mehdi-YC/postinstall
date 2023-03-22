@@ -1,6 +1,7 @@
 
 #packages that i generally use : (maybe adding imagemagick)
-packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc'
+# for desktop add : i3 awesome lightdm xfce4-terminal thunar lxappearance dunst compton and #cargo install i3-style
+packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc jq unzip zip'
 
 if [ -x "$(command -v pacman)" ];       then 
   sudo pacman -Suy $packagesNeeded
@@ -22,7 +23,7 @@ elif [ -x "$(command -v dnf)" ];     then
   sudo dnf install $packagesNeeded 
   sudo dnf install go  openssl-devel
   #sudo dnf install docker
-  sudo dnf install podman
+  sudo dnf install podman podman-docker
   
   sudo dnf copr enable varlad/helix
   sudo dnf install helix
