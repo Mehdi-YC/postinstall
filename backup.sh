@@ -28,23 +28,28 @@ if ! [ -x "$(command -v pip)" ]; then
   sudo dnf install python3-pip
 fi
 
+
 EOT
 
-# listing flatpaks pips and crates to install : 
-echo "flatpaks : " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
-flatpak list --columns=app | tail -n +2 | while read line; do echo flatpak install ${line}; done >> app_backup_$(date +'%d-%m-%Y').sh
+echo -e "\n\# listing flatpaks pips and crates to install  : " >>  ~/backup/app_backup_$(date +'%d-%m-%Y').sh
 
-echo "python packages : " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo pip install $(pip freeze | cut -d "=" -f1  | sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g') >>  app_backup_$(date +'%d-%m-%Y').sh
+echo -e "\n#flatpaks..."
+echo -e "\n\n#flatpaks : " >>  ~/backup/app_backup_$(date +'%d-%m-%Y').sh
+flatpak list --columns=app | tail -n +2 | while read line; do echo flatpak install ${line}; done >> ~/backup/app_backup_$(date +'%d-%m-%Y').sh
 
-echo "Rust crates : " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g') >>  app_backup_$(date +'%d-%m-%Y').sh
 
-echo "vscodium extentions : " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
-codium --list-extensions | while read line; do echo codium --install-extension ${line}; done >> app_backup_$(date +'%d-%m-%Y').sh
+echo -e "\n#python packages..." 
+echo -e "\n\n#python packages : " >>  ~/backup/app_backup_$(date +'%d-%m-%Y').sh
+echo pip install $(pip freeze | cut -d "=" -f1  | sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g') >>  ~/backup/app_backup_$(date +'%d-%m-%Y').sh
+
+echo -e "\n#Rust crates..."
+echo -e "\n\n#Rust crates : " >>  ~/backup/app_backup_$(date +'%d-%m-%Y').sh
+echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g') >>  ~/backup/app_backup_$(date +'%d-%m-%Y').sh
+
+echo -e "\n#vscodium extentions..." 
+echo -e "\n\n#vscodium extentions : " >>  ~/backup/app_backup_$(date +'%d-%m-%Y').sh
+codium --list-extensions | while read line; do echo codium --install-extension ${line}; done >> ~/backup/app_backup_$(date +'%d-%m-%Y').sh
+
+echo -e "\n#.config dir ..." 
 rm -rf ~/backup/.config_$(date +'%d-%m-%Y')
 cp -r ~/.config/ ~/backup/.config_$(date +'%d-%m-%Y')
