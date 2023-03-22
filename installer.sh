@@ -1,6 +1,6 @@
 
 #packages that i generally use : (maybe adding imagemagick)
-packagesNeeded=' scrcpy tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc'
+packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc'
 
 if [ -x "$(command -v pacman)" ];       then 
   sudo pacman -Suy $packagesNeeded
@@ -33,12 +33,12 @@ elif [ -x "$(command -v dnf)" ];     then
   sudo dnf copr enable zeno/scrcpy
   sudo dnf install scrcpy
 
-elif [ -x "$(command -v zypper)" ];  then 
-  sudo zypper install $packagesNeeded
 
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
+
 # activate docker
 sudo systemctl start docker
+
 #nvchad
 echo "Installing nvchad"
 cd
@@ -74,8 +74,8 @@ sudo cp lazydocker /usr/bin/lazydocker
 source ~/.bashrc
 bash
 
-pip install howdoi
-cargo install tokei
+#pip install howdoi
+#cargo install tokei
 cargo install --locked hyperfine
 #cargo install bottom
 cargo install mdcat
@@ -113,4 +113,3 @@ echo "source ~/.cache/starship/init.nu" | save --raw --append $nu.config-path
 # ADD portainer
 # ADD k9s maybe
 #check peregrine and codon
-
