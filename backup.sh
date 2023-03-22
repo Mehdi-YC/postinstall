@@ -32,6 +32,8 @@ echo "Rust crates : " >>  app_backup-$(date +'%d/%m/%Y').sh
 echo " ---- " >>  app_backup-$(date +'%d/%m/%Y').sh
 echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g')
 
+echo "vscodium extentions : " >>  app_backup-$(date +'%d/%m/%Y').sh
+echo " ---- " >>  app_backup-$(date +'%d/%m/%Y').sh
+codium --list-extensions | while read line; do echo codium --install-extension ${line}; done >> app_backup-$(date +'%d/%m/%Y').sh
 
-
-
+cp -r ~/.config/ ~/backup/.config$(date +'%d/%m/%Y')
