@@ -46,5 +46,5 @@ echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h
 echo "vscodium extentions : " >>  app_backup_$(date +'%d-%m-%Y').sh
 echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
 codium --list-extensions | while read line; do echo codium --install-extension ${line}; done >> app_backup_$(date +'%d-%m-%Y').sh
-
+rm -rf ~/backup/.config_$(date +'%d-%m-%Y')
 cp -r ~/.config/ ~/backup/.config_$(date +'%d-%m-%Y')
