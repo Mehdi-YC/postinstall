@@ -1,0 +1,37 @@
+# get empty backup.sh
+mkdir -p ~/backup
+cat <<EOT >> ~/backup/app_backup-$(date +'%d/%m/%Y').sh
+#install flatpak and add flathub : 
+sudo dnf install flatpak
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+#install vscodium : 
+sudo rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
+printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=download.vscodium.com\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo tee -a /etc/yum.repos.d/vscodium.repo
+sudo dnf install codium
+
+# install rust : 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+#install pip if not installed :
+sudo dnf install python3-pip
+
+
+EOT
+
+# listing flatpaks pips and crates to install : 
+echo "flatpaks : " >>  app_backup-$(date +'%d/%m/%Y').sh
+echo " ---- " >>  app_backup-$(date +'%d/%m/%Y').sh
+flatpak list --columns=app | tail -n +2 | while read line; do echo flatpak install ${line}; done >> app_backup-$(date +'%d/%m/%Y').sh
+
+echo "python packages : " >>  app_backup-$(date +'%d/%m/%Y').sh
+echo " ---- " >>  app_backup-$(date +'%d/%m/%Y').sh
+echo pip install $(pip freeze | cut -d "=" -f1  | sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g')
+
+echo "Rust crates : " >>  app_backup-$(date +'%d/%m/%Y').sh
+echo " ---- " >>  app_backup-$(date +'%d/%m/%Y').sh
+echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g')
+
+
+
+
