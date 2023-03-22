@@ -41,7 +41,7 @@ echo pip install $(pip freeze | cut -d "=" -f1  | sort -h | uniq | sed ':a;N;$!b
 
 echo "Rust crates : " >>  app_backup_$(date +'%d-%m-%Y').sh
 echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g')
+echo cargo install $( cargo install --list c | awk '/^\w/ { print $1 }'| sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g') >>  app_backup_$(date +'%d-%m-%Y').sh
 
 echo "vscodium extentions : " >>  app_backup_$(date +'%d-%m-%Y').sh
 echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
