@@ -1,5 +1,6 @@
 # idea : cli tool that generate a script that installs everything:
  #- install flatpak if not installed
+ #- add flathub if not added : flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
  #- install cargo if not installed
  #- install vscode if not installed
  #- install python3-pip if not installed
