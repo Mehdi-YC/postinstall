@@ -53,3 +53,8 @@ codium --list-extensions | while read line; do echo codium --install-extension $
 echo -e "\n#.config dir ..." 
 rm -rf ~/backup/.config_$(date +'%d-%m-%Y')
 cp -r ~/.config/ ~/backup/.config_$(date +'%d-%m-%Y')
+
+echo -e "\n#zip the backup ..." 
+rm ~/backup/backup$(date +'%d-%m-%Y').zip
+zip -r ~/backup/backup$(date +'%d-%m-%Y').zip ~/backup/
+echo ~/backup/backup$(date +'%d-%m-%Y').zip
