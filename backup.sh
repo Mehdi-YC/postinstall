@@ -1,5 +1,6 @@
 # get empty backup.sh
 mkdir -p ~/backup
+rm ~/backup/app_backup_$(date +'%d-%m-%Y').sh
 cat <<EOT >> ~/backup/app_backup_$(date +'%d-%m-%Y').sh
 #install flatpak and add flathub : 
 if ! [ -x "$(command -v flatpak)" ]; then
@@ -36,7 +37,7 @@ flatpak list --columns=app | tail -n +2 | while read line; do echo flatpak insta
 
 echo "python packages : " >>  app_backup_$(date +'%d-%m-%Y').sh
 echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
-echo pip install $(pip freeze | cut -d "=" -f1  | sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g')
+echo pip install $(pip freeze | cut -d "=" -f1  | sort -h | uniq | sed ':a;N;$!ba;s/\n/ /g') >>  app_backup_$(date +'%d-%m-%Y').sh
 
 echo "Rust crates : " >>  app_backup_$(date +'%d-%m-%Y').sh
 echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
@@ -46,4 +47,4 @@ echo "vscodium extentions : " >>  app_backup_$(date +'%d-%m-%Y').sh
 echo " ---- " >>  app_backup_$(date +'%d-%m-%Y').sh
 codium --list-extensions | while read line; do echo codium --install-extension ${line}; done >> app_backup_$(date +'%d-%m-%Y').sh
 
-cp -r ~/.config/ ~/backup/.config$(date +'%d/%m/%Y')
+cp -r ~/.config/ ~/backup/.config_$(date +'%d-%m-%Y')
