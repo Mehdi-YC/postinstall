@@ -1,0 +1,48 @@
+- rust
+    - reqwest
+    - rocket
+    - serde_json / serde
+    - clap
+    - slog / log
+    - chrono
+
+- python
+    - request
+    - beautifulsoup4 / scrapy
+    - numpy
+    - pandas
+    - matplotlib / plotly
+    - fastapi
+    - jupyter
+    - tkinter
+
+- bash / linux in general + ansible
+- svelte(+ some ui like daisyUI / skeleton / framework 7)
+- abap
+
+----------------
+- pocketbase
+- strapi
+
+- n8n 
+- mautic
+- listmonk
+- wordpress
+- odoo
+- glpi
+- cal.com
+
+- superset
+- grafana
+- airflow / perfectHQ
+- quadratic
+- querybook
+
+- aapanel
+- cockpit
+-----------------
+
+- api / rpc
+- json / toml / yaml
+- docker / podman / distrobox / kubernetes (k3s , 8s , okd)
+-
