@@ -2,9 +2,6 @@
 title: 0- design pattenrs / standards
 updated: 2023-03-28 13:30:26Z
 created: 2023-03-28 11:16:43Z
-latitude: 36.76234590
-longitude: 2.92258930
-altitude: 0.0000
 ---
 
 ## design patterns : 
