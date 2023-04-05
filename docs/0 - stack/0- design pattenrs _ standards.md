@@ -1,4 +1,4 @@
-## design patterns : [Refactoring guru](https://refactoring.guru/ "good principles")
+## design patterns : [Refactoring guru](https://refactoring.guru/ "good principles") / [roadmaps](https://roadmap.sh/)
 
 - [intro to design patterns (neet code)](https://www.youtube.com/watch?v=tAuRQs_d9F8&t=30s)
 - [10 design patterns (intro)](https://youtu.be/tv-_1er1mWI)
