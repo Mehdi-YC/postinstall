@@ -1,3 +1,5 @@
+#podman / docker build -t <name> .
+
 FROM quay.io/toolbx-images/alpine-toolbox:edge
 
 COPY extra-packages /
