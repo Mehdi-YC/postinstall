@@ -10,11 +10,7 @@ neofetch
 neovim
 npm
 python3
-py3-pip
-py3-numpy
-speedtest-cli
-starship
-zellij
+python3-pip
 jq
 git
 curl

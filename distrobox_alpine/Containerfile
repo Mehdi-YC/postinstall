@@ -1,19 +1,13 @@
 #podman / docker build -t <name> .
 
-FROM quay.io/toolbx-images/alpine-toolbox:edge
+FROM registry.fedoraproject.org/fedora:37 
 
 COPY extra-packages /
-RUN apk update && \
-    apk upgrade && \
-    grep -v '^#' /extra-packages | xargs apk add
+RUN dnf update && \
+    dnf upgrade && \
+    grep -v '^#' /extra-packages | xargs dnf install
 RUN rm /extra-packages
 
-#NVCHAD
-RUN   rm -rf ~/.config/nvim &&\
-      rm -rf ~/.local/share/nvim &&\
-      rm -rf ~/.cache/nvim &&\
-      mkdir .config &&\
-      git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
 #LINKING DOCKER PODMAN AND FLATPAK
 RUN   ln -fs /bin/sh /usr/bin/sh && \
@@ -22,29 +16,11 @@ RUN   ln -fs /bin/sh /usr/bin/sh && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
-   
-#OMT   
-RUN   cd &&\
-      git clone https://github.com/mehdi-yc/.tmux.git &&\
-      ln -s -f .tmux/.tmux.conf &&\
-      cp .tmux/.tmux.conf.local . 
-  
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
-ENV PATH="~/.cargo/bin:${PATH}"
 
-RUN cd && touch .bashrc && source .bashrc && echo 'eval "$(starship init bash)"' >> ~/.bashrc
-RUN touch .bash_profile
-RUN cat << EOF >> # ~/.bash_profile
+COPY set_config.sh /usr/local/bin/set_config
+RUN chmod +x set_config
+COPY starship.toml /usr/local/starship.toml
 
-# Get the aliases and functions
-if [ -f ~/.bashrc ]; then
-	. ~/.bashrc
-fi
+RUN chmod +x /usr/local/bin/set_config
 
-# User specific environment and startup programs
-. "$HOME/.cargo/env"
-EOF
-
-
-
-RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy 
+RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy
