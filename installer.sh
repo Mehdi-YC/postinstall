@@ -40,7 +40,6 @@ else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manual
 # activate docker
 sudo systemctl start docker
 
-#nvchad
 echo "Installing nvchad"
 cd
 rm -rf ~/.config/nvim
@@ -90,6 +89,7 @@ cargo install --locked bat
 cargo install hoard-rs
 #pip install visidata
 #python3 -m http.server
+cargo install nu
 
 # starship for bash
 echo 'eval "$(starship init bash)"' >> ~/.bashrc

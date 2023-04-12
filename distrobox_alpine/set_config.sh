@@ -1,11 +1,4 @@
-echo "Installing nvchad"
-cd
-rm -rf ~/.config/nvim
-rm -rf ~/.local/share/nvim
-rm -rf ~/.cache/nvim
-mkdir .config
-
-cp /usr/local/starship.toml $HOME/.config/
+cp -r /usr/local/config/ $HOME/
 
 # my omt mod
 cd
@@ -14,15 +7,13 @@ ln -s -f .tmux/.tmux.conf
 cp .tmux/.tmux.conf.local .
 
 echo "Installing Rust : "
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+echo 'eval "$(starship init bash)"' >> ~/.bashrc
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain stable --default-host
 
 # GOOD CLI TOOLS : 
 curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
 cd
 source ~/.bashrc
-
-source ~/.bashrc
-bash
 
 #pip install howdoi
 #cargo install tokei
@@ -41,13 +32,7 @@ cargo install hoard-rs
 #python3 -m http.server
 cargo install nu
 
-# starship for bash
-echo 'eval "$(starship init bash)"' >> ~/.bashrc
-
 # starship for nushell
 mkdir ~/.cache/starship
 starship init nu | save ~/.cache/starship/init.nu
 echo "source ~/.cache/starship/init.nu" | save --raw --append $nu.config-path
-
-
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim

@@ -1,12 +1,11 @@
 #podman / docker build -t <name> .
-
 FROM registry.fedoraproject.org/fedora:37 
 
-COPY extra-packages /
-RUN dnf update && \
-    dnf upgrade && \
-    grep -v '^#' /extra-packages | xargs dnf install
-RUN rm /extra-packages
+RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_parallel_downloads=10\n" | tee /etc/dnf/dnf.conf
+
+
+
+RUN dnf install atuin htop btop bat fzf github-cli just make neofetch neovim npm python3 python3-pip jq git curl wget
 
 
 #LINKING DOCKER PODMAN AND FLATPAK
@@ -21,6 +20,8 @@ COPY set_config.sh /usr/local/bin/set_config
 RUN chmod +x set_config
 COPY starship.toml /usr/local/starship.toml
 
+COPY ../.config /usr/local/config/
 RUN chmod +x /usr/local/bin/set_config
+RUN git clone https://github.com/NvChad/NvChad /usr/local/config/.config/nvim --depth 1
 
 RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy
