@@ -5,7 +5,7 @@ RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_pa
 
 
 
-RUN dnf install  htop btop bat fzf gh just make neofetch neovim npm python3 python3-pip jq git curl wget
+RUN dnf install  htop btop bat fzf gh just make neofetch neovim npm python3 python3-pip jq git curl wget -y
 
 
 #LINKING DOCKER PODMAN AND FLATPAK
