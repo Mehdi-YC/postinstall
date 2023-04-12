@@ -8,7 +8,7 @@ cp .tmux/.tmux.conf.local .
 
 echo "Installing Rust : "
 echo 'eval "$(starship init bash)"' >> ~/.bashrc
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain stable --default-host
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -y -- --default-toolchain stable
 
 # GOOD CLI TOOLS : 
 curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
@@ -34,5 +34,6 @@ cargo install nu
 
 # starship for nushell
 mkdir ~/.cache/starship
+nu
 starship init nu | save ~/.cache/starship/init.nu
 echo "source ~/.cache/starship/init.nu" | save --raw --append $nu.config-path
