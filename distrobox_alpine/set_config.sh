@@ -1,4 +1,4 @@
-cp -r /usr/local/config/ $HOME/
+cp -r /usr/local/config/* $HOME/.config/
 
 # my omt mod
 cd
