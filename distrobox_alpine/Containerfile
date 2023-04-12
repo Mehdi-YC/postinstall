@@ -5,23 +5,19 @@ RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_pa
 
 
 
-RUN dnf install atuin htop btop bat fzf gh just make neofetch neovim npm python3 python3-pip jq git curl wget
+RUN dnf install  htop btop bat fzf gh just make neofetch neovim npm python3 python3-pip jq git curl wget
 
 
 #LINKING DOCKER PODMAN AND FLATPAK
-RUN   ln -fs /bin/sh /usr/bin/sh && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
+RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
 
 COPY set_config.sh /usr/local/bin/set_config
-RUN chmod +x set_config
-COPY starship.toml /usr/local/starship.toml
-
-COPY ../.config /usr/local/config/
 RUN chmod +x /usr/local/bin/set_config
+
+
+COPY .config /usr/local/config/
+
 RUN git clone https://github.com/NvChad/NvChad /usr/local/config/.config/nvim --depth 1
 
 RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy
