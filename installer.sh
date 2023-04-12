@@ -61,23 +61,19 @@ python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi s
 
 echo "Installing Rust : "
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
+source ~/.bashrc
 # GOOD CLI TOOLS : 
 curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
+
 cd
-source ~/.bashrc
 #lazydocker
 curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 sudo cp lazydocker /usr/bin/lazydocker
 
-#reload bash after installing cargo
-source ~/.bashrc
-bash
 
 #pip install howdoi
-#cargo install tokei
+cargo install tokei
 cargo install --locked hyperfine
-#cargo install bottom
 cargo install mdcat
 cargo install --locked zellij
 cargo install --locked miniserve
