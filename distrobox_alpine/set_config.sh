@@ -1,3 +1,4 @@
+mkdir $HOME/.config/
 cp -r /usr/local/config/* $HOME/.config/
 
 # my omt mod
@@ -7,8 +8,8 @@ ln -s -f .tmux/.tmux.conf
 cp .tmux/.tmux.conf.local .
 
 echo "Installing Rust : "
+touch ~/.bashrc
 echo 'eval "$(starship init bash)"' >> ~/.bashrc
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -y -- --default-toolchain stable
 
 # GOOD CLI TOOLS : 
 curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
@@ -18,19 +19,11 @@ source ~/.bashrc
 #pip install howdoi
 #cargo install tokei
 cargo install --locked hyperfine
-#cargo install bottom
-cargo install mdcat
 cargo install --locked zellij
-cargo install --locked miniserve
-cargo install just
-cargo install --locked bat
-#cargo install --locked broot
-#cargo install htmlq
-#cargo install skim # grep & fzf
 cargo install hoard-rs
-#pip install visidata
-#python3 -m http.server
 cargo install nu
+
+source ~/.bashrc
 
 # starship for nushell
 mkdir ~/.cache/starship
