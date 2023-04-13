@@ -18,6 +18,6 @@ RUN chmod +x /usr/local/bin/set_config
 
 COPY .config /usr/local/config/
 
-RUN git clone https://github.com/NvChad/NvChad /usr/local/config/.config/nvim --depth 1
+RUN git clone https://github.com/NvChad/NvChad /usr/local/config/nvim --depth 1
 
 RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy
