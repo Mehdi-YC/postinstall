@@ -42,6 +42,7 @@ python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi s
 
 #echo "Installing Rust : "   now installed with the package manager
 #  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cd && wget https://raw.githubusercontent.com/Mehdi-YC/postinstall/main/distrobox_builder/.config/.bashrc
 source ~/.bashrc
 # GOOD CLI TOOLS : 
 curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
@@ -55,9 +56,6 @@ cargo install tokei hyperfine mdcat zellij miniserve just bat hoard-rs nu
 #cargo install --locked broot htmlq skim
 #pip install visidata howdoi
 #python3 -m http.server
-
-# starship for bash
-echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
 # Wallpapers :
 #git clone https://github.com/linuxdotexe/nordic-wallpapers ~/.config/awesome/nordic-wallpapers 
