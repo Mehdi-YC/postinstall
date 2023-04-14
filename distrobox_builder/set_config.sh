@@ -16,6 +16,8 @@ cd && source ~/.bashrc
 #cargo install tokei
 cargo install --locked hyperfine hoard-rs zellij nu
 # curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)" currently installed with dnf
+sudo dnf copr enable atim/starship -y
+sudo dnf install starship -y
 # starship for nushell
 # mkdir ~/.cache/starship
 # nu
