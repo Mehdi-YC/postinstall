@@ -18,20 +18,12 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
--- Load Debian menu entries
-local debian = require("debian.menu")
+
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
-
-
-
--- custom widgets : 
-local volume_widget = require('awesome-wm-widgets.volume-widget.volume')
-
-local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 
 
 if awesome.startup_errors then
@@ -116,7 +108,6 @@ else
     mymainmenu = awful.menu({
         items = {
                   menu_awesome,
-                  { "Debian", debian.menu.Debian_menu.Debian },
                   menu_terminal,
                 }
     })
@@ -244,7 +235,6 @@ awful.screen.connect_for_each_screen(function(s)
 
             wibox.widget.systray(),
             mytextclock,
-	    logout_menu_widget(),
         },
     }
 end)

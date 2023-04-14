@@ -17,6 +17,10 @@ RUN chmod +x /usr/local/bin/set_config
 
 
 COPY .config /usr/local/config/
-
-
+#RUN git clone https://github.com/siduck76/NvChad /usr/local/config/.config/nvim --depth 1
+RUN git clone --depth 1 https://github.com/AstroNvim/AstroNvim /usr/local/config/.config/nvim --depth 1
+#https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip
+#mkdir ~/.local/share/fonts
+#unzip NerdFontsSymbolsOnly.zip -d ~/.local/share/fonts/
+#fc-cache ~/.local/share/fonts
 RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy
