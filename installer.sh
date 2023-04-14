@@ -1,7 +1,6 @@
-
 #packages that i generally use : (maybe adding imagemagick and ffmpeg)
 # for desktop add : i3 awesome lightdm xfce4-terminal thunar lxappearance dunst compton and #cargo install i3-style
-packagesNeeded='tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc jq unzip zip'
+packagesNeeded='cargo rustc tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc jq unzip zip'
 
 if [ -x "$(command -v pacman)" ];       then 
   sudo pacman -Suy $packagesNeeded
@@ -11,102 +10,62 @@ if [ -x "$(command -v pacman)" ];       then
   makepkg -si
 
 elif [ -x "$(command -v apt)" ]; then 
-  sudo apt-get install $packagesNeeded
-  sudo apt install golang  docker.io
+  sudo apt-get install $packagesNeeded -y
   sudo apt remove neovim
-  sudo apt-get install software-properties-common
   sudo add-apt-repository ppa:neovim-ppa/stable
   sudo apt-get update
-  sudo apt install neovim
+  sudo apt install software-properties-common neovim golang  docker.io -y
 
 elif [ -x "$(command -v dnf)" ];     then 
-  sudo dnf install $packagesNeeded 
-  sudo dnf install go  openssl-devel
-  #sudo dnf install docker
-  sudo dnf install podman podman-docker
-  
-  sudo dnf copr enable varlad/helix
-  sudo dnf install helix
-  
+  #sudo dnf copr enable varlad/helix
   sudo dnf copr enable alciregi/distrobox
-  sudo dnf install distrobox
-  
   sudo dnf copr enable zeno/scrcpy
-  sudo dnf install scrcpy
-
+  sudo dnf install $packagesNeeded -y
+  sudo dnf install scrcpy distrobox podman podman-docker go  openssl-devel gcc-c++ -y
+  #sudo dnf install docker helix
 
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
 # activate docker
 sudo systemctl start docker
 
-echo "Installing nvchad"
-cd
-rm -rf ~/.config/nvim
-rm -rf ~/.local/share/nvim
-rm -rf ~/.cache/nvim
-mkdir .config
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+cd && echo "Installing nvchad"
+rm -rf ~/.config/nvim ~/.local/share/nvim ~/.cache/nvim
+mkdir ~/.config
+git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
-
-# my omt mod
-cd
-git clone https://github.com/mehdi-yc/.tmux.git
+cd && git clone https://github.com/mehdi-yc/.tmux.git
 ln -s -f .tmux/.tmux.conf
 cp .tmux/.tmux.conf.local .
 
 #pyhon packages
-python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi scrapy sqlalchemy
+python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi scrapy
 
-
-echo "Installing Rust : "
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#echo "Installing Rust : "   now installed with the package manager
+#  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source ~/.bashrc
 # GOOD CLI TOOLS : 
 curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
 
-cd
 #lazydocker
-curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+cd && curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 sudo cp lazydocker /usr/bin/lazydocker
 
 
-#pip install howdoi
-cargo install tokei
-cargo install --locked hyperfine
-cargo install mdcat
-cargo install --locked zellij
-cargo install --locked miniserve
-cargo install just
-cargo install --locked bat
-#cargo install --locked broot
-#cargo install htmlq
-#cargo install skim # grep & fzf
-cargo install hoard-rs
-#pip install visidata
+cargo install tokei hyperfine mdcat zellij miniserve just bat hoard-rs nu
+#cargo install --locked broot htmlq skim
+#pip install visidata howdoi
 #python3 -m http.server
-cargo install nu
 
 # starship for bash
 echo 'eval "$(starship init bash)"' >> ~/.bashrc
 
-# starship for nushell
-mkdir ~/.cache/starship
-starship init nu | save ~/.cache/starship/init.nu
-echo "source ~/.cache/starship/init.nu" | save --raw --append $nu.config-path
-
-#echo -e "installing nerd fonts \n"
-#/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
-
 # Wallpapers :
 #git clone https://github.com/linuxdotexe/nordic-wallpapers ~/.config/awesome/nordic-wallpapers 
 
+mkdir ~/.local/share/fonts
+unzip SourceCodePro.zip -d ~/.local/share/fonts/
+fc-cache ~/.local/share/fonts
 
-
-# TODO 
-# ADD jupyter notebook with python , rust and nushell ,
-# ADD cockpit
-# ADD ansible tower 
-# ADD portainer
-# ADD k9s maybe
+# TODO : ADD jupyter notebook with python , rust and nushell , cockpit  ansible-tower   portainer  k9s
 #check peregrine and codon
