@@ -44,15 +44,9 @@ python3 -m pip install beautifulsoup4 numpy pandas matplotlib requests fastapi s
 #  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 cd && wget https://raw.githubusercontent.com/Mehdi-YC/postinstall/main/distrobox_builder/.config/.bashrc
 source ~/.bashrc
+
 # GOOD CLI TOOLS : 
-curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
-
-#lazydocker
-cd && curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-sudo cp lazydocker /usr/bin/lazydocker
-
-
-cargo install tokei hyperfine mdcat zellij miniserve just bat hoard-rs nu
+cargo install tokei hyperfine mdcat zellij just bat hoard-rs nu
 #cargo install --locked broot htmlq skim
 #pip install visidata howdoi
 #python3 -m http.server
@@ -64,5 +58,9 @@ mkdir ~/.local/share/fonts
 unzip SourceCodePro.zip -d ~/.local/share/fonts/
 fc-cache ~/.local/share/fonts
 
+#lazydocker
+cd && curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sh
+
+curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
 # TODO : ADD jupyter notebook with python , rust and nushell , cockpit  ansible-tower   portainer  k9s
 #check peregrine and codon
