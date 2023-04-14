@@ -17,11 +17,10 @@ elif [ -x "$(command -v apt)" ]; then
   sudo apt install software-properties-common neovim golang  docker.io -y
 
 elif [ -x "$(command -v dnf)" ];     then 
-  #sudo dnf copr enable varlad/helix
-  sudo dnf copr enable alciregi/distrobox
-  sudo dnf copr enable zeno/scrcpy
-  sudo dnf install $packagesNeeded -y
-  sudo dnf install scrcpy distrobox podman podman-docker go  openssl-devel gcc-c++ -y
+  #sudo dnf copr enable varlad/helix -y
+  sudo dnf copr enable alciregi/distrobox -y
+  sudo dnf copr enable zeno/scrcpy -y
+  sudo dnf install $packagesNeeded scrcpy distrobox podman podman-docker go  openssl-devel gcc-c++ -y
   #sudo dnf install docker helix
 
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
