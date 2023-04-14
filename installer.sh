@@ -20,7 +20,7 @@ elif [ -x "$(command -v dnf)" ];     then
   #sudo dnf copr enable varlad/helix -y
   sudo dnf copr enable alciregi/distrobox -y
   sudo dnf copr enable zeno/scrcpy -y
-  dnf copr enable atim/starship -y
+  sudo dnf copr enable atim/starship -y
   sudo dnf install --setopt=tsflags=nodocs --setopt=install_weak_deps=False $packagesNeeded starship scrcpy distrobox podman podman-docker go  openssl-devel gcc-c++ -y
   #sudo dnf install docker helix
 
