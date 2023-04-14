@@ -20,7 +20,8 @@ elif [ -x "$(command -v dnf)" ];     then
   #sudo dnf copr enable varlad/helix -y
   sudo dnf copr enable alciregi/distrobox -y
   sudo dnf copr enable zeno/scrcpy -y
-  sudo dnf install $packagesNeeded scrcpy distrobox podman podman-docker go  openssl-devel gcc-c++ -y
+  dnf copr enable atim/starship -y
+  sudo dnf install $packagesNeeded starship scrcpy distrobox podman podman-docker go  openssl-devel gcc-c++ -y
   #sudo dnf install docker helix
 
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
@@ -61,6 +62,6 @@ fc-cache ~/.local/share/fonts
 #lazydocker
 cd && curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sh
 
-curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
+# curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)" NEW: installed with dnf
 # TODO : ADD jupyter notebook with python , rust and nushell , cockpit  ansible-tower   portainer  k9s
 #check peregrine and codon
