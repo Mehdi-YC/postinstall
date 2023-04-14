@@ -29,4 +29,19 @@ bind "set completion-ignore-case on"
 # Show auto-completion list automatically, without double tab
 bind "set show-all-if-ambiguous On"
 
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias hg='history | grep '
+alias install=sudo dnf install
+mkcd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
+mkcd() {
+        if [ $# != 1 ]; then
+                echo "Usage: mkcd <dir>"
+        else
+                mkdir -p $1 && cd $1
+        fi
+}
+
+
 eval "$(starship init bash)"
