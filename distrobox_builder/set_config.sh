@@ -10,14 +10,12 @@ cp .tmux/.tmux.conf.local .
 mv ~/.config/.bashrc ~/.bashrc
 
 # GOOD CLI TOOLS : 
-curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
-
 cd && source ~/.bashrc
 
 #pip install howdoi
 #cargo install tokei
 cargo install --locked hyperfine hoard-rs zellij nu
-
+curl -sS https://starship.rs/install.sh | sh #eval "$(starship init bash)"
 # starship for nushell
 # mkdir ~/.cache/starship
 # nu
