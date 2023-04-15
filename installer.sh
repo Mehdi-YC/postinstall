@@ -2,28 +2,11 @@
 # for desktop add : i3 awesome lightdm xfce4-terminal thunar lxappearance dunst compton and #cargo install i3-style
 packagesNeeded='cargo rustc tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc jq unzip zip'
 
-if [ -x "$(command -v pacman)" ];       then 
-  sudo pacman -Suy $packagesNeeded
-  sudo pacman -Suy go  docker
-  git clone https://aur.archlinux.org/yay-git.git
-  cd yay-git
-  makepkg -si
-
-elif [ -x "$(command -v apt)" ]; then 
-  sudo apt-get install $packagesNeeded -y
-  sudo apt remove neovim
-  sudo add-apt-repository ppa:neovim-ppa/stable
-  sudo apt-get update
-  sudo apt install software-properties-common neovim golang  docker.io -y
-
 elif [ -x "$(command -v dnf)" ];     then 
-  #sudo dnf copr enable varlad/helix -y
   sudo dnf copr enable alciregi/distrobox -y
   sudo dnf copr enable zeno/scrcpy -y
   sudo dnf copr enable atim/starship -y
   sudo dnf install --setopt=tsflags=nodocs --setopt=install_weak_deps=False $packagesNeeded starship scrcpy distrobox podman podman-docker go  openssl-devel gcc-c++ -y
-  #sudo dnf install docker helix
-
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
 # activate docker

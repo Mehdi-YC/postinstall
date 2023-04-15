@@ -1,0 +1,86 @@
+---
+- name: Install DNF packages
+  hosts: all
+  tasks:
+    - name: Enable COPRs
+      command: dnf copr enable {{ item }} -y
+      with_items:
+        - alciregi/distrobox
+        - zeno/scrcpy
+        - atim/starship
+        - atim/nushell
+    - name: Install packages
+      dnf:
+        name:
+          - cargo
+          - rustc
+          - tmux
+          - htop
+          - docker-compose
+          - python3-pip
+          - wget
+          - curl
+          - neovim
+          - git
+          - nodejs
+          - npm
+          - ansible
+          - afetch
+          - gcc
+          - jq
+          - unzip
+          - zip
+          - bat
+          - hyperfine
+          - tokei
+          - just
+          - nushell
+        state: latest
+        install_weak_deps: False
+        disable_gpg_check: yes
+        setopts:
+          tsflags: nodocs
+
+    - name: Install pip packages
+      pip:
+        name:
+          - beautifulsoup4
+          - numpy
+          - pandas
+          - matplotlib
+          - requests
+          - fastapi
+          - scrapy
+        state: latest
+        executable: python3
+
+    - name: Download Config
+      become: true
+      become_user: $USER
+      get_url:
+        url: "{{ base_url }}{{ item.url }}"
+        dest: "~/{{ item.dest }}"
+      loop:
+          #i3
+        - { url: "i3/config", dest: ".config/i3/config" }
+        - { url: "i3/gotonp.sh", dest: ".config/i3/gotonp.sh" }
+        - { url: "i3status/config, dest: ".config/i3status/config" }
+          #nvim
+        - { url: "nvim.bk/init.lua", dest: ".config/nvim/init.lua" }
+        - { url: ".bashrc", dest: ".bashrc" }
+        
+          #starship
+        - { url: "/starship.toml", dest: ".config/starship.toml" }
+      vars:
+        base_url: "https://raw.githubusercontent.com/Mehdi-YC/postinstall/main/distrobox_builder/.config/"
+
+
+    - name: My Tmux config
+      hosts: all
+      become: true
+      become_user: $USER
+      tasks:
+        - name: Run script
+          shell: |
+            cd && git clone https://github.com/mehdi-yc/.tmux.git
+            ln -s -f .tmux/.tmux.conf && cp .tmux/.tmux.conf.local .

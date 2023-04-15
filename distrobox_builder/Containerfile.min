@@ -1,0 +1,21 @@
+#podman / docker build -t <name> .
+FROM registry.fedoraproject.org/fedora:37 
+
+RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_parallel_downloads=15\n" | tee /etc/dnf/dnf.conf
+
+
+
+RUN dnf install  --setopt=tsflags=nodocs --setopt=install_weak_deps=False  tree-sitter-cli htop hyperfine just bat fzf gh make neovim  python3-pip jq git curl gcc-c++ gcc wget -y
+
+
+#LINKING DOCKER PODMAN AND FLATPAK
+RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
+      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman
+
+COPY set_config.sh /usr/local/bin/set_config
+RUN chmod +x /usr/local/bin/set_config
+
+
+COPY .config /usr/local/config/
+
+RUN python3 -m pip install beautifulsoup4 requests fastapi
