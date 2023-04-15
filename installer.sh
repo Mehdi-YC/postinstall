@@ -54,10 +54,11 @@ cargo install tokei hyperfine mdcat zellij just bat hoard-rs nu
 
 # Wallpapers :
 #git clone https://github.com/linuxdotexe/nordic-wallpapers ~/.config/awesome/nordic-wallpapers 
-
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/SourceCodePro.zip
 mkdir ~/.local/share/fonts
 unzip SourceCodePro.zip -d ~/.local/share/fonts/
 fc-cache ~/.local/share/fonts
+rm -rf SourceCodePro.zip
 
 #lazydocker
 cd && curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sh
