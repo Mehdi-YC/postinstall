@@ -25,6 +25,8 @@
       become: true
       dnf:
         name:
+          - stow
+          - fzf
           - cargo
           - rustc
           - tmux
