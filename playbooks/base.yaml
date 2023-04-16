@@ -69,3 +69,8 @@
 
     - name: Stow the config files
       command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
+
+#https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/NerdFontsSymbolsOnly.zip
+#mkdir ~/.local/share/fonts
+#unzip NerdFontsSymbolsOnly.zip -d ~/.local/share/fonts/
+#fc-cache ~/.local/share/fonts
