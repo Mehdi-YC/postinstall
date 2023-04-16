@@ -65,8 +65,8 @@
     - name: Clone config
       git:
         repo: https://github.com/mehdi-yc/postinstall
-        dest: {{config_path}}
+        dest: "{{config_path}}"
         update: true
 
     - name: Stow the config files
-      command: stow -vRd {{config_path}}/distrobox_builder/ -t $HOME config
+      command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
