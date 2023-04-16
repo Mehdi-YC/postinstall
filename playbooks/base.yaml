@@ -1,15 +1,28 @@
----
 - name: Install DNF packages
-  hosts: all
+  hosts: localhost
+  vars:
+    config_directories:
+     - ~/.config/
+     - ~/.config/nvim
+     - ~/.config/i3
+     - ~/.config/i3status
+ #    - ~/.config/
+ #    - ~/.config/
   tasks:
+
+     
     - name: Enable COPRs
-      command: dnf copr enable {{ item }} -y
+      become: true
+      command: 'dnf copr enable {{ item }} -y'
       with_items:
         - alciregi/distrobox
         - zeno/scrcpy
         - atim/starship
         - atim/nushell
+        
+
     - name: Install packages
+      become: true
       dnf:
         name:
           - cargo
@@ -35,12 +48,13 @@
           - tokei
           - just
           - nushell
-        state: latest
-        install_weak_deps: False
-        disable_gpg_check: yes
-        setopts:
-          tsflags: nodocs
-
+          - starship
+        state: present
+        update_cache: false
+        install_weak_deps: false
+        disable_gpg_check: 'yes'
+          
+          
     - name: Install pip packages
       pip:
         name:
@@ -51,36 +65,37 @@
           - requests
           - fastapi
           - scrapy
-        state: latest
-        executable: python3
-
-    - name: Download Config
-      become: true
-      become_user: $USER
-      get_url:
-        url: "{{ base_url }}{{ item.url }}"
-        dest: "~/{{ item.dest }}"
-      loop:
-          #i3
-        - { url: "i3/config", dest: ".config/i3/config" }
-        - { url: "i3/gotonp.sh", dest: ".config/i3/gotonp.sh" }
-        - { url: "i3status/config, dest: ".config/i3status/config" }
-          #nvim
-        - { url: "nvim.bk/init.lua", dest: ".config/nvim/init.lua" }
-        - { url: ".bashrc", dest: ".bashrc" }
-        
-          #starship
-        - { url: "/starship.toml", dest: ".config/starship.toml" }
-      vars:
-        base_url: "https://raw.githubusercontent.com/Mehdi-YC/postinstall/main/distrobox_builder/.config/"
-
-
+        state: present   
+          
     - name: My Tmux config
-      hosts: all
-      become: true
-      become_user: $USER
-      tasks:
-        - name: Run script
-          shell: |
+      shell: |
             cd && git clone https://github.com/mehdi-yc/.tmux.git
             ln -s -f .tmux/.tmux.conf && cp .tmux/.tmux.conf.local .
+
+    - name: creating config diractory
+      file:
+        path: "{{item}}"
+        state: directory
+      loop: "{{config_directories}}"
+        
+        
+    - name: Download Config
+      get_url:
+        url: '{{ base_url }}{{ item.url }}'
+        dest: '~/{{ item.dest }}'
+        force: true
+      loop:
+        - url: i3/config
+          dest: .config/i3/config
+        - url: i3/gotonp.sh
+          dest: .config/i3/gotonp.sh
+        - url: i3status/config
+          dest: .config/i3status/config
+        - url: nvim.bk/init.lua
+          dest: .config/nvim/init.lua
+        - url: .bashrc
+          dest: .bashrc
+        - url: /starship.toml
+          dest: .config/starship.toml
+      vars:
+        base_url: "https://raw.githubusercontent.com/Mehdi-YC/postinstall/main/distrobox_builder/.config/"
