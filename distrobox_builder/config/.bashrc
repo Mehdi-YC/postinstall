@@ -15,10 +15,10 @@ export PATH
 
 
 # Don't put duplicate lines in the history and do not add lines that start with a space
-export HISTCONTROL=erasedups:ignoredups:ignorespac
+export HISTCONTROL=erasedups:ignoredups:ignorespac:ignoreboth
 # Causes bash to append to history instead of overwriting it so if you start a new terminal, you have old session history
 shopt -s histappend
-PROMPT_COMMAND='history -a'
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 # Ignore case on auto-completion
 bind "set completion-ignore-case on"
 # Show auto-completion list automatically, without double tab
@@ -28,8 +28,8 @@ bind "set show-all-if-ambiguous On"
 #Aliases
 alias ..='cd ..'
 alias ...='cd ../..'
-alias hg='history | grep '
-alias fh='history | fzf '
+alias greph='history | grep '
+alias fh='history -w /dev/stdout | fzf | bash'
 alias install='sudo dnf install'
 alias ls="ls -CF --color=auto"
 
