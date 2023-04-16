@@ -2,6 +2,14 @@
     hosts: localhost
     tasks:
 
+      - name: Install Flatpak if necessary
+        become: true
+        package:
+          name: flatpak
+          state: present
+        when: flatpak_installed.rc != 0
+
+
       - name: Install Flatpak Apps
         become: true
         flatpak:
@@ -28,7 +36,6 @@
 
 
       - name: Install vscodium extensions
-
         command: codium --install-extension "{{ item }}"
         with_items:
           - jdinhlife.gruvbox
@@ -47,6 +54,3 @@
           - tamasfe.even-better-toml
           - vscodevim.vim
           - yandeu.five-server
-        # Check if the extension is installed before installing it
-  #      when: "'{{ item }}' not in ansible_facts.vscode_extensions"
-
