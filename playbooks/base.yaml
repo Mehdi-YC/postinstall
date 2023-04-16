@@ -50,7 +50,7 @@
         update_cache: false
         install_weak_deps: false
         disable_gpg_check: 'yes'
-        register: dnf_output
+      register: dnf_output
           
     - name: Install pip packages
       pip:
