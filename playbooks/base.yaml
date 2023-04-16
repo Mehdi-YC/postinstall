@@ -1,6 +1,6 @@
 - name: Install DNF packages
   hosts: localhost
-
+  tasks:
     - name: Enable COPRs
       become: true
       command: 'dnf copr enable {{ item }} -y'
