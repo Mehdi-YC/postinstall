@@ -1,8 +1,9 @@
-- name: Desktop
-  hosts: localhost
-  become: true
-  tasks:
-      - name: Install Flatpak packages
+  - name: Desktop
+    hosts: localhost
+    tasks:
+
+      - name: Install Flatpak Apps
+        become: true
         flatpak:
           name:
             - rest.insomnia.Insomnia
@@ -18,8 +19,36 @@
           method: system
           state: present
         
-      - name: Vscode and extentions
+
+      - name: install vscodium
         shell: |
               sudo rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
               printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=download.vscodium.com\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo tee -a /etc/yum.repos.d/vscodium.repo
               sudo dnf install codium -y
+
+
+      - name: Install vscodium extensions
+
+        command: codium --install-extension "{{ item }}"
+        with_items:
+          - jdinhlife.gruvbox
+          - ms-python.python
+          - ms-toolsai.jupyter
+          - ms-toolsai.jupyter-keymap
+          - ms-toolsai.jupyter-renderers
+          - ms-toolsai.vscode-jupyter-cell-tags
+          - ms-toolsai.vscode-jupyter-slideshow
+          - PKief.material-icon-theme
+          - rust-lang.rust
+          - rust-lang.rust-analyzer
+          - s-nlf-fh.glassit
+          - sainnhe.gruvbox-material
+          - svelte.svelte-vscode
+          - tamasfe.even-better-toml
+          - vscodevim.vim
+          - yandeu.five-server
+        # Check if the extension is installed before installing it
+  #      when: "'{{ item }}' not in ansible_facts.vscode_extensions"
+
+      - debug:
+          var: cmd_output.stdout_lines
