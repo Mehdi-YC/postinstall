@@ -2,7 +2,7 @@
   hosts: localhost
   vars:
     config_path: "$HOME/repos/myconfig"
-    
+
   tasks:
     - name: Enable COPRs
       become: true
@@ -12,7 +12,6 @@
         - zeno/scrcpy
         - atim/starship
         - atim/nushell
-      state: present
 
     - name: Install packages
       become: true
