@@ -1,5 +1,7 @@
 - name: Install DNF packages
   hosts: localhost
+  vars:
+    - config_path: $HOME/repos/myconfig
   tasks:
     - name: Enable COPRs
       become: true
@@ -9,7 +11,7 @@
         - zeno/scrcpy
         - atim/starship
         - atim/nushell
-        
+      state: present
 
     - name: Install packages
       become: true
@@ -63,8 +65,8 @@
     - name: Clone config
       git:
         repo: https://github.com/mehdi-yc/postinstall
-        dest: $HOME/repo
+        dest: {{config_path}}
         update: true
 
     - name: Stow the config files
-      command: stow -vRd repos/postinstall/distrobox_builder/ -t $HOME config
+      command: stow -vRd {{config_path}}/distrobox_builder/ -t $HOME config
