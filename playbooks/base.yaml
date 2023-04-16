@@ -1,7 +1,5 @@
 - name: Install DNF packages
   hosts: localhost
-  strategy: debug
-  gather_facts: true
   vars:
     config_path: "$HOME/repos/myconfig"
 
@@ -11,7 +9,7 @@
       command: 'dnf copr enable {{ item }} -y'
       with_items:
         - alciregi/distrobox
-        - zeno/scrcpy
+#        - zeno/scrcpy
         - atim/starship
         - atim/nushell
 
@@ -50,7 +48,6 @@
         update_cache: false
         install_weak_deps: false
         disable_gpg_check: 'yes'
-      register: dnf_output
           
     - name: Install pip packages
       pip:
@@ -72,7 +69,3 @@
 
     - name: Stow the config files
       command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
-
-    - name: Display output
-      debug:
-        var: dnf_output.stdout_lines
