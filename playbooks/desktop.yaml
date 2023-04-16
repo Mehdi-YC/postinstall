@@ -50,5 +50,3 @@
         # Check if the extension is installed before installing it
   #      when: "'{{ item }}' not in ansible_facts.vscode_extensions"
 
-      - debug:
-          var: cmd_output.stdout_lines
