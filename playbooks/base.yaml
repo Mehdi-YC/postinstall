@@ -1,5 +1,6 @@
 - name: Install DNF packages
   hosts: localhost
+  strategy: debug
   gather_facts: true
   vars:
     config_path: "$HOME/repos/myconfig"
