@@ -2,6 +2,7 @@
   hosts: localhost
   vars:
     config_path: "$HOME/repos/myconfig"
+    
   tasks:
     - name: Enable COPRs
       become: true
