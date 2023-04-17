@@ -1,9 +1,10 @@
 #podman / docker build -t <name> .
-FROM registry.fedoraproject.org/fedora:37 
-
-RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_parallel_downloads=15\n" | tee /etc/dnf/dnf.conf
-RUN dnf install  --setopt=tsflags=nodocs --setopt=install_weak_deps=False cargo tokei htop hyperfine just bat fzf gh make neovim npm python3-pip jq git gcc-c++ -y
-
+#FROM registry.fedoraproject.org/fedora:37 
+FROM quay.io/toolbx-images/alpine-toolbox:edge
+#RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_parallel_downloads=15\n" | tee /etc/dnf/dnf.conf
+#RUN dnf install  --setopt=tsflags=nodocs --setopt=install_weak_deps=False cargo tokei htop hyperfine just bat fzf gh make neovim npm python3-pip jq git gcc-c++ -y
+RUN apk add neovim starship tmux curl  
+RUn apk add ansible python3 py3-pip just make bat fzf jq git htop
 
 #LINKING DOCKER PODMAN AND FLATPAK
 RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
@@ -14,8 +15,6 @@ COPY set_config.sh /usr/local/bin/set_config
 RUN chmod +x /usr/local/bin/set_config
 
 
-COPY config/.config /usr/local/config/
-COPY config/.bashrc /usr/local/config/
-
+COPY config/* /usr/local/config/
 
 RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy
