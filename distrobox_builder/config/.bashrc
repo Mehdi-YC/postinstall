@@ -25,14 +25,6 @@ bind "set completion-ignore-case on"
 bind "set show-all-if-ambiguous On"
 
 
-#Aliases
-alias ..='cd ..'
-alias ...='cd ../..'
-alias greph='history | grep '
-alias fh='history -w /dev/stdout | fzf | bash'
-alias install='sudo dnf install'
-alias ls="ls -CF --color=auto"
-
 
 # fzf
 export FZF_DEFAULT_COMMAND='fd --type f --color=never --hidden'
@@ -45,17 +37,8 @@ export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -50'"
 
 
-mkcd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
-
-dbox () { 
-    if [ -d "$HOME/db_$1" ];then
-        echo "Distrobox already exists $1 entering $1 ..."
-        distrobox enter $1
-    else 
-        distrobox create -H $HOME/db_$1 $1
-        distrobox enter $1
-    fi
-}
-
-
 eval "$(starship init bash)"
+
+# including aliases and functions
+. $HOME/.bash_aliases
+. $HOME/.bash_functions
