@@ -2,7 +2,7 @@
 # for desktop add : i3 awesome lightdm xfce4-terminal thunar lxappearance dunst compton and #cargo install i3-style
 packagesNeeded='cargo rustc tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc jq unzip zip'
 
-elif [ -x "$(command -v dnf)" ];     then 
+if [ -x "$(command -v dnf)" ];     then 
   sudo dnf copr enable alciregi/distrobox -y
   sudo dnf copr enable zeno/scrcpy -y
   sudo dnf copr enable atim/starship -y
