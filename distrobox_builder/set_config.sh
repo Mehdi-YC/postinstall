@@ -4,8 +4,8 @@ mv ~/.config/.bashrc ~/.bashrc
 cd && source ~/.bashrc
 
 #pip install howdoi
-
+if [ -x "$(command -v dnf)" ]; then
 sudo dnf copr enable atim/starship -y
 sudo dnf copr enable atim/nushell -y
 sudo dnf install starship nushell -y
-
+fi
