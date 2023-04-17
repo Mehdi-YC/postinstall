@@ -3,8 +3,8 @@
 FROM quay.io/toolbx-images/alpine-toolbox:edge
 #RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_parallel_downloads=15\n" | tee /etc/dnf/dnf.conf
 #RUN dnf install  --setopt=tsflags=nodocs --setopt=install_weak_deps=False cargo tokei htop hyperfine just bat fzf gh make neovim npm python3-pip jq git gcc-c++ -y
-RUN apk add neovim starship tmux curl  
-RUn apk add ansible python3 py3-pip just make bat fzf jq git htop
+RUN apk add neovim starship tmux curl stow ansible fzf bat git     python3 py3-pip  jq  htop
+
 
 #LINKING DOCKER PODMAN AND FLATPAK
 RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
@@ -14,7 +14,4 @@ RUN   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \
 COPY set_config.sh /usr/local/bin/set_config
 RUN chmod +x /usr/local/bin/set_config
 
-
-COPY config/* /usr/local/config/
-
-RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy
+#RUN python3 -m pip install beautifulsoup4 requests fastapi scrapy numpy

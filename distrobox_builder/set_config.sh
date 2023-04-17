@@ -1,7 +1,6 @@
-mkdir $HOME/.config/
-cp -r /usr/local/config/* $HOME/.config/
-mv ~/.config/.bashrc ~/.bashrc
-cd && source ~/.bashrc
+#get my latest config
+cd && git clone https://github.com/mehdi-yc/postinstall
+stow -vRd "postinstall/distrobox_builder/" -t $HOME config
 
 #pip install howdoi
 if [ -x "$(command -v dnf)" ]; then
