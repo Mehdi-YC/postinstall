@@ -65,7 +65,7 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-  {
+--[[  {
     "nvim-tree/nvim-tree.lua",
     version = "*",
     dependencies = {
@@ -74,12 +74,12 @@ require('lazy').setup({
     config = function()
       require("nvim-tree").setup {}
     end,
-  },
+  }, --]]
 
-  'nvim-tree/nvim-web-devicons',
+ -- 'nvim-tree/nvim-web-devicons',
   -- Git related plugins
-  'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
+--  'tpope/vim-fugitive',
+--  'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -154,8 +154,24 @@ require('lazy').setup({
     },
   },
 
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim', opts = {
+        padding = true,
+        sticky = true,
+        -- ignore = nil,
+        toggler = {
+              line = '<leader>//',
+              block = '<leader>**',
+          },
+        opleader = {
+              line = '<leader>/',
+              block = '<leader>*',
+          },
+        mappings = { basic = true, extra = false },
+        pre_hook = nil,
+        post_hook = nil,
+
+    }
+  },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -163,15 +179,15 @@ require('lazy').setup({
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
   -- requirements installed.
-  {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    -- NOTE: If you are having trouble with this installation,
-    --       refer to the README for telescope-fzf-native for more instructions.
-    build = 'make',
-    cond = function()
-      return vim.fn.executable 'make' == 1
-    end,
-  },
+  -- {
+  --   'nvim-telescope/telescope-fzf-native.nvim',
+  --   -- NOTE: If you are having trouble with this installation,
+  --   --       refer to the README for telescope-fzf-native for more instructions.
+  --   build = 'make',
+  --   cond = function()
+  --     return vim.fn.executable 'make' == 1
+  --   end,
+  -- },
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -279,13 +295,13 @@ pcall(require('telescope').load_extension, 'fzf')
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer' })
+-- vim.keymap.set('n', '<leader>/', function()
+--   -- You can pass additional configuration to telescope to change theme, layout, etc.
+--   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+--     winblend = 10,
+--     previewer = false,
+--   })
+-- end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
