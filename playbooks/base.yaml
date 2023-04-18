@@ -9,7 +9,7 @@
       command: 'dnf copr enable {{ item }} -y'
       with_items:
         - alciregi/distrobox
-#        - zeno/scrcpy
+#       - zeno/scrcpy
         - atim/starship
         - atim/nushell
 
@@ -33,7 +33,6 @@
           - npm
           - ansible
           - afetch
-          - gcc
           - jq
           - unzip
           - zip
@@ -43,7 +42,6 @@
           - just
           - nushell
           - starship
-          - gcc-c++
         state: present
         update_cache: false
         install_weak_deps: false
