@@ -35,8 +35,8 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 exec --no-startup-id compton
-exec --no-startup-id tint2
-
+#exec --no-startup-id tint2
+exec --no-startup-id xfce4-panel --disable-wm-check
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
@@ -169,25 +169,25 @@ bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {   position top
-        status_command i3status
-  colors {
-    separator #444444
-    background #222222
-    statusline #666666
-    focused_workspace #07abba #07abba #ffffff #ffffff
-    active_workspace #333333 #333333 #888888 #aea79f
-    inactive_workspace #333333 #333333 #888888 #aea79f
-    urgent_workspace #eb709b #eb709b #ffffff #ffffff
-  }
-}
-client.focused #07abba #07abba #ffffff #8c0333
-client.focused_inactive #333333 #333333 #888888 #333333
-client.unfocused #333333 #333333 #888888 #333333
-client.urgent #eb709b #eb709b #ffffff #eb709b
+#bar {   position top
+#        status_command i3status
+#  colors {
+#    separator #444444
+#    background #222222
+#    statusline #666666
+#    focused_workspace #07abba #07abba #ffffff #ffffff
+#    active_workspace #333333 #333333 #888888 #aea79f
+#    inactive_workspace #333333 #333333 #888888 #aea79f
+#    urgent_workspace #eb709b #eb709b #ffffff #ffffff
+#  }
+#}
+#client.focused #07abba #07abba #ffffff #8c0333
+#client.focused_inactive #333333 #333333 #888888 #333333
+#client.unfocused #333333 #333333 #888888 #333333
+#client.urgent #eb709b #eb709b #ffffff #eb709b
 
 
-gaps inner 6
+gaps inner 3
 gaps outer 3
 
 # exec xrandr --dpi 220  # for hidpi screens
