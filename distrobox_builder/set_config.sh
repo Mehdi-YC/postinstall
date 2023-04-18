@@ -1,7 +1,9 @@
+#!/bin/bash
+
 #get my latest config
 cd && git clone https://github.com/mehdi-yc/postinstall
 stow -vRd "postinstall/distrobox_builder/" -t $HOME config
-
+cp .bashrc .bash_profile
 #pip install howdoi
 if [ -x "$(command -v dnf)" ]; then
 sudo dnf copr enable atim/starship -y
