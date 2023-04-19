@@ -9,7 +9,7 @@
       <property name="position" type="string" value="p=6;x=0;y=0"/>
       <property name="length" type="uint" value="100"/>
       <property name="position-locked" type="bool" value="true"/>
-      <property name="icon-size" type="uint" value="16"/>
+      <property name="icon-size" type="uint" value="18"/>
       <property name="size" type="uint" value="26"/>
       <property name="plugin-ids" type="array">
         <value type="int" value="1"/>
@@ -18,29 +18,29 @@
         <value type="int" value="4"/>
         <value type="int" value="5"/>
         <value type="int" value="6"/>
+        <value type="int" value="8"/>
+        <value type="int" value="9"/>
+        <value type="int" value="10"/>
         <value type="int" value="11"/>
         <value type="int" value="12"/>
         <value type="int" value="13"/>
         <value type="int" value="14"/>
       </property>
-      <property name="autohide-behavior" type="uint" value="0"/>
-      <property name="span-monitors" type="bool" value="true"/>
-      <property name="output-name" type="string" value="Primary"/>
     </property>
   </property>
   <property name="plugins" type="empty">
     <property name="plugin-1" type="string" value="applicationsmenu">
-      <property name="button-title" type="string" value=""/>
       <property name="show-menu-icons" type="bool" value="true"/>
       <property name="show-button-title" type="bool" value="false"/>
-      <property name="button-icon" type="string" value="fedora-logo-icon"/>
-      <property name="show-generic-names" type="bool" value="false"/>
+      <property name="button-icon" type="string" value="start-here"/>
     </property>
     <property name="plugin-2" type="string" value="tasklist">
       <property name="grouping" type="uint" value="1"/>
       <property name="show-labels" type="bool" value="false"/>
       <property name="flat-buttons" type="bool" value="true"/>
       <property name="show-handle" type="bool" value="false"/>
+      <property name="show-tooltips" type="bool" value="true"/>
+      <property name="switch-workspace-on-unminimize" type="bool" value="true"/>
     </property>
     <property name="plugin-3" type="string" value="separator">
       <property name="expand" type="bool" value="true"/>
@@ -53,13 +53,11 @@
     <property name="plugin-6" type="string" value="systray">
       <property name="square-icons" type="bool" value="true"/>
       <property name="known-legacy-items" type="array">
-        <value type="string" value="wi-fi network connection “home” active: home (75%)"/>
-        <value type="string" value="wi-fi network connection “home” active: home (77%)"/>
-        <value type="string" value="wi-fi network connection “home” active: home (73%)"/>
+        <value type="string" value="connexion au réseau ethernet « enp1s0 » active"/>
+        <value type="string" value="xfce4-power-manager"/>
       </property>
       <property name="known-items" type="array">
-        <value type="string" value="flameshot"/>
-        <value type="string" value="blueman"/>
+        <value type="string" value="dnfdragora-updater"/>
       </property>
     </property>
     <property name="plugin-8" type="string" value="pulseaudio">
@@ -71,36 +69,10 @@
     <property name="plugin-11" type="string" value="separator">
       <property name="style" type="uint" value="0"/>
     </property>
-    <property name="plugin-12" type="string" value="clock">
-      <property name="tooltip-format" type="string" value="%A %d %B %Y"/>
-      <property name="digital-format" type="string" value="%_H:%M"/>
-      <property name="mode" type="uint" value="4"/>
-      <property name="show-meridiem" type="bool" value="false"/>
-      <property name="flash-separators" type="bool" value="false"/>
-      <property name="show-seconds" type="bool" value="false"/>
-    </property>
+    <property name="plugin-12" type="string" value="clock"/>
     <property name="plugin-13" type="string" value="separator">
       <property name="style" type="uint" value="0"/>
     </property>
-    <property name="plugin-14" type="string" value="actions">
-      <property name="items" type="array">
-        <value type="string" value="-lock-screen"/>
-        <value type="string" value="-switch-user"/>
-        <value type="string" value="+separator"/>
-        <value type="string" value="-suspend"/>
-        <value type="string" value="-hibernate"/>
-        <value type="string" value="-hybrid-sleep"/>
-        <value type="string" value="+separator"/>
-        <value type="string" value="+shutdown"/>
-        <value type="string" value="+restart"/>
-        <value type="string" value="+separator"/>
-        <value type="string" value="-logout"/>
-        <value type="string" value="+logout-dialog"/>
-      </property>
-      <property name="button-title" type="uint" value="3"/>
-      <property name="custom-title" type="string" value="M"/>
-      <property name="appearance" type="uint" value="0"/>
-      <property name="ask-confirmation" type="bool" value="false"/>
-    </property>
+    <property name="plugin-14" type="string" value="actions"/>
   </property>
 </channel>
