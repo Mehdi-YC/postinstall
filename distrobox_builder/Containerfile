@@ -1,8 +1,9 @@
 #podman / docker build -t <name> .
 #FROM registry.fedoraproject.org/fedora:37 
-FROM quay.io/toolbx-images/alpine-toolbox:edge
 #RUN echo -e "[main]\ngpgcheck=1\ninstallonly_limit=3\nfastestmirror=true\nmax_parallel_downloads=15\n" | tee /etc/dnf/dnf.conf
 #RUN dnf install  --setopt=tsflags=nodocs --setopt=install_weak_deps=False cargo tokei htop hyperfine just bat fzf gh make neovim npm python3-pip jq git gcc-c++ -y
+
+FROM quay.io/toolbx-images/alpine-toolbox:edge
 RUN apk add neovim starship tmux curl stow ansible fzf bat git     python3 py3-pip  jq  htop
 
 

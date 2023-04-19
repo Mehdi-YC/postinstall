@@ -1,5 +1,5 @@
 #packages that i generally use : (maybe adding imagemagick and ffmpeg)
-# for desktop add : i3 awesome lightdm xfce4-terminal thunar lxappearance dunst compton and #cargo install i3-style
+# for desktop add : i3 awesome lightdm xfce4-terminal thunar lxappearance dunst picom and #cargo install i3-style
 packagesNeeded='cargo rustc tmux htop docker-compose python3-pip wget curl neovim git nodejs npm ansible afetch gcc jq unzip zip'
 
 if [ -x "$(command -v dnf)" ];     then 

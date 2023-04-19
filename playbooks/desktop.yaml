@@ -17,7 +17,7 @@
             - codium
             - i3
             - i3status
-            - compton
+            - picom
             - xfce4-panel
             - dunst
           state: present
@@ -38,6 +38,7 @@
             - com.valvesoftware.Steam
             - io.dbeaver.DBeaverCommunity
             - net.cozic.joplin_desktop
+            - org.flameshot.Flameshot
           method: system
           state: present
 
