@@ -15,12 +15,20 @@
           name: 
             - flatpak
             - codium
+
+          state: present
+      
+      - name: install i3 + config
+        become: true
+        package:
+          name: 
             - i3
             - i3status
             - picom
             - xfce4-panel
             - dunst
           state: present
+          tags: minimal
 
 
 

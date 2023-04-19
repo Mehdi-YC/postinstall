@@ -4,6 +4,32 @@
     config_path: "$HOME/repos/myconfig"
 
   tasks:
+
+
+    - name: Install minimal packages
+      become: true
+      dnf:
+        name:
+          - stow
+          - fzf
+          - tmux
+          - htop
+          - python3-pip
+          - neovim
+          - git
+          - bat
+          - hyperfine
+          - tokei
+          - just
+          - nushell
+          - starship
+        state: present
+        update_cache: false
+        install_weak_deps: false
+        disable_gpg_check: 'yes'
+      tags: minimal
+
+
     - name: Enable COPRs
       become: true
       command: 'dnf copr enable {{ item }} -y'
@@ -46,7 +72,9 @@
         update_cache: false
         install_weak_deps: false
         disable_gpg_check: 'yes'
-          
+
+
+
     - name: Install pip packages
       pip:
         name:
@@ -70,4 +98,4 @@
 
     - name: Add some fonts
       command: mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts && curl -fLo "Fira Code Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf
-
+      tags: minimal
