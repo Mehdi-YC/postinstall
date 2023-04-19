@@ -6,6 +6,17 @@
   tasks:
 
 
+    - name: Enable COPRs
+      become: true
+      command: 'dnf copr enable {{ item }} -y'
+      with_items:
+        - alciregi/distrobox
+#       - zeno/scrcpy
+        - atim/starship
+        - atim/nushell
+      tags: minimal
+
+      
     - name: Install minimal packages
       become: true
       dnf:
@@ -29,15 +40,6 @@
         disable_gpg_check: 'yes'
       tags: minimal
 
-
-    - name: Enable COPRs
-      become: true
-      command: 'dnf copr enable {{ item }} -y'
-      with_items:
-        - alciregi/distrobox
-#       - zeno/scrcpy
-        - atim/starship
-        - atim/nushell
 
     - name: Install packages
       become: true

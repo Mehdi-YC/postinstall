@@ -28,7 +28,7 @@
             - xfce4-panel
             - dunst
           state: present
-          tags: minimal
+        tags: minimal
 
 
 
