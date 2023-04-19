@@ -1,5 +1,6 @@
 [shell]
 nu_indicator = '◷'
+bash_indicator = ''
 style = 'cyan'
 disabled = false
 
