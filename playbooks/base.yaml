@@ -21,6 +21,7 @@
       become: true
       dnf:
         name:
+          - ranger
           - stow
           - fzf
           - tmux
