@@ -1,0 +1,1550 @@
+{
+	"version": "2",
+	"templates": [
+
+		{
+			"categories": [
+				"OLAP"
+			],
+			"description": "MOLAP data visualisation tool",
+			"image": "magm3333/pentahoserver:latest",
+			"logo": "https://i.pinimg.com/originals/a4/50/84/a45084beba52027a92462c7b9f1708c5.png",
+			"platform": "linux",
+			"ports": [
+				"8080/tcp"
+			],
+			"title": "Pantaho server CE",
+			"type": 1
+			
+		},
+
+		{
+			"categories": [
+				"processing"
+			],
+			"restart_policy": "always",
+			"description": "Redpanda Console is a developer-friendly UI for managing your Kafka/Redpanda workloads. ",
+			"image": "docker.redpanda.com/redpandadata/console:latest",
+			"logo": "https://images.ctfassets.net/paqvtpyf8rwu/5wODDUzLP7teOGDS7M5m39/466f646e44c2ccc4e78236b17d7d68ac/Logo.svg",
+			"platform": "linux",
+			"ports": [
+				"8080/tcp"
+			],
+			"title": "Redmanda Console (kafka console)",
+			"type": 1,
+			"env": [
+				{
+					"default": "host.docker.internal:9092",
+					"description": "KAFKA_BROKERS",
+					"label": "KAFKA_BROKERS",
+					"name": "KAFKA_BROKERS"
+				}
+			]
+			
+		},
+		{
+			"categories": [
+				"processing"
+			],
+			"description": "A visual tool to define and run real-time decision algorithms. docker run -it --network host -e DEFAULT_SCENARIO_TYPE=streaming-lite-embedded -e KAFKA_ADDRESS=localhost:3032 -e SCHEMA_REGISTRY_URL=http://localhost:3082 touk/nussknacker:latest",
+			"image": "touk/nussknacker:latest",
+			"logo": "https://nussknacker.io/wp-content/uploads/2022/07/Twitter-header.png",
+			"platform": "linux",
+			"ports": [
+				"8181/tcp"
+			],
+			"title": "nussknacker",
+			"type": 1,
+			"env": [
+				{
+					"default": "request-response-embedded",
+					"description": "DEFAULT_SCENARIO_TYPE",
+					"label": "DEFAULT_SCENARIO_TYPE",
+					"name": "DEFAULT_SCENARIO_TYPE"
+				}
+			]
+			
+		},
+		{
+			"categories": [
+				"ETL"
+			],
+			"restart_policy": "always",
+			"description": "An easy to use, powerful, and reliable system to process and distribute data.",
+			"image": "apache/nifi:latest",
+			"logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Apache-nifi-logo.svg/1200px-Apache-nifi-logo.svg.png",
+			"platform": "linux",
+			"ports": [
+				"8080/tcp"
+			],
+			"title": "APACHE NIFI",
+			"type": 1,
+			"env": [
+				{
+					"default": "8080",
+					"description": "NIFI_WEB_HTTP_PORT",
+					"label": "NIFI_WEB_HTTP_PORT",
+					"name": "NIFI_WEB_HTTP_PORT"
+				}
+			]
+		},
+		{
+			"categories": [
+				"Spreadsheet",
+				"Office suite"
+			],
+			"restart_policy": "always",
+			"description": "Run your private office with the ONLYOFFICE",
+			"image": "onlyoffice/documentserver:latest",
+			"logo": "https://helpcenter.onlyoffice.com/images/logonew.svg",
+			"platform": "linux",
+			"ports": [
+				"80/tcp"
+
+			],
+			"title": "OnlyOffice",
+			"type": 1,
+			"env": [
+				{
+					"default": "my_token",
+					"description": "JWT_SECRET",
+					"label": "JWT_SECRET",
+					"name": "JWT_SECRET"
+				},
+				{
+					"default": "false",
+					"description": "JWT_ENABLED",
+					"label": "JWT_ENABLED",
+					"name": "JWT_ENABLED"
+				}
+			]
+		},
+
+		{
+			"categories": [
+				"OLAP",
+				"Datawarehouse"
+			],
+			"description": "ClickHouse is the fastest and most resource efficient open-source database for real-time apps and analytics.",
+			"image": "yandex/clickhouse-server:latest",
+			"logo": "https://clickhouse.com/logos/black-logo.svg",
+			"platform": "linux",
+			"ports": [
+				"9000/tcp",
+				"8123/tcp"
+			],
+			"title": "Clickhouse",
+			"type": 1,
+			"env": [
+				{
+					"default": "nofile=262144:262144",
+					"description": "ulimit",
+					"label": "ulimit",
+					"name": "ulimit"
+				}
+			]
+		},
+		{
+			"categories": [
+				"Utility"
+			],
+			"description": "Manage your files on the cloud.",
+			"restart_policy": "unless-stopped",
+			"image": "lscr.io/linuxserver/papermerge:latest",
+			"logo": "https://www.papermerge.com/assets/img/papermerge-logo.svg",
+			"platform": "linux",
+			"ports": [
+				"8000/tcp"
+			],
+			"title": "papermerge",
+			"type": 1,
+			"env": [
+				{
+					"default": "1000",
+					"description": "PUID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "1000",
+					"description": "PGID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "America/New_York",
+					"description": "time zone",
+					"label": "time zone",
+					"name": "America/New_York"
+				},
+				{
+					"default": "nofile=262144:262144",
+					"description": "ulimit",
+					"label": "ulimit",
+					"name": "ulimit"
+				}
+			]
+		},
+		{
+			"categories": [
+				"data",
+				"Logging"
+			],
+			"description": "Collect, search and visualise log data with Elasticsearch, Logstash, and Kibana. ",
+			"image": "sebp/elk:latest",
+			"logo": "https://cdn.freebiesupply.com/logos/large/2x/elastic-stack-logo-svg-vector.svg",
+			"platform": "linux",
+			"ports": [
+				"5601/tcp",
+				"9200/tcp",
+				"5044/tcp"
+			],
+			"title": "ELK stack",
+			"type": 1
+		},
+		{
+			"categories": [
+				"data",
+				"dashboard"
+			],
+			"description": "Apache Superset is a Data Visualization and Data Exploration Platform. ",
+			"image": "apache/superset:latest",
+			"logo": "https://superset.apache.org/img/favicon.ico",
+			"platform": "linux",
+			"ports": [
+				"8088/tcp"
+			],
+			"title": "Apache superset",
+			"type": 1
+		},
+		{
+			"categories": [
+				"data",
+				"dashboard"
+			],
+			"description": "The open and composable observability and data visualization platform. Visualize metrics, logs, and traces from multiple sources like Prometheus, Loki, Elasticsearch, InfluxDB, Postgres and many more.",
+			"image": "grafana/grafana:latest",
+			"logo": "https://grafana.com/static/assets/img/fav32.png",
+			"platform": "linux",
+			"ports": [
+				"3000/tcp"
+			],
+			"title": "Grafana",
+			"type": 1
+		},
+		{
+			"categories": [
+				"code",
+				"pipelines"
+			],
+			"description": "Build powerful pipelines in any programming language. ",
+			"image": "gaiapipeline/gaia:latest",
+			"logo": "https://gist.githubusercontent.com/michelvocks/ef3894f63c3bb004bca1a2fd5f7eb644/raw/40c5799d74a6f28af1874e726083a50a3ebd877d/gaia-logo-text.png",
+			"platform": "linux",
+			"ports": [
+				"8080/tcp"
+			],
+			"title": "Gaia pipeline",
+			"type": 1
+		},
+		{
+			"categories": [
+				"cms",
+				"low-code"
+			],
+			"description": "Open source Node.js Headless CMS to easily build customisable APIs.",
+			"image": "strapi/strapi:latest",
+			"logo": "https://strapi.io/assets/favicon-32x32.png",
+			"platform": "linux",
+			"ports": [
+				"1337/tcp"
+			],
+			"title": "Strapi",
+			"type": 1
+		},
+		{
+			"categories": [
+				"coding",
+				"datascience"
+			],
+			"description": "Base Jupyter Notebook Stack",
+			"image": "jupyter/base-notebook:latest",
+			"logo": "https://jupyter-docker-stacks.readthedocs.io/en/latest/_static/jupyter-logo.svg",
+			"platform": "linux",
+			"ports": [
+				"8888/tcp"
+			],
+			"title": "Jupyter",
+			"type": 1
+		},
+		{
+			"categories": [
+				"database",
+				"low-code"
+			],
+			"description": "The Open Source Airtable Alternative 🎃Turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart-spreadsheet. .",
+			"image": "nocodb/nocodb:latest",
+			"logo": "https://docs.nocodb.com/favicon-128.png",
+			"platform": "linux",
+			"ports": [
+				"8080/tcp"
+			],
+			"title": "NocoDB",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/home/node/.nocodb"
+				}
+			],
+			"env": [
+				{
+					"label": "use a database first",
+					"name": "NC_DB",
+					"default": "pg://host:port?u=user&p=password&d=database"
+				},
+				{
+					"label": "secret token",
+					"name": "NC_AUTH_JWT_SECRET",
+					"default": "569a1821-0a93-45e8-87ab-eb857f20a010"
+				}
+			]
+		},
+		{
+			"categories": [
+				"workflow",
+				"low-code"
+			],
+			"description": "n8n is a free and open fair-code distributed node based Workflow Automation Tool. It can be self-hosted, easily extended, and so also used with internal tools.",
+			"image": "n8nio/n8n:latest",
+			"logo": "https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png",
+			"platform": "linux",
+			"ports": [
+				"5678/tcp"
+			],
+			"title": "n8n",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/home/node/.n8n"
+				}
+			],
+			"env": [
+				{
+					"label": "activate user auth",
+					"name": "N8N_BASIC_AUTH_ACTIVE"
+				},
+				{
+					"label": "access udername",
+					"name": "N8N_BASIC_AUTH_USER"
+				},
+				{
+					"label": "access password",
+					"name": "N8N_BASIC_AUTH_PASSWORD"
+				},
+				{
+					"label": "WEBHOOK_URL",
+					"name": "WEBHOOK_URL"
+				}
+			]
+		},
+		{
+			"categories": [
+				"workflow",
+				"low-code"
+			],
+			"description": "Low-code programming for event-driven applications ",
+			"image": "nodered/node-red:latest",
+			"logo": "https://aws1.discourse-cdn.com/business6/uploads/nodered/original/1X/778549404735e222c89ce5449482a189ace8cdae.png",
+			"platform": "linux",
+			"ports": [
+				"1880/tcp"
+			],
+			"title": "Node-red",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/data"
+				}
+			]
+		},
+		{
+			"categories": [
+				"database"
+			],
+			"description": "The most advanced open-source database",
+			"env": [
+				{
+					"label": "Superuser",
+					"name": "POSTGRES_USER"
+				},
+				{
+					"label": "Superuser password",
+					"name": "POSTGRES_PASSWORD"
+				}
+			],
+			"image": "postgres:latest",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/postgres.png",
+			"platform": "linux",
+			"ports": [
+				"5432/tcp"
+			],
+			"title": "PostgreSQL",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/var/lib/postgresql/data"
+				}
+			]
+		},
+		{
+			"categories": [
+				"serverless"
+			],
+			"description": "Serverless functions made simple",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/openfaas.png",
+			"name": "func",
+			"note": "Deploys the API gateway and sample functions. You can access the UI on port 8080. <b>Warning</b>: the name of the stack must be 'func'.",
+			"platform": "linux",
+			"repository": {
+				"stackfile": "docker-compose.yml",
+				"url": "https://github.com/openfaas/faas"
+			},
+			"title": "OpenFaaS",
+			"type": 2
+		},
+		{
+			"categories": [
+				"database"
+			],
+			"description": "Open-source in-memory data structure store",
+			"image": "redis:latest",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/redis.png",
+			"platform": "linux",
+			"ports": [
+				"6379/tcp"
+			],
+			"title": "Redis",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/data"
+				}
+			]
+		},
+		{
+			"categories": [
+				"search-engine"
+			],
+			"description": "Open-source enterprise search platform",
+			"image": "solr:latest",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/solr.png",
+			"platform": "linux",
+			"ports": [
+				"8983/tcp"
+			],
+			"title": "Solr",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/opt/solr/mydata"
+				}
+			]
+		},
+		{
+			"categories": [
+				"database"
+			],
+			"description": "Microsoft SQL Server on Linux",
+			"env": [
+				{
+					"name": "ACCEPT_EULA",
+					"set": "Y"
+				},
+				{
+					"label": "SA password",
+					"name": "SA_PASSWORD"
+				}
+			],
+			"image": "microsoft/mssql-server-linux:2017-GA",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/microsoft.png",
+			"note": "Password needs to include at least 8 characters including uppercase, lowercase letters, base-10 digits and/or non-alphanumeric symbols.",
+			"platform": "linux",
+			"ports": [
+				"1433/tcp"
+			],
+			"title": "SQL Server",
+			"type": 1
+		},
+		{
+			"categories": [
+				"CMS"
+			],
+			"description": "Wordpress setup with a MySQL database",
+			"env": [
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "MYSQL_DATABASE_PASSWORD"
+				}
+			],
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/wordpress.png",
+			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"platform": "linux",
+			"repository": {
+				"stackfile": "stacks/wordpress/docker-stack.yml",
+				"url": "https://github.com/mikestraney/portainer-templates"
+			},
+			"title": "Wordpress",
+			"type": 3
+		},
+		{
+			"categories": [
+				"CMS"
+			],
+			"description": "Wordpress setup with a MySQL database",
+			"env": [
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "MYSQL_DATABASE_PASSWORD"
+				}
+			],
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/wordpress.png",
+			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"platform": "linux",
+			"repository": {
+				"stackfile": "stacks/wordpress/docker-stack.yml",
+				"url": "https://github.com/mikestraney/portainer-templates"
+			},
+			"title": "Wordpress",
+			"type": 3
+		},
+		{
+			"description": "Wordpress setup with a MySQL database",
+			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"stackfile": "https://raw.githubusercontent.com/mikestraney/portainer-templates/master/stacks/wordpress/edge/docker-stack.yml",
+			"title": "Wordpress",
+			"type": 4
+		},
+		{
+			"categories": [
+				"CMS"
+			],
+			"description": "WebOps platform and hosting control panel",
+			"image": "plesk/plesk:latest",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/plesk.png",
+			"note": "Default credentials: admin / changeme",
+			"platform": "linux",
+			"ports": [
+				"21/tcp",
+				"80/tcp",
+				"443/tcp",
+				"8880/tcp",
+				"8443/tcp",
+				"8447/tcp"
+			],
+			"title": "Plesk",
+			"type": 1
+		},
+		{
+			"categories": [
+				"Other",
+				"Downloaders"
+			],
+			"description": "YoutubeDL-Material is a Material Design frontend for youtube-dl. It's coded using Angular 9 for the frontend, and Node.js on the backend.",
+			"image": "tzahi12345/youtubedl-material:latest",
+			"logo": "https://raw.githubusercontent.com/Qballjos/portainer_templates/master/Images/ytdlm.png",
+			"name": "youtubedl-material",
+			"platform": "linux",
+			"ports": [
+				"17442:17442/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "YouTubeDL-Material",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/portainer/Files/AppData/Config/YTDLM",
+					"container": "/app/appdata"
+				},
+				{
+					"bind": "/portainer/Files/AppData/Youtube/Video",
+					"container": "/app/video"
+				},
+				{
+					"bind": "/portainer/Files/AppData/Youtube/Subscriptions",
+					"container": "/app/subscriptions"
+				},
+				{
+					"bind": "/portainer/Files/AppData/Youtube/Users",
+					"container": "/app/users"
+				},
+				{
+					"bind": "/portainer/Files/AppData/Youtube/Audio",
+					"container": "/app/audio"
+				}
+			]
+		},
+		{
+			"description": "[Mariadb](https://mariadb.org/) is one of the most popular database servers. Made by the original developers of MySQL.",
+			"env": [
+				{
+					"default": "1024",
+					"description": "for GroupID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "100",
+					"description": "for UserID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "ROOT_ACCESS_PASSWORD",
+					"description": "Set this to root password for installation (minimum 4 characters).",
+					"label": "MYSQL_ROOT_PASSWORD",
+					"name": "MYSQL_ROOT_PASSWORD"
+				},
+				{
+					"default": "Europe/Amsterdam",
+					"description": "Specify a timezone to use for example Europe/Amsterdam",
+					"label": "TZ",
+					"name": "TZ"
+				},
+				{
+					"default": "USER_DB_NAME",
+					"description": "Specify the name of a database to be created on image startup.",
+					"label": "MYSQL_DATABASE",
+					"name": "MYSQL_DATABASE"
+				},
+				{
+					"default": "MYSQL_USER",
+					"description": "This user will have superuser access to the database specified by MYSQL_DATABASE (do not use root here).",
+					"label": "MYSQL_USER",
+					"name": "MYSQL_USER"
+				},
+				{
+					"default": "DATABASE_PASSWORD",
+					"description": "Set this to the password you want to use for you MYSQL_USER (minimum 4 characters).",
+					"label": "MYSQL_PASSWORD",
+					"name": "MYSQL_PASSWORD"
+				},
+				{
+					"default": "http://URL1/your.sql,https://URL2/your.sql",
+					"description": "Set this to ingest sql files from an http/https endpoint (comma seperated array).",
+					"label": "REMOTE_SQL",
+					"name": "REMOTE_SQL"
+				}
+			],
+			"image": "linuxserver/mariadb:latest",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/mariadb-git.png",
+			"name": "Mariadb",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p>mkdir -p /volume1/docker/mariadb/config</p>",
+			"platform": "linux",
+			"ports": [
+				"3306:3306/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Mariadb",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/volume1/docker/mariadb/config",
+					"container": "/config"
+				}
+			]
+		},
+		{
+			"description": "[Nextcloud](https://nextcloud.com/) gives you access to all your files wherever you are. Where are your photos and documents? With Nextcloud you pick a server of your choice, at home, in a data center or at a provider. And that is where your files will be. Nextcloud runs on that server, protecting your data and giving you access from your desktop or mobile devices. Through Nextcloud you also access, sync and share your existing data on that FTP drive at the office, a Dropbox or a NAS you have at home.",
+			"env": [
+				{
+					"default": "1024",
+					"description": "for GroupID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "100",
+					"description": "for UserID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "Europe/Amsterdam",
+					"description": "Specify a timezone to use for example Europe/Amsterdam",
+					"label": "TZ",
+					"name": "TZ"
+				}
+			],
+			"image": "linuxserver/nextcloud:latest",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/nextcloud-icon.png",
+			"name": "Nextcloud",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p>mkdir -p /volume1/docker/nextcloud/config<br>mkdir -p /volume1/docker/nextcloud/data</p>",
+			"platform": "linux",
+			"ports": [
+				"443:443/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Nextcloud",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/volume1/docker/nextcloud/config",
+					"container": "/config"
+				},
+				{
+					"bind": "/volume1/docker/nextcloud/data",
+					"container": "/data"
+				}
+			]
+		},
+		{
+			"description": "[Nginx](https://nginx.org/) is a simple webserver with php support. The config files reside in `/config` for easy user customization.",
+			"env": [
+				{
+					"default": "1024",
+					"description": "for GroupID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "100",
+					"description": "for UserID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "Europe/Amsterdam",
+					"description": "Specify a timezone to use for example Europe/Amsterdam",
+					"label": "TZ",
+					"name": "TZ"
+				}
+			],
+			"image": "linuxserver/nginx:latest",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/nginx-banner.png",
+			"name": "Nginx",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p>mkdir -p /volume1/docker/nginx/config</p>",
+			"platform": "linux",
+			"ports": [
+				"80:80/tcp",
+				"443:443/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Nginx",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/volume1/docker/nginx/config",
+					"container": "/config"
+				}
+			]
+		},
+		{
+			"categories": [
+				"webserver"
+			],
+			"description": "Open-source HTTP server",
+			"image": "httpd:latest",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/httpd.png",
+			"platform": "linux",
+			"ports": [
+				"80/tcp"
+			],
+			"title": "Httpd",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/usr/local/apache2/htdocs/"
+				}
+			]
+		},
+		{
+			"description": "[Syncthing](https://syncthing.net) replaces proprietary sync and cloud services with something open, trustworthy and decentralized. Your data is your data alone and you deserve to choose where it is stored, if it is shared with some third party and how it's transmitted over the Internet.",
+			"env": [
+				{
+					"default": "1024",
+					"description": "for GroupID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "100",
+					"description": "for UserID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "Europe/Amsterdam",
+					"description": "Specify a timezone to use for example Europe/Amsterdam",
+					"label": "TZ",
+					"name": "TZ"
+				}
+			],
+			"image": "linuxserver/syncthing:latest",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/syncthing-banner.png",
+			"name": "Syncthing",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p>mkdir -p /volume1/docker/syncthing/config<br>mkdir -p /volume1/docker/syncthing/data1<br>mkdir -p /volume1/docker/syncthing/data2</p>",
+			"platform": "linux",
+			"ports": [
+				"8384:8384/tcp",
+				"22000:22000/tcp",
+				"22000:22000/udp",
+				"21027:21027/udp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Syncthing",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/volume1/docker/syncthing/config",
+					"container": "/config"
+				},
+				{
+					"bind": "/volume1/docker/syncthing/data1",
+					"container": "/data1"
+				},
+				{
+					"bind": "/volume1/docker/syncthing/data2",
+					"container": "/data2"
+				}
+			]
+		},
+		{
+			"categories": [
+				"Utilities"
+			],
+			"description": "[Webtop](https://github.com/linuxserver/docker-webtop) - Alpine, Ubuntu, Fedora, and Arch based containers containing full desktop environments in officially supported flavors accessible via any modern web browser.",
+			"env": [
+				{
+					"default": "1024",
+					"description": "for GroupID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "100",
+					"description": "for UserID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "Europe/Amsterdam",
+					"description": "Specify a timezone to use for example Europe/Amsterdam",
+					"label": "TZ",
+					"name": "TZ"
+				},
+				{
+					"default": "/",
+					"description": "Specify a subfolder to use with reverse proxies, IE `/subfolder/`",
+					"label": "SUBFOLDER",
+					"name": "SUBFOLDER"
+				}
+			],
+			"image": "linuxserver/webtop:latest",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/webtop-logo.png",
+			"name": "Webtop",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p>mkdir -p /volume1/docker/webtop/config<br></p>",
+			"platform": "linux",
+			"ports": [
+				"3000:3000/tcp"
+			],
+			"privileged": true,
+			"restart_policy": "unless-stopped",
+			"title": "Webtop",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/volume1/docker/webtop/config",
+					"container": "/config"
+				},
+				{
+					"bind": "/var/run/docker.sock",
+					"container": "/var/run/docker.sock"
+				}
+			]
+		},
+		{
+			"description": "[Wireshark](https://www.wireshark.org/) is the world’s foremost and widely-used network protocol analyzer. It lets you see what’s happening on your network at a microscopic level and is the de facto (and often de jure) standard across many commercial and non-profit enterprises, government agencies, and educational institutions. Wireshark development thrives thanks to the volunteer contributions of networking experts around the globe and is the continuation of a project started by Gerald Combs in 1998.",
+			"env": [
+				{
+					"default": "1024",
+					"description": "for GroupID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "100",
+					"description": "for UserID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "Europe/Amsterdam",
+					"description": "Specify a timezone to use for example Europe/Amsterdam",
+					"label": "TZ",
+					"name": "TZ"
+				}
+			],
+			"image": "linuxserver/wireshark:latest",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/wireshark-icon.png",
+			"name": "Wireshark",
+			"network": "host",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p>mkdir -p /volume1/docker/wireshark/config</p>",
+			"platform": "linux",
+			"ports": [
+				"3000:3000/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Wireshark",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/volume1/docker/wireshark/config",
+					"container": "/config"
+				}
+			]
+		},
+		{
+			"category": [
+				"Other"
+			],
+			"description": "OpenVPN Access Server is a full featured secure network tunneling VPN software solution that integrates OpenVPN server capabilities, enterprise management capabilities, simplified OpenVPN Connect UI, and OpenVPN Client software packages that accommodate Windows, MAC, Linux, Android, and iOS environments.",
+			"env": [
+				{
+					"label": "INTERFACE",
+					"name": "INTERFACE",
+					"set": "eth0"
+				},
+				{
+					"label": "PGID",
+					"name": "PGID",
+					"set": "1000"
+				},
+				{
+					"label": "PUID",
+					"name": "PUID",
+					"set": "1000"
+				},
+				{
+					"label": "TZ",
+					"name": "TZ",
+					"set": "America/Chicago"
+				}
+			],
+			"image": "linuxserver/openvpn-as:latest",
+			"logo": "https://raw.githubusercontent.com/thesugarat/portainer_templates-1/master/Images/openvpn-as-icon.png",
+			"platform": "linux",
+			"ports": [
+				"943/tcp",
+				"9443/tcp",
+				"1194/udp"
+			],
+			"title": "openvpn-as",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/config"
+				}
+			]
+		},
+		{
+			"description": "[Openvscode-server](https://github.com/gitpod-io/openvscode-server) provides a version of VS Code that runs a server on a remote machine and allows access through a modern web browser.",
+			"env": [
+				{
+					"default": "1024",
+					"description": "for GroupID",
+					"label": "PUID",
+					"name": "PUID"
+				},
+				{
+					"default": "100",
+					"description": "for UserID",
+					"label": "PGID",
+					"name": "PGID"
+				},
+				{
+					"default": "Europe/Amsterdam",
+					"description": "Specify a timezone to use for example Europe/Amsterdam",
+					"label": "TZ",
+					"name": "TZ"
+				},
+				{
+					"default": "supersecrettoken",
+					"description": "Optional security token for accessing the Web UI.",
+					"label": "CONNECTION_TOKEN",
+					"name": "CONNECTION_TOKEN"
+				},
+				{
+					"default": "",
+					"description": "Optional path to a file inside the container that contains the security token for accessing the Web UI (ie. `/path/to/file`). Overrides `CONNECTION_TOKEN`.",
+					"label": "CONNECTION_SECRET",
+					"name": "CONNECTION_SECRET"
+				},
+				{
+					"default": "password",
+					"description": "If this optional variable is set, user will have sudo access in the openvscode-server terminal with the specified password.",
+					"label": "SUDO_PASSWORD",
+					"name": "SUDO_PASSWORD"
+				},
+				{
+					"default": "",
+					"description": "Optionally set sudo password via hash (takes priority over `SUDO_PASSWORD` var). Format is `$type$salt$hashed`.",
+					"label": "SUDO_PASSWORD_HASH",
+					"name": "SUDO_PASSWORD_HASH"
+				}
+			],
+			"image": "linuxserver/openvscode-server:latest",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/openvscode-server-logo.png",
+			"name": "Openvscode-server",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p>mkdir -p /volume1/docker/openvscode-server/config</p>",
+			"platform": "linux",
+			"ports": [
+				"3000:3000/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Openvscode-server",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/volume1/docker/openvscode-server/config",
+					"container": "/config"
+				}
+			]
+		},
+		{
+			"categories": [
+				"Other",
+				"Tools"
+			],
+			"description": "A dead simple static HOMepage for your servER to keep your s ervices on hand, from a simple yaml configuration file.",
+			"image": "b4bz/homer:latest",
+			"logo": "https://raw.githubusercontent.com/Qballjos/portainer_templates/master/Images/homer.png",
+			"name": "homer",
+			"note": "This container requires a yml file within the config volume. See the documentation here https://github.com/bastienwirtz/homer",
+			"platform": "linux",
+			"ports": [
+				"8902:8080/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Homer",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/portainer/Files/AppData/Config/Homer/assets",
+					"container": "/www/assets"
+				},
+				{
+					"bind": "/portainer/Files/AppData/Config/Homer",
+					"container": "/www/config.yml"
+				}
+			]
+		},
+		{
+			"categories": [
+				"continuous-integration"
+			],
+			"description": "Open-source continuous integration tool",
+			"env": [
+				{
+					"label": "Jenkins options",
+					"name": "JENKINS_OPTS"
+				}
+			],
+			"image": "jenkins/jenkins:lts",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/jenkins.png",
+			"platform": "linux",
+			"ports": [
+				"8080/tcp",
+				"50000/tcp"
+			],
+			"title": "Jenkins",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/var/jenkins_home"
+				}
+			]
+		},
+		{
+			"categories": [
+				"marketing"
+			],
+			"description": "Open-source marketing automation platform",
+			"env": [
+				{
+					"label": "MySQL database host",
+					"name": "MAUTIC_DB_HOST",
+					"type": "container"
+				},
+				{
+					"label": "Database password",
+					"name": "MAUTIC_DB_PASSWORD"
+				}
+			],
+			"image": "mautic/mautic:latest",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/mautic.png",
+			"platform": "linux",
+			"ports": [
+				"80/tcp"
+			],
+			"title": "Mautic",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/var/www/html"
+				}
+			]
+		},
+		{
+			"categories": [
+				"storage"
+			],
+			"description": "Standalone AWS S3 protocol server",
+			"env": [
+				{
+					"label": "Scality S3 access key",
+					"name": "SCALITY_ACCESS_KEY"
+				},
+				{
+					"label": "Scality S3 secret key",
+					"name": "SCALITY_SECRET_KEY"
+				}
+			],
+			"image": "scality/s3server",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/scality-s3.png",
+			"platform": "linux",
+			"ports": [
+				"8000/tcp"
+			],
+			"title": "Scality S3",
+			"type": 1,
+			"volumes": [
+				{
+					"container": "/usr/src/app/localData"
+				},
+				{
+					"container": "/usr/src/app/localMetadata"
+				}
+			]
+		},
+		{
+			"categories": [
+				"Other",
+				"Music"
+			],
+			"description": "Deemix is a deezer downloader built from the ashes of Deezloader Remix.",
+			"image": "registry.gitlab.com/bockiii/deemix-docker",
+			"logo": "https://raw.githubusercontent.com/mikestraney/portainer-templates/master/Images/deemix.png",
+			"name": "deemix",
+			"note": "Deemix may take a few minutes to install. Be sure to check the logs for details. Refer to \u003ca href='https://notabug.org/RemixDevs/DeezloaderRemix/wiki/Login+via+userToken'\u003ethis page\u003c/a\u003e for userToken details.",
+			"platform": "linux",
+			"ports": [
+				"9666:9666/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "DeeMix",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/portainer/Files/AppData/Config/DeeMix",
+					"container": "/config"
+				},
+				{
+					"bind": "/portainer/Downloads",
+					"container": "/downloads"
+				}
+			]
+		},
+		{
+			"type": 1,
+			"title": "Mongo",
+			"description": "Open-source document-oriented database",
+			"categories": [
+				"database"
+			],
+			"platform": "linux",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/mongo.png",
+			"image": "mongo:latest",
+			"ports": [
+				"27017/tcp"
+			],
+			"volumes": [
+				{
+					"container": "/data/db"
+				}
+			]
+		},
+		{
+			"type": 1,
+			"title": "MySQL",
+			"description": "The most popular open-source database",
+			"categories": [
+				"database"
+			],
+			"platform": "linux",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/mysql.png",
+			"image": "mysql:latest",
+			"env": [
+				{
+					"name": "MYSQL_ROOT_PASSWORD",
+					"label": "Root password"
+				}
+			],
+			"ports": [
+				"3306/tcp"
+			],
+			"volumes": [
+				{
+					"container": "/var/lib/mysql"
+				}
+			]
+		},
+		{
+			"type": 1,
+			"title": "Odoo",
+			"description": "Open-source business apps",
+			"categories": [
+				"project-management"
+			],
+			"platform": "linux",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/odoo.png",
+			"image": "odoo:latest",
+			"env": [
+				{
+					"name": "HOST",
+					"label": "PostgreSQL database host",
+					"type": "container"
+				},
+				{
+					"name": "USER",
+					"label": "Database user"
+				},
+				{
+					"name": "PASSWORD",
+					"label": "Database password"
+				}
+			],
+			"ports": [
+				"8069/tcp"
+			],
+			"volumes": [
+				{
+					"container": "/var/lib/odoo"
+				},
+				{
+					"container": "/mnt/extra-addons"
+				}
+			]
+		},
+		{
+			"categories": [
+				"Other",
+				"Tools"
+			],
+			"description": "A Linux network-level advertisement and Internet tracker blocking application which acts as a DNS sinkhole.",
+			"image": "pihole/pihole:latest",
+			"logo": "https://raw.githubusercontent.com/mikestraney/portainer-templates/master/Images/pihole.png",
+			"name": "pihole",
+			"note": "When the installation is complete, navigate to your.ip.goes.here:1010/admin. Follow the article \u003ca href='https://medium.com/@niktrix/getting-rid-of-systemd-resolved-consuming-port-53-605f0234f32f'\u003ehere\u003c/a\u003e if you run into issues binding to port 53.",
+			"platform": "linux",
+			"ports": [
+				"53:53/tcp",
+				"53:53/udp",
+				"67:67/udp",
+				"1010:80/tcp",
+				"4443:443/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Pi-Hole",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/portainer/Files/AppData/Config/PiHole",
+					"container": "/etc/pihole"
+				},
+				{
+					"bind": "/portainer/Files/AppData/Config/PiHole/DNS",
+					"container": "/etc/dnsmasq.d"
+				}
+			]
+		},
+		{
+			"type": 1,
+			"title": "RabbitMQ",
+			"description": "Highly reliable enterprise messaging system",
+			"categories": [
+				"messaging"
+			],
+			"platform": "linux",
+			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/rabbitmq.png",
+			"image": "rabbitmq:latest",
+			"ports": [
+				"5671/tcp",
+				"5672/tcp"
+			],
+			"volumes": [
+				{
+					"container": "/var/lib/rabbitmq"
+				}
+			]
+		},
+		{
+			"categories": [
+				"Other",
+				"Tools"
+			],
+			"description": "A web interface for managing docker containers with an emphasis on templating to provide 1 click deployments. Think of it like a decentralized app store for servers that anyone can make packages for.",
+			"image": "selfhostedpro/yacht:latest",
+			"logo": "https://raw.githubusercontent.com/SelfhostedPro/Yacht/master/readme_media/Yacht_logo_1_dark.png",
+			"name": "yacht",
+			"platform": "linux",
+			"ports": [
+				"8001:8000/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Yacht",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "yacht",
+					"container": "/config"
+				},
+				{
+					"bind": "/var/run/docker.sock",
+					"container": "/var/run/docker.sock"
+				}
+			]
+		},
+		{
+			"categories": [
+				"backend",
+				"lowcode"
+			],
+			"description": "Supabase is an open source Firebase alternative.It provides all the backend services you need to build a product. You can use it completely, or just the services you require:",
+			"env": [
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "POSTGRES_PASSWORD",
+					"default": "your-super-secret-and-long-postgres-password"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "JWT_SECRET",
+					"default": "your-super-secret-jwt-token-with-at-least-32-characters-long"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "ANON_KEY",
+					"default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SERVICE_ROLE_KEY",
+					"default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "POSTGRES_HOST",
+					"default": "db"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "POSTGRES_DB",
+					"default": "postgres"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "POSTGRES_USER",
+					"default": "postgres"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "POSTGRES_PORT",
+					"default": "5432"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "KONG_HTTP_PORT",
+					"default": "8000"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "KONG_HTTPS_PORT",
+					"default": "8443"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "PGRST_DB_SCHEMAS",
+					"default": "public,storage,graphql_public"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SITE_URL",
+					"default": "http://localhost:3000"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "ADDITIONAL_REDIRECT_URLS",
+					"default": ""
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "JWT_EXPIRY",
+					"default": "3600"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "DISABLE_SIGNUP",
+					"default": "false"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "ENABLE_EMAIL_SIGNUP",
+					"default": "true"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "ENABLE_EMAIL_AUTOCONFIRM",
+					"default": "true"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SMTP_ADMIN_EMAIL",
+					"default": "admin@example.com"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SMTP_HOST",
+					"default": "fake"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SMTP_PORT",
+					"default": "fake"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SMTP_USER",
+					"default": "fake"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SMTP_PASS",
+					"default": "fake"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "SMTP_SENDER_NAME",
+					"default": "fake"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "ENABLE_PHONE_SIGNUP",
+					"default": "true"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "ENABLE_PHONE_AUTOCONFIRM",
+					"default": "true"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "STUDIO_PORT",
+					"default": "3000"
+				},
+				{
+					"description": "Password used by the MySQL root user.",
+					"label": "Database root password",
+					"name": "PUBLIC_REST_URL",
+					"default": "http://localhost:8000/rest/v1/"
+				}
+			],
+			"logo": "https://supabase.com/docs/supabase-dark.svg",
+			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"platform": "linux",
+			"repository": {
+				"stackfile": "supabase/docker-compose.yml",
+				"url": "https://github.com/mehdi-yc/goodcontainers"
+			},
+			"title": "Supabase",
+			"type": 3
+		},
+
+
+
+
+
+
+		{
+			"type": 1,
+			"title": "Rdesktop",
+			"name": "Rdesktop",
+			"note": "Portainer App Templates by <a href='https://www.technorabilia.com' target='_blank'>Technorabilia</a> based on data provided by <a href='https://www.linuxserver.io' target='_blank'>LinuxServer.io</a>.</p><p>Don't forget to create the volume directories on the host file system.</p><p><br>mkdir -p /volume1/docker/rdesktop/config</p>",
+			"description": "[Rdesktop](http://xrdp.org/) - Containers containing full desktop environments in many popular flavors for Alpine, Ubuntu, Arch, and Fedora accessible via RDP.",
+			"platform": "linux",
+			"logo": "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/rdesktop.png",
+			"image": "linuxserver/rdesktop:latest",
+			"env": [
+				{
+					"name": "PUID",
+					"label": "PUID",
+					"default": "1024",
+					"description": "for UserID"
+				},
+				{
+					"name": "PGID",
+					"label": "PGID",
+					"default": "100",
+					"description": "for GroupID"
+				},
+				{
+					"name": "TZ",
+					"label": "TZ",
+					"default": "Europe/Amsterdam",
+					"description": "specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)."
+				}
+			],
+			"ports": [
+				"3389:3389/tcp"
+			],
+			"volumes": [
+				{
+					"container": "/var/run/docker.sock",
+					"bind": "/var/run/docker.sock"
+				},
+				{
+					"container": "/config",
+					"bind": "/volume1/docker/rdesktop/config"
+				}
+			],
+			"restart_policy": "unless-stopped"
+		}
+	]
+}
