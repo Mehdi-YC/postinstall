@@ -1,0 +1,1934 @@
+{
+  "customtemplates": [
+    {
+      "Id": 1,
+      "Title": "wp_lms",
+      "Description": "lmq for bachir's cousin",
+      "ProjectPath": "/data/custom_templates/1",
+      "EntryPoint": "docker-compose.yml",
+      "CreatedByUserId": 1,
+      "Note": "",
+      "Platform": 1,
+      "Logo": "https://s.w.org/style/images/about/WordPress-logotype-simplified.png",
+      "Type": 2,
+      "ResourceControl": null,
+      "Variables": []
+    },
+    {
+      "Id": 2,
+      "Title": "matomo",
+      "Description": "Google Analytics alternative that protects your data and your customers' privacy",
+      "ProjectPath": "/data/custom_templates/2",
+      "EntryPoint": "docker-compose.yml",
+      "CreatedByUserId": 1,
+      "Note": "",
+      "Platform": 1,
+      "Logo": "https://m-img.org/spai/w_170+q_lossless+ret_img+to_webp/https://static.matomo.org/wp-content/uploads/2018/10/matomo-logo-final-1-340x50.png",
+      "Type": 1,
+      "ResourceControl": null,
+      "Variables": []
+    },
+    {
+      "Id": 3,
+      "Title": "apache-kafka",
+      "Description": "kafka is a data streeming tool",
+      "ProjectPath": "/data/custom_templates/3",
+      "EntryPoint": "docker-compose.yml",
+      "CreatedByUserId": 1,
+      "Note": "",
+      "Platform": 1,
+      "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Apache_kafka.svg/1200px-Apache_kafka.svg.png",
+      "Type": 2,
+      "ResourceControl": null,
+      "Variables": []
+    },
+    {
+      "Id": 4,
+      "Title": "airflow",
+      "Description": "Airflow is a platform created by the community to programmatically author, schedule and monitor workflows.",
+      "ProjectPath": "/data/custom_templates/4",
+      "EntryPoint": "docker-compose.yml",
+      "CreatedByUserId": 1,
+      "Note": "",
+      "Platform": 1,
+      "Logo": "https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png",
+      "Type": 2,
+      "ResourceControl": null,
+      "Variables": []
+    },
+    {
+      "Id": 5,
+      "Title": "confluent-full-stack",
+      "Description": "Find the guides, samples, and references you need to use the streaming data platform based on Apache Kafka®. Use this documentation to get started.",
+      "ProjectPath": "/data/custom_templates/5",
+      "EntryPoint": "docker-compose.yml",
+      "CreatedByUserId": 1,
+      "Note": "",
+      "Platform": 1,
+      "Logo": "https://assets.confluent.io/m/1661ef5e4ff82d3d/original/20200122-PNG-web-dev-logo-denim.png",
+      "Type": 2,
+      "ResourceControl": null,
+      "Variables": []
+    }
+  ],
+  "endpoints": [
+    {
+      "Id": 2,
+      "Name": "local",
+      "Type": 1,
+      "URL": "unix:///var/run/docker.sock",
+      "GroupId": 1,
+      "PublicURL": "",
+      "Gpus": [],
+      "TLSConfig": {
+        "TLS": false,
+        "TLSSkipVerify": false
+      },
+      "AzureCredentials": {
+        "ApplicationID": "",
+        "TenantID": "",
+        "AuthenticationKey": ""
+      },
+      "TagIds": [],
+      "Status": 1,
+      "Snapshots": [],
+      "UserAccessPolicies": {},
+      "TeamAccessPolicies": {},
+      "EdgeKey": "",
+      "EdgeCheckinInterval": 0,
+      "Kubernetes": {
+        "Snapshots": [],
+        "Configuration": {
+          "UseLoadBalancer": false,
+          "UseServerMetrics": false,
+          "EnableResourceOverCommit": false,
+          "ResourceOverCommitPercentage": 0,
+          "StorageClasses": [],
+          "IngressClasses": [],
+          "RestrictDefaultNamespace": false,
+          "IngressAvailabilityPerNamespace": false,
+          "AllowNoneIngressClass": false
+        },
+        "Flags": {
+          "IsServerMetricsDetected": false,
+          "IsServerStorageDetected": false
+        }
+      },
+      "ComposeSyntaxMaxVersion": "",
+      "SecuritySettings": {
+        "allowBindMountsForRegularUsers": true,
+        "allowPrivilegedModeForRegularUsers": true,
+        "allowVolumeBrowserForRegularUsers": false,
+        "allowHostNamespaceForRegularUsers": true,
+        "allowDeviceMappingForRegularUsers": true,
+        "allowStackManagementForRegularUsers": true,
+        "allowContainerCapabilitiesForRegularUsers": true,
+        "allowSysctlSettingForRegularUsers": true,
+        "enableHostManagementFeatures": false
+      },
+      "LastCheckInDate": 0,
+      "QueryDate": 0,
+      "IsEdgeDevice": false,
+      "UserTrusted": false,
+      "PostInitMigrations": {
+        "MigrateIngresses": false
+      },
+      "Edge": {
+        "AsyncMode": false,
+        "PingInterval": 0,
+        "SnapshotInterval": 0,
+        "CommandInterval": 0
+      },
+      "Agent": {
+        "Version": ""
+      },
+      "AuthorizedUsers": null,
+      "AuthorizedTeams": null,
+      "Tags": null
+    }
+  ],
+  "endpoint_groups": [
+    {
+      "Id": 1,
+      "Name": "Unassigned",
+      "Description": "Unassigned environments",
+      "UserAccessPolicies": {},
+      "TeamAccessPolicies": {},
+      "TagIds": [],
+      "Labels": [],
+      "AuthorizedUsers": null,
+      "AuthorizedTeams": null,
+      "Tags": null
+    }
+  ],
+  "endpoint_relations": [
+    {
+      "EndpointID": 2,
+      "EdgeStacks": {}
+    }
+  ],
+  "resource_control": [
+    {
+      "Id": 2,
+      "ResourceId": "1",
+      "SubResourceIds": [],
+      "Type": 8,
+      "UserAccesses": [],
+      "TeamAccesses": [],
+      "Public": false,
+      "AdministratorsOnly": true,
+      "System": false
+    },
+    {
+      "Id": 3,
+      "ResourceId": "2_wp_lms",
+      "SubResourceIds": [],
+      "Type": 6,
+      "UserAccesses": [],
+      "TeamAccesses": [],
+      "Public": false,
+      "AdministratorsOnly": true,
+      "System": false
+    },
+    {
+      "Id": 4,
+      "ResourceId": "2",
+      "SubResourceIds": [],
+      "Type": 8,
+      "UserAccesses": [],
+      "TeamAccesses": [],
+      "Public": false,
+      "AdministratorsOnly": true,
+      "System": false
+    },
+    {
+      "Id": 5,
+      "ResourceId": "8356160f86982f222bdf8aad1bda2f3b0008e333f956e5134a5568f757f6b0d6",
+      "SubResourceIds": [],
+      "Type": 1,
+      "UserAccesses": [],
+      "TeamAccesses": [],
+      "Public": false,
+      "AdministratorsOnly": true,
+      "System": false
+    },
+    {
+      "Id": 6,
+      "ResourceId": "3",
+      "SubResourceIds": [],
+      "Type": 8,
+      "UserAccesses": [],
+      "TeamAccesses": [],
+      "Public": false,
+      "AdministratorsOnly": true,
+      "System": false
+    },
+    {
+      "Id": 7,
+      "ResourceId": "4",
+      "SubResourceIds": [],
+      "Type": 8,
+      "UserAccesses": [],
+      "TeamAccesses": [],
+      "Public": false,
+      "AdministratorsOnly": true,
+      "System": false
+    },
+    {
+      "Id": 8,
+      "ResourceId": "5",
+      "SubResourceIds": [],
+      "Type": 8,
+      "UserAccesses": [],
+      "TeamAccesses": [],
+      "Public": false,
+      "AdministratorsOnly": true,
+      "System": false
+    }
+  ],
+  "settings": {
+    "LogoURL": "",
+    "BlackListedLabels": [],
+    "AuthenticationMethod": 1,
+    "InternalAuthSettings": {
+      "RequiredPasswordLength": 12
+    },
+    "LDAPSettings": {
+      "AnonymousMode": true,
+      "ReaderDN": "",
+      "URL": "",
+      "TLSConfig": {
+        "TLS": false,
+        "TLSSkipVerify": false
+      },
+      "StartTLS": false,
+      "SearchSettings": [
+        {
+          "BaseDN": "",
+          "Filter": "",
+          "UserNameAttribute": ""
+        }
+      ],
+      "GroupSearchSettings": [
+        {
+          "GroupBaseDN": "",
+          "GroupFilter": "",
+          "GroupAttribute": ""
+        }
+      ],
+      "AutoCreateUsers": true
+    },
+    "OAuthSettings": {
+      "ClientID": "",
+      "AccessTokenURI": "",
+      "AuthorizationURI": "",
+      "ResourceURI": "",
+      "RedirectURI": "",
+      "UserIdentifier": "",
+      "Scopes": "",
+      "OAuthAutoCreateUsers": false,
+      "DefaultTeamID": 0,
+      "SSO": true,
+      "LogoutURI": "",
+      "KubeSecretKey": "7pUperyDYe53xV/9fEHLaWAMM/JgsbjzWGkmo1g3zL0="
+    },
+    "openAMTConfiguration": {
+      "enabled": false,
+      "mpsServer": "",
+      "mpsUser": "",
+      "mpsPassword": "",
+      "mpsToken": "",
+      "certFileName": "",
+      "certFileContent": "",
+      "certFilePassword": "",
+      "domainName": ""
+    },
+    "fdoConfiguration": {
+      "enabled": false,
+      "ownerURL": "",
+      "ownerUsername": "",
+      "ownerPassword": ""
+    },
+    "FeatureFlagSettings": {},
+    "SnapshotInterval": "5m",
+    "TemplatesURL": "https://raw.githubusercontent.com/Mehdi-YC/goodcontainers/main/templatesZ.json",
+    "EdgeAgentCheckinInterval": 5,
+    "ShowKomposeBuildOption": false,
+    "EnableEdgeComputeFeatures": false,
+    "UserSessionTimeout": "8h",
+    "KubeconfigExpiry": "0",
+    "EnableTelemetry": false,
+    "HelmRepositoryURL": "https://charts.bitnami.com/bitnami",
+    "KubectlShellImage": "portainer/kubectl-shell",
+    "TrustOnFirstConnect": false,
+    "EnforceEdgeID": false,
+    "AgentSecret": "",
+    "EdgePortainerUrl": "",
+    "Edge": {
+      "CommandInterval": 0,
+      "PingInterval": 0,
+      "SnapshotInterval": 0,
+      "AsyncMode": false
+    },
+    "DisplayDonationHeader": false,
+    "DisplayExternalContributors": false,
+    "EnableHostManagementFeatures": false,
+    "AllowVolumeBrowserForRegularUsers": false,
+    "AllowBindMountsForRegularUsers": false,
+    "AllowPrivilegedModeForRegularUsers": false,
+    "AllowHostNamespaceForRegularUsers": false,
+    "AllowStackManagementForRegularUsers": false,
+    "AllowDeviceMappingForRegularUsers": false,
+    "AllowContainerCapabilitiesForRegularUsers": false
+  },
+  "snapshots": [
+    {
+      "EndpointId": 2,
+      "Docker": {
+        "Time": 1682086459,
+        "DockerVersion": "4.5.0",
+        "Swarm": false,
+        "TotalCPU": 16,
+        "TotalMemory": 16005996544,
+        "RunningContainerCount": 2,
+        "StoppedContainerCount": 5,
+        "HealthyContainerCount": 0,
+        "UnhealthyContainerCount": 0,
+        "VolumeCount": 12,
+        "ImageCount": 10,
+        "ServiceCount": 0,
+        "StackCount": 2,
+        "DockerSnapshotRaw": {
+          "Containers": [
+            {
+              "Id": "20ad42a60a4345a593b2c0e54378b65533b3cef54cff192c53a8167aea179cae",
+              "Names": [
+                "/docker-elk_elasticsearch_1"
+              ],
+              "Image": "localhost/docker-elk_elasticsearch:latest",
+              "ImageID": "sha256:fd60cca4e217c3f4d53eeee302b4b2b380c42cfd8cdcc935e9f6f25a268a3f35",
+              "Command": "eswrapper",
+              "Created": 1682019001,
+              "Ports": [
+                {
+                  "PrivatePort": 9200,
+                  "PublicPort": 9200,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 9300,
+                  "PublicPort": 9300,
+                  "Type": "tcp"
+                }
+              ],
+              "Labels": {
+                "com.docker.compose.config-hash": "5d6b882b24afb2d374bf09d7daaabf20b1b73d7d7cd08ad0efe7ff339d3d3176",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "docker-elk",
+                "com.docker.compose.project.config_files": "docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/home/mehdi/dockers/docker-elk",
+                "com.docker.compose.service": "elasticsearch",
+                "com.docker.compose.version": "1.29.2",
+                "org.label-schema.build-date": "2023-03-27T16:31:09.816451435Z",
+                "org.label-schema.license": "Elastic-License-2.0",
+                "org.label-schema.name": "Elasticsearch",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/elasticsearch",
+                "org.label-schema.usage": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.label-schema.vcs-ref": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.label-schema.vcs-url": "https://github.com/elastic/elasticsearch",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-27T16:31:09.816451435Z",
+                "org.opencontainers.image.documentation": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.opencontainers.image.licenses": "Elastic-License-2.0",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.opencontainers.image.source": "https://github.com/elastic/elasticsearch",
+                "org.opencontainers.image.title": "Elasticsearch",
+                "org.opencontainers.image.url": "https://www.elastic.co/products/elasticsearch",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "State": "exited",
+              "Status": "Exited (143) 16 hours ago",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "docker-elk_elk": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "elasticsearch",
+                      "20ad42a60a43"
+                    ],
+                    "NetworkID": "docker-elk_elk",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "volume",
+                  "Name": "docker-elk_elasticsearch",
+                  "Source": "/var/lib/containers/storage/volumes/docker-elk_elasticsearch/_data",
+                  "Destination": "/usr/share/elasticsearch/data",
+                  "Driver": "local",
+                  "Mode": "Z",
+                  "RW": true,
+                  "Propagation": "rprivate"
+                },
+                {
+                  "Type": "bind",
+                  "Source": "/home/mehdi/dockers/docker-elk/elasticsearch/config/elasticsearch.yml",
+                  "Destination": "/usr/share/elasticsearch/config/elasticsearch.yml",
+                  "Mode": "",
+                  "RW": false,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "3913c74333d0592b8d6597fb89627c96abe2230093b0a3be5de23ea83cba36fe",
+              "Names": [
+                "/docker-elk_setup_1"
+              ],
+              "Image": "localhost/docker-elk_setup:latest",
+              "ImageID": "sha256:5f07b3b48c6c3d4a7a147abbd6ac6b1611ed380c094546aa0bc4742d26150a29",
+              "Command": "",
+              "Created": 1682019002,
+              "Ports": [],
+              "Labels": {
+                "com.docker.compose.config-hash": "9c79d231d4af1a942cb5a379542d72b7057b2b19940e36406d393d3e594385ca",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "docker-elk",
+                "com.docker.compose.project.config_files": "docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/home/mehdi/dockers/docker-elk",
+                "com.docker.compose.service": "setup",
+                "com.docker.compose.version": "1.29.2",
+                "io.buildah.version": "1.30.0",
+                "org.label-schema.build-date": "2023-03-27T16:31:09.816451435Z",
+                "org.label-schema.license": "Elastic-License-2.0",
+                "org.label-schema.name": "Elasticsearch",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/elasticsearch",
+                "org.label-schema.usage": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.label-schema.vcs-ref": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.label-schema.vcs-url": "https://github.com/elastic/elasticsearch",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-27T16:31:09.816451435Z",
+                "org.opencontainers.image.documentation": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.opencontainers.image.licenses": "Elastic-License-2.0",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.opencontainers.image.source": "https://github.com/elastic/elasticsearch",
+                "org.opencontainers.image.title": "Elasticsearch",
+                "org.opencontainers.image.url": "https://www.elastic.co/products/elasticsearch",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "State": "exited",
+              "Status": "Exited (0) 19 hours ago",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "docker-elk_elk": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "setup",
+                      "3913c74333d0"
+                    ],
+                    "NetworkID": "docker-elk_elk",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "volume",
+                  "Name": "docker-elk_setup",
+                  "Source": "/var/lib/containers/storage/volumes/docker-elk_setup/_data",
+                  "Destination": "/state",
+                  "Driver": "local",
+                  "Mode": "Z",
+                  "RW": true,
+                  "Propagation": "rprivate"
+                },
+                {
+                  "Type": "bind",
+                  "Source": "/home/mehdi/dockers/docker-elk/setup/lib.sh",
+                  "Destination": "/lib.sh",
+                  "Mode": "",
+                  "RW": false,
+                  "Propagation": "rprivate"
+                },
+                {
+                  "Type": "bind",
+                  "Source": "/home/mehdi/dockers/docker-elk/setup/entrypoint.sh",
+                  "Destination": "/entrypoint.sh",
+                  "Mode": "",
+                  "RW": false,
+                  "Propagation": "rprivate"
+                },
+                {
+                  "Type": "bind",
+                  "Source": "/home/mehdi/dockers/docker-elk/setup/roles",
+                  "Destination": "/roles",
+                  "Mode": "",
+                  "RW": false,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "8356160f86982f222bdf8aad1bda2f3b0008e333f956e5134a5568f757f6b0d6",
+              "Names": [
+                "/elegant_ride"
+              ],
+              "Image": "docker.io/sebp/elk:latest",
+              "ImageID": "sha256:0cc7dc7298448858be593629fb491fecc3b20e28a1a0a0bd0829fbb0eecb6119",
+              "Command": "/usr/local/bin/start.sh",
+              "Created": 1682024579,
+              "Ports": [
+                {
+                  "PrivatePort": 5044,
+                  "PublicPort": 5045,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 5601,
+                  "PublicPort": 5602,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 9200,
+                  "PublicPort": 9201,
+                  "Type": "tcp"
+                }
+              ],
+              "Labels": {
+                "org.opencontainers.image.created": "2023-03-18T18:28:13.554Z",
+                "org.opencontainers.image.description": "Elasticsearch, Logstash, Kibana (ELK) Docker image",
+                "org.opencontainers.image.licenses": "NOASSERTION, latest",
+                "org.opencontainers.image.revision": "39a486f2ab446f66088a1cc0e2af5171fbf11dbd",
+                "org.opencontainers.image.source": "https://github.com/spujadas/elk-docker",
+                "org.opencontainers.image.title": "elk-docker",
+                "org.opencontainers.image.url": "https://github.com/spujadas/elk-docker",
+                "org.opencontainers.image.version": "8.6.2"
+              },
+              "State": "exited",
+              "Status": "Exited (137) 17 hours ago",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "podman": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "8356160f8698"
+                    ],
+                    "NetworkID": "podman",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "volume",
+                  "Name": "79a42f567b324b9b537cb3cd7c32bc8b8475b1ff8a12f3bf3c5b5766d03ad201",
+                  "Source": "/var/lib/containers/storage/volumes/79a42f567b324b9b537cb3cd7c32bc8b8475b1ff8a12f3bf3c5b5766d03ad201/_data",
+                  "Destination": "/var/lib/elasticsearch",
+                  "Driver": "local",
+                  "Mode": "",
+                  "RW": true,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "922f2252bd8df5b899d8af6c0c4eeabd574184d77046e9ace1ead758c2789c35",
+              "Names": [
+                "/docker-elk_kibana_1"
+              ],
+              "Image": "localhost/docker-elk_kibana:latest",
+              "ImageID": "sha256:a96c64a53cfef6942fa8c154d082b360d8e054d13c44df622d9197df63efea8e",
+              "Command": "/usr/local/bin/kibana-docker",
+              "Created": 1682019002,
+              "Ports": [
+                {
+                  "PrivatePort": 5601,
+                  "PublicPort": 5601,
+                  "Type": "tcp"
+                }
+              ],
+              "Labels": {
+                "com.docker.compose.config-hash": "68ea469288bc784e64866c187c7109df7653b5a34f9c5b958c54584b180b34c8",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "docker-elk",
+                "com.docker.compose.project.config_files": "docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/home/mehdi/dockers/docker-elk",
+                "com.docker.compose.service": "kibana",
+                "com.docker.compose.version": "1.29.2",
+                "org.label-schema.build-date": "2023-03-27T11:09:20.771Z",
+                "org.label-schema.license": "Elastic License",
+                "org.label-schema.name": "Kibana",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/kibana",
+                "org.label-schema.usage": "https://www.elastic.co/guide/en/kibana/reference/index.html",
+                "org.label-schema.vcs-ref": "05f12599523732051b84dde0b8d5610e0db2b06d",
+                "org.label-schema.vcs-url": "https://github.com/elastic/kibana",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-27T11:09:20.771Z",
+                "org.opencontainers.image.documentation": "https://www.elastic.co/guide/en/kibana/reference/index.html",
+                "org.opencontainers.image.licenses": "Elastic License",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "05f12599523732051b84dde0b8d5610e0db2b06d",
+                "org.opencontainers.image.source": "https://github.com/elastic/kibana",
+                "org.opencontainers.image.title": "Kibana",
+                "org.opencontainers.image.url": "https://www.elastic.co/products/kibana",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "State": "exited",
+              "Status": "Exited (0) 16 hours ago",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "docker-elk_elk": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "kibana",
+                      "922f2252bd8d"
+                    ],
+                    "NetworkID": "docker-elk_elk",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "bind",
+                  "Source": "/home/mehdi/dockers/docker-elk/kibana/config/kibana.yml",
+                  "Destination": "/usr/share/kibana/config/kibana.yml",
+                  "Mode": "",
+                  "RW": false,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "9d375c20ce01a8b1df98886c44f44cd6b400965118be8edbf2248b4f2a6dc5fb",
+              "Names": [
+                "/portainer"
+              ],
+              "Image": "docker.io/portainer/portainer-ce:latest",
+              "ImageID": "sha256:a87d51c7a32408ba63e65888d023ad7d4328fd575d8a4c8bd8cffa495fcd055c",
+              "Command": "",
+              "Created": 1680434785,
+              "Ports": [
+                {
+                  "PrivatePort": 8000,
+                  "PublicPort": 8000,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 9001,
+                  "PublicPort": 9000,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 9443,
+                  "PublicPort": 9443,
+                  "Type": "tcp"
+                }
+              ],
+              "Labels": {
+                "com.docker.desktop.extension.api.version": "\u003e= 0.2.2",
+                "com.docker.desktop.extension.icon": "https://portainer-io-assets.sfo2.cdn.digitaloceanspaces.com/logos/portainer.png",
+                "com.docker.extension.additional-urls": "[{\"title\":\"Website\",\"url\":\"https://www.portainer.io?utm_campaign=DockerCon\u0026utm_source=DockerDesktop\"},{\"title\":\"Documentation\",\"url\":\"https://docs.portainer.io\"},{\"title\":\"Support\",\"url\":\"https://join.slack.com/t/portainer/shared_invite/zt-txh3ljab-52QHTyjCqbe5RibC2lcjKA\"}]",
+                "com.docker.extension.detailed-description": "\u003cp data-renderer-start-pos=\"226\"\u003ePortainer\u0026rsquo;s Docker Desktop extension gives you access to all of Portainer\u0026rsquo;s rich management functionality within your docker desktop experience.\u003c/p\u003e\u003ch2 data-renderer-start-pos=\"374\"\u003eWith Portainer you can:\u003c/h2\u003e\u003cul\u003e\u003cli\u003eSee all your running containers\u003c/li\u003e\u003cli\u003eEasily view all of your container logs\u003c/li\u003e\u003cli\u003eConsole into containers\u003c/li\u003e\u003cli\u003eEasily deploy your code into containers using a simple form\u003c/li\u003e\u003cli\u003eTurn your YAML into custom templates for easy reuse\u003c/li\u003e\u003c/ul\u003e\u003ch2 data-renderer-start-pos=\"660\"\u003eAbout Portainer\u0026nbsp;\u003c/h2\u003e\u003cp data-renderer-start-pos=\"680\"\u003ePortainer is the worlds\u0026rsquo; most popular universal container management platform with more than 650,000 active monthly users. Portainer can be used to manage Docker Standalone, Kubernetes, Docker Swarm and Nomad environments through a single common interface. It includes a simple GitOps automation engine and a Kube API.\u0026nbsp;\u003c/p\u003e\u003cp data-renderer-start-pos=\"1006\"\u003ePortainer Business Edition is our fully supported commercial grade product for business-wide use. It includes all the functionality that businesses need to manage containers at scale. Visit \u003ca class=\"sc-jKJlTe dPfAtb\" href=\"http://portainer.io/\" title=\"http://Portainer.io\" data-renderer-mark=\"true\"\u003ePortainer.io\u003c/a\u003e to learn more about Portainer Business and \u003ca class=\"sc-jKJlTe dPfAtb\" href=\"http://portainer.io/take5?utm_campaign=DockerCon\u0026amp;utm_source=Docker%20Desktop\" title=\"http://portainer.io/take5?utm_campaign=DockerCon\u0026amp;utm_source=Docker%20Desktop\" data-renderer-mark=\"true\"\u003eget 5 free nodes.\u003c/a\u003e\u003c/p\u003e",
+                "com.docker.extension.publisher-url": "https://www.portainer.io",
+                "com.docker.extension.screenshots": "[{\"alt\": \"screenshot one\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-1.png\"},{\"alt\": \"screenshot two\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-2.png\"},{\"alt\": \"screenshot three\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-3.png\"},{\"alt\": \"screenshot four\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-4.png\"},{\"alt\": \"screenshot five\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-5.png\"},{\"alt\": \"screenshot six\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-6.png\"},{\"alt\": \"screenshot seven\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-7.png\"},{\"alt\": \"screenshot eight\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-8.png\"},{\"alt\": \"screenshot nine\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-9.png\"}]",
+                "io.portainer.server": "true",
+                "org.opencontainers.image.description": "Docker container management made simple, with the world’s most popular GUI-based container management platform.",
+                "org.opencontainers.image.title": "Portainer",
+                "org.opencontainers.image.vendor": "Portainer.io"
+              },
+              "State": "running",
+              "Status": "Up 3 hours",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "podman": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "9d375c20ce01"
+                    ],
+                    "NetworkID": "podman",
+                    "EndpointID": "",
+                    "Gateway": "10.88.0.1",
+                    "IPAddress": "10.88.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "76:50:e5:44:d7:8c",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "volume",
+                  "Name": "4a240b8b9c7900f3222ecc906e713e856d671fc5dc15c96aedaad94f51720717",
+                  "Source": "/var/lib/containers/storage/volumes/4a240b8b9c7900f3222ecc906e713e856d671fc5dc15c96aedaad94f51720717/_data",
+                  "Destination": "/data",
+                  "Driver": "local",
+                  "Mode": "",
+                  "RW": true,
+                  "Propagation": "rprivate"
+                },
+                {
+                  "Type": "bind",
+                  "Source": "/run/podman/podman.sock",
+                  "Destination": "/var/run/docker.sock",
+                  "Mode": "",
+                  "RW": true,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "a813f15b8f51c5fc26f5206d9147cf9d1f49ed63ce2e0b1a8c1e9447beba5325",
+              "Names": [
+                "/wp_lms-wordpress-1"
+              ],
+              "Image": "docker.io/library/wordpress:latest",
+              "ImageID": "sha256:3d55a510c77e3af1a27fa189967ac05f3e4b9fdb4f09ce6e098cd3bd359245a0",
+              "Command": "apache2-foreground",
+              "Created": 1680442548,
+              "Ports": [
+                {
+                  "PrivatePort": 80,
+                  "PublicPort": 80,
+                  "Type": "tcp"
+                }
+              ],
+              "Labels": {
+                "com.docker.compose.config-hash": "dca4c6e1d028eb7c7c8850945907c7c3ea9305dd642739b80b39dd6ec0cd2b54",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:3d55a510c77e3af1a27fa189967ac05f3e4b9fdb4f09ce6e098cd3bd359245a0",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "wp_lms",
+                "com.docker.compose.project.config_files": "/data/compose/2/docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/data/compose/2",
+                "com.docker.compose.service": "wordpress",
+                "com.docker.compose.version": "2.13.0"
+              },
+              "State": "created",
+              "Status": "Created",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "wp_lms_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "wordpress",
+                      "a813f15b8f51"
+                    ],
+                    "NetworkID": "wp_lms_default",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "volume",
+                  "Name": "9bb452a891f1214ea16c18dbdce6877c1f6392540ad2bdf7b2976a067740d551",
+                  "Source": "/var/lib/containers/storage/volumes/9bb452a891f1214ea16c18dbdce6877c1f6392540ad2bdf7b2976a067740d551/_data",
+                  "Destination": "/var/www/html",
+                  "Driver": "local",
+                  "Mode": "",
+                  "RW": true,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "ab1b9ddf7dad732872f845ff01214e1bd3cf6de70ad97db9775be03c97028c73",
+              "Names": [
+                "/docker-elk_logstash_1"
+              ],
+              "Image": "localhost/docker-elk_logstash:latest",
+              "ImageID": "sha256:a0ba1fb9c04042cacecf3aa43cd987c30c90ead20330fabc9d346f5ae8324445",
+              "Command": "",
+              "Created": 1682019002,
+              "Ports": [
+                {
+                  "PrivatePort": 5044,
+                  "PublicPort": 5044,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 9600,
+                  "PublicPort": 9600,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 50000,
+                  "PublicPort": 50000,
+                  "Type": "tcp"
+                },
+                {
+                  "PrivatePort": 50000,
+                  "PublicPort": 50000,
+                  "Type": "udp"
+                }
+              ],
+              "Labels": {
+                "com.docker.compose.config-hash": "dc06f7398c46070cfb3e3333b0152c1f4c034fe3458fdbc3f515db37bf80f6a5",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "docker-elk",
+                "com.docker.compose.project.config_files": "docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/home/mehdi/dockers/docker-elk",
+                "com.docker.compose.service": "logstash",
+                "com.docker.compose.version": "1.29.2",
+                "org.label-schema.build-date": "2023-03-26T03:44:05+00:00",
+                "org.label-schema.license": "Elastic License",
+                "org.label-schema.name": "logstash",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/logstash",
+                "org.label-schema.vcs-url": "https://github.com/elastic/logstash",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-26T03:44:05+00:00",
+                "org.opencontainers.image.description": "Logstash is a free and open server-side data processing pipeline that ingests data from a multitude of sources, transforms it, and then sends it to your favorite 'stash.'",
+                "org.opencontainers.image.licenses": "Elastic License",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.title": "logstash",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "State": "exited",
+              "Status": "Exited (0) 16 hours ago",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "docker-elk_elk": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "logstash",
+                      "ab1b9ddf7dad"
+                    ],
+                    "NetworkID": "docker-elk_elk",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "bind",
+                  "Source": "/home/mehdi/dockers/docker-elk/logstash/config/logstash.yml",
+                  "Destination": "/usr/share/logstash/config/logstash.yml",
+                  "Mode": "",
+                  "RW": false,
+                  "Propagation": "rprivate"
+                },
+                {
+                  "Type": "bind",
+                  "Source": "/home/mehdi/dockers/docker-elk/logstash/pipeline",
+                  "Destination": "/usr/share/logstash/pipeline",
+                  "Mode": "",
+                  "RW": false,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "cce7b4b12876e90eb98bd7b4da4b1094cf4b1b634385022b5453e88a1e35f2d1",
+              "Names": [
+                "/wp_lms-db-1"
+              ],
+              "Image": "docker.io/library/mysql:5.7",
+              "ImageID": "sha256:3f3447deacaa5bacab184fabbf821a785e13303b2e340465bdf7815b0284497b",
+              "Command": "mysqld",
+              "Created": 1680442663,
+              "Ports": [],
+              "Labels": {
+                "com.docker.compose.config-hash": "7be270ed7458ae7932cbfb01d8fb43ca417c1a59ac21bc282aea7e8620c9ee32",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:3f3447deacaa5bacab184fabbf821a785e13303b2e340465bdf7815b0284497b",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "wp_lms",
+                "com.docker.compose.project.config_files": "/data/compose/2/docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/data/compose/2",
+                "com.docker.compose.service": "db",
+                "com.docker.compose.version": "2.13.0"
+              },
+              "State": "created",
+              "Status": "Created",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "wp_lms_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "db",
+                      "cce7b4b12876"
+                    ],
+                    "NetworkID": "wp_lms_default",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": [
+                {
+                  "Type": "volume",
+                  "Name": "wp_lms_db_data",
+                  "Source": "/var/lib/containers/storage/volumes/wp_lms_db_data/_data",
+                  "Destination": "/var/lib/mysql",
+                  "Driver": "local",
+                  "Mode": "",
+                  "RW": true,
+                  "Propagation": "rprivate"
+                }
+              ]
+            },
+            {
+              "Id": "f7c20a2daaa740af9f8a2fed3f20c47205ab86720c13923e1a3375ddeb76f329",
+              "Names": [
+                "/mipentahoserver"
+              ],
+              "Image": "docker.io/magm3333/pentahoserver:latest",
+              "ImageID": "sha256:3af7f172fe223195e9a66d2228cd6a9719ba146eff3c14448e6ab6f8f89ba9ab",
+              "Command": "",
+              "Created": 1682079004,
+              "Ports": [
+                {
+                  "PrivatePort": 8080,
+                  "PublicPort": 8080,
+                  "Type": "tcp"
+                }
+              ],
+              "Labels": {},
+              "State": "running",
+              "Status": "Up 2 hours",
+              "HostConfig": {},
+              "NetworkSettings": {
+                "Networks": {
+                  "podman": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                      "f7c20a2daaa7"
+                    ],
+                    "NetworkID": "podman",
+                    "EndpointID": "",
+                    "Gateway": "10.88.0.1",
+                    "IPAddress": "10.88.0.3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "8a:c3:b8:42:1e:08",
+                    "DriverOpts": null
+                  }
+                }
+              },
+              "Mounts": []
+            }
+          ],
+          "Volumes": {
+            "Volumes": [
+              {
+                "CreatedAt": "2023-04-02T12:30:42+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/03d602469cb7930b3af7fbcd71715868ad88ca4eea8add5b22ed54a1e520192c/_data",
+                "Name": "03d602469cb7930b3af7fbcd71715868ad88ca4eea8add5b22ed54a1e520192c",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T12:26:16+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/35a3c60fb1c0a5b8432c958e9bd52ff39e2c9fa2b1c9e7e1e8ce3712edb35d32/_data",
+                "Name": "35a3c60fb1c0a5b8432c958e9bd52ff39e2c9fa2b1c9e7e1e8ce3712edb35d32",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T12:26:09+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/3d4d31313219f2e07c9bc16b24b2feb7dbcef272a2b59d44e369825f3ad728e0/_data",
+                "Name": "3d4d31313219f2e07c9bc16b24b2feb7dbcef272a2b59d44e369825f3ad728e0",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T12:26:25+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/4a240b8b9c7900f3222ecc906e713e856d671fc5dc15c96aedaad94f51720717/_data",
+                "Name": "4a240b8b9c7900f3222ecc906e713e856d671fc5dc15c96aedaad94f51720717",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-20T22:02:59+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/79a42f567b324b9b537cb3cd7c32bc8b8475b1ff8a12f3bf3c5b5766d03ad201/_data",
+                "Name": "79a42f567b324b9b537cb3cd7c32bc8b8475b1ff8a12f3bf3c5b5766d03ad201",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T14:35:48+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/9bb452a891f1214ea16c18dbdce6877c1f6392540ad2bdf7b2976a067740d551/_data",
+                "Name": "9bb452a891f1214ea16c18dbdce6877c1f6392540ad2bdf7b2976a067740d551",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T12:25:26+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/aad4d5e62ad5000209ba0abb21994ec319797531064d4cbf4028ef4e6d1dbce9/_data",
+                "Name": "aad4d5e62ad5000209ba0abb21994ec319797531064d4cbf4028ef4e6d1dbce9",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-20T20:14:56+01:00",
+                "Driver": "local",
+                "Labels": {
+                  "com.docker.compose.project": "docker-elk",
+                  "com.docker.compose.version": "1.29.2",
+                  "com.docker.compose.volume": "elasticsearch"
+                },
+                "Mountpoint": "/var/lib/containers/storage/volumes/docker-elk_elasticsearch/_data",
+                "Name": "docker-elk_elasticsearch",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-20T20:14:56+01:00",
+                "Driver": "local",
+                "Labels": {
+                  "com.docker.compose.project": "docker-elk",
+                  "com.docker.compose.version": "1.29.2",
+                  "com.docker.compose.volume": "setup"
+                },
+                "Mountpoint": "/var/lib/containers/storage/volumes/docker-elk_setup/_data",
+                "Name": "docker-elk_setup",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T12:30:42+01:00",
+                "Driver": "local",
+                "Labels": {
+                  "com.docker.compose.project": "lms",
+                  "com.docker.compose.version": "2.13.0",
+                  "com.docker.compose.volume": "db_data"
+                },
+                "Mountpoint": "/var/lib/containers/storage/volumes/lms_db_data/_data",
+                "Name": "lms_db_data",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T12:16:24+01:00",
+                "Driver": "local",
+                "Labels": {},
+                "Mountpoint": "/var/lib/containers/storage/volumes/portainer_data/_data",
+                "Name": "portainer_data",
+                "Options": {},
+                "Scope": "local"
+              },
+              {
+                "CreatedAt": "2023-04-02T14:35:48+01:00",
+                "Driver": "local",
+                "Labels": {
+                  "com.docker.compose.project": "wp_lms",
+                  "com.docker.compose.version": "2.13.0",
+                  "com.docker.compose.volume": "db_data"
+                },
+                "Mountpoint": "/var/lib/containers/storage/volumes/wp_lms_db_data/_data",
+                "Name": "wp_lms_db_data",
+                "Options": {},
+                "Scope": "local"
+              }
+            ],
+            "Warnings": []
+          },
+          "Networks": [
+            {
+              "Name": "docker-elk_elk",
+              "Id": "6e407e1c360be64507ad91138f0d5846309578ac91fa2226323ed51584c90625",
+              "Created": "2023-04-20T20:14:56.912551613+01:00",
+              "Scope": "local",
+              "Driver": "bridge",
+              "EnableIPv6": false,
+              "IPAM": {
+                "Driver": "default",
+                "Options": {
+                  "driver": "host-local"
+                },
+                "Config": [
+                  {
+                    "Subnet": "10.89.1.0/24",
+                    "Gateway": "10.89.1.1"
+                  }
+                ]
+              },
+              "Internal": false,
+              "Attachable": false,
+              "Ingress": false,
+              "ConfigFrom": {
+                "Network": ""
+              },
+              "ConfigOnly": false,
+              "Containers": {
+                "20ad42a60a4345a593b2c0e54378b65533b3cef54cff192c53a8167aea179cae": {
+                  "Name": "docker-elk_elasticsearch_1",
+                  "EndpointID": "",
+                  "MacAddress": "",
+                  "IPv4Address": "",
+                  "IPv6Address": ""
+                },
+                "3913c74333d0592b8d6597fb89627c96abe2230093b0a3be5de23ea83cba36fe": {
+                  "Name": "docker-elk_setup_1",
+                  "EndpointID": "",
+                  "MacAddress": "",
+                  "IPv4Address": "",
+                  "IPv6Address": ""
+                },
+                "922f2252bd8df5b899d8af6c0c4eeabd574184d77046e9ace1ead758c2789c35": {
+                  "Name": "docker-elk_kibana_1",
+                  "EndpointID": "",
+                  "MacAddress": "",
+                  "IPv4Address": "",
+                  "IPv6Address": ""
+                },
+                "ab1b9ddf7dad732872f845ff01214e1bd3cf6de70ad97db9775be03c97028c73": {
+                  "Name": "docker-elk_logstash_1",
+                  "EndpointID": "",
+                  "MacAddress": "",
+                  "IPv4Address": "",
+                  "IPv6Address": ""
+                }
+              },
+              "Options": {},
+              "Labels": {
+                "com.docker.compose.network": "elk",
+                "com.docker.compose.project": "docker-elk",
+                "com.docker.compose.version": "1.29.2"
+              }
+            },
+            {
+              "Name": "wp_lms_default",
+              "Id": "ffd6ca61bb0336efd2401a8fe2f44bd66f372cd0fa9a81ac80aaf1c0cf603726",
+              "Created": "2023-04-02T14:35:48.411727278+01:00",
+              "Scope": "local",
+              "Driver": "bridge",
+              "EnableIPv6": false,
+              "IPAM": {
+                "Driver": "default",
+                "Options": {
+                  "driver": "host-local"
+                },
+                "Config": [
+                  {
+                    "Subnet": "10.89.0.0/24",
+                    "Gateway": "10.89.0.1"
+                  }
+                ]
+              },
+              "Internal": false,
+              "Attachable": false,
+              "Ingress": false,
+              "ConfigFrom": {
+                "Network": ""
+              },
+              "ConfigOnly": false,
+              "Containers": {
+                "a813f15b8f51c5fc26f5206d9147cf9d1f49ed63ce2e0b1a8c1e9447beba5325": {
+                  "Name": "wp_lms-wordpress-1",
+                  "EndpointID": "",
+                  "MacAddress": "",
+                  "IPv4Address": "",
+                  "IPv6Address": ""
+                },
+                "cce7b4b12876e90eb98bd7b4da4b1094cf4b1b634385022b5453e88a1e35f2d1": {
+                  "Name": "wp_lms-db-1",
+                  "EndpointID": "",
+                  "MacAddress": "",
+                  "IPv4Address": "",
+                  "IPv6Address": ""
+                }
+              },
+              "Options": {},
+              "Labels": {
+                "com.docker.compose.network": "default",
+                "com.docker.compose.project": "wp_lms",
+                "com.docker.compose.version": "2.13.0"
+              }
+            },
+            {
+              "Name": "bridge",
+              "Id": "2f259bab93aaaaa2542ba43ef33eb990d0999ee1b9924b557b7be53c0b7a1bb9",
+              "Created": "2023-04-21T15:14:19.430980472+01:00",
+              "Scope": "local",
+              "Driver": "bridge",
+              "EnableIPv6": false,
+              "IPAM": {
+                "Driver": "default",
+                "Options": {
+                  "driver": "host-local"
+                },
+                "Config": [
+                  {
+                    "Subnet": "10.88.0.0/16",
+                    "Gateway": "10.88.0.1"
+                  }
+                ]
+              },
+              "Internal": false,
+              "Attachable": false,
+              "Ingress": false,
+              "ConfigFrom": {
+                "Network": ""
+              },
+              "ConfigOnly": false,
+              "Containers": {
+                "8356160f86982f222bdf8aad1bda2f3b0008e333f956e5134a5568f757f6b0d6": {
+                  "Name": "elegant_ride",
+                  "EndpointID": "",
+                  "MacAddress": "",
+                  "IPv4Address": "",
+                  "IPv6Address": ""
+                },
+                "9d375c20ce01a8b1df98886c44f44cd6b400965118be8edbf2248b4f2a6dc5fb": {
+                  "Name": "portainer",
+                  "EndpointID": "",
+                  "MacAddress": "76:50:e5:44:d7:8c",
+                  "IPv4Address": "10.88.0.2/16",
+                  "IPv6Address": ""
+                },
+                "f7c20a2daaa740af9f8a2fed3f20c47205ab86720c13923e1a3375ddeb76f329": {
+                  "Name": "mipentahoserver",
+                  "EndpointID": "",
+                  "MacAddress": "8a:c3:b8:42:1e:08",
+                  "IPv4Address": "10.88.0.3/16",
+                  "IPv6Address": ""
+                }
+              },
+              "Options": {},
+              "Labels": {}
+            }
+          ],
+          "Images": [
+            {
+              "Containers": 0,
+              "Created": 1562747078,
+              "Id": "sha256:c50c5f4820dfa861dca4243c0c85e6d6abfc69d4e64e8171bd206bb7143dd9e7",
+              "Labels": null,
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.io/scrapinghub/portia@sha256:a2acdf0c4a243deeea289f267feff06171c473c7ce1c0b992ae130b7cf486fa6"
+              ],
+              "RepoTags": [
+                "docker.io/scrapinghub/portia:latest"
+              ],
+              "SharedSize": 0,
+              "Size": 1422201805,
+              "VirtualSize": 1422201805
+            },
+            {
+              "Containers": 1,
+              "Created": 1677118465,
+              "Id": "sha256:a87d51c7a32408ba63e65888d023ad7d4328fd575d8a4c8bd8cffa495fcd055c",
+              "Labels": {
+                "com.docker.desktop.extension.api.version": "\u003e= 0.2.2",
+                "com.docker.desktop.extension.icon": "https://portainer-io-assets.sfo2.cdn.digitaloceanspaces.com/logos/portainer.png",
+                "com.docker.extension.additional-urls": "[{\"title\":\"Website\",\"url\":\"https://www.portainer.io?utm_campaign=DockerCon\u0026utm_source=DockerDesktop\"},{\"title\":\"Documentation\",\"url\":\"https://docs.portainer.io\"},{\"title\":\"Support\",\"url\":\"https://join.slack.com/t/portainer/shared_invite/zt-txh3ljab-52QHTyjCqbe5RibC2lcjKA\"}]",
+                "com.docker.extension.detailed-description": "\u003cp data-renderer-start-pos=\"226\"\u003ePortainer\u0026rsquo;s Docker Desktop extension gives you access to all of Portainer\u0026rsquo;s rich management functionality within your docker desktop experience.\u003c/p\u003e\u003ch2 data-renderer-start-pos=\"374\"\u003eWith Portainer you can:\u003c/h2\u003e\u003cul\u003e\u003cli\u003eSee all your running containers\u003c/li\u003e\u003cli\u003eEasily view all of your container logs\u003c/li\u003e\u003cli\u003eConsole into containers\u003c/li\u003e\u003cli\u003eEasily deploy your code into containers using a simple form\u003c/li\u003e\u003cli\u003eTurn your YAML into custom templates for easy reuse\u003c/li\u003e\u003c/ul\u003e\u003ch2 data-renderer-start-pos=\"660\"\u003eAbout Portainer\u0026nbsp;\u003c/h2\u003e\u003cp data-renderer-start-pos=\"680\"\u003ePortainer is the worlds\u0026rsquo; most popular universal container management platform with more than 650,000 active monthly users. Portainer can be used to manage Docker Standalone, Kubernetes, Docker Swarm and Nomad environments through a single common interface. It includes a simple GitOps automation engine and a Kube API.\u0026nbsp;\u003c/p\u003e\u003cp data-renderer-start-pos=\"1006\"\u003ePortainer Business Edition is our fully supported commercial grade product for business-wide use. It includes all the functionality that businesses need to manage containers at scale. Visit \u003ca class=\"sc-jKJlTe dPfAtb\" href=\"http://portainer.io/\" title=\"http://Portainer.io\" data-renderer-mark=\"true\"\u003ePortainer.io\u003c/a\u003e to learn more about Portainer Business and \u003ca class=\"sc-jKJlTe dPfAtb\" href=\"http://portainer.io/take5?utm_campaign=DockerCon\u0026amp;utm_source=Docker%20Desktop\" title=\"http://portainer.io/take5?utm_campaign=DockerCon\u0026amp;utm_source=Docker%20Desktop\" data-renderer-mark=\"true\"\u003eget 5 free nodes.\u003c/a\u003e\u003c/p\u003e",
+                "com.docker.extension.publisher-url": "https://www.portainer.io",
+                "com.docker.extension.screenshots": "[{\"alt\": \"screenshot one\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-1.png\"},{\"alt\": \"screenshot two\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-2.png\"},{\"alt\": \"screenshot three\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-3.png\"},{\"alt\": \"screenshot four\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-4.png\"},{\"alt\": \"screenshot five\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-5.png\"},{\"alt\": \"screenshot six\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-6.png\"},{\"alt\": \"screenshot seven\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-7.png\"},{\"alt\": \"screenshot eight\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-8.png\"},{\"alt\": \"screenshot nine\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-9.png\"}]",
+                "io.portainer.server": "true",
+                "org.opencontainers.image.description": "Docker container management made simple, with the world’s most popular GUI-based container management platform.",
+                "org.opencontainers.image.title": "Portainer",
+                "org.opencontainers.image.vendor": "Portainer.io"
+              },
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.io/portainer/portainer-ce@sha256:11145b955efbaef5ce62465a367a11c9bddfd57e42a51fca9b7a5e93178179a6",
+                "docker.io/portainer/portainer-ce@sha256:9fa1ec78b4e29d83593cf9720674b72829c9cdc0db7083a962bc30e64e27f64e"
+              ],
+              "RepoTags": [
+                "docker.io/portainer/portainer-ce:latest"
+              ],
+              "SharedSize": 0,
+              "Size": 272622678,
+              "VirtualSize": 272622678
+            },
+            {
+              "Containers": 1,
+              "Created": 1680305049,
+              "Id": "sha256:3f3447deacaa5bacab184fabbf821a785e13303b2e340465bdf7815b0284497b",
+              "Labels": null,
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.io/library/mysql@sha256:47b0250a983e600ab247e6f25a4c99069d4cb637fd8dc6a11a43e83a83e9308c",
+                "docker.io/library/mysql@sha256:bf18020f32cc5d8f5e2add516d52fbf3afc3de431457076340e938596c528171"
+              ],
+              "RepoTags": [
+                "docker.io/library/mysql:5.7"
+              ],
+              "SharedSize": 0,
+              "Size": 471600290,
+              "VirtualSize": 471600290
+            },
+            {
+              "Containers": 1,
+              "Created": 1680222019,
+              "Id": "sha256:3d55a510c77e3af1a27fa189967ac05f3e4b9fdb4f09ce6e098cd3bd359245a0",
+              "Labels": null,
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.io/library/wordpress@sha256:8852dc9659a9b24a5966e5cd22bfc957caca5f117532fd083ce1307275d18ba8",
+                "docker.io/library/wordpress@sha256:fad1ce2182a79e442b20b333a3be786e84a4e44391f87dab51a1992e22790528"
+              ],
+              "RepoTags": [
+                "docker.io/library/wordpress:latest"
+              ],
+              "SharedSize": 0,
+              "Size": 629216521,
+              "VirtualSize": 629216521
+            },
+            {
+              "Containers": 1,
+              "Created": 1679935102,
+              "Id": "sha256:fd60cca4e217c3f4d53eeee302b4b2b380c42cfd8cdcc935e9f6f25a268a3f35",
+              "Labels": {
+                "org.label-schema.build-date": "2023-03-27T16:31:09.816451435Z",
+                "org.label-schema.license": "Elastic-License-2.0",
+                "org.label-schema.name": "Elasticsearch",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/elasticsearch",
+                "org.label-schema.usage": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.label-schema.vcs-ref": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.label-schema.vcs-url": "https://github.com/elastic/elasticsearch",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-27T16:31:09.816451435Z",
+                "org.opencontainers.image.documentation": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.opencontainers.image.licenses": "Elastic-License-2.0",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.opencontainers.image.source": "https://github.com/elastic/elasticsearch",
+                "org.opencontainers.image.title": "Elasticsearch",
+                "org.opencontainers.image.url": "https://www.elastic.co/products/elasticsearch",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.elastic.co/elasticsearch/elasticsearch@sha256:1ce91bcb3f049150229dcac9d0b1c428a561ef2e79b96aac2f76ac9e8f433419",
+                "docker.elastic.co/elasticsearch/elasticsearch@sha256:28deaf4dfbbe3e1197f4a505bd1461d38d7d30377aec2c84aa94e389ac676bb1",
+                "docker.elastic.co/elasticsearch/elasticsearch@sha256:9fe38a4dc00ce101630e70a966aad1a195b56bceb779748e6c399ceeb45cffab",
+                "localhost/docker-elk_elasticsearch@sha256:1ce91bcb3f049150229dcac9d0b1c428a561ef2e79b96aac2f76ac9e8f433419",
+                "localhost/docker-elk_elasticsearch@sha256:28deaf4dfbbe3e1197f4a505bd1461d38d7d30377aec2c84aa94e389ac676bb1",
+                "localhost/docker-elk_elasticsearch@sha256:9fe38a4dc00ce101630e70a966aad1a195b56bceb779748e6c399ceeb45cffab"
+              ],
+              "RepoTags": [
+                "localhost/docker-elk_elasticsearch:latest",
+                "docker.elastic.co/elasticsearch/elasticsearch:8.7.0"
+              ],
+              "SharedSize": 0,
+              "Size": 1330721563,
+              "VirtualSize": 1330721563
+            },
+            {
+              "Containers": 1,
+              "Created": 1682018638,
+              "Id": "sha256:5f07b3b48c6c3d4a7a147abbd6ac6b1611ed380c094546aa0bc4742d26150a29",
+              "Labels": {
+                "io.buildah.version": "1.30.0",
+                "org.label-schema.build-date": "2023-03-27T16:31:09.816451435Z",
+                "org.label-schema.license": "Elastic-License-2.0",
+                "org.label-schema.name": "Elasticsearch",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/elasticsearch",
+                "org.label-schema.usage": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.label-schema.vcs-ref": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.label-schema.vcs-url": "https://github.com/elastic/elasticsearch",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-27T16:31:09.816451435Z",
+                "org.opencontainers.image.documentation": "https://www.elastic.co/guide/en/elasticsearch/reference/index.html",
+                "org.opencontainers.image.licenses": "Elastic-License-2.0",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "09520b59b6bc1057340b55750186466ea715e30e",
+                "org.opencontainers.image.source": "https://github.com/elastic/elasticsearch",
+                "org.opencontainers.image.title": "Elasticsearch",
+                "org.opencontainers.image.url": "https://www.elastic.co/products/elasticsearch",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "ParentId": "128f6bf1c5a93da0485a58ebf101cb3088b6c978666bf3b18f71c63504b29d05",
+              "RepoDigests": [
+                "localhost/docker-elk_setup@sha256:ebf3b99316258b87aea5cd0f9d330f90fd7decbbf2f391ba7ac1e7f1b98dba38"
+              ],
+              "RepoTags": [
+                "localhost/docker-elk_setup:latest"
+              ],
+              "SharedSize": 0,
+              "Size": 1330721275,
+              "VirtualSize": 1330721275
+            },
+            {
+              "Containers": 1,
+              "Created": 1679803247,
+              "Id": "sha256:a0ba1fb9c04042cacecf3aa43cd987c30c90ead20330fabc9d346f5ae8324445",
+              "Labels": {
+                "org.label-schema.build-date": "2023-03-26T03:44:05+00:00",
+                "org.label-schema.license": "Elastic License",
+                "org.label-schema.name": "logstash",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/logstash",
+                "org.label-schema.vcs-url": "https://github.com/elastic/logstash",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-26T03:44:05+00:00",
+                "org.opencontainers.image.description": "Logstash is a free and open server-side data processing pipeline that ingests data from a multitude of sources, transforms it, and then sends it to your favorite 'stash.'",
+                "org.opencontainers.image.licenses": "Elastic License",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.title": "logstash",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.elastic.co/logstash/logstash@sha256:3c5fdc9fcaa8f9cd55f4be3795911465b1775847281bb3af65689fe56175c05e",
+                "docker.elastic.co/logstash/logstash@sha256:9aecbe5f49e1015bc7041dcd9b4124fb2026fc3cf28c0888aac3d64cd11865f6",
+                "docker.elastic.co/logstash/logstash@sha256:a415751da9a3894585ef3c7c217e13a069f1f05eccae2c0e46e55b8dc984ed78",
+                "localhost/docker-elk_logstash@sha256:3c5fdc9fcaa8f9cd55f4be3795911465b1775847281bb3af65689fe56175c05e",
+                "localhost/docker-elk_logstash@sha256:9aecbe5f49e1015bc7041dcd9b4124fb2026fc3cf28c0888aac3d64cd11865f6",
+                "localhost/docker-elk_logstash@sha256:a415751da9a3894585ef3c7c217e13a069f1f05eccae2c0e46e55b8dc984ed78"
+              ],
+              "RepoTags": [
+                "localhost/docker-elk_logstash:latest",
+                "docker.elastic.co/logstash/logstash:8.7.0"
+              ],
+              "SharedSize": 0,
+              "Size": 745912346,
+              "VirtualSize": 745912346
+            },
+            {
+              "Containers": 1,
+              "Created": 1679917044,
+              "Id": "sha256:a96c64a53cfef6942fa8c154d082b360d8e054d13c44df622d9197df63efea8e",
+              "Labels": {
+                "org.label-schema.build-date": "2023-03-27T11:09:20.771Z",
+                "org.label-schema.license": "Elastic License",
+                "org.label-schema.name": "Kibana",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/kibana",
+                "org.label-schema.usage": "https://www.elastic.co/guide/en/kibana/reference/index.html",
+                "org.label-schema.vcs-ref": "05f12599523732051b84dde0b8d5610e0db2b06d",
+                "org.label-schema.vcs-url": "https://github.com/elastic/kibana",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "8.7.0",
+                "org.opencontainers.image.created": "2023-03-27T11:09:20.771Z",
+                "org.opencontainers.image.documentation": "https://www.elastic.co/guide/en/kibana/reference/index.html",
+                "org.opencontainers.image.licenses": "Elastic License",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "05f12599523732051b84dde0b8d5610e0db2b06d",
+                "org.opencontainers.image.source": "https://github.com/elastic/kibana",
+                "org.opencontainers.image.title": "Kibana",
+                "org.opencontainers.image.url": "https://www.elastic.co/products/kibana",
+                "org.opencontainers.image.vendor": "Elastic",
+                "org.opencontainers.image.version": "8.7.0"
+              },
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.elastic.co/kibana/kibana@sha256:0be3e2e4d6a95b09e1393b877be930e433a2a112ad457738183108b05c719755",
+                "docker.elastic.co/kibana/kibana@sha256:1221b78152e82741e40f8a2a4dcf125ebd9eb064297bff6626c54f6b1145cf4e",
+                "docker.elastic.co/kibana/kibana@sha256:14e0574d043eab9078e2ca64487334ad1dca2215d710b7321027e9f63c34449b",
+                "localhost/docker-elk_kibana@sha256:0be3e2e4d6a95b09e1393b877be930e433a2a112ad457738183108b05c719755",
+                "localhost/docker-elk_kibana@sha256:1221b78152e82741e40f8a2a4dcf125ebd9eb064297bff6626c54f6b1145cf4e",
+                "localhost/docker-elk_kibana@sha256:14e0574d043eab9078e2ca64487334ad1dca2215d710b7321027e9f63c34449b"
+              ],
+              "RepoTags": [
+                "localhost/docker-elk_kibana:latest",
+                "docker.elastic.co/kibana/kibana:8.7.0"
+              ],
+              "SharedSize": 0,
+              "Size": 785714682,
+              "VirtualSize": 785714682
+            },
+            {
+              "Containers": 1,
+              "Created": 1679164196,
+              "Id": "sha256:0cc7dc7298448858be593629fb491fecc3b20e28a1a0a0bd0829fbb0eecb6119",
+              "Labels": {
+                "org.opencontainers.image.created": "2023-03-18T18:28:13.554Z",
+                "org.opencontainers.image.description": "Elasticsearch, Logstash, Kibana (ELK) Docker image",
+                "org.opencontainers.image.licenses": "NOASSERTION, latest",
+                "org.opencontainers.image.revision": "39a486f2ab446f66088a1cc0e2af5171fbf11dbd",
+                "org.opencontainers.image.source": "https://github.com/spujadas/elk-docker",
+                "org.opencontainers.image.title": "elk-docker",
+                "org.opencontainers.image.url": "https://github.com/spujadas/elk-docker",
+                "org.opencontainers.image.version": "8.6.2"
+              },
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.io/sebp/elk@sha256:8396518a1556b26d19646fe2e17940a9a70b46882ba12cb4fe9bd5853f9f3a81"
+              ],
+              "RepoTags": [
+                "docker.io/sebp/elk:latest"
+              ],
+              "SharedSize": 0,
+              "Size": 3099585077,
+              "VirtualSize": 3099585077
+            },
+            {
+              "Containers": 1,
+              "Created": 1630343282,
+              "Id": "sha256:3af7f172fe223195e9a66d2228cd6a9719ba146eff3c14448e6ab6f8f89ba9ab",
+              "Labels": null,
+              "ParentId": "",
+              "RepoDigests": [
+                "docker.io/magm3333/pentahoserver@sha256:1511d1ad79875c5ea9be49c1a6d446f764ee8225a309557913024bbfcf165a21"
+              ],
+              "RepoTags": [
+                "docker.io/magm3333/pentahoserver:latest"
+              ],
+              "SharedSize": 0,
+              "Size": 5193280352,
+              "VirtualSize": 5193280352
+            }
+          ],
+          "Info": {
+            "ID": "71ca70d7-75ab-41bb-a408-e7871406b995",
+            "Containers": 9,
+            "ContainersRunning": 2,
+            "ContainersPaused": 0,
+            "ContainersStopped": 5,
+            "Images": 13,
+            "Driver": "overlay",
+            "DriverStatus": [
+              [
+                "Native Overlay Diff",
+                "false"
+              ],
+              [
+                "Using metacopy",
+                "true"
+              ],
+              [
+                "Backing Filesystem",
+                "btrfs"
+              ],
+              [
+                "Supports d_type",
+                "true"
+              ]
+            ],
+            "Plugins": {
+              "Volume": [
+                "local"
+              ],
+              "Network": [
+                "bridge",
+                "macvlan",
+                "ipvlan"
+              ],
+              "Authorization": null,
+              "Log": [
+                "k8s-file",
+                "none",
+                "passthrough",
+                "journald"
+              ]
+            },
+            "MemoryLimit": true,
+            "SwapLimit": false,
+            "KernelMemory": false,
+            "KernelMemoryTCP": false,
+            "CpuCfsPeriod": false,
+            "CpuCfsQuota": false,
+            "CPUShares": false,
+            "CPUSet": false,
+            "PidsLimit": true,
+            "IPv4Forwarding": true,
+            "BridgeNfIptables": false,
+            "BridgeNfIp6tables": false,
+            "Debug": false,
+            "NFd": 10,
+            "OomKillDisable": false,
+            "NGoroutines": 11,
+            "SystemTime": "2023-04-21T15:14:19.400019595+01:00",
+            "LoggingDriver": "",
+            "CgroupDriver": "systemd",
+            "CgroupVersion": "2",
+            "NEventsListener": 0,
+            "KernelVersion": "6.2.11-300.fc38.x86_64",
+            "OperatingSystem": "fedora",
+            "OSVersion": "38",
+            "OSType": "linux",
+            "Architecture": "amd64",
+            "IndexServerAddress": "",
+            "RegistryConfig": {
+              "AllowNondistributableArtifactsCIDRs": [],
+              "AllowNondistributableArtifactsHostnames": [],
+              "InsecureRegistryCIDRs": [],
+              "IndexConfigs": {},
+              "Mirrors": []
+            },
+            "NCPU": 16,
+            "MemTotal": 16005996544,
+            "GenericResources": null,
+            "DockerRootDir": "/var/lib/containers/storage",
+            "HttpProxy": "",
+            "HttpsProxy": "",
+            "NoProxy": "",
+            "Name": "localhost.localdomain",
+            "Labels": null,
+            "ExperimentalBuild": true,
+            "ServerVersion": "4.5.0",
+            "Runtimes": {
+              "crun": {
+                "path": "/usr/bin/crun"
+              },
+              "crun-wasm": {
+                "path": "/usr/bin/crun-wasm"
+              },
+              "kata": {
+                "path": "/usr/bin/kata-runtime"
+              },
+              "krun": {
+                "path": "/usr/bin/krun"
+              },
+              "ocijail": {
+                "path": "/usr/local/bin/ocijail"
+              },
+              "runc": {
+                "path": "/usr/bin/runc"
+              },
+              "runj": {
+                "path": "/usr/local/bin/runj"
+              },
+              "runsc": {
+                "path": "/usr/bin/runsc"
+              },
+              "youki": {
+                "path": "/usr/local/bin/youki"
+              }
+            },
+            "DefaultRuntime": "crun",
+            "Swarm": {
+              "NodeID": "",
+              "NodeAddr": "",
+              "LocalNodeState": "inactive",
+              "ControlAvailable": false,
+              "Error": "",
+              "RemoteManagers": null
+            },
+            "LiveRestoreEnabled": false,
+            "Isolation": "",
+            "InitBinary": "",
+            "ContainerdCommit": {
+              "ID": "",
+              "Expected": ""
+            },
+            "RuncCommit": {
+              "ID": "",
+              "Expected": ""
+            },
+            "InitCommit": {
+              "ID": "",
+              "Expected": ""
+            },
+            "SecurityOptions": [
+              "name=seccomp,profile=default"
+            ],
+            "ProductLicense": "Apache-2.0",
+            "Warnings": []
+          },
+          "Version": {
+            "Platform": {
+              "Name": "linux/amd64/fedora-38"
+            },
+            "Components": [
+              {
+                "Name": "Podman Engine",
+                "Version": "4.5.0",
+                "Details": {
+                  "APIVersion": "4.5.0",
+                  "Arch": "amd64",
+                  "BuildTime": "2023-04-14T16:42:22+01:00",
+                  "Experimental": "false",
+                  "GitCommit": "",
+                  "GoVersion": "go1.20.2",
+                  "KernelVersion": "6.2.11-300.fc38.x86_64",
+                  "MinAPIVersion": "4.0.0",
+                  "Os": "linux"
+                }
+              },
+              {
+                "Name": "Conmon",
+                "Version": "conmon version 2.1.7, commit: ",
+                "Details": {
+                  "Package": "conmon-2.1.7-2.fc38.x86_64"
+                }
+              },
+              {
+                "Name": "OCI Runtime (crun)",
+                "Version": "crun version 1.8.3\ncommit: 59f2beb7efb0d35611d5818fd0311883676f6f7e\nrundir: /run/crun\nspec: 1.0.0\n+SYSTEMD +SELINUX +APPARMOR +CAP +SECCOMP +EBPF +CRIU +LIBKRUN +WASM:wasmedge +YAJL",
+                "Details": {
+                  "Package": "crun-1.8.3-2.fc38.x86_64"
+                }
+              }
+            ],
+            "Version": "4.5.0",
+            "ApiVersion": "1.41",
+            "MinAPIVersion": "1.24",
+            "GitCommit": "",
+            "GoVersion": "go1.20.2",
+            "Os": "linux",
+            "Arch": "amd64",
+            "KernelVersion": "6.2.11-300.fc38.x86_64",
+            "BuildTime": "2023-04-14T16:42:22+01:00"
+          }
+        },
+        "NodeCount": 0,
+        "GpuUseAll": false,
+        "GpuUseList": []
+      },
+      "Kubernetes": null
+    }
+  ],
+  "ssl": {
+    "certPath": "/data/certs/cert.pem",
+    "keyPath": "/data/certs/key.pem",
+    "selfSigned": true,
+    "httpEnabled": true
+  },
+  "stacks": [
+    {
+      "Id": 2,
+      "Name": "wp_lms",
+      "Type": 2,
+      "EndpointId": 2,
+      "SwarmId": "",
+      "EntryPoint": "docker-compose.yml",
+      "Env": [],
+      "ResourceControl": null,
+      "Status": 1,
+      "ProjectPath": "/data/compose/2",
+      "CreationDate": 1680442548,
+      "CreatedBy": "admin",
+      "UpdateDate": 1680442663,
+      "UpdatedBy": "admin",
+      "AdditionalFiles": null,
+      "AutoUpdate": null,
+      "Option": null,
+      "GitConfig": null,
+      "FromAppTemplate": false,
+      "Namespace": "",
+      "IsComposeFormat": false
+    }
+  ],
+  "tunnel_server": {
+    "PrivateKeySeed": "6KhaEhfHIkA5KSXa"
+  },
+  "users": [
+    {
+      "Id": 1,
+      "Username": "admin",
+      "Password": "$2a$10$m4egcAHobF8Xxpw7vtCeF.TZd4HH1cFNg0UgLFMFyCC.TEPPnn5xa",
+      "Role": 1,
+      "TokenIssueAt": 0,
+      "ThemeSettings": {
+        "color": "",
+        "subtleUpgradeButton": false
+      },
+      "UserTheme": "",
+      "PortainerAuthorizations": null,
+      "EndpointAuthorizations": null
+    }
+  ],
+  "version": {
+    "SchemaVersion": "2.17.1",
+    "MigratorCount": 1,
+    "Edition": 1,
+    "InstanceID": "e973751d-2f4a-44f1-9e94-c21c911a5505"
+  },
+  "metadata": {
+    "api_key": 0,
+    "customtemplates": 5,
+    "dockerhub": 0,
+    "edge_stack": 0,
+    "edgegroups": 0,
+    "edgejobs": 0,
+    "endpoint_groups": 1,
+    "endpoint_relations": 0,
+    "endpoints": 2,
+    "extension": 0,
+    "fdo_profiles": 0,
+    "helm_user_repository": 0,
+    "registries": 0,
+    "resource_control": 8,
+    "roles": 0,
+    "schedules": 0,
+    "settings": 0,
+    "snapshots": 0,
+    "ssl": 0,
+    "stacks": 2,
+    "tags": 0,
+    "team_membership": 0,
+    "teams": 0,
+    "tunnel_server": 0,
+    "users": 1,
+    "version": 0,
+    "webhooks": 0
+  }
+}
