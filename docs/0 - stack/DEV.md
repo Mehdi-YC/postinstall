@@ -48,3 +48,41 @@ altitude: 0.0000
     - markdown
 
 nim / kotlin
+
+
+## DATA : 
+
+### code : 
+- python 
+- js(svelte) 
+- rust
+---
+
+### storage
+- mongo
+- postgres
+- csv
+- api
+---
+### processing
+- kafka/postgres
+
+- python:
+    - apache beam
+    - polars / pandas
+    - prefect
+
+- n8n
+- apache nifi
+---
+### datawarehouse : 
+Clickhouse
+
+
+
+### reporting
+- grafana
+- superset
+- pentaho
+
+
