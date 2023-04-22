@@ -17,7 +17,21 @@
 			"type": 1
 			
 		},
-
+		{
+			"categories": [
+				"processing"
+			],
+			"description": "Data processing",
+			"image": "streamsets/datacollectorlatest",
+			"logo": "https://avatars.githubusercontent.com/u/14020362?s=280&v=4",
+			"platform": "linux",
+			"ports": [
+				"18630 /tcp"
+			],
+			"title": "Streamsets",
+			"type": 1
+			
+		},
 		{
 			"categories": [
 				"processing"
