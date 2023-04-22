@@ -70,7 +70,7 @@ nim / kotlin
 - python:
     - apache beam
     - polars / pandas
-    - prefect
+    - prefect and maybe luigi & airflow
 
 - n8n
 - apache nifi
