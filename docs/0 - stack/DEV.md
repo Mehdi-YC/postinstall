@@ -71,6 +71,7 @@ nim / kotlin
     - apache beam
     - polars / pandas
     - prefect and maybe luigi & airflow
+    - dbt
 
 - n8n
 - apache nifi
