@@ -75,7 +75,8 @@
 			"logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Apache-nifi-logo.svg/1200px-Apache-nifi-logo.svg.png",
 			"platform": "linux",
 			"ports": [
-				"8080/tcp"
+				"8080/tcp",
+				"8443/tcp"
 			],
 			"title": "APACHE NIFI",
 			"type": 1,
@@ -85,6 +86,24 @@
 					"description": "NIFI_WEB_HTTP_PORT",
 					"label": "NIFI_WEB_HTTP_PORT",
 					"name": "NIFI_WEB_HTTP_PORT"
+				},
+				{
+					"default": "8443",
+					"description": "NIFI_WEB_HTTPS_PORT",
+					"label": "NIFI_WEB_HTTPS_PORT",
+					"name": "NIFI_WEB_HTTPS_PORT"
+				},
+				{
+					"default": "admin",
+					"description": "SINGLE_USER_CREDETIALS_PASSWORD",
+					"label": "SINGLE_USER_CREDETIALS_PASSWORD",
+					"name": "SINGLE_USER_CREDETIALS_PASSWORD"
+				},
+				{
+					"default": "admin",
+					"description": "SINGLE_USER_CREDETIALS_USERNAME",
+					"label": "SINGLE_USER_CREDETIALS_USERNAME",
+					"name": "SINGLE_USER_CREDETIALS_USERNAME"
 				}
 			]
 		},
