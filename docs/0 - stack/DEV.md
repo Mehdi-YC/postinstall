@@ -76,10 +76,10 @@ nim / kotlin
 - apache nifi
 ---
 ### datawarehouse : 
-Clickhouse
+- Clickhouse
 
 
-
+---
 ### reporting
 - grafana
 - superset
