@@ -1,7 +1,22 @@
 {
 	"version": "2",
-	"templates": [
-
+	"templates": [ 
+	{
+		"categories": [
+			"PROCESSING"
+		],
+		"description": "CDAP is a layer of software running on top of Apache Hadoop® platforms such as the Cloudera Enterprise Data",
+		"image": "caskdata/cdap-sandbox:latest",
+		"logo": "https://miro.medium.com/v2/resize:fit:432/1*mZN3exaRl2rLEeqb0_p5ew.png",
+		"platform": "linux",
+		"ports": [
+			"11015/tcp",
+			"11011/tcp"
+		],
+		"title": "cdap",
+		"type": 1
+		
+	},
 		{
 			"categories": [
 				"OLAP"
