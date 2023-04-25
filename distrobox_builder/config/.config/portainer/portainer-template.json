@@ -17,6 +17,39 @@
 		"type": 1
 		
 	},
+
+
+    {
+		"categories": [
+			"PROCESSING"
+		],
+		"description": "Ship data pipelines with extraordinary velocity",
+		"image": "caskdata/cdap-sandbox:latest",
+		"logo": "https://docs.dagster.io/assets/logos/dagster_logo_primary.svg",
+		"platform": "linux",
+
+		"title": "TODO : DAGSTER",
+		"type": 1
+		
+	},
+
+    {
+		"categories": [
+			"PROCESSING"
+		],
+		"description": "https://www.querybook.org/docs/setup_guide/quick_setup/#main-requirement",
+		"image": "querybook/querybook:latest",
+		"logo": "https://www.querybook.org/img/querybook.svg",
+		"platform": "linux",
+		"ports": [
+			"10001/tcp"
+		],
+		"title": "TODO : QUARYBOOK",
+		"type": 1
+		
+	},
+
+
 		{
 			"categories": [
 				"OLAP"
@@ -6569,6 +6602,23 @@
             "logo": "https://images.ctfassets.net/paqvtpyf8rwu/GeLUVavqqxhFZolzU9jM3/3b8dddc74a632e63f17e0a5e40b971bb/super-panda-update.svg",
             "repository": {
                 "stackfile": "distrobox_builder/config/.config/portainer/composes-files/redpanda-kafka.yml",
+                "url": "https://github.com/mehdi-yc/postinstall"
+            }
+
+        },
+
+        {
+            "type": 3,
+            "title": "airflow",
+            "name": "airflow-compose",
+            "description": "bitnami airflow",
+            "categories": [
+                "SelfHosted"
+            ],
+            "platform": "linux",
+            "logo": "https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png",
+            "repository": {
+                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/airflow-bitnami.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
