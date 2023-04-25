@@ -70,11 +70,13 @@ nim / kotlin
 - python:
     - apache beam
     - polars / pandas
-    - prefect and maybe luigi & airflow
-    - dbt
-
+    - prefect / airflow
+- dbt
+- airbyte
+- dagster
 - n8n
 - apache nifi
+
 ---
 ### datawarehouse : 
 - Clickhouse
@@ -85,5 +87,10 @@ nim / kotlin
 - grafana
 - superset
 - pentaho
+
+### Other : 
+- great_expectations
+- querybook
+- jupyter
 
 
