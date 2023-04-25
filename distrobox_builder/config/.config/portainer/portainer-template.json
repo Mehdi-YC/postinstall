@@ -1627,7 +1627,7 @@
             "logo": "https://img.papamica.com/logo/adminer.png",
             "repository": {
                 "stackfile": "composes-files/adminer.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1663,7 +1663,7 @@
             "logo": "https://ampache.org/img/logo/ampache-logo.png",
             "repository": {
                 "stackfile": "composes-files/ampache.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1705,7 +1705,7 @@
             "logo": "https://img.papamica.com/logo/apprise.png",
             "repository": {
                 "stackfile": "composes-files/apprise-api.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1747,7 +1747,7 @@
             "logo": "https://img.papamica.com/logo/audacity.png",
             "repository": {
                 "stackfile": "composes-files/audacity.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1796,7 +1796,7 @@
             "logo": "https://img.papamica.com/logo/autoheal.png",
             "repository": {
                 "stackfile": "composes-files/autoheal.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1827,7 +1827,7 @@
             "logo": "https://img.papamica.com/logo/babybuddy.png",
             "repository": {
                 "stackfile": "composes-files/babybuddy.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1876,7 +1876,7 @@
             "logo": "https://img.papamica.com/logo/bazarr.png",
             "repository": {
                 "stackfile": "composes-files/bazarr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1934,7 +1934,7 @@
             "logo": "https://img.papamica.com/logo/bookstack.png",
             "repository": {
                 "stackfile": "composes-files/bookstack.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -1997,7 +1997,7 @@
             "logo": "https://developer.asustor.com/uploadIcons/0020_999_1573465183_calibre-web_256.png",
             "repository": {
                 "stackfile": "composes-files/calibre-web.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2046,7 +2046,7 @@
             "logo": "https://img.papamica.com/logo/checkmk.png",
             "repository": {
                 "stackfile": "composes-files/checkmk.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2088,7 +2088,7 @@
             "logo": "https://img.papamica.com/logo/chevereto.png",
             "repository": {
                 "stackfile": "composes-files/chevereto.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2155,7 +2155,7 @@
             "logo": "https://img.papamica.com/logo/dashy.png",
             "repository": {
                 "stackfile": "composes-files/dashy.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2197,7 +2197,7 @@
             "logo": "https://deemix.app/img/logo.png",
             "repository": {
                 "stackfile": "composes-files/deemix.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2240,7 +2240,7 @@
             "logo": "https://img.papamica.com/logo/deluge.png",
             "repository": {
                 "stackfile": "composes-files/deluge.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2303,7 +2303,7 @@
             "logo": "https://img.papamica.com/logo/dillinger.png",
             "repository": {
                 "stackfile": "composes-files/dillinger.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2345,7 +2345,7 @@
             "logo": "https://img.papamica.com/logo/duplicati.png",
             "repository": {
                 "stackfile": "composes-files/duplicaty.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2402,7 +2402,7 @@
             "logo": "https://img.papamica.com/logo/email2pdf.png",
             "repository": {
                 "stackfile": "composes-files/email2pdf.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2486,7 +2486,7 @@
             "logo": "https://img.papamica.com/logo/emby.png",
             "repository": {
                 "stackfile": "composes-files/emby.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2545,7 +2545,7 @@
             "logo": "https://img.papamica.com/logo/embystat.png",
             "repository": {
                 "stackfile": "composes-files/embystat.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2593,7 +2593,7 @@
             "logo": "https://img.papamica.com/logo/etherpad.png",
             "repository": {
                 "stackfile": "composes-files/etherpad.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2649,7 +2649,7 @@
             "logo": "https://img.papamica.com/logo/ferdi.png",
             "repository": {
                 "stackfile": "composes-files/ferdi.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2715,7 +2715,7 @@
             "logo": "https://img.papamica.com/logo/filebot.svg",
             "repository": {
                 "stackfile": "composes-files/filebot.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2762,7 +2762,7 @@
             "logo": "https://img.papamica.com/logo/filebrowser.png",
             "repository": {
                 "stackfile": "composes-files/filebrowser.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2810,7 +2810,7 @@
             "logo": "https://img.papamica.com/logo/flaresolverr.png",
             "repository": {
                 "stackfile": "composes-files/flaresolverr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2858,7 +2858,7 @@
             "logo": "https://img.papamica.com/logo/freshrss.png",
             "repository": {
                 "stackfile": "composes-files/freshrss.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2907,7 +2907,7 @@
             "logo": "https://www.linuxtricks.fr/upload/logo-glpi.png",
             "repository": {
                 "stackfile": "composes-files/glpi.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -2970,7 +2970,7 @@
             "logo": "https://img.papamica.com/logo/grafana.png",
             "repository": {
                 "stackfile": "composes-files/grafana.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3018,7 +3018,7 @@
             "logo": "https://www.tech2tech.fr/wp-content/uploads/2019/12/guac-tricolor-300x300.png",
             "repository": {
                 "stackfile": "composes-files/guacamole.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3078,7 +3078,7 @@
             "logo": "https://img.papamica.com/logo/hastebin.png",
             "repository": {
                 "stackfile": "composes-files/hastebin.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3121,7 +3121,7 @@
             "logo": "https://img.papamica.com/logo/healthchecks.jpg",
             "repository": {
                 "stackfile": "composes-files/heathchecks.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3207,7 +3207,7 @@
             "logo": "https://img.papamica.com/logo/homeassistant.png",
             "repository": {
                 "stackfile": "composes-files/homeassistant.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3238,7 +3238,7 @@
             "logo": "https://raw.githubusercontent.com//bastienwirtz/homer/main/public/logo.png",
             "repository": {
                 "stackfile": "composes-files/homer.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3280,7 +3280,7 @@
             "logo": "https://img.papamica.com/logo/imgproxy.png",
             "repository": {
                 "stackfile": "composes-files/imgproxy.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3323,7 +3323,7 @@
             "logo": "https://img.papamica.com/logo/jackett.png",
             "repository": {
                 "stackfile": "composes-files/jackett.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3372,7 +3372,7 @@
             "logo": "https://img.papamica.com/logo/jellyfin.png",
             "repository": {
                 "stackfile": "composes-files/jellyfin.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3430,7 +3430,7 @@
             "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Jenkins_logo.svg/1200px-Jenkins_logo.svg.png",
             "repository": {
                 "stackfile": "composes-files/jenkins.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3489,7 +3489,7 @@
             "logo": "https://img.papamica.com/logo/jirafeau.png",
             "repository": {
                 "stackfile": "composes-files/jirafeau.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3532,7 +3532,7 @@
             "logo": "https://www.kavitareader.com/img/logo.png",
             "repository": {
                 "stackfile": "composes-files/kavita.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3580,7 +3580,7 @@
             "logo": "https://img.papamica.com/logo/keycloak.png",
             "repository": {
                 "stackfile": "composes-files/keycloak.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3647,7 +3647,7 @@
             "logo": "https://img.papamica.com/logo/lidarr.png",
             "repository": {
                 "stackfile": "composes-files/lidarr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3705,7 +3705,7 @@
             "logo": "https://img.papamica.com/logo/limesurvey.png",
             "repository": {
                 "stackfile": "composes-files/limesurvey.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3766,7 +3766,7 @@
             "logo": "https://img.papamica.com/logo/mariadb.png",
             "repository": {
                 "stackfile": "composes-files/mariadb.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3832,7 +3832,7 @@
             "logo": "https://img.papamica.com/logo/matomo.png",
             "repository": {
                 "stackfile": "composes-files/matomo.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -3885,7 +3885,7 @@
             "logo": "https://img.papamica.com/logo/minecraft.png",
             "repository": {
                 "stackfile": "composes-files/minecraft-java-server.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4011,7 +4011,7 @@
             "logo": "https://img.papamica.com/logo/mumblebot.png",
             "repository": {
                 "stackfile": "composes-files/mumble-bot.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4047,7 +4047,7 @@
             "logo": "https://img.papamica.com/logo/mumble.png",
             "repository": {
                 "stackfile": "composes-files/mumble-web.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4093,7 +4093,7 @@
             "logo": "https://img.papamica.com/logo/mumble.png",
             "repository": {
                 "stackfile": "composes-files/murmur.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4135,7 +4135,7 @@
             "logo": "https://img.papamica.com/logo/nextcloud.png",
             "repository": {
                 "stackfile": "composes-files/nextcloud.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4196,7 +4196,7 @@
             "logo": "https://img.papamica.com/logo/nzbget.png",
             "repository": {
                 "stackfile": "composes-files/nzbget.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4259,7 +4259,7 @@
             "logo": "https://img.papamica.com/logo/olivetin.png",
             "repository": {
                 "stackfile": "composes-files/olivetin.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4302,7 +4302,7 @@
             "logo": "https://img.papamica.com/logo/ombi.png",
             "repository": {
                 "stackfile": "composes-files/ombi.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4350,7 +4350,7 @@
             "logo": "https://img.papamica.com/logo/openspeedtest.png",
             "repository": {
                 "stackfile": "composes-files/openspeedtest.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4393,7 +4393,7 @@
             "logo": "https://img.papamica.com/logo/organizr.png",
             "repository": {
                 "stackfile": "composes-files/organizr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4441,7 +4441,7 @@
             "logo": "https://img.papamica.com/logo/outline.webp",
             "repository": {
                 "stackfile": "composes-files/outline.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4525,7 +4525,7 @@
             "logo": "https://img.papamica.com/logo/overseerr.svg",
             "repository": {
                 "stackfile": "composes-files/overseerr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4573,7 +4573,7 @@
             "logo": "https://img.papamica.com/logo/paperless.png",
             "repository": {
                 "stackfile": "composes-files/paperless-ngx.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4621,7 +4621,7 @@
             "logo": "https://www.phpmyadmin.net/static/images/logo-og.png",
             "repository": {
                 "stackfile": "composes-files/phpmyadmin.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4664,7 +4664,7 @@
             "logo": "https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg",
             "repository": {
                 "stackfile": "composes-files/pigvin-share.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4707,7 +4707,7 @@
             "logo": "https://img.papamica.com/logo/plex.png",
             "repository": {
                 "stackfile": "composes-files/plex.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4766,7 +4766,7 @@
             "logo": "https://img.papamica.com/logo/prometheus.png",
             "repository": {
                 "stackfile": "composes-files/prometheus_server.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4815,7 +4815,7 @@
             "logo": "https://img.papamica.com/logo/prowlarr.png",
             "repository": {
                 "stackfile": "composes-files/prowlarr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4864,7 +4864,7 @@
             "logo": "https://img.papamica.com/logo/radarr.png",
             "repository": {
                 "stackfile": "composes-files/radarr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4923,7 +4923,7 @@
             "logo": "https://img.papamica.com/logo/readarr.png",
             "repository": {
                 "stackfile": "composes-files/readarr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -4982,7 +4982,7 @@
             "logo": "https://img.papamica.com/logo/requestrr.png",
             "repository": {
                 "stackfile": "composes-files/requestrr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5030,7 +5030,7 @@
             "logo": "https://img.papamica.com/logo/rundeck.png",
             "repository": {
                 "stackfile": "composes-files/rundeck.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5081,7 +5081,7 @@
             "logo": "https://img.papamica.com/logo/rustdesk.png",
             "repository": {
                 "stackfile": "composes-files/rustdesk.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5124,7 +5124,7 @@
             "logo": "https://img.papamica.com/logo/flood.png",
             "repository": {
                 "stackfile": "composes-files/rutorrent.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5188,7 +5188,7 @@
             "logo": "https://img.papamica.com/logo/scrypted.png",
             "repository": {
                 "stackfile": "composes-files/scrypted.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5219,7 +5219,7 @@
             "logo": "https://img.papamica.com/logo/sinusbot.png",
             "repository": {
                 "stackfile": "composes-files/sinusbot.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5262,7 +5262,7 @@
             "logo": "https://img.papamica.com/logo/sonarr.png",
             "repository": {
                 "stackfile": "composes-files/sonarr.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5320,7 +5320,7 @@
             "logo": "https://img.papamica.com/logo/wordpress.png",
             "repository": {
                 "stackfile": "composes-files/superwordpress.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5434,7 +5434,7 @@
             "logo": "https://img.papamica.com/logo/swagger.png",
             "repository": {
                 "stackfile": "composes-files/swagger.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5482,7 +5482,7 @@
             "logo": "https://img.papamica.com/logo/tautulli.png",
             "repository": {
                 "stackfile": "composes-files/tautulli.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5530,7 +5530,7 @@
             "logo": "https://img.papamica.com/logo/teamspeak.png",
             "repository": {
                 "stackfile": "composes-files/teamspeak.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5576,7 +5576,7 @@
             "logo": "https://img.papamica.com/logo/teedy.png",
             "repository": {
                 "stackfile": "composes-files/teedy.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5624,7 +5624,7 @@
             "logo": "https://img.papamica.com/logo/traefik.png",
             "repository": {
                 "stackfile": "composes-files/traefik.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5672,7 +5672,7 @@
             "logo": "https://img.papamica.com/logo/transmission.png",
             "repository": {
                 "stackfile": "composes-files/transmission.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5735,7 +5735,7 @@
             "logo": "https://raw.githubusercontent.com/zadam/trilium/master/images/app-icons/png/128x128.png",
             "repository": {
                 "stackfile": "composes-files/trilium.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5777,7 +5777,7 @@
             "logo": "https://img.papamica.com/logo/tsnranksystem.png",
             "repository": {
                 "stackfile": "composes-files/ts3rank.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5833,7 +5833,7 @@
             "logo": "https://img.papamica.com/logo/teamspeak_alt.png",
             "repository": {
                 "stackfile": "composes-files/ts3viewer.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5889,7 +5889,7 @@
             "logo": "https://img.papamica.com/logo/umami.png",
             "repository": {
                 "stackfile": "composes-files/umami.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5936,7 +5936,7 @@
             "logo": "https://img.papamica.com/logo/uptimekuma.svg",
             "repository": {
                 "stackfile": "composes-files/uptime-kuma.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -5978,7 +5978,7 @@
             "logo": "https://img.papamica.com/logo/bitwarden.png",
             "repository": {
                 "stackfile": "composes-files/vaultwarden.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6037,7 +6037,7 @@
             "logo": "https://img.papamica.com/logo/vikunja.png",
             "repository": {
                 "stackfile": "composes-files/vikunja.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6093,7 +6093,7 @@
             "logo": "https://img.papamica.com/logo/vscode.png",
             "repository": {
                 "stackfile": "composes-files/vscode.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6139,7 +6139,7 @@
             "logo": "https://img.papamica.com/logo/html.png",
             "repository": {
                 "stackfile": "composes-files/website-html.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6181,7 +6181,7 @@
             "logo": "https://img.papamica.com/logo/wikijs.png",
             "repository": {
                 "stackfile": "composes-files/wikijs.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6237,7 +6237,7 @@
             "logo": "https://img.papamica.com/logo/wordpress.png",
             "repository": {
                 "stackfile": "composes-files/wordpress.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6293,7 +6293,7 @@
             "logo": "https://img.papamica.com/logo/xbrowsersync.png",
             "repository": {
                 "stackfile": "composes-files/xbrowsersync.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6346,7 +6346,7 @@
             "logo": "https://yacht.sh/img/logo-light.svg",
             "repository": {
                 "stackfile": "composes-files/yacht.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6388,7 +6388,7 @@
             "logo": "https://img.papamica.com/logo/yourls.png",
             "repository": {
                 "stackfile": "composes-files/yourls.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6455,7 +6455,7 @@
             "logo": "https://img.papamica.com/logo/zabbix.png",
             "repository": {
                 "stackfile": "composes-files/zabbix-proxy.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6508,7 +6508,7 @@
             "logo": "https://img.papamica.com/logo/zabbix.png",
             "repository": {
                 "stackfile": "distrobox_builder/config/.config/portainer/composes-files/zabbix.yml",
-                "url": "https://github.com/PAPAMICA/docker-compose-collection"
+                "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
                 {
@@ -6552,6 +6552,26 @@
                 }
 
             ]
+        },
+
+        {
+            "type": 3,
+            "title": "redpanda kafka",
+            "name": "redpanda-kafka",
+            "description": "kafka console",
+            "note": "Website: <a href='https://www.zabbix.com/' target='_blank' rel='noopener'>Zabbix.com</a>",
+            "categories": [
+                "SelfHosted",
+                "Monitoring",
+                "PAPAMICA"
+            ],
+            "platform": "linux",
+            "logo": "https://images.ctfassets.net/paqvtpyf8rwu/GeLUVavqqxhFZolzU9jM3/3b8dddc74a632e63f17e0a5e40b971bb/super-panda-update.svg",
+            "repository": {
+                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/redpanda-kafka.yml",
+                "url": "https://github.com/mehdi-yc/postinstall"
+            }
+
         }
 	]
 }
