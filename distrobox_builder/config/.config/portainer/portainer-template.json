@@ -6622,6 +6622,40 @@
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
+        },
+        {
+            "type": 3,
+            "title": "kafka-compose",
+            "name": "kafka-compose",
+            "description": "kafka",
+            "categories": [
+                "kafka"
+            ],
+            "platform": "linux",
+            "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Apache_kafka.svg/1200px-Apache_kafka.svg.png",
+            "repository": {
+                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/kafka-compose.yml",
+                "url": "https://github.com/mehdi-yc/postinstall"
+            }
+
+        },
+
+        {
+            "type": 3,
+            "title": "confluent-kafka",
+            "name": "confluent-kafka",
+            "description": "confluent-kafka",
+            "categories": [
+                "kafka"
+            ],
+            "platform": "linux",
+            "logo": "https://companieslogo.com/img/orig/CFLT-c4a50286.png?t=1627024622",
+            "repository": {
+                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/confluent-kafka.yml",
+                "url": "https://github.com/mehdi-yc/postinstall"
+            }
+
         }
+
 	]
 }
