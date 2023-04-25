@@ -80,7 +80,7 @@ nim / kotlin
 ---
 ### datawarehouse : 
 - Clickhouse
-
+- Druid
 
 ---
 ### reporting
