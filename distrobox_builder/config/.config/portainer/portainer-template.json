@@ -263,7 +263,22 @@
 				"8088/tcp"
 			],
 			"title": "Apache superset",
-			"type": 1
+			"type": 1,
+			"env": [
+				{
+					"default": "sk",
+					"description": "SUPERSET_SECRET_KEY",
+					"label": "SUPERSET_SECRET_KEY",
+					"name": "SUPERSET_SECRET_KEY"
+				},
+				{
+					"default": "sk",
+					"description": "ECRET_KEY",
+					"label": "SECRET_KEY",
+					"name": "SECRET_KEY"
+				}
+					
+			]
 		},
 		{
 			"categories": [
