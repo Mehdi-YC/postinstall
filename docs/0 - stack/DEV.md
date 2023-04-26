@@ -82,12 +82,14 @@ nim / kotlin
 ### datawarehouse : 
 - Clickhouse
 - Druid
+- duckdb ...
 
 ---
 ### reporting
 - grafana
 - superset
 - pentaho
+- lightdash
 
 ### Other : 
 - great_expectations
