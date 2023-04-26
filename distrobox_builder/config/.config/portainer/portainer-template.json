@@ -50,6 +50,34 @@
 	},
     {
 		"categories": [
+			"visualization"
+		],
+		"description": "Fast analytics with the friendly UX and integrated tooling to let your company explore data on their own.",
+		"image": "metabase/metabase:latest",
+		"logo": "https://www.metabase.com/images/logo.svg",
+		"platform": "linux",
+		"ports": [
+			"3000/tcp"
+		],
+		"title": "Metabase",
+		"type": 1
+		
+	},
+    {
+		"categories": [
+			"visualization"
+		],
+		"description": "Connect and query your data sources, build dashboards to visualize data and share them with your company. https://redash.io/.",
+		"image": "metabase/metabase:latest",
+		"logo": "https://redash.io/assets/images/elements/redash-logo.svg",
+		"platform": "linux",
+
+		"title": "N/A Redash",
+		"type": 1
+		
+	},
+    {
+		"categories": [
 			"Database"
 		],
 		"description": "InfluxDB is an open source time series database for recording metrics, events, and analytics.",
@@ -6748,6 +6776,22 @@
 
         },
 
+        {
+            "type": 3,
+            "title": "lightdash",
+            "name": "lightdash",
+            "description": "lightdash",
+            "categories": [
+                "visualization"
+            ],
+            "platform": "linux",
+            "logo": "https://uploads-ssl.webflow.com/62a9ae93cf7542032ae55b9c/62b074584bde0e71c6675d0e_Lightdash-black%20(3)-p-500.png",
+            "repository": {
+                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/lightdash.yml",
+                "url": "https://github.com/mehdi-yc/postinstall"
+            }
+
+        }
 
 
 
