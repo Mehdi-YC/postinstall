@@ -53,17 +53,27 @@
       - name: Install vscodium extensions
         command: codium --install-extension "{{ item }}"
         with_items:
+          - asvetliakov.vscode-neovim
+          - bradlc.vscode-tailwindcss
+          - innoverio.vscode-dbt-power-user
+          - jdinhlife.gruvbox
           - ms-python.python
           - ms-toolsai.jupyter
           - ms-toolsai.jupyter-keymap
           - ms-toolsai.jupyter-renderers
           - ms-toolsai.vscode-jupyter-cell-tags
           - ms-toolsai.vscode-jupyter-slideshow
+          - mtxr.sqltools
+          - mtxr.sqltools-driver-pg
+          - mtxr.sqltools-driver-sqlite
           - PKief.material-icon-theme
+          - rust-lang.rust
+          - rust-lang.rust-analyzer
           - s-nlf-fh.glassit
           - sainnhe.gruvbox-material
+          - samuelcolvin.jinjahtml
           - svelte.svelte-vscode
           - tamasfe.even-better-toml
+          - ultram4rine.sqltools-clickhouse-driver
+          - vscodevim.vim
           - yandeu.five-server
-
-  
