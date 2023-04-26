@@ -1,9 +1,9 @@
 {
 	"version": "2",
-	"templates": [ 
+	"templates": [
 	{
 		"categories": [
-			"PROCESSING"
+			"Processing"
 		],
 		"description": "CDAP is a layer of software running on top of Apache Hadoop® platforms such as the Cloudera Enterprise Data",
 		"image": "caskdata/cdap-sandbox:latest",
@@ -17,11 +17,70 @@
 		"type": 1
 		
 	},
+    {
+		"categories": [
+			"Database"
+		],
+		"description": "Neo4j is the world's leading graph database, with native graph storage and processing.",
+		"image": "neo4j:latest",
+		"logo": "https://raw.githubusercontent.com/docker-library/docs/56823e63d5b6dd7ddbb9d5d3c4a8947778055d8e/neo4j/logo.png",
+		"platform": "linux",
+		"ports": [
+			"7474/tcp",
+			"7687/tcp"
+		],
+		"title": "Neo4j",
+		"type": 1
+		
+	},
+    {
+		"categories": [
+			"Database"
+		],
+		"description": "SurrealDB is an end-to-end cloud native database for web, mobile, serverless, jamstack, backend, and traditional applications.",
+		"image": "surrealdb/surrealdb:latest",
+		"logo": "https://github.com/surrealdb/surrealdb/blob/main/img/whatissurreal.svg",
+		"platform": "linux",
+		"ports": [
+			"8000/tcp"
+		],
+		"title": "Surrealdb-standalone",
+		"type": 1
+		
+	},
+    {
+		"categories": [
+			"Database"
+		],
+		"description": "InfluxDB is an open source time series database for recording metrics, events, and analytics.",
+		"image": "influxdb:latest",
+		"logo": "https://raw.githubusercontent.com/docker-library/docs/43d87118415bb75d7bb107683e79cd6d69186f67/influxdb/logo.png",
+		"platform": "linux",
+		"ports": [
+			"8086/tcp"
 
+		],
+		"title": "InfluxDB",
+		"type": 1
+		
+	},
+	{
+		"categories": [
+			"Processing"
+		],
+		"description": "see : https://hub.docker.com/r/apache/druid",
+		"image": "apache/druid:latest",
+		"logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Apache_Druid_logo.svg/2560px-Apache_Druid_logo.svg.png",
+		"platform": "linux",
+
+		"title": "N∕A : Druid",
+		"type": 1
+		
+	},
 
     {
 		"categories": [
-			"PROCESSING"
+			"Processing"
 		],
 		"description": "Ship data pipelines with extraordinary velocity",
 		"image": "caskdata/cdap-sandbox:latest",
@@ -35,7 +94,7 @@
 
     {
 		"categories": [
-			"PROCESSING"
+			"Processing"
 		],
 		"description": "https://www.querybook.org/docs/setup_guide/quick_setup/#main-requirement",
 		"image": "querybook/querybook:latest",
@@ -67,9 +126,9 @@
 		},
 		{
 			"categories": [
-				"processing"
+				"Processing"
 			],
-			"description": "Data processing",
+			"description": "Data Processing",
 			"image": "streamsets/datacollectorlatest",
 			"logo": "https://avatars.githubusercontent.com/u/14020362?s=280&v=4",
 			"platform": "linux",
@@ -82,7 +141,7 @@
 		},
 		{
 			"categories": [
-				"processing"
+				"Processing"
 			],
 			"restart_policy": "always",
 			"description": "Redpanda Console is a developer-friendly UI for managing your Kafka/Redpanda workloads. ",
@@ -106,7 +165,7 @@
 		},
 		{
 			"categories": [
-				"processing"
+				"Processing"
 			],
 			"description": "A visual tool to define and run real-time decision algorithms. docker run -it --network host -e DEFAULT_SCENARIO_TYPE=streaming-lite-embedded -e KAFKA_ADDRESS=localhost:3032 -e SCHEMA_REGISTRY_URL=http://localhost:3082 touk/nussknacker:latest",
 			"image": "touk/nussknacker:latest",
@@ -206,7 +265,7 @@
 				"OLAP",
 				"Datawarehouse"
 			],
-			"description": "ClickHouse is the fastest and most resource efficient open-source database for real-time apps and analytics.",
+			"description": "ClickHouse is the fastest and most resource efficient open-source Database for real-time apps and analytics.",
 			"image": "yandex/clickhouse-server:latest",
 			"logo": "https://clickhouse.com/logos/black-logo.svg",
 			"platform": "linux",
@@ -375,7 +434,7 @@
 		},
 		{
 			"categories": [
-				"database",
+				"Database",
 				"low-code"
 			],
 			"description": "The Open Source Airtable Alternative 🎃Turns any MySQL, PostgreSQL, SQL Server, SQLite & MariaDB into a smart-spreadsheet. .",
@@ -394,9 +453,9 @@
 			],
 			"env": [
 				{
-					"label": "use a database first",
+					"label": "use a Database first",
 					"name": "NC_DB",
-					"default": "pg://host:port?u=user&p=password&d=database"
+					"default": "pg://host:port?u=user&p=password&d=Database"
 				},
 				{
 					"label": "secret token",
@@ -465,9 +524,9 @@
 		},
 		{
 			"categories": [
-				"database"
+				"Database"
 			],
-			"description": "The most advanced open-source database",
+			"description": "The most advanced open-source Database",
 			"env": [
 				{
 					"label": "Superuser",
@@ -510,7 +569,7 @@
 		},
 		{
 			"categories": [
-				"database"
+				"Database"
 			],
 			"description": "Open-source in-memory data structure store",
 			"image": "redis:latest",
@@ -548,7 +607,7 @@
 		},
 		{
 			"categories": [
-				"database"
+				"Database"
 			],
 			"description": "Microsoft SQL Server on Linux",
 			"env": [
@@ -575,7 +634,7 @@
 			"categories": [
 				"CMS"
 			],
-			"description": "Wordpress setup with a MySQL database",
+			"description": "Wordpress setup with a MySQL Database",
 			"env": [
 				{
 					"description": "Password used by the MySQL root user.",
@@ -584,7 +643,7 @@
 				}
 			],
 			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/wordpress.png",
-			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"note": "Deploys a Wordpress instance connected to a MySQL Database.",
 			"platform": "linux",
 			"repository": {
 				"stackfile": "stacks/wordpress/docker-stack.yml",
@@ -597,7 +656,7 @@
 			"categories": [
 				"CMS"
 			],
-			"description": "Wordpress setup with a MySQL database",
+			"description": "Wordpress setup with a MySQL Database",
 			"env": [
 				{
 					"description": "Password used by the MySQL root user.",
@@ -606,7 +665,7 @@
 				}
 			],
 			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/wordpress.png",
-			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"note": "Deploys a Wordpress instance connected to a MySQL Database.",
 			"platform": "linux",
 			"repository": {
 				"stackfile": "stacks/wordpress/docker-stack.yml",
@@ -616,8 +675,8 @@
 			"type": 3
 		},
 		{
-			"description": "Wordpress setup with a MySQL database",
-			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"description": "Wordpress setup with a MySQL Database",
+			"note": "Deploys a Wordpress instance connected to a MySQL Database.",
 			"stackfile": "https://raw.githubusercontent.com/mikestraney/portainer-templates/master/stacks/wordpress/edge/docker-stack.yml",
 			"title": "Wordpress",
 			"type": 4
@@ -682,7 +741,7 @@
 			]
 		},
 		{
-			"description": "[Mariadb](https://mariadb.org/) is one of the most popular database servers. Made by the original developers of MySQL.",
+			"description": "[Mariadb](https://mariadb.org/) is one of the most popular Database servers. Made by the original developers of MySQL.",
 			"env": [
 				{
 					"default": "1024",
@@ -710,13 +769,13 @@
 				},
 				{
 					"default": "USER_DB_NAME",
-					"description": "Specify the name of a database to be created on image startup.",
+					"description": "Specify the name of a Database to be created on image startup.",
 					"label": "MYSQL_DATABASE",
 					"name": "MYSQL_DATABASE"
 				},
 				{
 					"default": "MYSQL_USER",
-					"description": "This user will have superuser access to the database specified by MYSQL_DATABASE (do not use root here).",
+					"description": "This user will have superuser access to the Database specified by MYSQL_DATABASE (do not use root here).",
 					"label": "MYSQL_USER",
 					"name": "MYSQL_USER"
 				},
@@ -1169,7 +1228,7 @@
 			"description": "Open-source marketing automation platform",
 			"env": [
 				{
-					"label": "MySQL database host",
+					"label": "MySQL Database host",
 					"name": "MAUTIC_DB_HOST",
 					"type": "container"
 				},
@@ -1255,9 +1314,9 @@
 		{
 			"type": 1,
 			"title": "Mongo",
-			"description": "Open-source document-oriented database",
+			"description": "Open-source document-oriented Database",
 			"categories": [
-				"database"
+				"Database"
 			],
 			"platform": "linux",
 			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/mongo.png",
@@ -1274,9 +1333,9 @@
 		{
 			"type": 1,
 			"title": "MySQL",
-			"description": "The most popular open-source database",
+			"description": "The most popular open-source Database",
 			"categories": [
-				"database"
+				"Database"
 			],
 			"platform": "linux",
 			"logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/mysql.png",
@@ -1309,7 +1368,7 @@
 			"env": [
 				{
 					"name": "HOST",
-					"label": "PostgreSQL database host",
+					"label": "PostgreSQL Database host",
 					"type": "container"
 				},
 				{
@@ -1583,7 +1642,7 @@
 				}
 			],
 			"logo": "https://supabase.com/docs/supabase-dark.svg",
-			"note": "Deploys a Wordpress instance connected to a MySQL database.",
+			"note": "Deploys a Wordpress instance connected to a MySQL Database.",
 			"platform": "linux",
 			"repository": {
 				"stackfile": "supabase/docker-compose.yml",
@@ -1624,7 +1683,7 @@
 					"name": "TZ",
 					"label": "TZ",
 					"default": "Europe/Amsterdam",
-					"description": "specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)."
+					"description": "specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_Database_time_zones#List)."
 				}
 			],
 			"ports": [
@@ -3085,7 +3144,7 @@
                 },
                 {
                     "name": "GUAC_DB_PASSWORD",
-                    "label": "Your database password ",
+                    "label": "Your Database password ",
                     "description": "Exemple: My-Super-Password!",
                     "default": "My-Super-Password!"
                 },
@@ -3303,7 +3362,7 @@
             "type": 3,
             "title": "ImgProxy",
             "name": "ImgProxy",
-            "description": "Proxy for images with processing.",
+            "description": "Proxy for images with Processing.",
             "note": "Website: <a href='https://imgproxy.net/' target='_blank' rel='noopener'>ImgProxy.net</a>",
             "categories": [
                 "SelfHosted",
@@ -3788,7 +3847,7 @@
             "type": 3,
             "title": "MariaDB",
             "name": "MariaDB",
-            "description": "Mariadb is one of the most popular database servers. Made by the original developers of MySQL.",
+            "description": "Mariadb is one of the most popular Database servers. Made by the original developers of MySQL.",
             "note": "Website: <a href='https://mariadb.org/' target='_blank' rel='noopener'>mariadb.org</a>",
             "categories": [
                 "SelfHosted",
@@ -4202,11 +4261,11 @@
                 },
                 {
                     "name": "DB_PASSWORD",
-                    "label": "Password for database user"
+                    "label": "Password for Database user"
                 },
                 {
                     "name": "DB_ROOT",
-                    "label": "Password for database root"
+                    "label": "Password for Database root"
                 },
                 {
                     "name": "DATA",
@@ -5387,11 +5446,11 @@
                 },
                 {
                     "name": "DB_PASSWORD",
-                    "label": "Password for database user"
+                    "label": "Password for Database user"
                 },
                 {
                     "name": "DB_ROOT",
-                    "label": "Password for database root"
+                    "label": "Password for Database root"
                 },
                 {
                     "name": "WORDPRESS_ADMIN_USERNAME",
@@ -6248,11 +6307,11 @@
                 },
                 {
                     "name": "DB_PASSWORD",
-                    "label": "Password for database user"
+                    "label": "Password for Database user"
                 },
                 {
                     "name": "DB_ROOT",
-                    "label": "Password for database root"
+                    "label": "Password for Database root"
                 }
             ]
         },
@@ -6304,11 +6363,11 @@
                 },
                 {
                     "name": "DB_PASSWORD",
-                    "label": "Password for database user"
+                    "label": "Password for Database user"
                 },
                 {
                     "name": "DB_ROOT",
-                    "label": "Password for database root"
+                    "label": "Password for Database root"
                 }
             ]
         },
@@ -6655,7 +6714,43 @@
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
-        }
+        },
+        {
+            "type": 3,
+            "title": "surrealdb",
+            "name": "surrealdb",
+            "description": "surrealdb",
+            "categories": [
+                "Database"
+            ],
+            "platform": "linux",
+            "logo": "https://avatars.githubusercontent.com/u/10982346",
+            "repository": {
+                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/surrealdb.yml",
+                "url": "https://github.com/mehdi-yc/postinstall"
+            }
+
+        },
+        {
+            "type": 3,
+            "title": "PocketBase",
+            "name": "PocketBase",
+            "description": "PocketBase",
+            "categories": [
+                "Database"
+            ],
+            "platform": "linux",
+            "logo": "https://pocketbase.io/images/logo.svg",
+            "repository": {
+                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/pocketbase.yml",
+                "url": "https://github.com/mehdi-yc/postinstall"
+            }
+
+        },
+
+
+
+
 
 	]
 }
