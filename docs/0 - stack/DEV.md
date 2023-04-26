@@ -71,6 +71,7 @@ nim / kotlin
     - apache beam
     - polars / pandas
     - prefect / airflow
+    - duckdb
 - dbt
 - airbyte
 - dagster
