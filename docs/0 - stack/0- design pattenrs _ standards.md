@@ -71,6 +71,9 @@
 
 - [gr8 rust](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDF6BX6_RdPisRVHgzV02NW)
 - [crust of rust](https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa)
+- [Let's get rusty](https://www.youtube.com/@letsgetrusty/videos)
+- [From python to rust](https://www.youtube.com/watch?v=7odJDwhjCXQ&list=PLEIv4NBmh-GsWGE9mY3sF9c5lgh5Z_jLr)
+- [Good rust stuff](https://www.youtube.com/@JeremyChone)
 
 * * *
 
@@ -79,6 +82,7 @@
 - [py code standards](https://www.youtube.com/watch?v=U2vDWc5sce0)
 - [python all in one](https://www.youtube.com/playlist?list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU)
 - [advanced](https://www.youtube.com/@mCoding)
+- [good python tips](https://www.youtube.com/@ArjanCodes)
 
 * * *
 
@@ -134,13 +138,13 @@
 - [logic 2](https://www.youtube.com/watch?v=7dnLtvmQkdk&list=PLqEJ_rxb3Xf0dTy_-dSqINnAD5tbmpUx8&index=5)
     
 - [exo 7](https://www.youtube.com/@Exo7Math/playlists)
+- [Reducible - MATH PROBLEMS](https://www.youtube.com/@Reducible)
     
 - find more ...
     
 
 * * *
 
-* * *
 
 ## best channels :
 
@@ -153,3 +157,18 @@
 - [Grafikart](https://www.youtube.com/@grafikart)
 - [web dev (watch & learn)](https://www.youtube.com/@WatchandLearnTutorials/playlists)
 - [Net Ninja](https://www.youtube.com/@NetNinja)
+- [Awesome](https://www.youtube.com/@awesome-coding)
+
+***
+## New Data stack :
+- [Restack - Stacks overview](https://www.youtube.com/watch?v=Lizg1LzMEhE)
+- [Grafana](https://www.youtube.com/watch?v=wcTr8Hm7SCQ&list=PLn6POgpklwWo3_2pj5Jflqwla62P5OI8n)
+- [Clickhouse](https://www.youtube.com/@ClickHouseDB)
+- [Apache Superset](https://www.youtube.com/watch?v=Hrx5w9s27P8&list=PLz-a3JGXUF8FPvKkm6yDgwAllb3kj2ZS2)
+- [DBT labs](https://www.youtube.com/@dbt-labs)
+- [Dagster](https://www.youtube.com/@dagsterio)
+-[Airbyte](https://www.youtube.com/@AirbyteHQ)
+- [Apache Nifi](https://www.youtube.com/watch?v=hpVZWYbifnc&list=PLkp40uss1kSI66DA_aDCfx02gXipoRQHc)
+
+
+
