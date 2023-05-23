@@ -7,7 +7,7 @@
 - [Derek design patterns](https://www.youtube.com/playlist?list=PLF206E906175C7E07)
 - [good design pattenrs](https://www.youtube.com/watch?v=tSZn4wkBIu8&list=PLlsmxlJgn1HJpa28yHzkBmUY-Ty71ZUGc&index=2)
 - [Clan code playlist](https://www.youtube.com/watch?v=rndiYu8If-I&list=PL_csAAO9PQ8ZIh89P2re5fziX9kaI8Yhx)
-
+- [API design patterns](https://opensource.zalando.com/restful-api-guidelines/#common-headers)
 * * *
 
 ## systems design :[ByteByteGo](https://blog.bytebytego.com/)
@@ -32,6 +32,7 @@
 - git : [Git and GitHub for Beginners](https://www.youtube.com/watch?v=RGOj5yH7evk)
     
 - regex [Regular Exp Net Ninja](https://www.youtube.com/watch?v=r6I-Ahc0HB4&list=PL4cUxeGkcC9g6m_6Sld9Q4jzqdqHd2HiD)
+- [IT general important knowledge](https://www.youtube.com/@prodcoder/videos)
     
 - rpc
     
