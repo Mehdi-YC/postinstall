@@ -1,0 +1,129 @@
+- name: i3_ubuntu
+  hosts: localhost
+  vars:
+    config_path: "$HOME/repos/myconfig"
+
+
+  tasks:
+
+    - name: install i3 + config
+      become: true
+      package:
+        name: 
+          - i3
+          - i3status
+          - picom
+          - xfce4-panel
+          - dunst
+          - network-manager
+        state: present
+
+
+
+    - name: Install required snaps
+      become: true
+      snap:
+        name: "{{ snaps }}"
+        state: present
+      vars:
+        snaps:
+          - insomnia
+          - pitivi
+          - remmina
+          - gimp
+          - inkscape
+          - discord
+          - firefox
+          - dbeaver-ce
+          - joplin
+          - flameshot
+          - codium
+
+
+
+    - name: Install vscodium extensions
+      command: codium --install-extension "{{ item }}"
+      with_items:
+        - asvetliakov.vscode-neovim
+        - bradlc.vscode-tailwindcss
+        - jdinhlife.gruvbox
+        - ms-python.python
+        - PKief.material-icon-theme
+        - rust-lang.rust-analyzer
+        - s-nlf-fh.glassit
+        - sainnhe.gruvbox-material
+        - samuelcolvin.jinjahtml
+        - svelte.svelte-vscode
+        - tamasfe.even-better-toml
+        - yandeu.five-server
+
+
+
+    - name: Install required packages from APT
+      become: true
+      apt:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - ranger
+          - stow
+          - fzf
+          - tmux
+          - htop
+          - python3-pip
+          - git
+          - bat
+          - cargo
+          - rustc
+          - docker 
+          - docker-compose
+
+
+
+    - name: Install pip packages
+      pip:
+        name:
+          - beautifulsoup4
+          - numpy
+          - pandas
+          - matplotlib
+          - requests
+          - fastapi
+          - scrapy
+        state: present   
+
+
+
+    - name: Clone config
+      git:
+        repo: https://github.com/mehdi-yc/postinstall
+        dest: "{{config_path}}"
+        update: true
+
+
+
+    - name: Backup .bashrc and .Xresources
+      command: mv "{{ item }}" "{{ item }}.bak"
+      args:
+        creates: "{{ item }}.bak"
+      with_items:
+        - ~/.bashrc
+        - ~/.Xresources
+
+
+
+    - name: Stow the config files
+      command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
+
+
+
+    - name: Add some fonts
+      shell: |
+              mkdir ~/.local/share/
+              mkdir ~/.local/share/fonts 
+              cd ~/.local/share/fonts 
+              curl -fLo "Fira Code Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf
+
+
+
