@@ -93,13 +93,19 @@
         state: present   
 
     - name: Clone config
+      command: mkdir -p ~/.vim/pack/plugins/start && git clone https://github.com/mg979/vim-visual-multi ~/.vim/pack/plugins/start/vim-visual-multi
+
+
+    - name: Neovim multiline editing plugin
       git:
         repo: https://github.com/mehdi-yc/postinstall
         dest: "{{config_path}}"
         update: true
 
+
+
     - name: Stow the config files
-      command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
+      command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config && chmod +x ~/.config/i3/*
 
     - name: Add some fonts
       shell: |

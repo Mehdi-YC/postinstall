@@ -26,7 +26,7 @@ require('lazy').setup({
       require("nvim-tree").setup {}
     end,
   },
-
+  'mg979/vim-visual-multi',
   'nvim-tree/nvim-web-devicons',
   -- Git related plugins
 --  'tpope/vim-fugitive',
