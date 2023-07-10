@@ -92,11 +92,11 @@
           - scrapy
         state: present   
 
-    - name: Clone config
+    - name: Neovim multiline editing plugin
       command: mkdir -p ~/.vim/pack/plugins/start && git clone https://github.com/mg979/vim-visual-multi ~/.vim/pack/plugins/start/vim-visual-multi
 
 
-    - name: Neovim multiline editing plugin
+    - name: Clone config 
       git:
         repo: https://github.com/mehdi-yc/postinstall
         dest: "{{config_path}}"
