@@ -46,6 +46,10 @@ altitude: 0.0000
     - csv
     - regex
     - markdown
+    - cron
+    - bookmarklets
+    - zombie process
+    - blue / canary / hot deployments
 
 nim / kotlin
 
