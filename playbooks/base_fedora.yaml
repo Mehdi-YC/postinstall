@@ -5,12 +5,10 @@
 
   tasks:
 
-
     - name: Enable COPRs
       become: true
       command: 'dnf copr enable {{ item }} -y'
       with_items:
-        - alciregi/distrobox
 #       - zeno/scrcpy
         - atim/starship
         - atim/nushell
@@ -26,16 +24,13 @@
           - fzf
           - tmux
           - htop
+          - docker
+          - docker-compose
           - python3-pip
           - neovim
           - git
           - bat
-          #- hyperfine
-          - tokei
-          #- just
-          - nushell
           - starship
-          - fish
         state: present
         update_cache: false
         install_weak_deps: false
@@ -53,6 +48,7 @@
           - rustc
           - tmux
           - htop
+          - docker
           - docker-compose
           - python3-pip
           - wget
@@ -61,7 +57,7 @@
           - git
           - nodejs
           - npm
-          - ansible
+#          - ansible
           - afetch
           - jq
           - unzip
@@ -72,7 +68,6 @@
           - just
           - nushell
           - starship
-          - fish
         state: present
         update_cache: false
         install_weak_deps: false
@@ -90,27 +85,43 @@
           - requests
           - fastapi
           - scrapy
+          - django+
         state: present   
 
-    - name: Neovim multiline editing plugin
-      command: mkdir -p ~/.vim/pack/plugins/start && git clone https://github.com/mg979/vim-visual-multi ~/.vim/pack/plugins/start/vim-visual-multi
 
 
-    - name: Clone config 
+    - name: Clone config
       git:
         repo: https://github.com/mehdi-yc/postinstall
         dest: "{{config_path}}"
         update: true
+      tags: minimal
+
+
+
+    - name: Backup .bashrc and .Xresources
+      command: mv "{{ item }}" "{{ item }}.bak"
+      args:
+        creates: "{{ item }}.bak"
+      with_items:
+        - ~/.bashrc
+        - ~/.Xresources
 
 
 
     - name: Stow the config files
-      command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config && chmod +x ~/.config/i3/*
-
-    - name: Add some fonts
-      shell: |
-              mkdir ~/.local/share/
-              mkdir ~/.local/share/fonts 
-              cd ~/.local/share/fonts 
-              curl -fLo "Fira Code Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf
+      command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
       tags: minimal
+    
+
+    - name: chmod the i3 scripts
+      command: chmod +x ~/.config/i3/*
+
+
+    - name: Download FiraCode Regular Nerd Font
+      get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
+        dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
+
+
+

@@ -13,7 +13,6 @@
           - i3
           - i3status
           - picom
-          - xfce4-panel
           - dunst
           - network-manager
         state: present
@@ -28,17 +27,17 @@
       vars:
         snaps:
           - insomnia
-          - pitivi
+          #- pitivi
           - remmina
-          - gimp
+          #- gimp
           - inkscape
           - discord
           - firefox
-          - dbeaver-ce
+          #- dbeaver-ce
           - joplin
           - flameshot
           - codium
-
+          - starship
 
 
     - name: Install vscodium extensions
@@ -78,22 +77,14 @@
           - rustc
           - docker 
           - docker-compose
-
-
-
-    - name: Install pip packages
-      pip:
-        name:
-          - beautifulsoup4
-          - numpy
-          - pandas
-          - matplotlib
-          - requests
-          - fastapi
-          - scrapy
-        state: present   
-
-
+          - python3-beautifulsoup4
+          - python3-numpy
+          - python3-pandas
+          - python3-matplotlib
+          - python3-requests
+          - python3-fastapi
+          - python3-scrapy
+          - fish
 
     - name: Clone config
       git:
@@ -115,15 +106,17 @@
 
     - name: Stow the config files
       command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
+      tags: minimal
+    
+    - name: chmod the i3 scripts
+      command: chmod +x ~/.config/i3/*
 
 
+    - name: Download FiraCode Regular Nerd Font
+      get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
+        dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
 
-    - name: Add some fonts
-      shell: |
-              mkdir ~/.local/share/
-              mkdir ~/.local/share/fonts 
-              cd ~/.local/share/fonts 
-              curl -fLo "Fira Code Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf
 
 
 
