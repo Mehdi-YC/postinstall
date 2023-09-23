@@ -126,6 +126,8 @@
         state: directory
 
     - name: Download FiraCode Regular Nerd Font
+      become: true
+      timeout: 300
       get_url:
         url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
         dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
