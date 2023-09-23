@@ -105,7 +105,7 @@
 
 
     - name: Stow the config files
-      command: stow -vRd "{{config_path}}/distrobox_builder/" -t $HOME config
+      command: stow -vRd "{{config_path}}/" -t $HOME config
       tags: minimal
     
     - name: chmod the i3 scripts

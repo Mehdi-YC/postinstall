@@ -6627,7 +6627,7 @@
             "platform": "linux",
             "logo": "https://img.papamica.com/logo/zabbix.png",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/zabbix.yml",
+                "stackfile": "config/.config/portainer/composes-files/zabbix.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             },
             "env": [
@@ -6688,7 +6688,7 @@
             "platform": "linux",
             "logo": "https://images.ctfassets.net/paqvtpyf8rwu/GeLUVavqqxhFZolzU9jM3/3b8dddc74a632e63f17e0a5e40b971bb/super-panda-update.svg",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/redpanda-kafka.yml",
+                "stackfile": "config/.config/portainer/composes-files/redpanda-kafka.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
@@ -6705,7 +6705,7 @@
             "platform": "linux",
             "logo": "https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/airflow-bitnami.yml",
+                "stackfile": "config/.config/portainer/composes-files/airflow-bitnami.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
@@ -6721,7 +6721,7 @@
             "platform": "linux",
             "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Apache_kafka.svg/1200px-Apache_kafka.svg.png",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/kafka-compose.yml",
+                "stackfile": "config/.config/portainer/composes-files/kafka-compose.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
@@ -6738,7 +6738,7 @@
             "platform": "linux",
             "logo": "https://companieslogo.com/img/orig/CFLT-c4a50286.png?t=1627024622",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/confluent-kafka.yml",
+                "stackfile": "config/.config/portainer/composes-files/confluent-kafka.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
@@ -6754,7 +6754,7 @@
             "platform": "linux",
             "logo": "https://avatars.githubusercontent.com/u/10982346",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/surrealdb.yml",
+                "stackfile": "config/.config/portainer/composes-files/surrealdb.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
@@ -6770,7 +6770,7 @@
             "platform": "linux",
             "logo": "https://pocketbase.io/images/logo.svg",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/pocketbase.yml",
+                "stackfile": "config/.config/portainer/composes-files/pocketbase.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
@@ -6787,7 +6787,7 @@
             "platform": "linux",
             "logo": "https://uploads-ssl.webflow.com/62a9ae93cf7542032ae55b9c/62b074584bde0e71c6675d0e_Lightdash-black%20(3)-p-500.png",
             "repository": {
-                "stackfile": "distrobox_builder/config/.config/portainer/composes-files/lightdash.yml",
+                "stackfile": "config/.config/portainer/composes-files/lightdash.yml",
                 "url": "https://github.com/mehdi-yc/postinstall"
             }
 
