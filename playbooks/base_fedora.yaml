@@ -32,6 +32,7 @@
           - bat
           - starship
           - fontawesome5*
+          - fira-code-fonts
         state: present
         update_cache: false
         install_weak_deps: false
