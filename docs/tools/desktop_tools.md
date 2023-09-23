@@ -1,2 +1,2 @@
-Remina
-Apache Guacamole
+- Remina
+- Apache Guacamole
