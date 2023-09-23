@@ -28,9 +28,11 @@ altitude: 0.0000
 
 -  ## rust
     - reqwest
-	-  rocket
-	-  serd / serd_json
-	-  tauri
+	- rocket
+	- serd / serd_json
+	- tauri
+    - chrono
+    - slog / log
 
 - ## go
     
@@ -42,6 +44,7 @@ altitude: 0.0000
     - api
     - graphql
     - rpc
+    - toml / yaml
     - json
     - csv
     - regex
@@ -50,8 +53,10 @@ altitude: 0.0000
     - bookmarklets
     - zombie process
     - blue / canary / hot deployments
+    - docker / kubernetes (k8s,k3s,k0s okd...)
+    - design patterns / system designs
 
-nim / kotlin
+
 
 
 ## DATA : 
@@ -162,3 +167,39 @@ nginx-proxy-manager traefik caddy
 - faskapi
 - pandas / polars
 - celery
+
+## good youtube channels
+- Algebra khan academy
+
+- Statistics
+
+- python & rust for production
+
+- linux RHEL / Fedora sys admin
+
+- abap...
+
+- ByteByteGo videos
+
+- ibm technology
+
+- mcoding python
+
+- let's get rusty + crust of rust (rust)
+
+- low level learning + compcert
+
+- the net ninja / PowerCert Animated Videos
+
+
+
+
+### to add later to the tool lists : 
+
+- appwrite 
+- dbt / ELK / kafka
+- Apache nifi
+- posthog
+- mongodb
+- portainer
+
