@@ -31,6 +31,7 @@
           - git
           - bat
           - starship
+          - fontawesome5*
         state: present
         update_cache: false
         install_weak_deps: false
