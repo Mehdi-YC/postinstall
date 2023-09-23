@@ -1,2 +1,30 @@
+### daily
 - Remina
-- Apache Guacamole
+- i3
+- firefox
+- vscode
+- remmina
+- gitui
+- insomnia
+- joplin
+- dbeaver
+- inkscape
+- onlyoffice
+- Insomnia
+- Pitivi
+- Remmina
+- GIMP
+- Inkscape
+- Discord
+- firefox
+- Steam
+- Flameshot
+
+### Eulation : 
+- retroarch  
+- pcsx2
+- ppsspp
+- dolphin
+- yuzu
+- omniedge
+- aethersx2
