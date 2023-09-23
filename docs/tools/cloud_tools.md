@@ -1,15 +1,18 @@
 ____
 ## [devspace](https://github.com/loft-sh/devspace)
 DevSpace - The Fastest Developer Tool for Kubernetes ⚡ Automate your deployment workflow with DevSpace and develop software directly inside Kubernetes.
+
 ![](https://d33wubrfki0l68.cloudfront.net/89294788df1c63b0dcd2691a0fa925f05fff020d/b3336/docs/assets/images/devspace-localhost-ui-dbc2064c7ba653a40e7aca03faf01814.png)
 ---
 ## [openshift](https://www.redhat.com/en/technologies/cloud-computing/openshift)
 Red Hat OpenShift is a multifaceted, open source container application development platform from Red Hat Inc. for the development, deployment and management of applications.
+
 ![](https://www.openvirtualization.pro/wp-content/uploads/2019/10/2.png)
 ![](https://www.redhat.com/rhdc/managed-files/openshift-product-page-screen.png)
 ---
 ## [droneCI](https://www.drone.io/)
 Drone is a self-service Continuous Integration platform for busy development teams. 
+
 ![](https://blog.drone.io/images/drone1_screenshot.png)
 ---
 
@@ -21,6 +24,7 @@ Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes.
 ## [Kubeapps](https://github.com/kubeapps/kubeapps)
 
 A web-based UI for deploying and managing applications in Kubernetes clusters
+
 ![](https://liveandletlearn.net/img/what-is-kubeapps/bitnami-catalog.png)
 ---
 ## [nerdctl ](https://github.com/containerd/nerdctl)
