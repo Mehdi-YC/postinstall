@@ -68,6 +68,7 @@
           - just
           - nushell
           - starship
+          - fish
         state: present
         update_cache: false
         install_weak_deps: false
