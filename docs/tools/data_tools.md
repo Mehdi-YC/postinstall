@@ -31,7 +31,7 @@ Querybook is Pinterest’s open-source big data IDE via a notebook interface.
 ___
 
 ## [Sqlite3](https://www.sqlite.org/index.html) / [DuckDB](https://duckdb.org/) / [Postgres](https://www.postgresql.org/) / [Mysql](https://www.mysql.com/) / [Clickhouse](https://clickhouse.com/)
-The best Databases available.
+The best Databases available. also : kylin pinot druid
 ___
 ## [Hasura](https://hasura.io/) (API)
 Instantly build and ship APIs on all your data

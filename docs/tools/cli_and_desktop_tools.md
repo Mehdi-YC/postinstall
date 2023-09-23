@@ -10,7 +10,6 @@
 - i3
 - firefox
 - vscode
-- remmina
 - gitui
 - insomnia
 - joplin
@@ -19,13 +18,21 @@
 - onlyoffice
 - Insomnia
 - Pitivi
-- Remmina
 - GIMP
 - Inkscape
 - Discord
 - firefox
 - Steam
 - Flameshot
+- libreofice
+- Gnome boxes
+- kde connect
+- kdenlive
+- easyssh
+- jupyter
+- obs
+- android studio
+- qgis
 
 ### Eulation : 
 - retroarch  
@@ -51,7 +58,7 @@
 - tldr
 - fish
 - afetch
-- python / node (npm) / bun / cargo
+- python / node (npm) / bun / cargo / go
 - openreplay
 - sentry
 - starship
@@ -69,7 +76,9 @@
 - python3-pip
 - unzip
 - zip
-
+- rsync
+- clamav
+- taskwarrior
 </td>
 </tr>
 </table>

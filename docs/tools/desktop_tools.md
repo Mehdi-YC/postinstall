@@ -20,11 +20,12 @@
 - Steam
 - Flameshot
 
-### Eulation : 
-- retroarch  
-- pcsx2
-- ppsspp
-- dolphin
-- yuzu
-- omniedge
-- aethersx2
+### Emulation : 
+- retroarch (all)  
+- pcsx2 (ps2)
+- ppsspp (psp)
+- dolphin (ds ds3 wii)
+- yuzu (switch)
+- omniedge ()
+- aethersx2 (ps2)
+- xenia (xbox 360) 

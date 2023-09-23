@@ -43,7 +43,7 @@ From datacenter to cloud to edge, Rancher lets you deliver Kubernetes-as-a-Servi
 
 ![](https://appsembler.com/wp-content/uploads/2015/09/rancher_services.png)
 ---
-## [Kubernetes]()
+## [Kubernetes]() / [Openshift]()
 tools :
 
 rancher-desktop (helm , k3s , nerdctl)
@@ -60,3 +60,9 @@ deployment : https://argo-cd.readthedocs.io/en/stable/getting_started/
 Irrespective of your industry, orchestration platform, or computing device, Portainer is the most versatile container management platform that simplifies your secure adoption of containers with remarkable speed.
 ![](https://i.redd.it/portainer-has-been-updated-with-a-brand-new-ui-v0-7qy57m7xw5m91.png?width=1356&format=png&auto=webp&s=d38dc5790e58aeb966f85ad90111cf75345a61be)
 
+---
+## JUJU / Kompose
+
+## lens
+
+## duplicati
