@@ -85,7 +85,7 @@
           - requests
           - fastapi
           - scrapy
-          - django+
+          - django
         state: present   
 
 
@@ -94,6 +94,7 @@
       git:
         repo: https://github.com/mehdi-yc/postinstall
         dest: "{{config_path}}"
+        force: true
         update: true
       tags: minimal
 
@@ -115,13 +116,16 @@
     
 
     - name: chmod the i3 scripts
-      command: chmod +x ~/.config/i3/*
+      command: chmod +x ~/.config/i3/gotonp.sh
 
+    - name: ensure Fonts directory exists
+      become: true
+      file:
+        path: /usr/share/fonts/truetype/
+        recurse: true
+        state: directory
 
     - name: Download FiraCode Regular Nerd Font
       get_url:
         url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
         dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
-
-
-
