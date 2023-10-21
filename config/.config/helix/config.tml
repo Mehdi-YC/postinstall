@@ -2,12 +2,10 @@ theme = "tokyonight_storm"
 [editor]
 bufferline = "multiple"
 
-[keys.normal]
-esc = ["collapse_selection","keep_primary_selection"]
-
 [editor.cursor-shape]
 insert= "bar"
 
 [keys.normal]
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+esc = ["collapse_selection","keep_primary_selection"]
