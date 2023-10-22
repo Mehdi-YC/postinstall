@@ -12,12 +12,13 @@
 #       - zeno/scrcpy
         - atim/starship
         - atim/nushell
+        - varlad/helix
       tags: minimal
 
       
     - name: Install minimal packages
       become: true
-      dnf:
+      package:
         name:
           - ranger
           - stow
@@ -33,63 +34,54 @@
           - starship
           - fontawesome5*
           - fira-code-fonts
+          - helix
         state: present
-        update_cache: false
-        install_weak_deps: false
-        disable_gpg_check: 'yes'
+        # update_cache: false
+        # install_weak_deps: false
+        # disable_gpg_check: 'yes'
       tags: minimal
 
 
     - name: Install packages
       become: true
-      dnf:
+      package:
         name:
-          - stow
-          - fzf
-          - cargo
-          - rustc
-          - tmux
-          - htop
-          - docker
-          - docker-compose
-          - python3-pip
           - wget
           - curl
-          - neovim
-          - git
           - nodejs
           - npm
-#          - ansible
+          - ansible
           - afetch
           - jq
           - unzip
           - zip
-          - bat
           - hyperfine
           - tokei
           - just
           - nushell
-          - starship
-          - fish
         state: present
-        update_cache: false
-        install_weak_deps: false
-        disable_gpg_check: 'yes'
+        # update_cache: false
+        # install_weak_deps: false
+        # disable_gpg_check: 'yes'
 
 
 
     - name: Install pip packages
-      pip:
+      become: true
+      state: present
+      package:
         name:
-          - beautifulsoup4
-          - numpy
-          - pandas
-          - matplotlib
-          - requests
-          - fastapi
-          - scrapy
-          - django
-        state: present   
+          - python3-pip
+          - docker-compose
+          - python3-beautifulsoup4
+          - python3-numpy
+          - python3-pandas
+          - python3-matplotlib
+          - python3-requests
+          - python3-fastapi
+          - python3-scrapy
+
+
 
 
 
@@ -110,7 +102,7 @@
       with_items:
         - ~/.bashrc
         - ~/.Xresources
-
+      tags: minimal
 
 
     - name: Stow the config files
@@ -118,8 +110,6 @@
       tags: minimal
     
 
-    - name: chmod the i3 scripts
-      command: chmod +x ~/.config/i3/gotonp.sh
 
     - name: ensure Fonts directory exists
       become: true
@@ -134,3 +124,129 @@
       get_url:
         url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
         dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
+
+
+
+        #DESKTOP
+      
+      
+      - name: add vscodium repo with rpmkeys
+        become: true
+        shell: |
+              rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
+              printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=download.vscodium.com\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo tee -a /etc/yum.repos.d/vscodium.repo
+        tags: desktop,fedora
+
+
+      - name: add vscodium repo with debiankeys
+        become: true
+        shell: | 
+                wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
+                | gpg --dearmor \
+                | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+                &&  echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' \
+                | sudo tee /etc/apt/sources.list.d/vscodium.list
+                && sudo apt update
+             
+        tags:
+          - desktop
+          - debian
+ 
+          
+
+      - name: Install Flatpak and vscode if necessary
+        become: true
+        package:
+          name: 
+            - flatpak
+            - codium
+          state: present
+        tags:
+          - desktop
+          - debian
+          - fedora
+
+
+      - name: install i3 + config
+        become: true
+        package:
+          name: 
+            - i3
+            - i3status
+            - picom
+            - dunst
+          state: present
+        tags:
+          - desktop
+          - debian
+          - fedora
+
+
+
+      - name: Install Flatpak Apps
+        become: true
+        flatpak:
+          name:
+            - rest.insomnia.Insomnia
+            - org.pitivi.Pitivi
+            - org.remmina.Remmina
+            - org.gimp.GIMP
+            - org.inkscape.Inkscape
+            - com.discordapp.Discord
+            - org.mozilla.firefox
+            - com.valvesoftware.Steam
+            - io.dbeaver.DBeaverCommunity
+            - net.cozic.joplin_desktop
+            - org.flameshot.Flameshot
+          method: system
+          state: present
+        tags:
+          - desktop
+          - debian
+          - fedora
+
+      - name: Install vscodium extensions
+        command: codium --install-extension "{{ item }}"
+        with_items:
+          - asvetliakov.vscode-neovim
+          - bradlc.vscode-tailwindcss
+          - innoverio.vscode-dbt-power-user
+          - jdinhlife.gruvbox
+          - ms-python.python
+          - ms-toolsai.jupyter
+          - ms-toolsai.jupyter-keymap
+          - ms-toolsai.jupyter-renderers
+          - ms-toolsai.vscode-jupyter-cell-tags
+          - ms-toolsai.vscode-jupyter-slideshow
+          - mtxr.sqltools
+          - mtxr.sqltools-driver-pg
+          - mtxr.sqltools-driver-sqlite
+          - PKief.material-icon-theme
+          - rust-lang.rust
+          - rust-lang.rust-analyzer
+          - s-nlf-fh.glassit
+          - sainnhe.gruvbox-material
+          - samuelcolvin.jinjahtml
+          - svelte.svelte-vscode
+          - tamasfe.even-better-toml
+          - ultram4rine.sqltools-clickhouse-driver
+          - vscodevim.vim
+          - yandeu.five-server
+        tags:
+          - desktop
+          - debian
+          - fedora
+
+
+
+      - name: Download Installer
+        get_url:
+          url: https://sh.rustup.rs
+          dest: /tmp/sh.rustup.rs
+          mode: '0755'
+          force: 'yes'
+        tags:
+          - rust
+
+      - name: install rust/cargo
+        shell: /tmp/sh.rustup.rs -y
