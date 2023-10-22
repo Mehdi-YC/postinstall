@@ -1,9 +1,3 @@
-[shell]
-nu_indicator = '◷'
-bash_indicator = ''
-style = 'cyan'
-disabled = false
-
 [username]
 style_user = "yellow bold"
 style_root = "red bold"
@@ -14,8 +8,8 @@ show_always = true
 ssh_only = false
 
 [character]   # The name of the module we are configuring is "character"
-success_symbol = "[➜](bold green)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
-error_symbol = "[✗](bold red)"
+success_symbol = " [➜](bold green)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
+error_symbol = " [✗](bold red)"
 
 [directory]
 truncation_length = 10
@@ -27,24 +21,3 @@ min_time = 4
 show_milliseconds = false
 style = "bold green "
 format = "- [$duration]($style)"
-
-[docker_context]
-format = "via [$symbol$context]($style) "
-style = "blue bold"
-detect_files = ["docker-compose.yml", "docker-compose.yaml", "Dockerfile"]
-
-[python]
-format = 'via [${symbol}python (${version} )(\($virtualenv\) )]($style)'
-style = "bold yellow"
-pyenv_prefix = "venv "
-python_binary = ["./venv/bin/python", "python", "python3", "python2"]
-detect_extensions = ["py"]
-version_format = "v${raw}"
-
-[nodejs]
-format = "via [ Node.js $version](bold green) "
-detect_files = ["package.json", ".node-version"]
-detect_folders = ["node_modules"]
-
-[rust]
-format = 'via [$symbol](red bold)'
