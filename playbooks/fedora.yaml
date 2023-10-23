@@ -31,6 +31,7 @@
           - fontawesome5*
           - fira-code-fonts
           - helix
+          - cargo
         state: present
         update_cache: false
         install_weak_deps: false
@@ -72,9 +73,15 @@
           - requests
           - fastapi
           - scrapy
+          - pylsp
       tags:
         - cli
 
+
+    - name: Install rust_analyzer
+      command: cargo install rust-analyzer
+      tags:
+        - cli
 
     - name: Clone config
       git:
