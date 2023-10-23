@@ -73,7 +73,7 @@
           - requests
           - fastapi
           - scrapy
-          - pylsp
+          - python-lsp-server
       tags:
         - cli
 
