@@ -56,17 +56,23 @@
           - nushell
           - python3-pip
           - docker-compose
-          - python3-beautifulsoup4
-          - python3-numpy
-          - python3-pandas
-          - python3-matplotlib
-          - python3-requests
-          - python3-fastapi
-          - python3-scrapy
         state: present
         update_cache: false
         install_weak_deps: false
       tags: 
+        - cli
+
+    - name: Install Python packages with pip
+      pip:
+        name:
+          - beautifulsoup4
+          - numpy
+          - pandas
+          - matplotlib
+          - requests
+          - fastapi
+          - scrapy
+      tags:
         - cli
 
 
