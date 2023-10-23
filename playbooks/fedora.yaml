@@ -34,7 +34,6 @@
         state: present
         update_cache: false
         install_weak_deps: false
-        disable_gpg_check: 'yes'
         tags: 
           - minimal
           - cli
@@ -67,7 +66,6 @@
         state: present
         update_cache: false
         install_weak_deps: false
-        disable_gpg_check: 'yes'
         tags: 
           - cli
 
