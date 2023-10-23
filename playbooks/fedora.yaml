@@ -31,7 +31,7 @@
           - fontawesome5*
           - fira-code-fonts
           - helix
-          - cargo
+          #- cargo
         state: present
         update_cache: false
         install_weak_deps: false
@@ -84,6 +84,7 @@
 
     - name: Install rust_analyzer
       command: rustup component add rust-src
+      ignore_errors: yes
       tags:
         - cli
 
