@@ -4,6 +4,7 @@
     config_path: "$HOME/repos/myconfig"
 
   tasks:
+  
     - name: Enable COPRs (Fedora/RHEL)
       become: true
       command: 'dnf copr enable {{ item }} -y'
@@ -12,6 +13,8 @@
         - atim/starship
         - atim/nushell
         - varlad/helix
+
+
 
     - name: Install minimal packages
       become: true
@@ -39,6 +42,8 @@
         - minimal
         - cli
 
+
+
     - name: Install packages
       become: true
       package:
@@ -63,6 +68,8 @@
       tags: 
         - cli
 
+
+
     - name: Install Python packages with pip
       pip:
         name:
@@ -78,6 +85,7 @@
         - cli
 
 
+
     - name: Install Rust via rustup
       become: yes
       shell: 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
@@ -87,6 +95,8 @@
       ignore_errors: yes
       tags:
         - cli
+
+
 
     - name: Clone config
       git:
@@ -112,12 +122,16 @@
         - minimal
         - cli
 
-          
+
+
+
     - name: Stow the config files
       command: stow -vRd "{{ config_path }}/" -t $HOME config
       tags: 
           - minimal
           - cli
+
+
 
     - name: Ensure Fonts directory exists
       become: true
@@ -127,6 +141,8 @@
         state: directory
       tags: 
         - cli
+
+
 
     - name: Download FiraCode Regular Nerd Font
       become: true
@@ -169,6 +185,7 @@
         state: present
 
 
+
     - name: Install VSCodium extensions
       command: codium --install-extension "{{ item }}"
       with_items:
@@ -196,6 +213,7 @@
         - ultram4rine.sqltools-clickhouse-driver
         - vscodevim.vim
         - yandeu.five-server
+
 
 
     - name: Install Flatpak Apps

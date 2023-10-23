@@ -1,10 +1,16 @@
----
-- name: Configure Debian machine
+- name: Configure Ubuntu/Debian/Fedora/RHEL machine
   hosts: localhost
   vars:
     config_path: "$HOME/repos/myconfig"
 
   tasks:
+    
+    - name: Update APT package cache (Debian)
+      become: true
+      apt:
+        update_cache: yes
+
+
     - name: Install minimal packages
       become: true
       package:
@@ -17,52 +23,87 @@
           - docker
           - docker-compose
           - python3-pip
+          - neovim
           - git
           - bat
-          - i3
-          - i3status
-          - picom
-          - dunst
+          - fonts-font-awesome
+          - fonts-firacode
+          - # helix (no direct equivalent, consider other alternatives)
+          - # cargo (already available for Rust)
         state: present
         update_cache: false
         install_weak_deps: false
-
-    - name: Clone Neovim from GitHub
-      become: true
-      git:
-        repo: https://github.com/neovim/neovim
-        dest: "{{ config_path }}/neovim"
-        force: true
-        update: true
+      tags:
+        - minimal
+        - cli
 
 
-    - name: Build and install Neovim
-      become: true
-      shell: |
-        cd "{{ config_path }}/neovim" && make CMAKE_BUILD_TYPE=Release && sudo make install
 
-    - name: Install Rust and Cargo
-      become: true
-      command: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-    - name: Add Cargo bin directory to PATH
-      shell: echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
-
-    - name: Install Rust Analyzer
-      command: cargo install rust-analyzer
-
-    - name: Install Starship
-      become: true
-      shell: |
-        curl -fsSL https://starship.rs/install.sh | bash -s -- -y
-        echo 'eval "$(starship init bash)"' >> ~/.bashrc
-
-    - name: Install fonts
+    - name: Install packages
       become: true
       package:
         name:
-          - fonts-firacode
+          - wget
+          - curl
+          - nodejs
+          - npm
+          - ansible
+          - jq
+          - unzip
+          - zip
+          - hyperfine
+          - tokei
+          - just
+          - nushell
+          - python3-pip
+          - docker-compose
         state: present
+        update_cache: false
+        install_weak_deps: false
+      tags:
+        - cli
+
+
+
+    - name: Install Python packages with apt
+      become: true
+      apt:
+        name:
+          - python3-bs4
+          - python3-numpy
+          - python3-pandas
+          - python3-matplotlib
+          - python3-requests
+          - python3-fastapi
+          - python3-scrapy
+          - python3-lsp-server
+        state: present
+      tags:
+        - cli
+
+
+
+    - name: Install Rust via rustup
+      become: yes
+      shell: 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
+
+      
+
+    - name: Install rust_analyzer
+      command: rustup component add rust-src
+      ignore_errors: yes
+      tags:
+        - cli
+
+
+
+    - name: Install Starship
+      become: yes
+      shell: 'curl -sS https://starship.rs/install.sh | sh'
+      tags:
+        - cli
+
+
 
     - name: Clone config
       git:
@@ -70,6 +111,11 @@
         dest: "{{ config_path }}"
         force: true
         update: true
+      tags:
+        - minimal
+        - cli
+
+
 
     - name: Backup .bashrc and .Xresources
       command: mv "{{ item }}" "{{ item }}.bak"
@@ -78,9 +124,20 @@
       with_items:
         - ~/.bashrc
         - ~/.Xresources
+      ignore_errors: yes
+      tags:
+        - minimal
+        - cli
+
+
 
     - name: Stow the config files
       command: stow -vRd "{{ config_path }}/" -t $HOME config
+      tags:
+        - minimal
+        - cli
+
+
 
     - name: Ensure Fonts directory exists
       become: true
@@ -88,45 +145,53 @@
         path: /usr/share/fonts/truetype/
         recurse: true
         state: directory
+      tags:
+        - cli
+
+
 
     - name: Download FiraCode Regular Nerd Font
       become: true
       get_url:
         url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
         dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
+      tags:
+        - cli
 
-    - name: Add VSCodium repository
+
+
+    - name: Install i3 and related packages
+      become: true
+      package:
+        name:
+          - i3
+          - i3status
+          - picom
+          - dunst
+          - feh
+        state: present
+      tags: minimal
+
+
+
+    - name: add VSCodium repo (Debian)
       become: true
       apt_repository:
-        repo: "deb https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/ vscodium main"
+        repo: deb https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/repos/debs/ vscodium main
         state: present
         update_cache: yes
 
+
+
     - name: Install Flatpak and Codium (VSCodium)
       become: true
-      package:
+      apt:
         name:
           - flatpak
           - codium
         state: present
 
-    - name: Install Flatpak Apps
-      become: true
-      flatpak:
-        name:
-          - rest.insomnia.Insomnia
-          - org.pitivi.Pitivi
-          - org.remmina.Remmina
-          - org.gimp.GIMP
-          - org.inkscape.Inkscape
-          - com.discordapp.Discord
-          - org.mozilla.firefox
-          - com.valvesoftware.Steam
-          - io.dbeaver.DBeaverCommunity
-          - net.cozic.joplin_desktop
-          - org.flameshot.Flameshot
-        method: system
-        state: present
+
 
     - name: Install VSCodium extensions
       command: codium --install-extension "{{ item }}"
@@ -155,3 +220,25 @@
         - ultram4rine.sqltools-clickhouse-driver
         - vscodevim.vim
         - yandeu.five-server
+
+
+        
+   - name: Install Flatpak Apps
+      become: true
+      flatpak:
+        name:
+          - rest.insomnia.Insomnia
+          - org.pitivi.Pitivi
+          - org.remmina.Remmina
+          - org.gimp.GIMP
+          - org.inkscape.Inkscape
+          - com.discordapp.Discord
+          - org.mozilla.firefox
+          - com.valvesoftware.Steam
+          - io.dbeaver.DBeaverCommunity
+          - net.cozic.joplin_desktop
+          - org.flameshot.Flameshot
+          - com.helix_editor.Helix
+        method: system
+        state: present
+
