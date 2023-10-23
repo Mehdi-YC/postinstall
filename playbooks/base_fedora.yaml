@@ -5,126 +5,6 @@
 
   tasks:
 
-    - name: Enable COPRs
-      become: true
-      command: 'dnf copr enable {{ item }} -y'
-      with_items:
-#       - zeno/scrcpy
-        - atim/starship
-        - atim/nushell
-        - varlad/helix
-      tags: minimal
-
-      
-    - name: Install minimal packages
-      become: true
-      package:
-        name:
-          - ranger
-          - stow
-          - fzf
-          - tmux
-          - htop
-          - docker
-          - docker-compose
-          - python3-pip
-          - neovim
-          - git
-          - bat
-          - starship
-          - fontawesome5*
-          - fira-code-fonts
-          - helix
-        state: present
-        # update_cache: false
-        # install_weak_deps: false
-        # disable_gpg_check: 'yes'
-      tags: minimal
-
-
-    - name: Install packages
-      become: true
-      package:
-        name:
-          - wget
-          - curl
-          - nodejs
-          - npm
-          - ansible
-          - afetch
-          - jq
-          - unzip
-          - zip
-          - hyperfine
-          - tokei
-          - just
-          - nushell
-        state: present
-        # update_cache: false
-        # install_weak_deps: false
-        # disable_gpg_check: 'yes'
-
-
-
-    - name: Install pip packages
-      become: true
-      state: present
-      package:
-        name:
-          - python3-pip
-          - docker-compose
-          - python3-beautifulsoup4
-          - python3-numpy
-          - python3-pandas
-          - python3-matplotlib
-          - python3-requests
-          - python3-fastapi
-          - python3-scrapy
-
-
-
-
-
-    - name: Clone config
-      git:
-        repo: https://github.com/mehdi-yc/postinstall
-        dest: "{{config_path}}"
-        force: true
-        update: true
-      tags: minimal
-
-
-
-    - name: Backup .bashrc and .Xresources
-      command: mv "{{ item }}" "{{ item }}.bak"
-      args:
-        creates: "{{ item }}.bak"
-      with_items:
-        - ~/.bashrc
-        - ~/.Xresources
-      tags: minimal
-
-
-    - name: Stow the config files
-      command: stow -vRd "{{config_path}}/" -t $HOME config
-      tags: minimal
-    
-
-
-    - name: ensure Fonts directory exists
-      become: true
-      file:
-        path: /usr/share/fonts/truetype/
-        recurse: true
-        state: directory
-
-    - name: Download FiraCode Regular Nerd Font
-      become: true
-      timeout: 300
-      get_url:
-        url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
-        dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
-
 
 
         #DESKTOP
@@ -147,10 +27,7 @@
                 &&  echo 'deb [ signed-by=/usr/share/keyrings/vscodium-archive-keyring.gpg ] https://download.vscodium.com/debs vscodium main' \
                 | sudo tee /etc/apt/sources.list.d/vscodium.list
                 && sudo apt update
-             
-        tags:
-          - desktop
-          - debian
+
  
           
 
@@ -161,10 +38,7 @@
             - flatpak
             - codium
           state: present
-        tags:
-          - desktop
-          - debian
-          - fedora
+
 
 
       - name: install i3 + config
@@ -176,10 +50,7 @@
             - picom
             - dunst
           state: present
-        tags:
-          - desktop
-          - debian
-          - fedora
+
 
 
 
@@ -200,10 +71,7 @@
             - org.flameshot.Flameshot
           method: system
           state: present
-        tags:
-          - desktop
-          - debian
-          - fedora
+
 
       - name: Install vscodium extensions
         command: codium --install-extension "{{ item }}"
@@ -232,10 +100,7 @@
           - ultram4rine.sqltools-clickhouse-driver
           - vscodevim.vim
           - yandeu.five-server
-        tags:
-          - desktop
-          - debian
-          - fedora
+
 
 
 

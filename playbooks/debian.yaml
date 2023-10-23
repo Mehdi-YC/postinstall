@@ -1,0 +1,157 @@
+---
+- name: Configure Debian machine
+  hosts: localhost
+  vars:
+    config_path: "$HOME/repos/myconfig"
+
+  tasks:
+    - name: Install minimal packages
+      become: true
+      package:
+        name:
+          - ranger
+          - stow
+          - fzf
+          - tmux
+          - htop
+          - docker
+          - docker-compose
+          - python3-pip
+          - git
+          - bat
+          - i3
+          - i3status
+          - picom
+          - dunst
+        state: present
+        update_cache: false
+        install_weak_deps: false
+
+    - name: Clone Neovim from GitHub
+      become: true
+      git:
+        repo: https://github.com/neovim/neovim
+        dest: "{{ config_path }}/neovim"
+        force: true
+        update: true
+
+
+    - name: Build and install Neovim
+      become: true
+      shell: |
+        cd "{{ config_path }}/neovim" && make CMAKE_BUILD_TYPE=Release && sudo make install
+
+    - name: Install Rust and Cargo
+      become: true
+      command: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+    - name: Add Cargo bin directory to PATH
+      shell: echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+
+    - name: Install Rust Analyzer
+      command: cargo install rust-analyzer
+
+    - name: Install Starship
+      become: true
+      shell: |
+        curl -fsSL https://starship.rs/install.sh | bash -s -- -y
+        echo 'eval "$(starship init bash)"' >> ~/.bashrc
+
+    - name: Install fonts
+      become: true
+      package:
+        name:
+          - fonts-firacode
+        state: present
+
+    - name: Clone config
+      git:
+        repo: https://github.com/mehdi-yc/postinstall
+        dest: "{{ config_path }}"
+        force: true
+        update: true
+
+    - name: Backup .bashrc and .Xresources
+      command: mv "{{ item }}" "{{ item }}.bak"
+      args:
+        creates: "{{ item }}.bak"
+      with_items:
+        - ~/.bashrc
+        - ~/.Xresources
+
+    - name: Stow the config files
+      command: stow -vRd "{{ config_path }}/" -t $HOME config
+
+    - name: Ensure Fonts directory exists
+      become: true
+      file:
+        path: /usr/share/fonts/truetype/
+        recurse: true
+        state: directory
+
+    - name: Download FiraCode Regular Nerd Font
+      become: true
+      get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
+        dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
+
+    - name: Add VSCodium repository
+      become: true
+      apt_repository:
+        repo: "deb https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/ vscodium main"
+        state: present
+        update_cache: yes
+
+    - name: Install Flatpak and Codium (VSCodium)
+      become: true
+      package:
+        name:
+          - flatpak
+          - codium
+        state: present
+
+    - name: Install Flatpak Apps
+      become: true
+      flatpak:
+        name:
+          - rest.insomnia.Insomnia
+          - org.pitivi.Pitivi
+          - org.remmina.Remmina
+          - org.gimp.GIMP
+          - org.inkscape.Inkscape
+          - com.discordapp.Discord
+          - org.mozilla.firefox
+          - com.valvesoftware.Steam
+          - io.dbeaver.DBeaverCommunity
+          - net.cozic.joplin_desktop
+          - org.flameshot.Flameshot
+        method: system
+        state: present
+
+    - name: Install VSCodium extensions
+      command: codium --install-extension "{{ item }}"
+      with_items:
+        - asvetliakov.vscode-neovim
+        - bradlc.vscode-tailwindcss
+        - innoverio.vscode-dbt-power-user
+        - jdinhlife.gruvbox
+        - ms-python.python
+        - ms-toolsai.jupyter
+        - ms-toolsai.jupyter-keymap
+        - ms-toolsai.jupyter-renderers
+        - ms-toolsai.vscode-jupyter-cell-tags
+        - ms-toolsai.vscode-jupyter-slideshow
+        - mtxr.sqltools
+        - mtxr.sqltools-driver-pg
+        - mtxr.sqltools-driver-sqlite
+        - PKief.material-icon-theme
+        - rust-lang.rust
+        - rust-lang.rust-analyzer
+        - s-nlf-fh.glassit
+        - sainnhe.gruvbox-material
+        - samuelcolvin.jinjahtml
+        - svelte.svelte-vscode
+        - tamasfe.even-better-toml
+        - ultram4rine.sqltools-clickhouse-driver
+        - vscodevim.vim
+        - yandeu.five-server
