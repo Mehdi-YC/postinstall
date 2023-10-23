@@ -118,13 +118,12 @@
         tags: 
           - cli
 
-    - name: Add VSCodium repository
-      become: true
-      apt_repository:
-        repo: "deb https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/ vscodium main"
-        state: present
-        update_cache: yes
-
+      - name: add vscodium repo with rpmkeys
+        become: true
+        shell: |
+              rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
+              printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=download.vscodium.com\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo tee -a /etc/yum.repos.d/vscodium.repo
+        tags: desktop,fedora
 
     - name: Install Flatpak and Codium (VSCodium)
       become: true
