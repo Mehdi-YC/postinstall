@@ -28,8 +28,8 @@
           - bat
           - fonts-font-awesome
           - fonts-firacode
-          - # helix (no direct equivalent, consider other alternatives)
-          - # cargo (already available for Rust)
+          #- helix (no direct equivalent, consider other alternatives)
+          #- cargo (already available for Rust)
         state: present
         update_cache: false
         install_weak_deps: false
@@ -52,9 +52,9 @@
           - unzip
           - zip
           - hyperfine
-          - tokei
-          - just
-          - nushell
+          #- tokei
+          #- just
+          #- nushell
           - python3-pip
           - docker-compose
         state: present
@@ -76,7 +76,7 @@
           - python3-requests
           - python3-fastapi
           - python3-scrapy
-          - python3-lsp-server
+          - python3-pylsp
         state: present
       tags:
         - cli
