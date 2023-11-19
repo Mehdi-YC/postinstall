@@ -55,6 +55,7 @@ altitude: 0.0000
     - blue / canary / hot deployments
     - docker / kubernetes (k8s,k3s,k0s okd...)
     - design patterns / system designs
+    - nginx
 
 
 
