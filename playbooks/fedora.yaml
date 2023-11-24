@@ -189,19 +189,19 @@
     - name: Install VSCodium extensions
       command: codium --install-extension "{{ item }}"
       with_items:
-        - asvetliakov.vscode-neovim
+        #- asvetliakov.vscode-neovim
         - bradlc.vscode-tailwindcss
-        - innoverio.vscode-dbt-power-user
+        #- innoverio.vscode-dbt-power-user
         - jdinhlife.gruvbox
         - ms-python.python
-        - ms-toolsai.jupyter
-        - ms-toolsai.jupyter-keymap
-        - ms-toolsai.jupyter-renderers
-        - ms-toolsai.vscode-jupyter-cell-tags
-        - ms-toolsai.vscode-jupyter-slideshow
-        - mtxr.sqltools
-        - mtxr.sqltools-driver-pg
-        - mtxr.sqltools-driver-sqlite
+        #- ms-toolsai.jupyter
+        #- ms-toolsai.jupyter-keymap
+        #- ms-toolsai.jupyter-renderers
+        #- ms-toolsai.vscode-jupyter-cell-tags
+        #- ms-toolsai.vscode-jupyter-slideshow
+        #- mtxr.sqltools
+        #- mtxr.sqltools-driver-pg
+        #- mtxr.sqltools-driver-sqlite
         - PKief.material-icon-theme
         - rust-lang.rust
         - rust-lang.rust-analyzer
@@ -210,8 +210,8 @@
         - samuelcolvin.jinjahtml
         - svelte.svelte-vscode
         - tamasfe.even-better-toml
-        - ultram4rine.sqltools-clickhouse-driver
-        - vscodevim.vim
+        #- ultram4rine.sqltools-clickhouse-driver
+        #- vscodevim.vim
         - yandeu.five-server
 
 
@@ -220,16 +220,17 @@
       become: true
       flatpak:
         name:
-          - rest.insomnia.Insomnia
-          - org.pitivi.Pitivi
-          - org.remmina.Remmina
-          - org.gimp.GIMP
-          - org.inkscape.Inkscape
-          - com.discordapp.Discord
+          - net.christianbeier.Gromit-MPX # drawing tool
+          - rest.insomnia.Insomnia #API testing
+          - org.pitivi.Pitivi #video editing
+          - org.remmina.Remmina #server access
+          - org.gimp.GIMP # Image manipulation program
+          - org.inkscape.Inkscape #vector manipulation program
+          - com.discordapp.Discord 
           - org.mozilla.firefox
           - com.valvesoftware.Steam
-          - io.dbeaver.DBeaverCommunity
-          - net.cozic.joplin_desktop
-          - org.flameshot.Flameshot
+          - io.dbeaver.DBeaverCommunity #db managment
+          #- net.cozic.joplin_desktop #notes taking app (may be replaced by git repo)
+          - org.flameshot.Flameshot #screenshot tool
         method: system
         state: present

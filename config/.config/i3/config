@@ -36,6 +36,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 exec --no-startup-id nm-applet
 exec --no-startup-id picom 
+exec --no-startup-id flatpak run net.christianbeier.Gromit-MPX
 #exec --no-startup-id tint2
 # exec --no-startup-id xfce4-panel --disable-wm-check
 # Use pactl to adjust volume in PulseAudio.
