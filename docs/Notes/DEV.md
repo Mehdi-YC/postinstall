@@ -18,8 +18,9 @@ altitude: 0.0000
     - pyinstaller
 - ## js / node
     
-    - react
-    - svelte
+    - react / next.js
+    - svelte / sveltekit
+    - solid.js / alpine.js
     - tailwindcss (daisuUI / skeleton)
     - localtunnel
     - pwa
@@ -28,11 +29,14 @@ altitude: 0.0000
 
 -  ## rust
     - reqwest
-	- rocket
+	- rocket / axum / actix
 	- serd / serd_json
 	- tauri
     - chrono
     - slog / log
+    - tokio
+    - clap
+    - anyhow
 
 - ## go
     
