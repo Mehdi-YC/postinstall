@@ -14,6 +14,13 @@ Build complex automations 10x faster, without fighting APIs
 
 ![](https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/screen_custom_error_handling_v4_584_d8793aaa1b.png)
 ___
+
+## [Directus](https://directus.io/)
+Build complex automations 10x faster, without fighting APIs 
+
+![](https://marketing.directus.app/assets/b095f78a-060e-4d7e-865c-861925703272?width=2368&format=auto)
+___
+
 ## [node-red](https://nodered.org/)
 Low-code programming for event-driven applications
 
@@ -161,6 +168,7 @@ The most agile ERP on the planet
 - firefox
 - Steam
 - Flameshot
+- Gromit-MPX
 
 ### Eulation : 
 - retroarch  
