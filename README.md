@@ -364,3 +364,51 @@ Irrespective of your industry, orchestration platform, or computing device, Port
 ![](https://i.redd.it/portainer-has-been-updated-with-a-brand-new-ui-v0-7qy57m7xw5m91.png?width=1356&format=png&auto=webp&s=d38dc5790e58aeb966f85ad90111cf75345a61be)
 
 
+
+
+# Other tools :
+____
+## [Roundcube](https://roundcube.net/)
+DevSpace - The Fastest Developer Tool for Kubernetes ⚡ Automate your deployment workflow with DevSpace and develop software directly inside Kubernetes.
+
+![](https://roundcube.net/screens/skins/elastic/desktop/screens/mailbox_dark.png)
+---
+
+
+
+## [openproject](https://www.openproject.org/)
+Efficient classic, agile or hybrid project management in a secure environment.
+
+![](https://www.openproject.org/assets/images/product-tour/task/openproject-filter-5ab879c4.gif)
+---
+
+
+## [aapanel](https://www.aapanel.com)
+Deploy your website in minutes, bind domain names, deploy SSL with one click, .
+
+![](https://www.aapanel.com/static/new/images/bt_video.png)
+---
+
+
+## [openakauntingproject](https://akaunting.com/)
+Akaunting is a free, open-source, and online accounting software for small businesses and freelancers. 
+
+![](https://assets.akaunting.com/site/img/pages/home/akaunting-dashboard.png)
+---
+
+
+## [openakauntingproject](https://akaunting.com/)
+Akaunting is a free, open-source, and online accounting software for small businesses and freelancers. 
+
+![](https://assets.akaunting.com/site/img/pages/home/akaunting-dashboard.png)
+---
+
+
+## [openakauntingproject](https://akaunting.com/)
+Akaunting is a free, open-source, and online accounting software for small businesses and freelancers. 
+
+![](https://assets.akaunting.com/site/img/pages/home/akaunting-dashboard.png)
+---
+
+
+
