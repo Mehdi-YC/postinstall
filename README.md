@@ -129,7 +129,7 @@ The all-in-one platform that connects your services and APIs in the most agile w
 ____
 ## [Ansible](https://www.ansible.com/)
 Ansible is a radically simple IT automation platform that makes your applications and systems easier to deploy and maintain. Automate everything from code deployment to network configuration
-
+* ansible tower is a UI for it *
 ![](https://4682592.fs1.hubspotusercontent-na1.net/hubfs/4682592/images/hp%200922/ansible-hero-illustration.svg)
 ____
 ## [ERPNext](https://erpnext.com/)
@@ -169,6 +169,7 @@ The most agile ERP on the planet
 - Steam
 - Flameshot
 - Gromit-MPX
+- rancher desktop
 
 ### Eulation : 
 - retroarch  
@@ -212,6 +213,11 @@ The most agile ERP on the planet
 - python3-pip
 - unzip
 - zip
+- scrcpy
+- k3s /kubectl / k0s / charmed kubernetes / juju
+- hugo
+- helix
+- adb
 
 </td>
 </tr>
@@ -235,6 +241,12 @@ Data integration for modern data teams.
 
 Get all your ELT data pipelines running in minutes, even your custom ones. Let your team focus on insights and innovation.
 ![](https://assets-global.website-files.com/605e01bc25f7e19a82e74788/64f890ef6f224eb14c2bbd6e_airbyte%20home%20video%20opt.gif)
+
+## [Dagster](https://dagster.io/)
+Ship data pipelines with extraordinary velocity
+
+![](https://dagster.io/_next/image?url=%2Fdags%2Fpython-assets2.png&w=1080&q=75)
+
 ___
 ## [Apache Airflow](https://airflow.apache.org)
 Airflow™ is a platform created by the community to programmatically author, schedule and monitor workflows. 
