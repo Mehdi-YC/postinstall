@@ -314,13 +314,13 @@ Build complex automations 10x faster, without fighting APIs
 
 
 ___
-##[Bytebase](https://www.bytebase.com/)
+## [Bytebase](https://www.bytebase.com/)
 Design, Review, Deploy Schema Migrations for Dev and DBA
 
 ![](https://www.bytebase.com/_next/image/?url=%2Fimages%2Fpage%2Fmain%2Fhero%2Fquery-data.webp&w=1080&q=75)
 
 ___
-##[Evidence BI](https://evidence.dev/)
+## [Evidence BI](https://evidence.dev/)
 Build polished data products with SQL
 
 ![](https://evidence.dev/wdi-new.png)
@@ -415,24 +415,24 @@ Deploy your website in minutes, bind domain names, deploy SSL with one click, .
 ---
 
 
-## [openakauntingproject](https://akaunting.com/)
+## [Akaunting](https://akaunting.com/)
 Akaunting is a free, open-source, and online accounting software for small businesses and freelancers. 
 
 ![](https://assets.akaunting.com/site/img/pages/home/akaunting-dashboard.png)
 ---
 
 
-## [openakauntingproject](https://akaunting.com/)
-Akaunting is a free, open-source, and online accounting software for small businesses and freelancers. 
+## [Paperless-ngx](https://docs.paperless-ngx.com/)
+Paperless-ngx is a community-supported open-source document management system that transforms your physical documents into a searchable online archive so you can keep, well, less paper. 
 
-![](https://assets.akaunting.com/site/img/pages/home/akaunting-dashboard.png)
+![](https://docs.paperless-ngx.com/assets/screenshots/documents-smallcards.png#only-light)
 ---
 
 
-## [openakauntingproject](https://akaunting.com/)
-Akaunting is a free, open-source, and online accounting software for small businesses and freelancers. 
+## [Magneto2](https://business.adobe.com/products/magento/magento-commerce.html)
+Adobe Commerce is a flexible and scalable commerce platform that lets you create uniquely personalized B2B and B2C experiences, no matter how many brands you have.
 
-![](https://assets.akaunting.com/site/img/pages/home/akaunting-dashboard.png)
+![](https://cm.magefan.com/wysiwyg/magento-2-products.png)
 ---
 
 
