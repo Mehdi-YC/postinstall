@@ -312,6 +312,19 @@ Build complex automations 10x faster, without fighting APIs
 ![](https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/screen_custom_error_handling_v4_584_d8793aaa1b.png)
 
 
+
+___
+##[Bytebase](https://www.bytebase.com/)
+Design, Review, Deploy Schema Migrations for Dev and DBA
+
+![](https://www.bytebase.com/_next/image/?url=%2Fimages%2Fpage%2Fmain%2Fhero%2Fquery-data.webp&w=1080&q=75)
+
+___
+##[Evidence BI](https://evidence.dev/)
+Build polished data products with SQL
+
+![](https://evidence.dev/wdi-new.png)
+
 # Cloud tools :
 ____
 ## [devspace](https://github.com/loft-sh/devspace)
@@ -421,6 +434,8 @@ Akaunting is a free, open-source, and online accounting software for small busin
 
 ![](https://assets.akaunting.com/site/img/pages/home/akaunting-dashboard.png)
 ---
+
+
 
 
 
