@@ -218,6 +218,7 @@ The most agile ERP on the planet
 - hugo
 - helix
 - adb
+- espanso
 
 </td>
 </tr>
@@ -310,6 +311,20 @@ ___
 Build complex automations 10x faster, without fighting APIs 
 
 ![](https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/screen_custom_error_handling_v4_584_d8793aaa1b.png)
+
+
+___
+## [Quadratic](https://www.quadratichq.com/)
+The infinite spreadsheet with Python, SQL, and AI.
+
+![](https://www.quadratichq.com/images/video_preview.png)
+
+
+___
+## [Windmill](https://www.windmill.dev/)
+Developer platform for APIs, critical jobs, workflows, data pipelines and UIs
+
+![](https://www.windmill.dev/videos/flow-sequence.mp4)
 
 
 
@@ -434,6 +449,8 @@ Adobe Commerce is a flexible and scalable commerce platform that lets you create
 
 ![](https://cm.magefan.com/wysiwyg/magento-2-products.png)
 ---
+
+
 
 
 

@@ -214,8 +214,41 @@
         #- vscodevim.vim
         - yandeu.five-server
 
+#____________________________________________________________
+#________________________ESPASO______________________________
+    - name: Check if ~/opt directory exists
+      ansible.builtin.stat:
+        path: "~/opt"
+      register: opt_dir
 
+    - name: Create the ~/opt destination folder if it doesn't exist
+      ansible.builtin.file:
+        path: "~/opt"
+        state: directory
+      when: not opt_dir.stat.exists
 
+    - name: Download the Espanso AppImage
+      ansible.builtin.get_url:
+        url: "https://github.com/federico-terzi/espanso/releases/download/v2.1.8/Espanso-X11.AppImage"
+        dest: "~/opt/Espanso.AppImage"
+
+    - name: Make Espanso AppImage executable
+      ansible.builtin.command:
+        cmd: "chmod u+x ~/opt/Espanso.AppImage"
+
+    - name: Register espanso command alias
+      ansible.builtin.command:
+        cmd: "sudo ~/opt/Espanso.AppImage env-path register"
+
+    - name: Register Espanso service
+      ansible.builtin.command:
+        cmd: "sudo ~/opt/Espanso.AppImage service register"
+
+    # - name: Start Espanso with --unmanaged option
+    #   ansible.builtin.command:
+    #     cmd: "~/opt/Espanso.AppImage start --unmanaged"
+#____________________________________________________________
+#____________________________________________________________
     - name: Install Flatpak Apps
       become: true
       flatpak:
