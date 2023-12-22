@@ -7,6 +7,11 @@ longitude: 3.09050000
 altitude: 0.0000
 ---
 
+## switching from pipewire to pulseaudio : 
+```bash
+sudo dnf swap --allowerasing pulseaudio pipewire-pulseaudio
+```
+
 # THE LINUX COMMANDS
 
 ## ==*BASIC*==
