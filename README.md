@@ -1,12 +1,6 @@
 # postinstall
-
-scripts that i use to install different things on my fedora , debian or arch distros with minimal effort
-
-
-## switching from pipewire to pulseaudio : 
-```bash
-sudo dnf swap --allowerasing pulseaudio pipewire-pulseaudio
-```
+This repo represents me, my reaserch, my studies, my dotfiles, my scripts... everything is here.
+i have 2  playbooks to install my distro, one for debian and one for fedora.
 
 # Low code tools : 
 ## [n8n](https://n8n.io/)
