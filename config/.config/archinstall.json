@@ -1,0 +1,153 @@
+{
+    "additional-repositories": [],
+    "archinstall-language": "English",
+    "audio_config": {
+        "audio": "pipewire"
+    },
+    "bootloader": "Grub",
+    "config_version": "2.7.1",
+    "debug": false,
+    "disk_config": {
+        "config_type": "default_layout",
+        "device_modifications": [
+            {
+                "device": "/dev/vda",
+                "partitions": [
+                    {
+                        "btrfs": [],
+                        "dev_path": null,
+                        "flags": [
+                            "Boot"
+                        ],
+                        "fs_type": "fat32",
+                        "mount_options": [],
+                        "mountpoint": "/boot",
+                        "obj_id": "a72f58df-b393-4566-a588-b93d6567d482",
+                        "size": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "MiB",
+                            "value": 203
+                        },
+                        "start": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "MiB",
+                            "value": 3
+                        },
+                        "status": "create",
+                        "type": "primary"
+                    },
+                    {
+                        "btrfs": [],
+                        "dev_path": null,
+                        "flags": [],
+                        "fs_type": "ext4",
+                        "mount_options": [],
+                        "mountpoint": "/",
+                        "obj_id": "32a7d7a9-6790-437c-b5c3-84b6cc36e8e2",
+                        "size": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "B",
+                            "value": 26627538944
+                        },
+                        "start": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "B",
+                            "value": 216006656
+                        },
+                        "status": "create",
+                        "type": "primary"
+                    }
+                ],
+                "wipe": true
+            }
+        ]
+    },
+    "hostname": "archlinux",
+    "kernels": [
+        "linux"
+    ],
+    "locale_config": {
+        "kb_layout": "fr",
+        "sys_enc": "UTF-8",
+        "sys_lang": "en_US"
+    },
+    "mirror_config": {
+        "custom_mirrors": [],
+        "mirror_regions": {
+            "France": [
+                "https://mirrors.jtremesay.org/archlinux/$repo/os/$arch",
+                "https://mirrors.gandi.net/archlinux/$repo/os/$arch",
+                "https://mirrors.eric.ovh/arch/$repo/os/$arch",
+                "https://mirrors.celianvdb.fr/archlinux/$repo/os/$arch",
+                "https://mirror.wormhole.eu/archlinux/$repo/os/$arch",
+                "https://mirror.theo546.fr/archlinux/$repo/os/$arch",
+                "https://mirror.thekinrar.fr/archlinux/$repo/os/$arch",
+                "https://mirror.sysa.tech/archlinux/$repo/os/$arch",
+                "https://mirror.oldsql.cc/archlinux/$repo/os/$arch",
+                "https://mirror.its-tps.fr/archlinux/$repo/os/$arch",
+                "https://mirror.ibakerserver.pt/Arch/$repo/os/$arch",
+                "https://mirror.cyberbits.eu/archlinux/$repo/os/$arch",
+                "https://archlinux.mailtunnel.eu/$repo/os/$arch",
+                "https://arch.yourlabs.org/$repo/os/$arch",
+                "http://mirrors.gandi.net/archlinux/$repo/os/$arch",
+                "http://mirrors.celianvdb.fr/archlinux/$repo/os/$arch",
+                "http://mirror.theo546.fr/archlinux/$repo/os/$arch",
+                "http://mirror.oldsql.cc/archlinux/$repo/os/$arch",
+                "http://mirror.lastmikoi.net/archlinux/$repo/os/$arch",
+                "http://mirror.its-tps.fr/archlinux/$repo/os/$arch",
+                "http://mirror.cyberbits.eu/archlinux/$repo/os/$arch",
+                "http://mirror.archlinux.ikoula.com/archlinux/$repo/os/$arch",
+                "http://mir.archlinux.fr/$repo/os/$arch",
+                "http://ftp.u-strasbg.fr/linux/distributions/archlinux/$repo/os/$arch",
+                "http://archlinux.mirrors.ovh.net/archlinux/$repo/os/$arch",
+                "http://archlinux.mailtunnel.eu/$repo/os/$arch",
+                "http://archlinux.datagr.am/$repo/os/$arch",
+                "http://arch.yourlabs.org/$repo/os/$arch"
+            ]
+        }
+    },
+    "network_config": {
+        "type": "nm"
+    },
+    "no_pkg_lookups": false,
+    "ntp": true,
+    "offline": false,
+    "packages": [],
+    "parallel downloads": 0,
+    "profile_config": {
+        "gfx_driver": "VMware / VirtualBox (open-source)",
+        "greeter": "gdm",
+        "profile": {
+            "custom_settings": {
+                "Qtile": {},
+                "i3-wm": {}
+            },
+            "details": [
+                "i3-wm",
+                "Qtile"
+            ],
+            "main": "Desktop"
+        }
+    },
+    "script": "guided",
+    "silent": false,
+    "skip_ntp": false,
+    "skip_version_check": false,
+    "swap": true,
+    "timezone": "UTC",
+    "uki": false,
+    "version": "2.7.1"
+}
+
