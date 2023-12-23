@@ -102,8 +102,8 @@ layouts = [
 
 widget_defaults = dict(
     font="sans",
-    fontsize=12,
-    padding=3,
+    fontsize=13,
+    padding=0,
 )
 extension_defaults = widget_defaults.copy()
 
@@ -112,7 +112,17 @@ screens = [
         top=bar.Bar(
             [
                 # widget.CurrentLayout(),
-                widget.GroupBox(),
+            widget.GroupBox(
+                    borderwidth=0,
+                    margin=0,
+                    padding=6,
+                    active="FFFFFF",
+                    inactive="585b70",
+                    highlight_method="block",
+                    this_current_screen_border="#3C7A89",
+                    invert_mouse_wheel=True,
+                    rounded=False,
+                ),
                 widget.Prompt(),
                 widget.WindowName(),
                 widget.Chord(
@@ -122,12 +132,12 @@ screens = [
                     name_transform=lambda name: name.upper(),
                 ),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                widget.StatusNotifier(),
-                widget.Systray(),
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
                 widget.QuickExit(),
+                widget.Systray(),
+                widget.StatusNotifier(),
             ],
-            24,
+            24,background="#16262E"
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
@@ -195,9 +205,9 @@ groups = []
 # group_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0",]
 
 # FOR AZERTY KEYBOARDS
-group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "section", "egrave", "exclam", "ccedilla", "agrave",]
+group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft"]
 
-group_labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0",]
+group_labels = ["1", "2", "3", "4", "5"]
 
 group_layouts = ["monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall",]
 
