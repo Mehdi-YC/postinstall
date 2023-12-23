@@ -90,7 +90,11 @@ layouts = [
    layout.MonadTall(
            font = "Ubuntu",
            fontsize = 10,
-           margin = 8
+           margin = 8,
+           border_focus = "3C7A89",
+           border_width = 2,
+           border_normal = "16262E"
+           
         ),
     # layout.MonadWide(),
     # layout.RatioTile(),
@@ -133,7 +137,7 @@ screens = [
                 ),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                # widget.QuickExit(),
                 widget.Systray(),
                 widget.StatusNotifier(),
             ],
