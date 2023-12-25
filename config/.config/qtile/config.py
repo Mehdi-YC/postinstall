@@ -206,7 +206,7 @@ subprocess.Popen(["flatpak", "run", "net.christianbeier.Gromit-MPX"])
 groups = []
 
 # FOR QWERTY KEYBOARDS
-# group_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0",]
+group_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0",]
 
 # FOR AZERTY KEYBOARDS
 group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft"]
