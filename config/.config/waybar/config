@@ -21,7 +21,7 @@
       }
     },
     "clock": {
-      "format": "<span color='#b4befe'> </span>{:%H:%M}",
+      "format": "<span color='#b4befe'> </span>{:%d/%m/%y - %H:%M}"
     },
     "backlight": {
       "device": "intel_backlight",
