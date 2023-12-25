@@ -13,6 +13,7 @@
         - atim/starship
         - atim/nushell
         - varlad/helix
+        - alebastr/sway-extras
 
 
 
@@ -159,11 +160,18 @@
       become: true
       package:
         name:
+        #X11
           - i3
           - i3status
           - picom
           - dunst
           - feh
+        #WAYLAND ! (NEW)
+          - hyprland
+          - waybar
+          - nmtui
+          - wofi
+          - swww
         state: present
       tags: minimal
 
