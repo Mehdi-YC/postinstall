@@ -160,17 +160,24 @@
       become: true
       package:
         name:
-        #X11
+        ## COMMON : rofi dunst
+          - rofi
+          - dunst
+
+        
+        #X11  i3 i3status picom feh
           - i3
           - i3status
           - picom
-          - dunst
           - feh
-        #WAYLAND ! (NEW)
+
+
+        #WAYLAND ! (NEW) hyprland waybar swww
           - hyprland
-          - waybar
-          - rofi
+          - waybar  
           - swww
+
+          
         state: present
       tags: minimal
 
