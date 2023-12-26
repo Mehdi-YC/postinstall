@@ -156,7 +156,7 @@
 
 
 
-    - name: Install i3 and related packages
+    - name: Install i3/hyprland and related packages
       become: true
       package:
         name:
@@ -169,8 +169,7 @@
         #WAYLAND ! (NEW)
           - hyprland
           - waybar
-          - nmtui
-          - wofi
+          - rofi
           - swww
         state: present
       tags: minimal
