@@ -1,0 +1,60 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+matches:
+  # Simple text replacement
+  - trigger: ":ca"
+    replace: "#YAHIA CHERIF Mohamed Mahdi add {{today}}\n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
+    vars:
+      - name: today
+        type: date
+        params: 
+          format: "%d/%m/%Y"
+        
+  - trigger: ":ce"
+    replace: "#YAHIA CHERIF Mohamed Mahdi Edit {{today}}\n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
+    vars:
+      - name: today
+        type: date
+        params: 
+          format: "%m/%d/%Y" 
+        
+    # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
+
+  # But matches can also be dynamic:
+ 
+  # Print the current date
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%m/%d/%Y"
+
+  # Print league of legends
+  - trigger: ":ro"
+    replace: "Record.objects.get(id=record).space"
+  # Print league of legends
+  - trigger: ":lol"
+    replace: "League of legends"
+  # Print league of legends
+  - trigger: ":tft"
+    replace: "Team fight tactics"
+
+  - trigger: ":ss"
+    replace:  "{\n
+    \"En cours\":\"badge badge-light-info rounded-pill\", \n
+    \"Terminé\":\"badge badge-light-success rounded-pill\"\n
+      }"
+
+
+  # Print league of legends
+  - trigger: ":pbuh"
+    replace: "Peace be upon him"
