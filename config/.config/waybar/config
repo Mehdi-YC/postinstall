@@ -1,8 +1,8 @@
 {
   "layer": "top",
     "modules-left": ["custom/arch", "hyprland/workspaces"],
-    "modules-center": ["clock"],
-    "modules-right": ["backlight", "pulseaudio", "bluetooth", "network", "battery"],
+    "modules-center": ["memory","cpu","clock"],
+    "modules-right": ["keyboard-state","backlight", "pulseaudio", "bluetooth", "network", "battery" ,"tray"],
     "custom/arch": {
       "format": "  ",
       "tooltip": false,
@@ -20,6 +20,7 @@
         "default": ""
       }
     },
+    
     "clock": {
       "format": "<span color='#b4befe'> </span>{:%d/%m/%y - %H:%M}",
     },
@@ -46,7 +47,7 @@
       "tooltip-format-enumerate-connected": "{device_alias}   {device_address}"
     },
     "network": {
-     "on-click":"kitty --class float -- nmtui connect",
+     "on-click":"~/.config/rofi/rofi-wifi-menu.sh",
      "interface": "wlp2s0f0u3",
       "format": "{ifname}",
       "format-wifi": "<span color='#b4befe'> </span> {essid}",
@@ -62,5 +63,35 @@
       "format-icons": ["", "", "", "", "", "", "", "", "", ""],
       "format-charging": "<span color='#b4befe'></span> {capacity}%",
       "tooltip": false,
+    },
+    "tray": {
+      // "icon-size": 21,
+      "spacing": 10
+    },
+        "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": "{name} {icon}",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+
+
+    "cpu": {
+        "format": "<span color='#b4befe'>{usage}% </span> ",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "<span color='#b4befe'>{}% </span> "
+    },
+    "temperature": {
+        // "thermal-zone": 2,
+        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        "critical-threshold": 80,
+        // "format-critical": "{temperatureC}°C {icon}",
+        "format": "<span color='#b4befe'>{temperatureC}°C {icon}</span>",
+        "format-icons": ["", "", ""]
     },
 }
