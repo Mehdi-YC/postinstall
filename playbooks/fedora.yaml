@@ -207,7 +207,7 @@
         - bradlc.vscode-tailwindcss
         #- innoverio.vscode-dbt-power-user
         - jdinhlife.gruvbox
-        - ms-python.python
+        #- ms-python.python
         #- ms-toolsai.jupyter
         #- ms-toolsai.jupyter-keymap
         #- ms-toolsai.jupyter-renderers
@@ -217,8 +217,8 @@
         #- mtxr.sqltools-driver-pg
         #- mtxr.sqltools-driver-sqlite
         - PKief.material-icon-theme
-        - rust-lang.rust
-        - rust-lang.rust-analyzer
+        #- rust-lang.rust
+        #- rust-lang.rust-analyzer
         - s-nlf-fh.glassit
         - sainnhe.gruvbox-material
         - samuelcolvin.jinjahtml

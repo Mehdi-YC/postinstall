@@ -1,22 +1,24 @@
 set $mod Mod4
 
-font pango:monospace 8
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id swaybg -i ~/Pictures/wallpapers/trees.jpg
-
-
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 exec --no-startup-id flatpak run net.christianbeier.Gromit-MPX
 exec --no-startup-id waybar
+
+font pango:monospace 8
+input type:keyboard {
+    xkb_layout fr
+    }
+
+
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-# Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec gnome-terminal
@@ -37,11 +39,8 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 
-
-# split in horizontal orientation
+# split in horizontal/vertical orientation
 bindsym $mod+h split h
-
-# split in vertical orientation
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
@@ -51,9 +50,7 @@ bindsym $mod+m fullscreen toggle
 bindsym $mod+s layout stacking
 bindsym $mod+z layout tabbed
 bindsym $mod+e layout toggle split
-
-# toggle tiling / floating
-bindsym $mod+space floating toggle
+bindsym $mod+space floating toggle # toggle tiling / floating
 
 set $ws1 "1"
 set $ws2 "2"
@@ -81,8 +78,6 @@ bindsym $mod+agrave workspace number $ws10
 bindsym $mod+Control+Left  workspace prev
 bindsym $mod+Control+Right  workspace next
 
-
-
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
 bindsym $mod+Shift+eacute move container to workspace number $ws2
@@ -102,6 +97,9 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Do you really want to power off the computer ?' -B 'Yes' 'poweroff'"
+
+floating_modifier $mod
+bindsym $mod+r mode "resize"
 # resize window (you can also use the mouse for that)
 mode "resize" {
         bindsym j resize shrink width 10 px or 10 ppt
@@ -121,11 +119,6 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
-bindsym $mod+r mode "resize"
-
-
-
 
 gaps inner 3
 gaps outer 3
-
