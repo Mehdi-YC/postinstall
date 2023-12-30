@@ -2,13 +2,13 @@ set $mod Mod4
 
 font pango:monospace 8
 exec --no-startup-id dex --autostart --environment i3
-exec --no-startup-id swaybg -i ~/Pictures/wallpapers/trees.jpg
-
+exec --no-startup-id swaybg -i /usr/share/backgrounds/arcolinux-candy/candy-04.png
 
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 exec --no-startup-id flatpak run net.christianbeier.Gromit-MPX
 exec --no-startup-id waybar
+
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
@@ -19,8 +19,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec gnome-terminal
-bindsym $mod+f exec nautilus
+bindsym $mod+Return exec xfce4-terminal # gnome-terminal
+bindsym $mod+f exec thunar # nautilus
 bindsym $mod+b exec firefox
 bindsym Print exec --no-startup-id flatpak run org.flameshot.Flameshot gui
 
@@ -29,7 +29,7 @@ bindsym Mod1+Tab exec ~/.config/i3/windows
 bindsym $mod+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+p exec --no-startup-id i3-dmenu-desktop 
+bindsym $mod+p exec --no-startup-id ~/.config/rofi/rofi-app-menu.sh  
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
@@ -97,9 +97,11 @@ bindsym $mod+Shift+agrave move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Do you really want to power off the computer ?' -B 'Yes' 'poweroff'"
+
+# exit i3 (logs you out of your Wayland session)
+bindsym $mod+Shift+e exec "swaynag -t warning -m 'Exit sway ?' -b 'Yes, exit sway' 'swaymsg exit'"
+
+bindsym $mod+Shift+x exec "swaynag -t warning -m 'Shutdown ? ' -b 'Shutdown' 'systemctl -i poweroff'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -122,7 +124,19 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-
+bindgesture swipe:right workspace prev
+bindgesture swipe:left workspace next
 
 gaps inner 3
 gaps outer 3
+
+
+ input * {
+        dwt enabled
+    	tap enabled
+    	middle_emulation enabled
+        xkb_layout "fr"
+}
+
+
+
