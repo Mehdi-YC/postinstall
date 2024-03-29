@@ -10,7 +10,7 @@
 matches:
   # Simple text replacement
   - trigger: ":ca"
-    replace: "#YAHIA CHERIF Mohamed Mahdi add {{today}}\n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
+    replace: "#YAHIA CHERIF Mohamed Mahdi add {{today}} : $|$ \n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
     vars:
       - name: today
         type: date
@@ -18,14 +18,14 @@ matches:
           format: "%d/%m/%Y"
         
   - trigger: ":ce"
-    replace: "#YAHIA CHERIF Mohamed Mahdi Edit {{today}}\n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
+    replace: "#YAHIA CHERIF Mohamed Mahdi Edit {{today}} : $|$ \n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
     vars:
       - name: today
         type: date
         params: 
-          format: "%m/%d/%Y" 
+          format: "%d/%m/%Y" 
         
-    # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
+  # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
 
   # But matches can also be dynamic:
  
@@ -39,14 +39,18 @@ matches:
           format: "%m/%d/%Y"
 
   # Print league of legends
-  - trigger: ":ro"
-    replace: "Record.objects.get(id=record).space"
-  # Print league of legends
   - trigger: ":lol"
     replace: "League of legends"
-  # Print league of legends
+
+  # Print Team fight tactics"
   - trigger: ":tft"
     replace: "Team fight tactics"
+
+
+  # Prophet Mohamad
+  - trigger: ":pbuh"
+    replace: "Peace be upon him"
+
 
   - trigger: ":ss"
     replace:  "{\n
@@ -54,7 +58,27 @@ matches:
     \"Terminé\":\"badge badge-light-success rounded-pill\"\n
       }"
 
+  - trigger: ":ia"
+    replace: |
+        if record.get("{{form.field}}") and record.get("{{form.field}}").name == "{{form.value}}":return True
+        return False
+    vars:
+      - name: "form"
+        type: form
+        params:
+          layout: "Field: [[field]] \nValue: [[value]]"
 
-  # Print league of legends
-  - trigger: ":pbuh"
-    replace: "Peace be upon him"
+
+
+  - trigger: ":rs"
+    replace: |
+        record.set("{{form.field}}","{{form.value}}")
+        record.save()
+    vars:
+      - name: "form"
+        type: form
+        params:
+          layout: "Field: [[field]] \nValue: [[value]]"
+
+
+
