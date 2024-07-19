@@ -1,4 +1,4 @@
-# postinstall
+# postinstall :
 This repo represents me, my reaserch, my studies, my dotfiles, my scripts... everything is here.
 i have 2  playbooks to install my distro, one for debian and one for fedora.
 
