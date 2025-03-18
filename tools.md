@@ -8,6 +8,7 @@
  - coreutils (grep / find / jq /sed ...)
  - ansible
  - fish / starship
+ - ollama / gollama
 
 # Saas
  - Wordpress (cf7 elementor)
@@ -33,3 +34,4 @@
  - inkscape
  - onlyoffice
  - flameshot
+ - lmstudio
