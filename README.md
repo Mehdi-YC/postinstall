@@ -146,31 +146,24 @@ The most agile ERP on the planet
 - i3
 - firefox
 - vscode
-- remmina
 - gitui
 - insomnia
-- joplin
 - dbeaver
 - inkscape
 - onlyoffice
-- Insomnia
 - Pitivi
-- Remmina
 - GIMP
-- Inkscape
 - Discord
-- firefox
-- Steam
 - Flameshot
 - Gromit-MPX
 - rancher desktop
 
 ### Eulation : 
 - retroarch  
-- pcsx2
+- pcsx2/aethersx2
 - ppsspp
 - dolphin
-- yuzu
+- yuzu/strao
 - omniedge
 - aethersx2
 
@@ -185,15 +178,10 @@ The most agile ERP on the planet
 - jq
 - just
 - hyperfine
-- nushell
-- tldr
 - fish
 - afetch
 - python / node (npm) / bun / cargo
-- openreplay
-- sentry
 - starship
-- fish
 - neovim
 - htop
 - tmux
@@ -438,11 +426,39 @@ Paperless-ngx is a community-supported open-source document management system th
 ---
 
 
-## [Magneto2](https://business.adobe.com/products/magento/magento-commerce.html)
-Adobe Commerce is a flexible and scalable commerce platform that lets you create uniquely personalized B2B and B2C experiences, no matter how many brands you have.
+## [chatwoot](https://github.com/chatwoot/chatwoot)
+Open-source live-chat, email support, omni-channel desk. An alternative to Intercom, Zendesk, Salesforce Service Cloud etc. 🔥💬
 
-![](https://cm.magefan.com/wysiwyg/magento-2-products.png)
+![](https://user-images.githubusercontent.com/2246121/282255784-3d1994ec-d895-4ff5-ac68-d819987e1869.png#gh-dark-mode-only)
 ---
+
+
+
+## [chatwoot](https://github.com/chatwoot/chatwoot)
+Open-source live-chat, email support, omni-channel desk. An alternative to Intercom, Zendesk, Salesforce Service Cloud etc. 🔥💬
+
+![](https://user-images.githubusercontent.com/2246121/282255784-3d1994ec-d895-4ff5-ac68-d819987e1869.png#gh-dark-mode-only)
+---
+
+
+
+## [BookStack](https://www.bookstackapp.com/)
+Simple & Free
+Wiki Software
+BookStack is a simple, self-hosted, easy-to-use platform for organising and storing information.
+![](https://www.bookstackapp.com/images/bookstack-hero-screenshot.webp)
+---
+
+
+## [APItable](https://github.com/apitable/apitable)
+🚀🎉📚 APITable, an API-oriented low-code platform for building collaborative apps and better than all other Airtable open-source
+![](https://github.com/apitable/apitable/raw/develop/docs/static/feature-realtime.gif)
+---
+
+- openreplay
+- sentry
+
+
 
 
 
