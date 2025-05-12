@@ -1,17 +1,25 @@
 # i3 config file (v4)
 # Optimized with workspace management, gnome-terminal+tmux, and multi-monitor support
+# Optimized with workspace management, gnome-terminal+tmux, and multi-monitor support
 
 set $mod Mod4
 
 # Font settings
+# Font settings
 font pango:monospace 8
 
+# Autostart applications
 # Autostart applications
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id feh --bg-scale /home/mehdi/Pictures/wallpapers/pxfuel.jpg
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id setxkbmap fr
+exec --no-startup-id setxkbmap fr
 exec --no-startup-id nm-applet
+# exec --no-startup-id picom --experimental-backends
+exec --no-startup-id dunst
+
+# Volume controls
 # exec --no-startup-id picom --experimental-backends
 exec --no-startup-id dunst
 
@@ -23,9 +31,17 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
 # Window management
+# Window management
 floating_modifier $mod
 bindsym $mod+q kill
+bindsym $mod+q kill
 bindsym $mod+f exec nautilus
+bindsym Print exec --no-startup-id flameshot gui
+
+# Application launcher
+# bindsym $mod+p exec --no-startup-id ~/.config/rofi/rofi-app-menu.sh
+bindsym $mod+p exec --no-startup-id dmenu_run
+# Window focus
 bindsym Print exec --no-startup-id flameshot gui
 
 # Application launcher
@@ -38,6 +54,7 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # Layout management
+# Layout management
 bindsym $mod+h split h
 bindsym $mod+v split v
 bindsym $mod+m fullscreen toggle
@@ -46,6 +63,7 @@ bindsym $mod+z layout tabbed
 bindsym $mod+e layout toggle split
 bindsym $mod+space floating toggle
 
+# Workspace configuration
 # Workspace configuration
 set $ws1 "1"
 set $ws2 "2"
@@ -56,6 +74,7 @@ set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
+set $ws10 "10"
 set $ws10 "10"
 
 # Assign workspaces to outputs
@@ -115,7 +134,22 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg e
 bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Power off?' -B 'Yes' 'systemctl poweroff'"
 
 # Resize mode
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
+bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Power off?' -B 'Yes' 'systemctl poweroff'"
+
+# Resize mode
 mode "resize" {
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym m resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
     bindsym j resize shrink width 10 px or 10 ppt
     bindsym k resize grow height 10 px or 10 ppt
     bindsym l resize shrink height 10 px or 10 ppt
@@ -134,8 +168,16 @@ bindsym $mod+r mode "resize"
 bar {
     position top
     status_command i3status
+# Status bar
+bar {
+    position top
+    status_command i3status
 }
 
+# Gaps and smart layout
+gaps inner 8
+gaps outer 2
+#smart_gaps on
 # Gaps and smart layout
 gaps inner 8
 gaps outer 2
@@ -143,6 +185,10 @@ gaps outer 2
 
 # Clipboard helper
 bindsym $mod+Shift+l exec "str=$(xclip -o -selection clipboard);echo ${str,,} | iconv -t ascii//TRANSLIT |tr ' ' '_' | xclip -selection clipboard"
+# Clipboard helper
+bindsym $mod+Shift+l exec "str=$(xclip -o -selection clipboard);echo ${str,,} | iconv -t ascii//TRANSLIT |tr ' ' '_' | xclip -selection clipboard"
 
+# Auto-start tmux session if not running
+# exec --no-startup-id [ -z "$TMUX" ] && gnome-terminal -- tmux new-session -A -s main
 # Auto-start tmux session if not running
 # exec --no-startup-id [ -z "$TMUX" ] && gnome-terminal -- tmux new-session -A -s main
