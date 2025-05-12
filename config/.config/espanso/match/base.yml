@@ -9,26 +9,13 @@
 # it gets replaced by the "replace" string.
 matches:
   # Simple text replacement
-  - trigger: ":ca"
-    replace: "#YAHIA CHERIF Mohamed Mahdi add {{today}} : $|$ \n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
-    vars:
-      - name: today
-        type: date
-        params: 
-          format: "%d/%m/%Y"
-        
-  - trigger: ":ce"
-    replace: "#YAHIA CHERIF Mohamed Mahdi Edit {{today}} : $|$ \n#End YAHIA CHERIF Mohamed Mahdi {{today}}"
-    vars:
-      - name: today
-        type: date
-        params: 
-          format: "%d/%m/%Y" 
-        
+  - trigger: ":espanso"
+    replace: "Hi there!"
+
   # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
 
   # But matches can also be dynamic:
- 
+
   # Print the current date
   - trigger: ":date"
     replace: "{{mydate}}"
@@ -38,47 +25,13 @@ matches:
         params:
           format: "%m/%d/%Y"
 
-  # Print league of legends
-  - trigger: ":lol"
-    replace: "League of legends"
-
-  # Print Team fight tactics"
-  - trigger: ":tft"
-    replace: "Team fight tactics"
-
-
-  # Prophet Mohamad
-  - trigger: ":pbuh"
-    replace: "Peace be upon him"
-
-
-  - trigger: ":ss"
-    replace:  "{\n
-    \"En cours\":\"badge badge-light-info rounded-pill\", \n
-    \"Terminé\":\"badge badge-light-success rounded-pill\"\n
-      }"
-
-  - trigger: ":ia"
-    replace: |
-        if record.get("{{form.field}}") and record.get("{{form.field}}").name == "{{form.value}}":return True
-        return False
+  # Print the output of a shell command
+  - trigger: ":shell"
+    replace: "{{output}}"
     vars:
-      - name: "form"
-        type: form
+      - name: output
+        type: shell
         params:
-          layout: "Field: [[field]] \nValue: [[value]]"
+          cmd: "echo 'Hello from your shell'"
 
-
-
-  - trigger: ":rs"
-    replace: |
-        record.set("{{form.field}}","{{form.value}}")
-        record.save()
-    vars:
-      - name: "form"
-        type: form
-        params:
-          layout: "Field: [[field]] \nValue: [[value]]"
-
-
-
+  # And much more! For more information, visit the docs: https://espanso.org/docs/

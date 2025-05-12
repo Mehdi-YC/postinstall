@@ -1,0 +1,60 @@
+matches:
+  # Main function
+  - trigger: ":main"
+    replace: |
+      fn main() {
+          println!("Hello, world!");
+      }
+
+  # Function snippet
+  - trigger: ":fn"
+    replace: |
+      fn function_name(i: i32) -> i32 {
+          // code here
+      }
+
+  # Struct definition
+  - trigger: ":struct"
+    replace: |
+      struct StructName {
+          field: Type,
+      }
+
+  # Enum definition
+  - trigger: ":enum"
+    replace: |
+      enum EnumName {
+          Variant1,
+          Variant2,
+      }
+
+  # Implementing methods for a struct
+  - trigger: ":impl"
+    replace: |
+      impl StructName {
+          fn new() -> Self {
+              // constructor
+          }
+      }
+
+  # Implementing a trait
+  - trigger: ":implt"
+    replace: |
+      impl Trait for Struct {
+          fn method(&self) {
+              // method implementation
+          }
+      }
+
+  # Rust unit test
+  - trigger: ":test"
+    replace: |
+      #[cfg(test)]
+      mod tests {
+          use super::*;
+
+          #[test]
+          fn test_example() {
+              assert_eq!(2 + 2, 4);
+          }
+      }

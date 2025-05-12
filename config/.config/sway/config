@@ -2,13 +2,13 @@ set $mod Mod4
 
 font pango:monospace 8
 exec --no-startup-id dex --autostart --environment i3
-exec --no-startup-id swaybg -i /usr/share/backgrounds/arcolinux-candy/candy-04.png
-
+#exec --no-startup-id swaybg -i /usr/share/backgrounds/arcolinux-candy/candy-04.png
+exec --no-startup-id swaybg -i /usr/share/backgrounds/f39/default/f39-01-day.png -m fill
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 exec --no-startup-id flatpak run net.christianbeier.Gromit-MPX
-exec --no-startup-id waybar
-
+#exec --no-startup-id waybar
+exec "swaymsg -t get_outputs | grep -q active && [ $(swaymsg -t get_outputs | grep -c active) -eq 2 ] && swaymsg output $(swaymsg -t get_outputs | jq -r '.[0].name') disable"
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
@@ -19,10 +19,11 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec xfce4-terminal # gnome-terminal
+bindsym $mod+Return exec foot #xfce4-terminal # gnome-terminal
 bindsym $mod+f exec thunar # nautilus
 bindsym $mod+b exec firefox
 bindsym Print exec --no-startup-id flatpak run org.flameshot.Flameshot gui
+bindsym $mod+o exec swaymsg output eDP-1 toggle
 
 bindsym Mod1+Tab exec ~/.config/i3/windows 
 # kill focused window
@@ -130,6 +131,13 @@ bindgesture swipe:left workspace next
 gaps inner 3
 gaps outer 3
 
+bar {
+    position top
+    status_command i3status
+    # When the status_command prints a new line to stdout, swaybar updates.
+    # The default just shows the current date and time.
+
+  }
 
  input * {
         dwt enabled
@@ -137,6 +145,10 @@ gaps outer 3
     	middle_emulation enabled
         xkb_layout "fr"
 }
+input type:keyboard xkb_numlock enabled
 
+for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
 
-
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
