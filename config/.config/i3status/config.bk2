@@ -30,7 +30,7 @@ order += "battery 0"
 order += "load"
 order += "tztime local"
 
-wireless wlp2s0f0u3{
+wireless wlp1s0{
     format_up = "%quality 📶 %essid %ip"
     format_down = ""
 }

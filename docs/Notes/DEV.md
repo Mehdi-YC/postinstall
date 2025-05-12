@@ -9,19 +9,15 @@ altitude: 0.0000
 
 - ## python
     
-    - numpy / pandas
-    - fastapi / flask
+    - pandas
+    - fastapi
     - requests / bs4 / scrapy
     - sklearn
-    - pyautogui
-    - matplotlib / plotly
-    - pyinstaller
 - ## js / node
-    
-    - react / next.js
+
     - svelte / sveltekit
-    - solid.js / alpine.js
-    - tailwindcss (daisuUI / skeleton)
+    - alpine.js
+    - tailwindcss (skeleton)
     - localtunnel
     - pwa
     - capacitor
@@ -37,13 +33,10 @@ altitude: 0.0000
     - tokio
     - clap
     - anyhow
-
-- ## go
     
 - ## SQL
     
 - ## tech
-    
     - pwa
     - api
     - graphql

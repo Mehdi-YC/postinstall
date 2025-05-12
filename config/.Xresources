@@ -1,2 +1,2 @@
-# xrandr --dpi 192
-#Xft.dpi: 192
+xrandr --dpi 140
+Xft.dpi: 140

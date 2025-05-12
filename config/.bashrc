@@ -12,8 +12,9 @@ fi
 export PATH
 #unset rc
 #. "$HOME/.cargo/env"
-
-
+export JAVA_HOME="/mnt/Work/JAVA/jdk-18.0.2.1_linux-x64_bin/jdk-18.0.2.1"
+# export STUDIO_JDK="/mnt/Work/JAVA/jdk-18.0.2.1_linux-x64_bin/jdk-18.0.2.1/bin"
+export PATH="$PATH:/mnt/Work/JAVA/jdk-18.0.2.1_linux-x64_bin/jdk-18.0.2.1/bin"
 # Don't put duplicate lines in the history and do not add lines that start with a space
 export HISTCONTROL=erasedups:ignoredups:ignorespac:ignoreboth
 # Causes bash to append to history instead of overwriting it so if you start a new terminal, you have old session history
@@ -50,3 +51,8 @@ alias ls="ls -CF --color=auto"
 
 #Functions :
 mkcd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
+
+
+export PATH="$PATH:/mnt/Work/dartsdk-linux-x64-release3.0.0/dart-sdk/bin:/mnt/Work/flutter_linux_3.24.4-stable/flutter/bin"
+alias studio="/mnt/Work/android-studio-2024.2.1.10-linux/android-studio/bin/studio"
+
