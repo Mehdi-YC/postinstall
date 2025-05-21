@@ -290,6 +290,7 @@ https://swagger.io/
 ## Python
 - [James Powell playlist](https://www.youtube.com/watch?v=cKPlPJyQrt4&list=PLzg3FkRs7fcTjdBdrP6dOTcV3AJwnzL0Y)
 - [sentdex web scraping](https://www.youtube.com/watch?v=aIPqt-OdmS0&list=PLQVvvaa0QuDfV1MIRBOcqClP6VZXsvyZS)
+
 ### pandas
 - [Pandas advanced](https://www.youtube.com/watch?v=ZyhVh-qRZPA&list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS)
 - [Pandas tricks](https://www.youtube.com/watch?v=RlIiVeig3hc)
@@ -300,7 +301,6 @@ https://swagger.io/
 
 ### django
 - [Full django](https://www.youtube.com/watch?v=PtQiiknWUcI)
-
 - [Full django (drf)](https://www.youtube.com/watch?v=c708Nf0cHrs)
 
 
@@ -321,20 +321,21 @@ long run
 - [bytebytego](https://www.youtube.com/@ByteByteGo/playlists) 
 - [OPEN API SPECS](https://www.youtube.com/watch?v=6kwmW_p_Tig)
 - [APiarchitecture](https://www.youtube.com/@CodeOpinion/featured)
+- [API desing](https://www.youtube.com/watch?v=9Ng00IlBCtw&list=PL9XzOCngAkqs4m0XdULJu_78nM3Ok3Q65)
+- [web design standards](https://www.youtube.com/watch?v=uS9wnNsamzA)
 
 
 ## rust
 - [All in one video](https://www.youtube.com/watch?v=ygL_xcavzQ4)
 - [from tust book](https://www.youtube.com/watch?v=OX9HJsJUDxA&list=PLai5B987bZ9CoVR-QEIN9foz4QCJ0H2Y8)
 - [From rust to python](https://www.youtube.com/watch?v=7odJDwhjCXQ&list=PLEIv4NBmh-GsWGE9mY3sF9c5lgh5Z_jLr)
-- also check the <b>rustlings</b>
+- also check the <b>rustlings & 100 exercices</b>
 
 
 
 
 ## git
 - [All in one video](https://www.youtube.com/watch?v=RGOj5yH7evk)
-
 
 
 
@@ -365,36 +366,157 @@ long run
 - we don't do that here
 
 
+# terminal
+ - ranger
+ - helix
+ - tmux
+ - docker / docker-compose /lazydocker
+ - git / lazygit
+ - htop
+ - coreutils (grep / find / jq /sed ...)
+ - ansible
+ - fish / starship
+ - ollama
 
-# NOW:
-practice and try to create a full django app with all the above stuff implemented and have an external service using a rust processing 'serverless' function
+# Saas
+ - Wordpress (cf7 elementor)
+ - Odoo
+ - directus
+ - n8n
+ - aapanel
+ - glpi
+ -- moodle / budibase / callcom
 
-and you are good to go
-- programming languages are swappable
-- we can replace python/django with :
-    - go / gin
-    - rust / rocket or axum
-    - node / any framework
-    - php / laravel
-    - ...
-- but the rest of the knowledge is portable
-- try to use reasy to use tool from this readme whenever is possible :
-    - [lowcode tools](https://github.com/mehdi-yc/postinstall)
+# dev
+ - python (django,pandas / polars,fasapi,requests,scrapy,sklearn) jupyter
+ - js (sveltekit / skeletonUi superform,drizzleORM,pwa,capacitor)
+ - fun with go / rust
+ - sentry
 
-- learn basic things like :
-  - regex
-  - text formats :markown / json / yaml / toml...
-  - unix tools
-      - vim
-      - tmux
-      - laydocker
-      - lazygit
-      - git
-      - ssh
-      - ansible
-      - bash / fish
-      - jq
-  - learn api design standards / graphql stuff
+# desktop
+ - insomnia
+ - vscodium
+ - chromium
+ - dbeaver
+ - inkscape
+ - onlyoffice
+ - flameshot
+ - lmstudio
+
+# Data
+ - dbt
+ - dagster
+ - airflow/prefect
+ - superset
+ - grafana
+ - pg / mongo / sqlite / clocckhouse
+ - great_expectations
+ - querybook
+
+# devops
+- pormetius / grafana / uptime kuma
+- gitlab
+- nginx / traefik / caddy
+- cockpit 
+- openstack
+- portainer
+
+# cool stuff
+- typst
+- automa
+- evilimiter
+- airgeddon
+- PlantUML
+- fedora / alpine / k3s / microk8s / k0s
+- bookmarklets
+
+
+
+---
+---
+
+# Python
+
+## <span style="color :#946969">Basics : 
+code examples : https://www.programcreek.com/python/
+- OOP (classes)
+- generators (yield)
+- Decorators (@something)
+- Type hint
+- List comprehention
+- Lambda functions
+
+
+## <span style="color :#93a315">Base Libraries : 
+
+- inspect
+- dis
+- toolz
+- functools
+- random/secret
+- operator
+- datetime/time
+- os/sys
+
+
+## <span style="color :#960b7d">Web : 
+- Django / DRF / Celery
+- flask (quart)/ fastapi / django / muffin / blacksheep /aiohttp
+- requests
+- lxml
+- json
+- bs4
+- sockets
+- urlib3
+- jwt
+
+
+## <span style="color: #405787;">Usefull libs :</span>
+
+- tabulate
+- sqlalchemy
+- tinydb
+- scrapy
+- pyautogui
+- opencv2
+- pynput
+- pyinstaller
+- pillow
+- networkx
+- jwt
+- sqlacodegen generating auto models from a database
+- furl manip url
+
+
+
+## <span style="color: #bf4c0d;">Functional programming :
+
+- map
+- reduce
+- filter
+- toolz
+- functools
+- lambda
+https://www.youtube.com/playlist?list=PLP8GkvaIxJP1z5bu4NX_bFrEInBkAgTMr
+
+
+## <span style="color: #d4ac28;">Data science / analytics :</span>
+
+- numpy
+- pandas
+- matplotlib
+- plotly
+- scipy
+- sklearn
+- pytorch
+- pands-profiling   https://github.com/ydataai/pandas-profiling
+
+
+## <span style="color :#449174">CLI : 
+
+- fire
+
+
 
 
 
