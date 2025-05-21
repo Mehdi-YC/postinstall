@@ -48,3 +48,6 @@
 
 # cool stuff
 - typst
+- automa
+- evilimiter
+- airgeddon
