@@ -2,20 +2,18 @@
  - ranger
  - helix
  - tmux
- - docker / lazydocker
+ - docker / docker-compose /lazydocker
  - git / lazygit
  - htop
  - coreutils (grep / find / jq /sed ...)
  - ansible
  - fish / starship
- - ollama / gollama
+ - ollama
 
 # Saas
  - Wordpress (cf7 elementor)
  - Odoo
  - directus
- - superset
- - grafana
  - n8n
  - aapanel
  - glpi
@@ -25,6 +23,7 @@
  - python (django,pandas,fasapi) jupyter
  - js (sveltekit / skeletonUi superform,drizzleORM)
  - fun with go / rust
+ - sentry
 
 # desktop
  - insomnia
@@ -35,3 +34,17 @@
  - onlyoffice
  - flameshot
  - lmstudio
+
+# Data
+ - dbt
+ - dagster
+ - airflow/prefect
+ - superset
+ - grafana
+
+# devops
+- pormetius / grafana / uptime kuma
+- gitlab
+
+# cool stuff
+- typst
