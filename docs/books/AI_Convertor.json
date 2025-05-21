@@ -1,0 +1,343 @@
+{
+  "name": "AI Convertor",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Drop_your_resume_here",
+        "options": {
+          "keepSource": "json",
+          "password": ""
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        -480
+      ],
+      "id": "e632ee37-3106-4455-945f-096cd9078ce3",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "formTitle": "AI Converter",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Drop your resume here",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -580,
+        -300
+      ],
+      "id": "7dae2532-c037-40e3-b465-5b1b69982f0a",
+      "name": "On form submission",
+      "webhookId": "17bc8347-c7fe-4a4c-8abd-7fd50235719c"
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "template",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".dotx",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -260
+      ],
+      "id": "8c2903a9-0bbf-4587-9e7b-dfa98b0924e3",
+      "name": "Form",
+      "webhookId": "71428455-414a-4ee9-a94e-c27e3fedacfc"
+    },
+    {
+      "parameters": {
+        "data": "={{ JSON.stringify($('Code').item.json) }}\n"
+      },
+      "type": "n8n-nodes-generate-report.generateReport",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -40
+      ],
+      "id": "d02bcb02-0894-42de-a19d-64105768fbd8",
+      "name": "Generate Report"
+    },
+    {
+      "parameters": {
+        "model": "gemma3:4b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        280,
+        -260
+      ],
+      "id": "2c8a1d67-7b52-4596-8f34-da61fd44c5af",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "En0mwXw3D27np6wM",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "schemaType": "fromJson",
+        "jsonSchemaExample": "{\n  \"initiales\": \"K.S.\",\n  \"qualifications\": \"Business Intelligence Specialist\",\n  \"nombre_année\": 3,\n  \"FORMATION\": {\n    \"nom\": \"Karim Seghir\",\n    \"titre\": \"Master Mathématiques et Informatique Décisionnelle (MIND)\",\n    \"description\": \"\",\n    \"université\": \"Université des Sciences et de la Technologie Houari Boumediene\",\n    \"programme\": \"Mathématiques et Informatique Décisionnelle\",\n    \"lieu\": \"Alger, Algérie\",\n    \"dates\": \"09/2019 - 09/2021\",\n    \"diplôme\": \"Master\"\n  },\n  \"COMPETENCES_FONCTIONNELLES\": [\n    \"Business Intelligence\",\n    \"Analyse des données\",\n    \"Automatisation des tâches\",\n    \"Génération de rapports\",\n    \"Collecte et traitement de données\"\n  ],\n  \"COMPETENCES_TECHNIQUES\": {\n    \"langages\": [\n      \"Python\",\n      \"Java\",\n      \"Django\",\n      \"HTML\",\n      \"CSS\",\n      \"JavaScript\"\n    ],\n    \"autres\": [\n      \"ETL: Pentaho Data Integration, SSIS\",\n      \"Reporting: Power BI, Excel\",\n      \"SGBD: SQL Server, PostgreSQL, Hyperfile SQL, Oracle, Access\",\n      \"Bootstrap\"\n    ]\n  },\n  \"EXPERIENCES_PROFESSIONNELLES\": [\n    {\n      \"poste\": \"Spécialiste maintenance support\",\n      \"entreprise\": \"Ooredoo Algérie\",\n      \"localisation\": \"Alger, Algérie\",\n      \"dates\": \"04/2022 - 10/2022\",\n      \"taille_entreprise\": \"Large\",\n      \"responsabilités\": [\n        \"Automatisation des tâches avec scripts Python\",\n        \"Génération de tableaux de bord pour le suivi des activités de maintenance avec Excel et Power BI\",\n        \"Collecte, mise à jour et analyse des données à partir des bases de données de maintenance\"\n      ],\n      \"compétences\": [],\n      \"réalisations\": [],\n      \"recommandation\": \"\"\n    }\n  ],\n  \"projets\": [\n    {\n      \"titre\": \"Projet de fin d'étude licence\",\n      \"dates\": \"03/2019 - 05/2019\",\n      \"description\": \"Application de l'algorithme des nombres entiers en programmation linéaire\",\n      \"outils\": [\"Java\"]\n    },\n    {\n      \"titre\": \"Projet de fin d'étude master\",\n      \"dates\": \"04/2021 - 09/2021\",\n      \"description\": \"Développement d'une solution BI pour la gestion des ressources humaines\",\n      \"entreprise\": \"SAE-EXACT\",\n      \"outils\": [\n        \"Pentaho Data Integration\",\n        \"Power BI\",\n        \"PostgreSQL\",\n        \"Hyperfile SQL\",\n        \"Access\"\n      ]\n    },\n    {\n      \"titre\": \"Algorithme Apriori pour extraire les règles d'association\",\n      \"description\": \"\",\n      \"outils\": [\"Python\"]\n    },\n    {\n      \"titre\": \"Application web pour la gestion de l'université\",\n      \"description\": \"\",\n      \"outils\": [\"Django\", \"Bootstrap\", \"HTML\", \"CSS\", \"JavaScript\"]\n    }\n  ],\n  \"certifications\": [\n    \"Analysez des données avec Excel - OpenClassrooms\",\n    \"Initiez-vous au Machine Learning - OpenClassrooms\",\n    \"Administrez vos bases de données avec MySQL - OpenClassrooms\"\n  ],\n  \"langues\": {\n    \"Français\": \"Professional Working Proficiency\",\n    \"Arabe\": \"Native or Bilingual Proficiency\"\n  },\n  \"contact\": {\n    \"email\": \"karimseghir96@gmail.com\",\n    \"téléphone\": \"0554547083\",\n    \"adresse\": \"Bab Ezzouar, Alger\"\n  },\n  \"description_personnelle\": \"Je suis un jeune....\"\n}\n",
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value.\nFrom now on, return the output as a regular Python dict object with the key  as 'text'."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -420
+      ],
+      "id": "6f521def-a7d3-4f05-a9fa-b63fe1891e67",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "returnBinary",
+        "completionTitle": "Got it",
+        "inputDataFieldName": "report",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -60
+      ],
+      "id": "2718ef90-f002-4f50-be9d-066b87a79531",
+      "name": "Form1",
+      "webhookId": "69af525e-cec8-4a26-8828-5d7d1b9c8e16"
+    },
+    {
+      "parameters": {
+        "content": "## Example data\n```json {\n  \"initiales\": \"K.S.\",\n  \"qualifications\": \"Business Intelligence Specialist\",\n  \"nombre_année\": 3,\n  \"FORMATION\": {\n    \"nom\": \"Karim Seghir\",\n    \"titre\": \"Master Mathématiques et Informatique Décisionnelle (MIND)\",\n    \"description\": \"\",\n    \"université\": \"Université des Sciences et de la Technologie Houari Boumediene\",\n    \"programme\": \"Mathématiques et Informatique Décisionnelle\",\n    \"lieu\": \"Alger, Algérie\",\n    \"dates\": \"09/2019 - 09/2021\",\n    \"diplôme\": \"Master\"\n  },\n  \"COMPETENCES_FONCTIONNELLES\": [\n    \"Business Intelligence\",\n    \"Analyse des données\",\n    \"Automatisation des tâches\",\n    \"Génération de rapports\",\n    \"Collecte et traitement de données\"\n  ],\n  \"COMPETENCES_TECHNIQUES\": {\n    \"langages\": [\n      \"Python\",\n      \"Java\",\n      \"Django\",\n      \"HTML\",\n      \"CSS\",\n      \"JavaScript\"\n    ],\n    \"autres\": [\n      \"ETL: Pentaho Data Integration, SSIS\",\n      \"Reporting: Power BI, Excel\",\n      \"SGBD: SQL Server, PostgreSQL, Hyperfile SQL, Oracle, Access\",\n      \"Bootstrap\"\n    ]\n  },\n  \"EXPERIENCES_PROFESSIONNELLES\": [\n    {\n      \"poste\": \"Spécialiste maintenance support\",\n      \"entreprise\": \"Ooredoo Algérie\",\n      \"localisation\": \"Alger, Algérie\",\n      \"dates\": \"04/2022 - 10/2022\",\n      \"taille_entreprise\": \"Large\",\n      \"responsabilités\": [\n        \"Automatisation des tâches avec scripts Python\",\n        \"Génération de tableaux de bord pour le suivi des activités de maintenance avec Excel et Power BI\",\n        \"Collecte, mise à jour et analyse des données à partir des bases de données de maintenance\"\n      ],\n      \"compétences\": [],\n      \"réalisations\": [],\n      \"recommandation\": \"\"\n    }\n  ],\n  \"projets\": [\n    {\n      \"titre\": \"Projet de fin d'étude licence\",\n      \"dates\": \"03/2019 - 05/2019\",\n      \"description\": \"Application de l'algorithme des nombres entiers en programmation linéaire\",\n      \"outils\": [\"Java\"]\n    },\n    {\n      \"titre\": \"Projet de fin d'étude master\",\n      \"dates\": \"04/2021 - 09/2021\",\n      \"description\": \"Développement d'une solution BI pour la gestion des ressources humaines\",\n      \"entreprise\": \"SAE-EXACT\",\n      \"outils\": [\n        \"Pentaho Data Integration\",\n        \"Power BI\",\n        \"PostgreSQL\",\n        \"Hyperfile SQL\",\n        \"Access\"\n      ]\n    },\n    {\n      \"titre\": \"Algorithme Apriori pour extraire les règles d'association\",\n      \"description\": \"\",\n      \"outils\": [\"Python\"]\n    },\n    {\n      \"titre\": \"Application web pour la gestion de l'université\",\n      \"description\": \"\",\n      \"outils\": [\"Django\", \"Bootstrap\", \"HTML\", \"CSS\", \"JavaScript\"]\n    }\n  ],\n  \"certifications\": [\n    \"Analysez des données avec Excel - OpenClassrooms\",\n    \"Initiez-vous au Machine Learning - OpenClassrooms\",\n    \"Administrez vos bases de données avec MySQL - OpenClassrooms\"\n  ],\n  \"langues\": {\n    \"Français\": \"Professional Working Proficiency\",\n    \"Arabe\": \"Native or Bilingual Proficiency\"\n  },\n  \"contact\": {\n    \"email\": \"karimseghir96@gmail.com\",\n    \"téléphone\": \"0554547083\",\n    \"adresse\": \"Bab Ezzouar, Alger\"\n  },\n  \"description_personnelle\": \"Je suis un jeune algérien motivé et ambitieux à la recherche d'opportunités dans le domaine de la Business Intelligence et l'analyse des données.\"\n} ```",
+        "height": 860,
+        "width": 540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1180,
+        -540
+      ],
+      "typeVersion": 1,
+      "id": "b5b1d558-0826-4d6c-9847-dc844c5fcbe1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -280
+      ],
+      "id": "6d773e83-2d67-4091-859b-2298c7bb822c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ur4G8YoFxZ2nstv4",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "let data = $json.text; // Replace with your actual field key\ndata = data.replace(/```json|```/g, '').trim();\nconst parsed = JSON.parse(data);\n\nreturn parsed;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        -480
+      ],
+      "id": "8c7264ee-7420-4948-a9c6-d63f4e33649b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional information extraction algorithm.\nYour task is to extract and structure data accurately from a given text.\nOnly include data that is clearly present. Omit any attribute that cannot be determined.\nThe result must be a well-formatted JSON object according to the structure below. Do not add comments or explanations — return only the JSON.\nJSON Structure to Fill\n{\n  \"initiales\": \"\",\n  \"qualifications\": \"\",\n  \"nombre_année\": \"\",\n  \"FORMATION\": {\n    \"nom\": \"\",\n    \"titre\": \"\",\n    \"université\": \"\",\n    \"programme\": \"\",\n    \"lieu\": \"\",\n    \"dates\": \"\",\n    \"diplôme\": \"\"\n  },\n  \"COMPETENCES_FONCTIONNELLES\": [\n    \"...\"\n  ],\n  \"COMPETENCES_TECHNIQUES\": {\n    \"langages\": [\"...\"],\n    \"autres\": [\"...\"]\n  },\n  \"EXPERIENCES_PROFESSIONNELLES\": [\n    {\n      \"poste\": \"\",\n      \"entreprise\": \"\",\n      \"localisation\": \"\",\n      \"dates\": \"\",\n      \"responsabilités\": [\n        \"...\"\n      ]\n    }\n  ],\n  \"projets\": [\n    {\n      \"titre\": \"\",\n      \"dates\": \"\",\n      \"description\": \"\",\n      \"outils\": [\"...\"]\n    }\n  ],\n  \"certifications\": [\n    \"...\"\n  ],\n  \"langues\": {\n    \"Français\": \"\",\n    \"Arabe\": \"\"\n  },\n  \"description_personnelle\": \"\",\n  \"contact\": {\n    \"email\": \"\",\n    \"téléphone\": \"\",\n    \"adresse\": \"\"\n  }\n}\n\n\nExtract the information from this input text:\n {{$json.text}} "
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        -380,
+        -480
+      ],
+      "id": "49a09bd9-bb6e-48f7-badb-95928d3276b5",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "content": "## Local \n",
+        "height": 420,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -540
+      ],
+      "typeVersion": 1,
+      "id": "e6ea87ac-0cc4-41ee-a5fe-4fa54a04520e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Google AI",
+        "height": 420,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        -540
+      ],
+      "typeVersion": 1,
+      "id": "4e84c60b-0269-40d6-b438-3012b478a7a5",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form": {
+      "main": [
+        [
+          {
+            "node": "Generate Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Report": {
+      "main": [
+        [
+          {
+            "node": "Form1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c81ed3b0-6fea-4e7e-bc46-b29cdd5ae3f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7f87e2fdc614b5648a596c4cf78fd65e216b2daec877a11dc9ccf84791946b78"
+  },
+  "id": "Gf5WCskfV8ivJxzf",
+  "tags": []
+}
