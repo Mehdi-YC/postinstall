@@ -28,7 +28,6 @@ code examples : https://www.programcreek.com/python/
 - json
 - bs4
 - sockets
-- plotly
 - urlib3
 - jwt
 
@@ -62,34 +61,6 @@ code examples : https://www.programcreek.com/python/
 https://www.youtube.com/playlist?list=PLP8GkvaIxJP1z5bu4NX_bFrEInBkAgTMr
 
 
-
-
-# <span style="color :#2b4c5c">Desktop : 
-
-- pyside2/pyqt5
-- pyautogui
-- dear pygui
-github : https://github.com/hoffstadt/DearPyGui
-  ```py
-	  from dearpygui import core, simple
-
-
-	def save_callback(sender, data):
-		print("Save Clicked")
-
-
-	with simple.window("Example Window"):
-		core.add_text("Hello world")
-		core.add_button("Save", callback=save_callback)
-		core.add_input_text("string")
-		core.add_slider_float("float")
-	#core.start_dearpygui()
-	core.start_dearpygui(primary_window="Example Window")
-```
-
-
-
-
 # <span style="color: #d4ac28;">Data science / analytics :</span>
 
 - numpy
@@ -98,14 +69,10 @@ github : https://github.com/hoffstadt/DearPyGui
 - plotly
 - scipy
 - sklearn
-- tensorflow
-    https://www.youtube.com/channel/UCJHs6RO1CSM85e8jIMmCySw
+- pytorch
 - pands-profiling   https://github.com/ydataai/pandas-profiling
-
-
 
 
 # <span style="color :#449174">CLI : 
 
 - fire
-- Toasts with win10toast
