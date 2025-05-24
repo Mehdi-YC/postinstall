@@ -73,6 +73,7 @@ class Singleton {
   +getInstance(): Singleton
 }
 ```
+---
 #### 🏭 Factory Method
 Define an interface for creating an object, but let subclasses decide which class to instantiate.
 
@@ -90,6 +91,7 @@ class ConcreteCreator {
 Creator <|-- ConcreteCreator
 Product <|-- ConcreteProduct
 ```
+---
 #### 🏗️ Builder
 Separate the construction of a complex object from its representation.
 
@@ -103,6 +105,7 @@ class Builder {
 }
 Director --> Builder
 ```
+---
 #### 🎨 Prototype
 Create new objects by copying an existing object (clone).
 
@@ -115,6 +118,8 @@ class Prototype {
 class ConcretePrototype
 Prototype <|-- ConcretePrototype
 ```
+---
+---
 ### 🧩 1.2 Structural Patterns
 Deal with object composition to form larger structures.
 
@@ -130,6 +135,7 @@ class Adapter
 Target <|.. Adapter
 Adapter --> Adaptee
 ```
+---
 #### 🛤️ Bridge
 Separate abstraction from implementation so they can vary independently.
 
@@ -142,6 +148,7 @@ class RefinedAbstraction
 Abstraction <|-- RefinedAbstraction
 RefinedAbstraction --> Implementor
 ```
+---
 #### 🌲 Composite
 Treat individual objects and compositions uniformly.
 
@@ -157,6 +164,7 @@ Component <|-- Leaf
 Component <|-- Composite
 Composite --> Component
 ```
+---
 #### 🎁 Decorator
 Add responsibilities to objects dynamically.
 
@@ -172,6 +180,7 @@ Component <|-- Decorator
 Decorator <|-- ConcreteDecorator
 Decorator --> Component
 ```
+
 #### 🧱 Facade
 Provide a simplified interface to a complex subsystem.
 
@@ -183,9 +192,12 @@ class SubsystemA
 class SubsystemB
 Facade --> SubsystemA
 Facade --> SubsystemB
+```
+---
+---
 ### 🧠 1.3 Behavioral Patterns
 Concerned with how objects interact and distribute responsibility.
-```
+
 #### 👁️ Observer
 Define a dependency between objects so that when one changes, others are notified.
 
@@ -202,6 +214,7 @@ class Observer {
 }
 Subject --> Observer
 ```
+---
 #### 🕹️ Command
 Encapsulate a request as an object.
 
@@ -218,6 +231,7 @@ Command <|-- ConcreteCommand
 Invoker --> Command
 ConcreteCommand --> Receiver
 ```
+---
 #### 🔄 Strategy
 Define a family of algorithms, encapsulate them, and make them interchangeable.
 
@@ -233,9 +247,11 @@ class Strategy {
 class ConcreteStrategyA
 Strategy <|-- ConcreteStrategyA
 Context --> Strategy
+```
+---
+---
 ## 🏛️ 2. Architectural Patterns
 High-level solutions to structure entire systems.
-```
 
 ### 🖼️ MVC (Model-View-Controller)
 Separates application logic into three interconnected components.
@@ -252,7 +268,7 @@ View: UI
 
 Controller: Handles input and updates model/view
 ```
-
+---
 ### 🔄 MVVM (Model-View-ViewModel)
 Enhances MVC with two-way binding between view and view model.
 
@@ -263,6 +279,8 @@ Model --> ViewModel
 ViewModel --> View
 View --> ViewModel
 ```
+---
+
 ### 🧅 Layered Architecture
 Organizes code into layers with specific responsibilities.
 
@@ -273,6 +291,8 @@ UI --> Application
 Application --> Domain
 Domain --> Infrastructure
 ```
+---
+
 ### 🌐 Client-Server
 Divide systems into a server (provider) and client (consumer).
 
@@ -282,6 +302,8 @@ graph TD
 Client -->|Request| Server
 Server -->|Response| Client
 ```
+---
+
 ### ⚙️ Microservices
 Decompose a system into small, independently deployable services.
 
@@ -293,6 +315,8 @@ ServiceB --> API
 ServiceC --> API
 API --> Client
 ```
+---
+
 ## ✅ Summary Table
 | Category |	Patterns|
 |-|-|
@@ -511,8 +535,6 @@ https://swagger.io/
 
 ### pandas
 - [Pandas advanced](https://www.youtube.com/watch?v=ZyhVh-qRZPA&list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS)
-- [Pandas tricks](https://www.youtube.com/watch?v=RlIiVeig3hc)
-- [more pandas tricks](https://www.youtube.com/watch?v=tWFQqaRtSQA)
 - [sentdex pandas](https://www.youtube.com/watch?v=Iqjy9UqKKuo&list=PLQVvvaa0QuDc-3szzjeP6N6b0aDrrKyL-)
 
 
@@ -526,7 +548,7 @@ https://swagger.io/
 
 
 ## IT (networking / databases / http ...)
-long run
+### long run :
 - [Best all in one channel i found](https://www.youtube.com/@hnasr/playlists)
 - [regex](https://www.youtube.com/watch?v=sa-TUpSx1JA)
 
@@ -535,7 +557,7 @@ long run
 
 
 ## backend / system design
-long run
+### long run:
 - [bytebytego](https://www.youtube.com/@ByteByteGo/playlists) 
 - [OPEN API SPECS](https://www.youtube.com/watch?v=6kwmW_p_Tig)
 - [APiarchitecture](https://www.youtube.com/@CodeOpinion/featured)
