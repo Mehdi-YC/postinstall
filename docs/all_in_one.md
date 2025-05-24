@@ -34,50 +34,274 @@
 - **KISS** (Keep It Simple, Stupid)
 - **YAGNI** (You Ain’t Gonna Need It)
 
+# 📐 Software Design & Architectural Patterns
+
+## 📄 Overview
+
+Design and architectural patterns are tried-and-true solutions to common software development problems. They help write clean, maintainable, and scalable code.
+
+### 🧱 Design Patterns (Gang of Four - GoF)
+
+These are general reusable solutions to common problems in object-oriented design.
+
+- **Creational Patterns** — How objects are created.
+- **Structural Patterns** — How objects and classes are composed.
+- **Behavioral Patterns** — How objects communicate and behave.
+
+### 🏛️ Architectural Patterns
+
+These define the high-level structure of software systems.
+
+- Examples: MVC, MVVM, Layered Architecture, Client-Server, Microservices
+
 ---
 
-## 🟠 Patterns You Already Use (Mapped To Official Names)
+## 🧱 1. Design Patterns
 
-| Your Intuition                           | Official Name  |
-|-------------------------------------------|----------------|
-| "Pick the right component/class at runtime"  | **Factory Pattern** |
-| "Wrap something external to fit my API"   | **Adapter Pattern** |
-| "Add features without changing original"  | **Decorator Pattern** |
-| "Assemble stuff step by step"             | **Builder Pattern** |
-| "Split big components into smaller ones"  | **Single Responsibility Principle (SRP)** |
-| "Centralize state after 2+ components need it" | **Mediator Pattern (Store)** |
-| "Wrap API calls inside utils"             | **Service Layer / Adapter** |
-| "Extract repeated code to shared utils"   | **DRY Principle** |
-| "Consistent variable naming"              | **Clean Code Naming & Style Guide** |
+### 🔨 1.1 Creational Patterns
 
----
+> Manage object creation to increase flexibility and reuse.
 
-## 🟢 Real-World Pattern Examples (Svelte / Python / Rust Logic)
+#### 🧍 Singleton
 
-### 🏭 Factory Pattern
-- **Svelte**: A `File` component that picks `ImageFile`, `PdfFile`, `TextFile` based on `file.type`.
-- **Python**: A function that returns different serializer classes based on the model.
-- **Rust**: Match on enum variant and return different structs.
+Ensure a class has only one instance and provide a global point of access.
 
-### 🔌 Adapter Pattern
-- **Svelte**: Wrap Google Maps JS API into a reactive Svelte component.
-- **Python**: Convert a raw SQL API response into Django model objects.
-- **Rust**: Implement `From`/`Into` traits to convert between types.
+```mermaid
+classDiagram
+class Singleton {
+  -instance: Singleton
+  +getInstance(): Singleton
+}
+```
+#### 🏭 Factory Method
+Define an interface for creating an object, but let subclasses decide which class to instantiate.
 
-### 🎨 Decorator Pattern
-- **Svelte**: Wrap a button to add animations or tooltips.
-- **Python**: Use `@login_required`, `@retry` decorators.
-- **Rust**: Wrap functions with middleware layers.
+```mermaid
 
-### 🏗️ Builder Pattern
-- **Svelte**: Create a dynamic `FormBuilder` component that `.addField()`s based on config.
-- **Python**: Build complex SQL queries via `.filter().order_by()` chaining.
-- **Rust**: Use builder structs to construct HTTP requests.
+classDiagram
+class Product
+class ConcreteProduct
+class Creator {
+  +factoryMethod(): Product
+}
+class ConcreteCreator {
+  +factoryMethod(): Product
+}
+Creator <|-- ConcreteCreator
+Product <|-- ConcreteProduct
+```
+#### 🏗️ Builder
+Separate the construction of a complex object from its representation.
 
-### 🟡 Mediator (State Store)
-- **Svelte**: Move shared state from components into a Svelte `store`.
-- **Python**: Use a Pub/Sub system (e.g., Signals in Django).
-- **Rust**: Use a channel or shared state wrapped in `Arc<Mutex<_>>`.
+```mermaid
+
+classDiagram
+class Director
+class Builder {
+  +setPart()
+  +getResult()
+}
+Director --> Builder
+```
+#### 🎨 Prototype
+Create new objects by copying an existing object (clone).
+
+```mermaid
+
+classDiagram
+class Prototype {
+  +clone(): Prototype
+}
+class ConcretePrototype
+Prototype <|-- ConcretePrototype
+```
+### 🧩 1.2 Structural Patterns
+Deal with object composition to form larger structures.
+
+#### 🔌 Adapter
+Allow incompatible interfaces to work together.
+
+```mermaid
+
+classDiagram
+class Target
+class Adaptee
+class Adapter
+Target <|.. Adapter
+Adapter --> Adaptee
+```
+#### 🛤️ Bridge
+Separate abstraction from implementation so they can vary independently.
+
+```mermaid
+
+classDiagram
+class Abstraction
+class Implementor
+class RefinedAbstraction
+Abstraction <|-- RefinedAbstraction
+RefinedAbstraction --> Implementor
+```
+#### 🌲 Composite
+Treat individual objects and compositions uniformly.
+
+```mermaid
+
+classDiagram
+class Component
+class Leaf
+class Composite {
+  +add()
+}
+Component <|-- Leaf
+Component <|-- Composite
+Composite --> Component
+```
+#### 🎁 Decorator
+Add responsibilities to objects dynamically.
+
+```mermaid
+
+classDiagram
+class Component
+class ConcreteComponent
+class Decorator
+class ConcreteDecorator
+Component <|-- ConcreteComponent
+Component <|-- Decorator
+Decorator <|-- ConcreteDecorator
+Decorator --> Component
+```
+#### 🧱 Facade
+Provide a simplified interface to a complex subsystem.
+
+```mermaid
+
+classDiagram
+class Facade
+class SubsystemA
+class SubsystemB
+Facade --> SubsystemA
+Facade --> SubsystemB
+### 🧠 1.3 Behavioral Patterns
+Concerned with how objects interact and distribute responsibility.
+```
+#### 👁️ Observer
+Define a dependency between objects so that when one changes, others are notified.
+
+```mermaid
+
+classDiagram
+class Subject {
+  +attach()
+  +detach()
+  +notify()
+}
+class Observer {
+  +update()
+}
+Subject --> Observer
+```
+#### 🕹️ Command
+Encapsulate a request as an object.
+
+```mermaid
+
+classDiagram
+class Command {
+  +execute()
+}
+class ConcreteCommand
+class Invoker
+class Receiver
+Command <|-- ConcreteCommand
+Invoker --> Command
+ConcreteCommand --> Receiver
+```
+#### 🔄 Strategy
+Define a family of algorithms, encapsulate them, and make them interchangeable.
+
+```mermaid
+
+classDiagram
+class Context {
+  -strategy: Strategy
+}
+class Strategy {
+  +execute()
+}
+class ConcreteStrategyA
+Strategy <|-- ConcreteStrategyA
+Context --> Strategy
+## 🏛️ 2. Architectural Patterns
+High-level solutions to structure entire systems.
+```
+
+### 🖼️ MVC (Model-View-Controller)
+Separates application logic into three interconnected components.
+
+```mermaid
+
+graph TD
+Model --> Controller
+Controller --> View
+View --> Model
+Model: Business logic / data
+
+View: UI
+
+Controller: Handles input and updates model/view
+```
+
+### 🔄 MVVM (Model-View-ViewModel)
+Enhances MVC with two-way binding between view and view model.
+
+```mermaid
+
+graph TD
+Model --> ViewModel
+ViewModel --> View
+View --> ViewModel
+```
+### 🧅 Layered Architecture
+Organizes code into layers with specific responsibilities.
+
+```mermaid
+
+graph TD
+UI --> Application
+Application --> Domain
+Domain --> Infrastructure
+```
+### 🌐 Client-Server
+Divide systems into a server (provider) and client (consumer).
+
+```mermaid
+
+graph TD
+Client -->|Request| Server
+Server -->|Response| Client
+```
+### ⚙️ Microservices
+Decompose a system into small, independently deployable services.
+
+```mermaid
+
+graph TD
+ServiceA --> API
+ServiceB --> API
+ServiceC --> API
+API --> Client
+```
+## ✅ Summary Table
+| Category |	Patterns|
+|-|-|
+| Creational |	Singleton, Factory Method, Builder, Prototype|
+| Structural |	Adapter, Composite, Facade, Bridge, Decorator|
+| Behavioral |	Observer, Command, Strategy|
+| Architectural |	MVC, MVVM, Layered, Client-Server, Microservices|
+
+
 
 ---
 
@@ -160,12 +384,6 @@
 - **Domain-Driven Design Distilled** by Vaughn Vernon (short & actionable)
 - **Patterns of Enterprise Application Architecture** by Martin Fowler
 - **Refactoring UI** by Adam Wathan (for frontend devs, Svelte too)
-
-### 📺 Videos:
-- [**Architecting Frontend Applications**](https://www.youtube.com/watch?v=E8I19uA-wGY) *(Best explanation of frontend patterns)*
-- [**Hexagonal Architecture Explained**](https://www.youtube.com/watch?v=th4AgBcrEHA)
-- [**Clean Code vs Dirty Code** (Fun Talk)](https://www.youtube.com/watch?v=HzWf-EeE3LE)
-- [**Event-Driven Architecture Crash Course**](https://www.youtube.com/watch?v=STKCRSUsyP0)
 
 ---
 
