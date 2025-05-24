@@ -756,6 +756,8 @@ https://swagger.io/
 - [sentdex pandas](https://www.youtube.com/watch?v=Iqjy9UqKKuo&list=PLQVvvaa0QuDc-3szzjeP6N6b0aDrrKyL-)
 - [Full django](https://www.youtube.com/watch?v=PtQiiknWUcI)
 - [Full django (drf)](https://www.youtube.com/watch?v=c708Nf0cHrs)
+- [refactoring.guru](https://roadmap.sh/) best design pattern explanaition
+- [roadmap.sh](https://refactoring.guru/) has this & better
 </details>
 
 <details>
