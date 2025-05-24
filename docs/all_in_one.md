@@ -324,24 +324,158 @@ API --> Client
 | Behavioral |	Observer, Command, Strategy|
 | Architectural |	MVC, MVVM, Layered, Client-Server, Microservices|
 
+---
 
+## 📘 UML Diagrams with Mermaid.js
+
+This document showcases the most common UML diagram types using Mermaid.js. Great for visualizing systems directly in GitHub markdown!
 
 ---
 
-## 🔥 Builder Pattern vs Functional Chaining (Explained)
+### 🧱 1. Class Diagram
 
-| Builder Pattern           | Functional Chaining (FP)         |
-|---------------------------|----------------------------------|
-| OOP pattern                | FP technique                     |
-| Has **internal mutable state** during building | Pure functions, no mutation |
-| Ends with `.build()` → final object  | Every step returns new data |
-| Used to construct **objects** | Used to transform **data** |
+**Description:**  
+Class diagrams represent the structure of classes in a system, showing their attributes, methods, and relationships.
 
-### 🔹 Svelte & Python Mental Rule
-- When you **build** → use Builder pattern (forms, objects, configs).
-- When you **transform** → use Functional chaining (arrays, data pipelines).
+```mermaid  
+classDiagram  
+    class Animal {  
+        +String name  
+        +int age  
+        +makeSound()  
+    }  
 
+    class Dog {  
+        +String breed  
+        +bark()  
+    }  
+
+    class Cat {  
+        +scratch()  
+    }  
+
+    Animal <|-- Dog  
+    Animal <|-- Cat  
+```
 ---
+
+### 🎭 2. Use Case Diagram
+
+**Description:**  
+Use case diagrams visualize the interactions between users (actors) and the system to achieve goals (use cases).
+
+```mermaid  
+graph TD  
+    Actor((👤 User)) -->|Uses| System[🖥️ System]  
+    System --> UC1(📌 Use Case 1)  
+    System --> UC2(📌 Use Case 2)  
+    UC1 -.-> UC2  
+```
+---
+
+### 🔁 3. Sequence Diagram
+
+**Description:**  
+Sequence diagrams show how objects or components interact in a particular sequence of time-ordered messages.
+
+```mermaid  
+sequenceDiagram  
+    participant User as 👤 User  
+    participant WebApp as 🌐 WebApp  
+    participant Server as 🖥️ Server  
+
+    User->>WebApp: Request Page  
+    WebApp->>Server: Fetch Data  
+    Server-->>WebApp: Return Data  
+    WebApp-->>User: Render Page  
+```
+---
+
+### 🏃 4. Activity Diagram
+
+**Description:**  
+Activity diagrams model the flow of control or data between activities, useful for describing workflows and logic.
+
+```mermaid  
+flowchart TD  
+    Start([🚀 Start]) --> A[🔐 Login]  
+    A --> B{✅ Valid?}  
+    B -- Yes --> C[📊 Show Dashboard]  
+    B -- No --> D[❌ Show Error]  
+    C --> End([🏁 End])  
+    D --> End  
+```
+---
+
+### 🔄 5. State Diagram
+
+**Description:**  
+State diagrams represent the possible states of an object and transitions triggered by events or actions.
+
+```mermaid  
+stateDiagram-v2  
+    [*] --> Idle  
+    Idle --> Processing : ▶️ start()  
+    Processing --> Finished : ✔️ complete()  
+    Finished --> [*]  
+```
+---
+
+### 🧩 6. Component Diagram
+
+**Description:**  
+Component diagrams model the components of a system and how they interact through interfaces.
+
+```mermaid  
+graph TB  
+    Client[🧑‍💻 Client] -->|uses| API[🌐 API]  
+    API --> Controller[🧭 Controller]  
+    Controller --> Service[⚙️ Service]  
+    Service --> Database[(🗄️ Database)]  
+```
+---
+
+### 🚚 7. Deployment Diagram
+
+**Description:**  
+Deployment diagrams show the physical layout of hardware and how software components are deployed on them.
+
+```mermaid  
+graph TD  
+    subgraph 🧑‍💻 Client Node  
+        Browser[🌍 Browser]  
+    end  
+
+    subgraph 🖥️ Server Node  
+        WebApp[🧠 WebApp]  
+        DB[(🗃️ Database)]  
+    end  
+
+    Browser --> WebApp  
+    WebApp --> DB  
+```
+---
+
+### 🧸 8. Object Diagram
+
+**Description:**  
+Object diagrams depict instances of classes (objects) and their relationships at a specific point in time.
+
+```mermaid  
+classDiagram  
+    class Person {  
+        +String name  
+        +int age  
+    }  
+
+    Person : name = "Alice"  
+    Person : age = 30  
+```
+---
+
+
+
+
 
 ## 🔥 Next-Level Topics To Master (Architect Mindset)
 
@@ -366,9 +500,6 @@ API --> Client
 - ✅ **Given-When-Then** (BDD style)
 - ✅ **Test Doubles** (Mock, Stub, Fake)
 - ✅ **Property-Based Testing** (e.g., `hypothesis` in Python, `proptest` in Rust)
-
-
-
 
 ---
 
