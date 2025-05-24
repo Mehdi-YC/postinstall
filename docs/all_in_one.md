@@ -262,12 +262,11 @@ graph TD
 Model --> Controller
 Controller --> View
 View --> Model
-Model: Business logic / data
-
-View: UI
-
-Controller: Handles input and updates model/view
 ```
+- Model: Business logic / data
+- View: UI
+- Controller: Handles input and updates model/view
+
 ---
 ### 🔄 MVVM (Model-View-ViewModel)
 Enhances MVC with two-way binding between view and view model.
