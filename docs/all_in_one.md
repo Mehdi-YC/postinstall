@@ -12,8 +12,8 @@
 
 ---
 
-<details open>
-<summary><strong>🟢 Foundational Knowledge (Must Always Keep Warm)</strong></summary>
+
+## 🟢 Foundational Knowledge (Must Always Keep Warm)
 
 <details>
 <summary><strong>✅ Data Structures & Algorithms (DSA)</strong></summary>
@@ -37,19 +37,82 @@
 - **YAGNI** (You Ain’t Gonna Need It)
 
 </details>
-</details>
+
 
 ---
-
+<br><br>
+## 🟠 LeetCode Patterns for DSA
 <details>
-<summary><strong>📐 Software Design & Architectural Patterns</strong></summary>
+<summary>Mastering these patterns helps you solve most coding interview problems efficiently:
+</summary>
 
-<details>
-<summary><strong>📄 Overview</strong></summary>
+
+- **Sliding Window**  
+  For subarrays/substrings with optimal time (e.g., max sum, longest substring).
+  - Example: Maximum Subarray, Longest Substring Without Repeating Characters
+
+- **Two Pointers**  
+  For problems on sorted arrays/linked lists (e.g., pair sum, reverse).
+  - Example: Two Sum II, Remove Duplicates from Sorted Array
+
+- **Fast & Slow Pointers (Cycle Detection)**  
+  Detect cycles or find middle in linked lists.
+  - Example: Linked List Cycle, Find Middle of Linked List
+
+- **Merge Intervals**  
+  For interval overlap/merge problems.
+  - Example: Merge Intervals, Insert Interval
+
+- **Binary Search**  
+  For sorted arrays/search space reduction.
+  - Example: Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array
+
+- **Backtracking**  
+  For permutations, combinations, and subsets.
+  - Example: Subsets, Permutations, Combination Sum
+
+- **Breadth-First Search (BFS)**  
+  For shortest path in unweighted graphs/trees.
+  - Example: Binary Tree Level Order Traversal, Word Ladder
+
+- **Depth-First Search (DFS)**  
+  For traversals, connected components, and recursion.
+  - Example: Number of Islands, Clone Graph
+
+- **Dynamic Programming (DP)**  
+  For optimal substructure/overlapping subproblems.
+  - Example: Climbing Stairs, House Robber, Longest Increasing Subsequence
+
+- **Greedy**  
+  For local optimal → global optimal.
+  - Example: Jump Game, Gas Station
+
+- **Heap/Priority Queue**  
+  For top K elements, merging sorted lists.
+  - Example: Kth Largest Element, Merge K Sorted Lists
+
+- **Trie**  
+  For prefix-based search.
+  - Example: Implement Trie, Word Search II
+
+**Tip:**  
+Focus on understanding the pattern, not just the solution.  
+[LeetCode Patterns Reference](https://seanprashad.com/leetcode-patterns/)
+
+</details>
+
+
+---
+<br><br>
+
+## 📐 Software Design & Architectural Patterns
+
+
+<strong>📄 Overview</strong>
 
 Design and architectural patterns are tried-and-true solutions to common software development problems. They help write clean, maintainable, and scalable code.
 
-</details>
+>
 
 <details>
 <summary><strong>🧱 1. Design Patterns</strong></summary>
@@ -286,12 +349,12 @@ Design and architectural patterns are tried-and-true solutions to common softwar
 | Architectural |	MVC, MVVM, Layered, Client-Server, Microservices|
 
 </details>
-</details>
+
 
 ---
+<br><br>
 
-<details>
-<summary><strong>📘 UML Diagrams with Mermaid.js</strong></summary>
+## 📘 UML Diagrams with Mermaid.js
 
 This document showcases the most common UML diagram types using Mermaid.js. Great for visualizing systems directly in GitHub markdown!
 
@@ -443,12 +506,13 @@ classDiagram
     Person : age = 30  
 ```
 </details>
-</details>
+
 
 ---
+<br><br>
 
-<details>
-<summary><strong>🔥 Next-Level Topics To Master (Architect Mindset)</strong></summary>
+
+## 🔥 Next-Level Topics To Master (Architect Mindset)
 
 <details>
 <summary><strong>1️⃣ Architectural Styles</strong></summary>
@@ -487,12 +551,11 @@ classDiagram
 - **Property-Based Testing** (e.g., `hypothesis` in Python, `proptest` in Rust)
 
 </details>
-</details>
 
 ---
+<br><br>
 
-<details>
-<summary><strong>🟢 Side Tools Every Mastermind Should Command</strong></summary>
+## 🟢 Tools Every Mastermind Should Command
 
 <details>
 <summary><strong>✅ Git (Version Control)</strong></summary>
@@ -532,9 +595,146 @@ classDiagram
 - Using Docker in CI pipelines
 
 </details>
+
+
+---
+
+
+<br><br>
+
+## 🌐 Clean API Development Guide (General & REST Focus)
+
+
+<details>
+<summary><strong>🚀 Goals of Clean API Design</strong></summary>
+
+- **Consistent** → predictable patterns everywhere
+- **Simple** → easy for clients to understand & use
+- **Versioned** → changes don't break old clients
+- **Secure** → protects against common vulnerabilities
+- **Extensible** → easy to add features without breaking old ones
+- **Well-documented** → clear and accurate API docs
+
+</details>
+
+<details>
+<summary><strong>🔥 General API Design Principles (Always Apply)</strong></summary>
+
+<details>
+<summary>1. Use Meaningful Resource Naming</summary>
+
+- Use **nouns** for resources, **verbs** for actions.
+- Examples:
+    ```
+    GET /users
+    POST /users
+    PATCH /users/{id}
+    ```
+
+</details>
+
+<details>
+<summary>2. Use HTTP Methods Correctly</summary>
+
+| Method  | Use For                   |
+|---------|---------------------------|
+| GET     | Retrieve data             |
+| POST    | Create new resource       |
+| PUT     | Replace entire resource   |
+| PATCH   | Update part of resource   |
+| DELETE  | Remove resource           |
+
+</details>
+
+<details>
+<summary>3. Version Your API (Always!)</summary>
+
+- Example:
+    ```
+    /api/v1/users
+    /api/v2/users
+    ```
+- Use URI versioning or headers, but **always version**.
+
+</details>
+
+<details>
+<summary>4. Use Standard HTTP Status Codes</summary>
+
+| Status Code  | Meaning              |
+|--------------|----------------------|
+| 200 OK       | Success               |
+| 201 Created  | Resource created      |
+| 400 Bad Request | Client error       |
+| 401 Unauthorized | Auth failed       |
+| 404 Not Found | Resource missing     |
+| 500 Server Error | Internal fail     |
+
+</details>
+
+<details>
+<summary>5. Keep Responses Consistent</summary>
+
+- Use a common envelope format:
+```json
+{
+  "data": { ... },
+  "error": null
+}
+```
+https://swagger.io/
+</details>
+</details>
 </details>
 
 ---
+<br><br>
+<br><br>
+
+## 🟣 My Personalized Pattern Map (Cheat Sheet)
+
+| When I do this...                             | It's called...         |
+|-----------------------------------------------|------------------------|
+| Pick components/classes based on condition    | **Factory Pattern**    |
+| Wrap external APIs/components to fit my code  | **Adapter Pattern**    |
+| Add features without changing base logic      | **Decorator Pattern**  |
+| Build objects/config step by step             | **Builder Pattern**    |
+| Split big things into smaller units           | **Single Responsibility** |
+| Centralize shared state across many parts     | **Mediator / Store Pattern** |
+| Extract repeated logic                        | **DRY Principle**      |
+| Follow naming conventions                     | **Clean Code Naming**  |
+
+</details>
+
+---
+<br><br>
+
+## ✅ How To Become Confident When Choosing Architecture
+
+1. **Small Project?**
+ - Use **Layered Architecture**.
+ - YAGNI: Don’t over-engineer.
+
+2. **Medium to Large?**
+ - Use **Hexagonal** + **DDD Lite**.
+ - Aim for framework-independent domain logic.
+
+3. **Frontend Complex State?**
+ - Model as **State Machines**.
+ - Use stores only when 2+ components need shared state.
+
+4. **Backend Scaling?**
+ - Move to **Event-Driven** or **CQRS** if reads/writes differ in volume.
+
+5. **Always**
+ - Start simple (Layered), then evolve to advanced when complexity forces you.
+ - Record decisions in **ADR** docs.
+
+</details>
+
+---
+<br><br>
+
 
 <details>
 <summary><strong>📚 Recommended Books & Videos (Curated)</strong></summary>
@@ -621,51 +821,6 @@ classDiagram
 </details>
 
 ---
-
-<details>
-<summary><strong>🟣 My Personalized Pattern Map (Cheat Sheet)</strong></summary>
-
-| When I do this...                             | It's called...         |
-|-----------------------------------------------|------------------------|
-| Pick components/classes based on condition    | **Factory Pattern**    |
-| Wrap external APIs/components to fit my code  | **Adapter Pattern**    |
-| Add features without changing base logic      | **Decorator Pattern**  |
-| Build objects/config step by step             | **Builder Pattern**    |
-| Split big things into smaller units           | **Single Responsibility** |
-| Centralize shared state across many parts     | **Mediator / Store Pattern** |
-| Extract repeated logic                        | **DRY Principle**      |
-| Follow naming conventions                     | **Clean Code Naming**  |
-
-</details>
-
----
-
-<details>
-<summary><strong>✅ How To Become Confident When Choosing Architecture</strong></summary>
-
-1. **Small Project?**
- - Use **Layered Architecture**.
- - YAGNI: Don’t over-engineer.
-
-2. **Medium to Large?**
- - Use **Hexagonal** + **DDD Lite**.
- - Aim for framework-independent domain logic.
-
-3. **Frontend Complex State?**
- - Model as **State Machines**.
- - Use stores only when 2+ components need shared state.
-
-4. **Backend Scaling?**
- - Move to **Event-Driven** or **CQRS** if reads/writes differ in volume.
-
-5. **Always**
- - Start simple (Layered), then evolve to advanced when complexity forces you.
- - Record decisions in **ADR** docs.
-
-</details>
-
----
-
 <details>
 <summary><strong>🔥 Final Tip</strong></summary>
 
@@ -677,94 +832,8 @@ classDiagram
 
 ---
 
-<details>
-<summary><strong>🌐 Clean API Development Guide (General & REST Focus)</strong></summary>
 
-_By: For Mastermind Devs who want to craft solid APIs_
 
-<details>
-<summary><strong>🚀 Goals of Clean API Design</strong></summary>
-
-- **Consistent** → predictable patterns everywhere
-- **Simple** → easy for clients to understand & use
-- **Versioned** → changes don't break old clients
-- **Secure** → protects against common vulnerabilities
-- **Extensible** → easy to add features without breaking old ones
-- **Well-documented** → clear and accurate API docs
-
-</details>
-
-<details>
-<summary><strong>🔥 General API Design Principles (Always Apply)</strong></summary>
-
-<details>
-<summary>1. Use Meaningful Resource Naming</summary>
-
-- Use **nouns** for resources, **verbs** for actions.
-- Examples:
-    ```
-    GET /users
-    POST /users
-    PATCH /users/{id}
-    ```
-
-</details>
-
-<details>
-<summary>2. Use HTTP Methods Correctly</summary>
-
-| Method  | Use For                   |
-|---------|---------------------------|
-| GET     | Retrieve data             |
-| POST    | Create new resource       |
-| PUT     | Replace entire resource   |
-| PATCH   | Update part of resource   |
-| DELETE  | Remove resource           |
-
-</details>
-
-<details>
-<summary>3. Version Your API (Always!)</summary>
-
-- Example:
-    ```
-    /api/v1/users
-    /api/v2/users
-    ```
-- Use URI versioning or headers, but **always version**.
-
-</details>
-
-<details>
-<summary>4. Use Standard HTTP Status Codes</summary>
-
-| Status Code  | Meaning              |
-|--------------|----------------------|
-| 200 OK       | Success               |
-| 201 Created  | Resource created      |
-| 400 Bad Request | Client error       |
-| 401 Unauthorized | Auth failed       |
-| 404 Not Found | Resource missing     |
-| 500 Server Error | Internal fail     |
-
-</details>
-
-<details>
-<summary>5. Keep Responses Consistent</summary>
-
-- Use a common envelope format:
-```json
-{
-  "data": { ... },
-  "error": null
-}
-```
-https://swagger.io/
-</details>
-</details>
-</details>
-
----
 
 <details>
 <summary><strong>🛠️ Terminal, SaaS, Dev, Desktop, Data, DevOps, Cool Stuff</strong></summary>
