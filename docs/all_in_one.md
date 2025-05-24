@@ -853,6 +853,7 @@ https://swagger.io/
 - ansible
 - fish / starship
 - ollama
+- certbot
 
 </details>
 

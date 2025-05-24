@@ -459,6 +459,14 @@ BookStack is a simple, self-hosted, easy-to-use platform for organising and stor
 - sentry
 
 
+###  Honorable mentions :
+- kafka
+- elk stack
+- posthog
+- datadog
+- apache NIFI
+- 
+
 
 
 
