@@ -1,4 +1,4 @@
-# postinstall :
+# postinstall
 This repo represents me, my reaserch, my studies, my dotfiles, my scripts... everything is here.
 i have 2  playbooks to install my distro, one for debian and one for fedora.
 
@@ -82,6 +82,11 @@ ___
 Scheduling infrastructure for everyone.
 
 ![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsak9EOmxC2n315PH4XijgQt-20GPAX1fnmg&usqp=CAU)
+___
+
+## [Drizzle ORM](https://orm.drizzle.team/)
+Connect to any database with this ORM 
+![](https://orm.drizzle.team/_astro/drizzle-studio-light.DiZyyUz0_29YhhA.webp)
 ___
 ## [listmonk](https://listmonk.app/)
 Self-hosted newsletter and mailing list manager
