@@ -478,6 +478,8 @@ BookStack is a simple, self-hosted, easy-to-use platform for organising and stor
 
 - openreplay
 - sentry
+- 1panel
+- cloudreve
 
 
 ###  Honorable mentions :
