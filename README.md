@@ -475,11 +475,32 @@ BookStack is a simple, self-hosted, easy-to-use platform for organising and stor
 🚀🎉📚 APITable, an API-oriented low-code platform for building collaborative apps and better than all other Airtable open-source
 ![](https://github.com/apitable/apitable/raw/develop/docs/static/feature-realtime.gif)
 ---
+## [OpenReplay](http://openreplay.com)
+Session replay, cobrowsing and product analytics you can self-host. Ideal for reproducing issues and iterating on your product.
+![](https://openreplay.com/cover-images/engineering2.svg)
+---
+## [Sentry](https://sentry.io/welcome/)
+Application monitoring software considered "not bad" by 4 million developers.
+![](https://www.sentry.dev/static/e0e734517ea3fd4153ad1a9085afe3fa/f3bae/hero-image.webp)
+---
+## [1panel](https://1panel.pro/)
+1Panel provides an intuitive web interface and MCP Server to manage websites, files, containers, databases, and LLMs on a Linux server.
+![](https://1panel.pro/images/overview-full.png)
+---
+## [Cloudreve](https://cloudreve.org/)
+Cloudreve can help you build a self-hosted file management service that is both suitable for private and public use, with support for multiple storage providers and virtual file systems to provide a flexible file management experience.
+![](https://cloudreve.org/imgs/feature4.png)
+---
+## [Twenty](https://twenty.com/)
+Modern, powerful, affordable platform to manage your customer relationships
+![](https://framerusercontent.com/images/PFK7w4J7AQNXaDkPoE1teXJELY.png)
+---
+## [Stalwart](https://stalw.art/)
+Step into the future with Stalwart, the open-source powerhouse combining modern email and collaboration features with unmatched security, speed, and scalability.
+![](https://heise.cloudimg.io/width/610/q85.png-lossy-85.webp-lossy-85.foil1/_www-heise-de_/imgs/18/4/8/6/1/6/3/1/stalwart-db0ae1cdee4e4daf.png)
+---
 
-- openreplay
-- sentry
-- 1panel
-- cloudreve
+
 
 
 ###  Honorable mentions :
@@ -488,12 +509,5 @@ BookStack is a simple, self-hosted, easy-to-use platform for organising and stor
 - posthog
 - datadog
 - apache NIFI
-- 
-
-
-
-
-
-
 
 
