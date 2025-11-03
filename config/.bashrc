@@ -21,9 +21,9 @@ export HISTCONTROL=erasedups:ignoredups:ignorespac:ignoreboth
 shopt -s histappend
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 # Ignore case on auto-completion
-bind "set completion-ignore-case on"
+# bind "set completion-ignore-case on"
 # Show auto-completion list automatically, without double tab
-bind "set show-all-if-ambiguous On"
+# bind "set show-all-if-ambiguous On"
 
 
 
@@ -36,7 +36,8 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :50 {}'"
 
 export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden'
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -50'"
-
+unset QT_IM_MODULE
+unset GTK_IM_MODULE
 
 eval "$(starship init bash)"
 
@@ -56,3 +57,10 @@ mkcd () { mkdir -p "$@" && eval cd "\"\$$#\""; }
 export PATH="$PATH:/mnt/Work/dartsdk-linux-x64-release3.0.0/dart-sdk/bin:/mnt/Work/flutter_linux_3.24.4-stable/flutter/bin"
 alias studio="/mnt/Work/android-studio-2024.2.1.10-linux/android-studio/bin/studio"
 
+# Start Fish automatically only in interactive terminals
+if [[ $- == *i* ]] && [[ -z "$FISH" ]]; then
+    # Only start Fish if this is a terminal session (not a script)
+    if [[ -t 1 ]]; then
+        fish
+    fi
+fi

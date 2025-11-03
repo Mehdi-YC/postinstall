@@ -1,0 +1,127 @@
+{
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "apostrophe",
+    ): MoveToWorkspace(4),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "quotedbl",
+    ): Workspace(3),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "space",
+    ): ToggleWindowFloating,
+    (
+        modifiers: [],
+        key: "Print",
+    ): Spawn("flatpak run org.flameshot.Flameshot gui --raw  | wl-copy -t image/png"),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "t",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "quotedbl",
+    ): MoveToWorkspace(3),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "Print",
+    ): System(Screenshot),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "eacute",
+    ): Workspace(2),
+    (
+        modifiers: [
+            Super,
+        ],
+    ): System(AppLibrary),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "parenleft",
+    ): Workspace(5),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "ampersand",
+    ): MoveToWorkspace(1),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "l",
+    ): Spawn("bash /home/mehdiyc/slugify_bash.sh"),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "2",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "1",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "3",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "g",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "Return",
+    ): System(Terminal),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "ampersand",
+    ): Workspace(1),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "apostrophe",
+    ): Workspace(4),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "eacute",
+    ): MoveToWorkspace(2),
+}

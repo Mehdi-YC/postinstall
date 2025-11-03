@@ -1,0 +1,3 @@
+2025-11-01 21:55:46.917 [error] #66: https://main.vscode-cdn.net/extensions/marketplace.json - error GET Request timeout after 10000ms
+2025-11-01 21:59:37.516 [error] #67: https://mobile.events.data.microsoft.com/OneCollector/1.0?cors=true&content-type=application/x-json-stream - error POST net::ERR_NAME_NOT_RESOLVED
+2025-11-01 21:59:37.516 [error] #68: https://mobile.events.data.microsoft.com/OneCollector/1.0?cors=true&content-type=application/x-json-stream - error POST net::ERR_NAME_NOT_RESOLVED

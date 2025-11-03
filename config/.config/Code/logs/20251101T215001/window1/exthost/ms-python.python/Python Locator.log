@@ -1,0 +1,42 @@
+2025-11-01 21:51:25.266 [info] Starting Python Locator /home/mehdiyc/.vscode/extensions/ms-python.python-2025.16.0-linux-x64/python-env-tools/bin/pet server
+2025-11-01 21:51:25.275 [info] Discovered env: /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 21:51:25.349 [info] Resolved /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 21:51:25.379 [info] Discovered env: /bin/python
+2025-11-01 21:51:25.388 [info] Discovered env: /usr/bin/python
+2025-11-01 21:51:25.407 [info] Env ("/sbin/python") in Path resolved as ResolvedPythonEnv { executable: "/sbin/python", prefix: "/usr", version: "3.14.0.final.0", is64_bit: true, symlinks: Some(["/sbin/python"]) } and reported as Some(GlobalPaths)
+2025-11-01 21:51:25.407 [info] Discovered env: /sbin/python
+2025-11-01 21:51:25.408 [info] Env ("/usr/sbin/python") in Path resolved as ResolvedPythonEnv { executable: "/usr/sbin/python", prefix: "/usr", version: "3.14.0.final.0", is64_bit: true, symlinks: Some(["/usr/sbin/python"]) } and reported as Some(GlobalPaths)
+2025-11-01 21:51:25.409 [info] Discovered env: /usr/sbin/python
+2025-11-01 21:51:25.469 [info] Env ("/usr/sbin/python3") in Path resolved as ResolvedPythonEnv { executable: "/usr/sbin/python3", prefix: "/usr", version: "3.14.0.final.0", is64_bit: true, symlinks: Some(["/usr/sbin/python3"]) } and reported as Some(GlobalPaths)
+2025-11-01 21:51:25.470 [info] Discovered env: /usr/sbin/python3
+2025-11-01 21:51:25.471 [info] Env ("/sbin/python3") in Path resolved as ResolvedPythonEnv { executable: "/sbin/python3", prefix: "/usr", version: "3.14.0.final.0", is64_bit: true, symlinks: Some(["/sbin/python3"]) } and reported as Some(GlobalPaths)
+2025-11-01 21:51:25.471 [info] Discovered env: /sbin/python3
+2025-11-01 21:51:25.535 [info] Env ("/sbin/python3.14") in Path resolved as ResolvedPythonEnv { executable: "/sbin/python3.14", prefix: "/usr", version: "3.14.0.final.0", is64_bit: true, symlinks: Some(["/sbin/python3.14"]) } and reported as Some(GlobalPaths)
+2025-11-01 21:51:25.536 [info] Discovered env: /sbin/python3.14
+2025-11-01 21:51:25.541 [info] Env ("/usr/sbin/python3.14") in Path resolved as ResolvedPythonEnv { executable: "/usr/sbin/python3.14", prefix: "/usr", version: "3.14.0.final.0", is64_bit: true, symlinks: Some(["/usr/sbin/python3.14"]) } and reported as Some(GlobalPaths)
+2025-11-01 21:51:25.542 [info] Discovered env: /usr/sbin/python3.14
+2025-11-01 21:51:25.543 [info] Locator Conda took 71.10203ms
+2025-11-01 21:51:25.543 [info] Locator Homebrew took 685.792µs
+2025-11-01 21:51:25.543 [info] Locator LinuxGlobal took 149.390777ms
+2025-11-01 21:51:25.543 [info] Locator PipEnv took 124.214µs
+2025-11-01 21:51:25.543 [info] Locator Pixi took 59.412µs
+2025-11-01 21:51:25.544 [info] Locator Poetry took 3.575284ms
+2025-11-01 21:51:25.544 [info] Locator PyEnv took 3.357555ms
+2025-11-01 21:51:25.544 [info] Locator Venv took 230.204µs
+2025-11-01 21:51:25.544 [info] Locator VirtualEnv took 53.43µs
+2025-11-01 21:51:25.544 [info] Locator VirtualEnvWrapper took 307.419µs
+2025-11-01 21:51:25.544 [info] Locator GlobalVirtualEnvs took 179.138µs
+2025-11-01 21:51:25.544 [info] Locator Locators took 151.469001ms
+2025-11-01 21:51:25.544 [info] Locator Path took 306.308503ms
+2025-11-01 21:51:25.544 [info] Locator Workspaces took 19.152276ms
+2025-11-01 21:51:25.544 [info] Refresh completed in 306ms
+2025-11-01 21:51:25.566 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 21:52:37.969 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 21:53:32.426 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 21:54:14.896 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 21:59:23.507 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 22:20:51.748 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 23:28:50.676 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 23:31:09.464 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 23:38:41.669 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-02 00:06:25.630 [info] Resolved Python Environment /home/mehdiyc/repos/work/med_scraping/.venv/bin/python

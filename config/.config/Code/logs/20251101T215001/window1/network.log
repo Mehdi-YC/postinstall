@@ -1,0 +1,10 @@
+2025-11-01 21:50:56.591 [error] #3: https://marketplace.visualstudio.com/_apis/public/gallery/vscode/ms-azuretools/vscode-containers/latest - error GET Canceled
+2025-11-01 21:50:56.591 [error] #4: https://marketplace.visualstudio.com/_apis/public/gallery/vscode/ms-vscode-remote/remote-containers/latest - error GET Canceled
+2025-11-01 21:50:56.592 [error] #5: https://marketplace.visualstudio.com/_apis/public/gallery/vscode/ms-kubernetes-tools/vscode-kubernetes-tools/latest - error GET Canceled
+2025-11-01 21:50:56.592 [error] #6: https://marketplace.visualstudio.com/_apis/public/gallery/vscode/eamodio/gitlens/latest - error GET Canceled
+2025-11-01 21:50:56.592 [error] #7: https://marketplace.visualstudio.com/_apis/public/gallery/vscode/vscodevim/vim/latest - error GET Canceled
+2025-11-01 21:50:56.593 [error] #2: https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery - error POST Canceled
+2025-11-01 21:51:11.967 [error] #10: https://ms-python.gallerycdn.vsassets.io/extensions/ms-python/python/2025.16.0/1760032296489/Microsoft.VisualStudio.Code.Manifest?targetPlatform=linux-x64 - error GET Failed to fetch
+2025-11-01 21:51:12.129 [error] #11: https://ms-python.gallerycdn.vsassets.io/extensions/ms-python/python/2025.16.0/1760032296489/Microsoft.VisualStudio.Code.Manifest?targetPlatform=linux-x64 - error GET Failed to fetch
+2025-11-01 21:51:12.708 [error] #12: https://ms-python.gallery.vsassets.io/_apis/public/gallery/publisher/ms-python/extension/python/2025.16.0/assetbyname/Microsoft.VisualStudio.Code.Manifest?targetPlatform=linux-x64 - error GET Failed to fetch
+2025-11-01 21:51:12.760 [error] #13: https://ms-python.gallery.vsassets.io/_apis/public/gallery/publisher/ms-python/extension/python/2025.16.0/assetbyname/Microsoft.VisualStudio.Code.Manifest?targetPlatform=linux-x64 - error GET Failed to fetch

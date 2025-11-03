@@ -1,0 +1,8 @@
+{
+    "Dock": (
+        force_presentation: Some(Icon),
+    ),
+    "Panel": (
+        force_presentation: None,
+    ),
+}

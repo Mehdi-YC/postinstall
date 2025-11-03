@@ -1,0 +1,46 @@
+2025-11-01 21:51:25.204 [info] Experiment 'pythonSurveyNotificationcf' is active
+2025-11-01 21:51:25.218 [info] Native locator: Refresh started
+2025-11-01 21:51:25.307 [info] Native locator: Refresh started
+2025-11-01 21:51:25.317 [info] Skipping ActivatedEnv Detection:  process.env.VSCODE_CLI !== '1'
+2025-11-01 21:51:25.317 [info] Skipping ActivatedEnv Detection:  process.env.VSCODE_CLI !== '1'
+2025-11-01 21:51:25.332 [info] > pyenv which python
+2025-11-01 21:51:25.332 [info] cwd: .
+2025-11-01 21:51:25.551 [info] Native locator: Refresh finished in 327 ms
+2025-11-01 21:51:25.569 [info] Python interpreter path: ./.venv/bin/python
+2025-11-01 21:51:28.766 [info] Starting Pylance language server.
+2025-11-01 21:53:31.786 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 21:53:32.647 [info] Send text to terminal: source /home/mehdiyc/repos/work/med_scraping/.venv/bin/activate
+2025-11-01 21:54:18.738 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 21:59:23.522 [info] > ./.venv/bin/python ~/.vscode/extensions/ms-python.python-2025.16.0-linux-x64/python_files/normalizeSelection.py
+2025-11-01 21:59:23.695 [info] Send text to terminal: source /home/mehdiyc/repos/work/med_scraping/.venv/bin/activate
+2025-11-01 21:59:24.035 [info] Send text to terminal: print(len(data))
+
+2025-11-01 21:59:24.197 [info] Send text to terminal: /home/mehdiyc/repos/work/med_scraping/.venv/bin/python
+2025-11-01 22:00:54.686 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:01:03.842 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:04:41.011 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:08:52.521 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:11:03.336 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:14:07.024 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:14:48.204 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:17:03.839 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:17:57.949 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:21:04.490 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:24:30.870 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:26:42.234 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:27:08.905 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:30:26.118 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:32:37.960 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:40:49.070 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:41:35.564 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:51:22.806 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:52:28.349 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:53:36.658 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:53:41.612 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:55:17.584 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 22:55:57.150 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 23:40:40.539 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 23:41:55.174 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 23:42:11.241 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 23:42:45.544 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
+2025-11-01 23:54:52.926 [info] Discover tests for workspace name: med_scraping - uri: /home/mehdiyc/repos/work/med_scraping/lellahom_scrapper.py
