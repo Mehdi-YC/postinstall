@@ -1,0 +1,25 @@
+2025-11-03 23:20:29.342 [info] Extensions added from another source pkief.material-icon-theme vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json
+2025-11-03 23:21:02.935 [info] Getting Manifest... samuelcolvin.jinjahtml
+2025-11-03 23:21:03.207 [info] Installing extension: samuelcolvin.jinjahtml {"isMachineScoped":false,"installPreReleaseVersion":false,"pinned":false,"profileLocation":{"$mid":1,"external":"vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json","path":"/home/mehdi/.vscode/extensions/extensions.json","scheme":"vscode-userdata"},"isApplicationScoped":false,"productVersion":{"version":"1.105.1","date":"2025-10-14T22:33:36.618Z"}}
+2025-11-03 23:21:05.592 [info] Extension signature verification result for samuelcolvin.jinjahtml: Success. Internal Code: 0. Executed: true. Duration: 1536ms.
+2025-11-03 23:21:05.637 [info] Extracted extension to file:///home/mehdi/.vscode/extensions/samuelcolvin.jinjahtml-0.20.0: samuelcolvin.jinjahtml
+2025-11-03 23:21:05.644 [info] Renamed to /home/mehdi/.vscode/extensions/samuelcolvin.jinjahtml-0.20.0
+2025-11-03 23:21:05.663 [info] Extension installed successfully: samuelcolvin.jinjahtml vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json
+2025-11-03 23:21:17.287 [info] Getting Manifest... svelte.svelte-vscode
+2025-11-03 23:21:17.482 [info] Installing extension: svelte.svelte-vscode {"isMachineScoped":false,"installPreReleaseVersion":false,"pinned":false,"profileLocation":{"$mid":1,"external":"vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json","path":"/home/mehdi/.vscode/extensions/extensions.json","scheme":"vscode-userdata"},"isApplicationScoped":false,"productVersion":{"version":"1.105.1","date":"2025-10-14T22:33:36.618Z"}}
+2025-11-03 23:21:20.187 [info] Extension signature verification result for svelte.svelte-vscode: Success. Internal Code: 0. Executed: true. Duration: 1457ms.
+2025-11-03 23:21:22.456 [info] Extracted extension to file:///home/mehdi/.vscode/extensions/svelte.svelte-vscode-109.11.2: svelte.svelte-vscode
+2025-11-03 23:21:22.563 [info] Renamed to /home/mehdi/.vscode/extensions/svelte.svelte-vscode-109.11.2
+2025-11-03 23:21:22.584 [info] Extension installed successfully: svelte.svelte-vscode vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json
+2025-11-03 23:21:30.959 [info] Getting Manifest... tamasfe.even-better-toml
+2025-11-03 23:21:31.242 [info] Installing extension: tamasfe.even-better-toml {"isMachineScoped":false,"installPreReleaseVersion":false,"pinned":false,"profileLocation":{"$mid":1,"external":"vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json","path":"/home/mehdi/.vscode/extensions/extensions.json","scheme":"vscode-userdata"},"isApplicationScoped":false,"productVersion":{"version":"1.105.1","date":"2025-10-14T22:33:36.618Z"}}
+2025-11-03 23:21:32.839 [info] Extension signature verification result for tamasfe.even-better-toml: Success. Internal Code: 0. Executed: true. Duration: 1445ms.
+2025-11-03 23:21:33.404 [info] Extracted extension to file:///home/mehdi/.vscode/extensions/tamasfe.even-better-toml-0.21.2: tamasfe.even-better-toml
+2025-11-03 23:21:33.411 [info] Renamed to /home/mehdi/.vscode/extensions/tamasfe.even-better-toml-0.21.2
+2025-11-03 23:21:33.431 [info] Extension installed successfully: tamasfe.even-better-toml vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json
+2025-11-03 23:21:39.925 [info] Getting Manifest... yandeu.five-server
+2025-11-03 23:21:40.123 [info] Installing extension: yandeu.five-server {"isMachineScoped":false,"installPreReleaseVersion":false,"pinned":false,"profileLocation":{"$mid":1,"external":"vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json","path":"/home/mehdi/.vscode/extensions/extensions.json","scheme":"vscode-userdata"},"isApplicationScoped":false,"productVersion":{"version":"1.105.1","date":"2025-10-14T22:33:36.618Z"}}
+2025-11-03 23:21:42.452 [info] Extension signature verification result for yandeu.five-server: Success. Internal Code: 0. Executed: true. Duration: 1530ms.
+2025-11-03 23:21:42.573 [info] Extracted extension to file:///home/mehdi/.vscode/extensions/yandeu.five-server-0.3.9: yandeu.five-server
+2025-11-03 23:21:42.583 [info] Renamed to /home/mehdi/.vscode/extensions/yandeu.five-server-0.3.9
+2025-11-03 23:21:42.603 [info] Extension installed successfully: yandeu.five-server vscode-userdata:/home/mehdi/.vscode/extensions/extensions.json

@@ -1,0 +1,4 @@
+2025-11-03 23:09:56.491 [error] Invalid path provided: /home/mehdiyc/repos/work/med_scraping, ENOENT: no such file or directory, stat '/home/mehdiyc/repos/work/med_scraping'
+2025-11-03 23:09:56.551 [info] update#setState idle
+2025-11-03 23:10:18.512 [info] Extension host with pid 23913 exited with code: 0, signal: unknown.
+2025-11-03 23:10:18.566 [error] [UtilityProcess id: 1, type: fileWatcher, pid: 23887]: crashed with code 15 and reason 'killed'

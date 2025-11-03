@@ -1,27 +1,25 @@
 {
     "telemetry.sqmId": "",
     "telemetry.machineId": "1d958b73c14506a1f2ffb30bbc8d8b5af42ee01ee7d1725f9c7e4196c7432815",
-    "telemetry.devDeviceId": "1797c77f-0f57-4205-b68b-f779b738ff9d",
+    "telemetry.devDeviceId": "3ec91670-8bae-4a47-a0bd-3630169d408e",
     "backupWorkspaces": {
         "workspaces": [],
-        "folders": [
-            {
-                "folderUri": "file:///home/mehdiyc/repos/work/med_scraping"
-            }
-        ],
+        "folders": [],
         "emptyWindows": [
             {
-                "backupFolder": "1762030202209"
+                "backupFolder": "1762209564019"
             }
         ]
     },
     "windowControlHeight": 50,
     "profileAssociations": {
         "workspaces": {
-            "file:///home/mehdiyc/repos/work/med_scraping": "__default__profile__"
+            "file:///home/mehdiyc/repos/work/med_scraping": "__default__profile__",
+            "file:///home/mehdi/repos/work/kostango/creator_back": "__default__profile__"
         },
         "emptyWindows": {
-            "1762030202209": "__default__profile__"
+            "1762209508064": "__default__profile__",
+            "1762209564019": "__default__profile__"
         }
     },
     "theme": "vs-dark",
@@ -56,14 +54,13 @@
     },
     "windowsState": {
         "lastActiveWindow": {
-            "folder": "file:///home/mehdiyc/repos/work/med_scraping",
-            "backupPath": "/home/mehdiyc/.config/Code/Backups/cf015a2e7d8c37b9540695feed0b0a5b",
+            "backupPath": "/home/mehdi/.config/Code/Backups/1762209564019",
             "uiState": {
-                "mode": 1,
-                "x": 14,
-                "y": 56,
-                "width": 1492,
-                "height": 1632,
+                "mode": 0,
+                "x": 1280,
+                "y": 44,
+                "width": 1280,
+                "height": 1396,
                 "zoomLevel": 2
             }
         },
@@ -71,11 +68,15 @@
     },
     "windowSplashWorkspaceOverride": {
         "layoutInfo": {
-            "sideBarWidth": 356,
-            "auxiliaryBarWidth": 216,
+            "sideBarWidth": 222,
+            "auxiliaryBarWidth": 222,
             "workspaces": {
                 "3429dd5f99196ad279b7fd050d813928": {
                     "sideBarVisible": false,
+                    "auxiliaryBarVisible": false
+                },
+                "90f66e131c031ba671002810aed25f4b": {
+                    "sideBarVisible": true,
                     "auxiliaryBarVisible": false
                 }
             }

@@ -1,0 +1,10 @@
+2025-11-03 23:19:23.177 [info] Started local extension host with pid 27581.
+2025-11-03 23:19:23.758 [info] MCP Registry configured: https://api.mcp.github.com/2025-09-15
+2025-11-03 23:19:24.080 [info] Settings Sync: Account status changed from uninitialized to unavailable
+2025-11-03 23:19:26.115 [info] [perf] Render performance baseline is 54ms
+2025-11-03 23:19:41.567 [info] ChatSessionStore: Migrating 0 chat sessions from storage service to file system
+2025-11-03 23:19:41.860 [info] Started local extension host with pid 27799.
+2025-11-03 23:19:42.818 [info] MCP Registry configured: https://api.mcp.github.com/2025-09-15
+2025-11-03 23:19:42.941 [info] Settings Sync: Account status changed from uninitialized to unavailable
+2025-11-03 23:19:44.391 [info] [perf] Render performance baseline is 39ms
+2025-11-03 23:22:01.628 [warning] [backup tracker] suspended, ignoring unregister event file:///home/mehdi/repos/work/kostango/creator_back/creator/templates/static/django-ace/pyodide/package.json 

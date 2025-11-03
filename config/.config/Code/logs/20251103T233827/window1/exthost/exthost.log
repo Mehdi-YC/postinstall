@@ -1,0 +1,11 @@
+2025-11-03 23:38:29.532 [info] Extension host with pid 32708 started
+2025-11-03 23:38:29.725 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2025-11-03 23:38:29.786 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2025-11-03 23:38:29.870 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*'
+2025-11-03 23:38:29.880 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2025-11-03 23:38:30.013 [info] Eager extensions activated
+2025-11-03 23:38:30.016 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2025-11-03 23:38:30.020 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2025-11-03 23:38:30.047 [info] ExtensionService#_doActivateExtension PKief.material-icon-theme, startup: false, activationEvent: 'onStartupFinished'
+2025-11-03 23:38:40.831 [info] Extension host terminating: renderer closed the MessagePort
+2025-11-03 23:38:40.843 [info] Extension host with pid 32708 exiting with code 0
