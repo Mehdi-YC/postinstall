@@ -12,7 +12,7 @@ Switch to Next Keyboard Layout=Meta+Alt+K
 [StandardShortcuts]
 AboutApp=
 AboutKDE=
-Activate Next Tab=Ctrl+]; Ctrl+PgDown
+Activate Next Tab=Ctrl+PgDown; Ctrl+]
 Activate Previous Tab=Ctrl+PgUp; Ctrl+[
 ActualSize=Ctrl+0
 AddBookmark=Ctrl+B
@@ -92,7 +92,7 @@ Undo=Ctrl+Z
 Up=
 WhatsThis=Shift+F1
 Zoom=
-ZoomIn=Ctrl++; Ctrl+=
+ZoomIn=Ctrl+=; Ctrl++
 ZoomOut=Ctrl+-
 
 [chromium-browser.desktop][Global Shortcuts]
@@ -133,7 +133,7 @@ Cycle Overview Opposite=
 Decrease Opacity=
 Edit Tiles=Meta+T
 Expose=Ctrl+F9
-ExposeAll=Ctrl+F10; Launch (C)
+ExposeAll=Launch (C); Ctrl+F10
 ExposeClass=Ctrl+F7
 ExposeClassCurrentDesktop=
 Grid View=Meta+G
@@ -181,17 +181,17 @@ MoveZoomDown=
 MoveZoomLeft=
 MoveZoomRight=
 MoveZoomUp=
-Overview=Meta+W; Meta
+Overview=Meta; Meta+W
 Setup Window Shortcut=
 Show Desktop=Meta+D
 Switch One Desktop Down=Meta+Ctrl+Down
 Switch One Desktop Up=Meta+Ctrl+Up
 Switch One Desktop to the Left=Meta+Ctrl+Left
 Switch One Desktop to the Right=Meta+Ctrl+Right
-Switch Window Down=Meta+Alt+Down; Alt+Down
-Switch Window Left=Alt+Left; Meta+Alt+Left
-Switch Window Right=Meta+Alt+Right; Alt+Right
-Switch Window Up=Meta+Alt+Up; Alt+Up
+Switch Window Down=Alt+Down; Meta+Alt+Down
+Switch Window Left=Meta+Alt+Left; Alt+Left
+Switch Window Right=Alt+Right; Meta+Alt+Right
+Switch Window Up=Alt+Up; Meta+Alt+Up
 Switch to Desktop 1=Meta+&; Ctrl+F1
 Switch to Desktop 10=
 Switch to Desktop 11=
@@ -230,12 +230,12 @@ Switch to Screen to the Left=
 Switch to Screen to the Right=
 Toggle Night Color=
 Toggle Window Raise/Lower=
-Walk Through Windows=Alt+Tab; Meta+Tab
-Walk Through Windows (Reverse)=Alt+Shift+Tab; Meta+Shift+Tab
+Walk Through Windows=Meta+Tab; Alt+Tab
+Walk Through Windows (Reverse)=Meta+Shift+Tab; Alt+Shift+Tab
 Walk Through Windows Alternative=
 Walk Through Windows Alternative (Reverse)=
 Walk Through Windows of Current Application=Meta+`; Alt+`
-Walk Through Windows of Current Application (Reverse)=Alt+~; Meta+~
+Walk Through Windows of Current Application (Reverse)=Meta+~; Alt+~
 Walk Through Windows of Current Application Alternative=
 Walk Through Windows of Current Application Alternative (Reverse)=
 Window Above Other Windows=
@@ -257,8 +257,8 @@ Window Move=
 Window Move Center=
 Window No Border=
 Window On All Desktops=
-Window One Desktop Down=Meta+Shift+Down; Meta+Ctrl+Shift+Down
-Window One Desktop Up=Meta+Shift+Up; Meta+Ctrl+Shift+Up
+Window One Desktop Down=Meta+Ctrl+Shift+Down
+Window One Desktop Up=Meta+Ctrl+Shift+Up
 Window One Desktop to the Left=Meta+Ctrl+Shift+Left
 Window One Desktop to the Right=Meta+Ctrl+Shift+Right
 Window One Screen Down=
@@ -317,7 +317,7 @@ Window to Screen 6=
 Window to Screen 7=
 disableInputCapture=Meta+Shift+Esc
 view_actual_size=Meta+0
-view_zoom_in=Meta++; Meta+=
+view_zoom_in=Meta+=; Meta++
 view_zoom_out=Meta+-
 
 [mediacontrol][Global Shortcuts]
@@ -334,7 +334,7 @@ stopmedia=Media Stop
 _launch=Ctrl+Shift+L
 
 [org.kde.dolphin.desktop][Global Shortcuts]
-_launch=Meta+F; Meta+E
+_launch=Meta+E; Meta+F
 
 [org.kde.kcalc.desktop][Global Shortcuts]
 _launch=Calculator
@@ -346,7 +346,7 @@ _launch=Meta+Return; Ctrl+Alt+T
 
 [org.kde.krunner.desktop][Global Shortcuts]
 RunClipboard=Alt+Shift+F2
-_launch=Alt+F2; Search; Alt+Space
+_launch=Search; Alt+Space; Alt+F2
 
 [org.kde.kscreen.desktop][Global Shortcuts]
 ShowOSD=Display; Meta+P
@@ -355,24 +355,24 @@ ShowOSD=Display; Meta+P
 _launch=Meta+Esc
 
 [org.kde.plasma.emojier.desktop][Global Shortcuts]
-_launch=Meta+Ctrl+Alt+Shift+Space; Meta+.
+_launch=Meta+.; Meta+Ctrl+Alt+Shift+Space
 
 [org.kde.spectacle.desktop][Global Shortcuts]
 ActiveWindowScreenShot=Meta+Print
 CurrentMonitorScreenShot=
 FullScreenScreenShot=Shift+Print
 OpenWithoutScreenshot=
-RecordRegion=Meta+Shift+R; Meta+R
+RecordRegion=Meta+R; Meta+Shift+R
 RecordScreen=Meta+Alt+R
 RecordWindow=Meta+Ctrl+R
 RectangularRegionScreenShot=Meta+Shift+Print
 WindowUnderCursorScreenShot=Meta+Ctrl+Print
-_launch=Meta+Shift+S; Print
+_launch=Print; Meta+Shift+S
 
 [org.kde.touchpadshortcuts.desktop][Global Shortcuts]
 DisableTouchpad=Touchpad Off
 EnableTouchpad=Touchpad On
-ToggleTouchpad=Touchpad Toggle; Meta+Ctrl+Touchpad Toggle; Meta+Ctrl+Zenkaku Hankaku
+ToggleTouchpad=Meta+Ctrl+Zenkaku Hankaku; Touchpad Toggle; Meta+Ctrl+Touchpad Toggle
 
 [org_kde_powerdevil][Global Shortcuts]
 Decrease Keyboard Brightness=Keyboard Brightness Down

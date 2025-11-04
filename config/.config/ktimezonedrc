@@ -1,0 +1,4 @@
+[TimeZones]
+LocalZone=Africa/Algiers
+ZoneinfoDir=/usr/share/zoneinfo
+Zonetab=/usr/share/zoneinfo/zone.tab

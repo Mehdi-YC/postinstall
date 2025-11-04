@@ -1,0 +1,22 @@
+[Global plugin config]
+manageProfile=false
+
+[SSH Config][144.91.120.121]
+hostname=144.91.120.121
+identifier=144.91.120.121
+importedFromSshConfig=true
+port=
+profileName=Built-in
+sshkey=~/.ssh/id_ed25519
+useSshConfig=true
+username=
+
+[SSH Config][gitlab.com]
+hostname=gitlab.com
+identifier=gitlab.com
+importedFromSshConfig=true
+port=
+profileName=Built-in
+sshkey=~/.ssh/id_ed25519
+useSshConfig=true
+username=
