@@ -58,9 +58,9 @@ export PATH="$PATH:/mnt/Work/dartsdk-linux-x64-release3.0.0/dart-sdk/bin:/mnt/Wo
 alias studio="/mnt/Work/android-studio-2024.2.1.10-linux/android-studio/bin/studio"
 
 # Start Fish automatically only in interactive terminals
-if [[ $- == *i* ]] && [[ -z "$FISH" ]]; then
-    # Only start Fish if this is a terminal session (not a script)
-    if [[ -t 1 ]]; then
-        fish
-    fi
-fi
+# if [[ $- == *i* ]] && [[ -z "$FISH" ]]; then
+#     # Only start Fish if this is a terminal session (not a script)
+#     if [[ -t 1 ]]; then
+#         fish
+#     fi
+# fi
