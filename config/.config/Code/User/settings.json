@@ -1,0 +1,7 @@
+{
+    "workbench.editor.labelFormat": "short",
+    "workbench.iconTheme": "material-icon-theme",
+    "explorer.sortOrder": "filesFirst",
+    "workbench.tree.indent": 20,
+    "explorer.compactFolders": false
+}
