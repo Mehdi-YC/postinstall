@@ -344,6 +344,13 @@ Build polished data products with SQL
 ![](https://evidence.dev/wdi-new.png)
 
 # Cloud tools :
+
+____
+## [Termix](https://github.com/Termix-SSH/Termix)
+Termix is a web-based server management platform with SSH terminal, tunneling, and file editing capabilities.
+
+![](https://github.com/Termix-SSH/Termix/blob/main/repo-images/Image%201.png)
+
 ____
 ## [devspace](https://github.com/loft-sh/devspace)
 DevSpace - The Fastest Developer Tool for Kubernetes ⚡ Automate your deployment workflow with DevSpace and develop software directly inside Kubernetes.
