@@ -1,0 +1,75 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "terminal": {
+    "show_count_badge": true
+  },
+  "toolbar": {
+    "code_actions": false,
+    "agent_review": true,
+    "selections_menu": true,
+    "quick_actions": true,
+    "breadcrumbs": false
+  },
+  "minimap": {
+    "show": "always"
+  },
+  "gutter": {
+    "folds": false
+  },
+  "hover_popover_enabled": true,
+  "cli_default_open_behavior": "existing_window",
+  "language_models": {
+    "lmstudio": {
+      "api_url": "http://localhost:1234/api/v0"
+    }
+  },
+  "agent": {
+    "dock": "right",
+    "sidebar_side": "right",
+    "default_model": {
+      "provider": "lmstudio",
+      "model": "qwen/qwen3.5-9b",
+      "enable_thinking": false
+    },
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "vim_mode": false,
+  "project_panel": {
+    "git_status_indicator": true,
+    "bold_folder_labels": true,
+    "dock": "left",
+    "auto_fold_dirs": false,
+    "sort_mode": "directories_first"
+  },
+  "base_keymap": "VSCode",
+  "sticky_scroll": {
+    "enabled": false
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Material Icon Theme"
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "One Dark",
+  },
+}
