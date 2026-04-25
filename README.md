@@ -276,6 +276,12 @@ ___
 - tellery is a good project but did not get any attention ...
 ![](https://miro.medium.com/v2/resize:fit:1400/1*Y3aNGoRED2q0pWjlHmr9wg.png)
 ___
+## [Marimo](https://marimo.io/) (Notebooks) 
+
+- The future of Python notebooks is here
+- Transform data, train models, and run SQL queries with marimo — feels like an AI-native reactive notebook, stored as Git-friendly reproducible Python. Seamlessly run as scripts and apps. All open source.
+![](https://cms.marimo.io/landing/1.mp4)
+___
 
 ## [DBeaver](https://dbeaver.io/)
 The best desktop app for managing databases
