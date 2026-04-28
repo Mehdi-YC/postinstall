@@ -73,6 +73,16 @@ integrated apps, kept simple, and loved by millions of happy users.
 
 ![](https://odoocdn.com/openerp_website/static/src/img/2020/home/screens-mockup.png)
 ___
+## [tryton](https://www.tryton.org/)
+TRYTON® is business software, ideal for companies of any size, easy to use, complete and 100% Open Source.
+
+![](https://images.g2crowd.com/uploads/attachment/file/1230249/sao-sale.png)
+___
+## [ERXES](https://erxes.io/)
+A Python-based low-modeling low-code open-source platform for smart and AI-enhanced software
+![](https://erxes.io/assets/solutions/technology/5.png)
+
+___
 ## [mautic](https://www.mautic.org/)
 Supporting the World's Largest Open-Source Marketing Automation Project
 
