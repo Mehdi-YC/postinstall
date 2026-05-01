@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dev Library</title>
+<style>
+:root {
+  --bg: #fafaf8;
+  --surface: #fff;
+  --text: #1a1a18;
+  --muted: #555551;
+  --light: #888884;
+  --border: #e0e0da;
+  --code-bg: #f5f5f2;
+  --accent: #ce412b;
+  --green: #2e7d32;
+  --green-light: #e8f5e9;
+  --orange: #e65100;
+  --orange-light: #fff3e0;
+  --blue: #1565c0;
+  --blue-light: #e3f2fd;
+  --purple: #6a1b9a;
+  --purple-light: #f3e5f5;
+  --red: #c62828;
+  --red-light: #fce4ec;
+  --teal: #00695c;
+  --teal-light: #e0f2f1;
+  --rust: #ce412b;
+  --rust-light: #fbe9e7;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Georgia,'Times New Roman',serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  font-size:16px;
+}
+
+/* ── Header ── */
+.hero {
+  max-width:820px;
+  margin:0 auto;
+  padding:72px 24px 56px;
+  border-bottom:1px solid var(--border);
+}
+.hero-eyebrow {
+  font-family:'Courier New',monospace;
+  font-size:11.5px;
+  color:var(--light);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.hero h1 {
+  font-size:42px;
+  font-weight:700;
+  line-height:1.15;
+  color:var(--text);
+  margin-bottom:16px;
+}
+.hero h1 span { color:var(--accent); }
+.hero-desc {
+  font-size:17px;
+  color:var(--muted);
+  max-width:580px;
+  line-height:1.75;
+  margin-bottom:32px;
+}
+.hero-meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  font-family:'Courier New',monospace;
+  font-size:12px;
+  color:var(--light);
+}
+.hero-meta span::before { content:'— '; }
+
+/* ── Main layout ── */
+.wrapper { max-width:820px; margin:0 auto; padding:0 24px 100px; }
+
+/* ── Section header ── */
+.section-label {
+  font-family:'Courier New',monospace;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--light);
+  margin:56px 0 20px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+
+/* ── Book cards ── */
+.books { display:grid; gap:2px; }
+.book-card {
+  display:flex;
+  align-items:stretch;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+  text-decoration:none;
+  color:inherit;
+  transition:border-color .15s, box-shadow .15s;
+}
+.book-card:hover {
+  border-color:#bbb;
+  box-shadow:0 2px 12px rgba(0,0,0,.07);
+}
+.book-card + .book-card { margin-top:-1px; }
+.book-spine {
+  width:6px;
+  flex-shrink:0;
+}
+.book-body {
+  flex:1;
+  padding:18px 22px 18px 20px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+}
+.book-left { flex:1; }
+.book-num {
+  font-family:'Courier New',monospace;
+  font-size:11px;
+  color:var(--light);
+  margin-bottom:5px;
+}
+.book-title {
+  font-size:17px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:5px;
+  line-height:1.3;
+}
+.book-subtitle {
+  font-size:13px;
+  color:var(--muted);
+  font-style:italic;
+  margin-bottom:10px;
+}
+.topics {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+.topic {
+  font-family:'Courier New',monospace;
+  font-size:11px;
+  color:var(--light);
+  background:var(--code-bg);
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:1px 7px;
+}
+.book-right {
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+}
+.book-badge {
+  font-family:'Courier New',monospace;
+  font-size:10.5px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:3px;
+  white-space:nowrap;
+}
+.book-arrow {
+  font-size:18px;
+  color:var(--light);
+  margin-top:auto;
+}
+.book-card:hover .book-arrow { color:var(--text); }
+
+/* Colors for spines & badges */
+.spine-green  { background:var(--green); }
+.spine-blue   { background:var(--blue); }
+.spine-orange { background:var(--orange); }
+.spine-purple { background:var(--purple); }
+.spine-teal   { background:var(--teal); }
+.spine-red    { background:var(--red); }
+.spine-rust   { background:var(--rust); }
+
+.badge-green  { background:var(--green-light);  color:var(--green); }
+.badge-blue   { background:var(--blue-light);   color:var(--blue); }
+.badge-orange { background:var(--orange-light); color:var(--orange); }
+.badge-purple { background:var(--purple-light); color:var(--purple); }
+.badge-teal   { background:var(--teal-light);   color:var(--teal); }
+.badge-red    { background:var(--red-light);     color:var(--red); }
+.badge-rust   { background:var(--rust-light);   color:var(--rust); }
+
+/* ── How to use ── */
+.how-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:4px;
+}
+@media(max-width:600px){ .how-grid { grid-template-columns:1fr; } }
+.how-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:16px 18px;
+}
+.how-card h4 {
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+  color:var(--text);
+}
+.how-card p {
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+/* ── Quote ── */
+.quote {
+  margin:56px 0 0;
+  padding:24px 28px;
+  border-left:3px solid var(--border);
+}
+.quote p {
+  font-size:18px;
+  color:var(--muted);
+  font-style:italic;
+  line-height:1.7;
+}
+.quote cite {
+  display:block;
+  margin-top:10px;
+  font-family:'Courier New',monospace;
+  font-size:12px;
+  color:var(--light);
+  font-style:normal;
+}
+
+/* ── Footer ── */
+footer {
+  border-top:1px solid var(--border);
+  padding:28px 24px;
+  max-width:820px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+}
+footer p {
+  font-family:'Courier New',monospace;
+  font-size:11.5px;
+  color:var(--light);
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+  <h1>The Dev<br><span>Reference</span><br>Library</h1>
+  <p class="hero-desc">
+    A curated set of practical engineering references — from system internals and networking
+    to web frameworks and language deep-dives. Built for daily use, not memorisation.
+  </p>
+  <div class="hero-meta">
+    <span>7 volumes</span>
+    <span>Open in any browser, no server needed</span>
+    <span>Works offline</span>
+    <span>Print-friendly</span>
+  </div>
+</div>
+
+<div class="wrapper">
+
+  <div class="section-label">The Collection</div>
+
+  <div class="books">
+
+    <!-- 1. Python -->
+    <a class="book-card" href="book/python.html">
+      <div class="book-spine spine-blue"></div>
+      <div class="book-body">
+        <div class="book-left">
+          <div class="book-num">Vol. 01</div>
+          <div class="book-title">Python — The Full Picture</div>
+          <div class="book-subtitle">From basics and OOP to async, type hints, Rust extensions, and tooling</div>
+          <div class="topics">
+            <span class="topic">basics</span>
+            <span class="topic">OOP</span>
+            <span class="topic">comprehensions</span>
+            <span class="topic">lambdas</span>
+            <span class="topic">decorators</span>
+            <span class="topic">generators</span>
+            <span class="topic">async/await</span>
+            <span class="topic">type hints</span>
+            <span class="topic">dataclasses</span>
+            <span class="topic">pandas</span>
+            <span class="topic">numpy</span>
+            <span class="topic">PyO3 / Rust</span>
+            <span class="topic">uv · ruff · mypy</span>
+          </div>
+        </div>
+        <div class="book-right">
+          <span class="book-badge badge-blue">Python</span>
+          <span class="book-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 2. Django -->
+    <a class="book-card" href="book/django.html">
+      <div class="book-spine spine-green"></div>
+      <div class="book-body">
+        <div class="book-left">
+          <div class="book-num">Vol. 02</div>
+          <div class="book-title">Django Development Reference</div>
+          <div class="book-subtitle">Project structure, ORM, views, templates, forms, and dev operations</div>
+          <div class="topics">
+            <span class="topic">models & ORM</span>
+            <span class="topic">migrations</span>
+            <span class="topic">views (FBV/CBV)</span>
+            <span class="topic">URL dispatcher</span>
+            <span class="topic">templates</span>
+            <span class="topic">forms & ModelForms</span>
+            <span class="topic">admin</span>
+            <span class="topic">signals</span>
+            <span class="topic">middleware</span>
+            <span class="topic">static/media</span>
+            <span class="topic">best practices</span>
+          </div>
+        </div>
+        <div class="book-right">
+          <span class="book-badge badge-green">Django</span>
+          <span class="book-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 3. Odoo -->
+    <a class="book-card" href="book/odoo.html">
+      <div class="book-spine spine-purple"></div>
+      <div class="book-body">
+        <div class="book-left">
+          <div class="book-num">Vol. 03</div>
+          <div class="book-title">Odoo 19 Development Reference</div>
+          <div class="book-subtitle">Models, views, security, OWL frontend, and deployment workflows</div>
+          <div class="topics">
+            <span class="topic">module structure</span>
+            <span class="topic">models/fields/constraints</span>
+            <span class="topic">views (form/list/search)</span>
+            <span class="topic">security (ACL/record rules)</span>
+            <span class="topic">OWL components</span>
+            <span class="topic">QWeb directives</span>
+            <span class="topic">manifest & assets</span>
+            <span class="topic">wizards & reports</span>
+            <span class="topic">devops (PG/backups)</span>
+          </div>
+        </div>
+        <div class="book-right">
+          <span class="book-badge badge-purple">Odoo</span>
+          <span class="book-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 4. Linux / Docker / Nginx / PG / Git -->
+    <a class="book-card" href="book/git_docker_others.html">
+      <div class="book-spine spine-orange"></div>
+      <div class="book-body">
+        <div class="book-left">
+          <div class="book-num">Vol. 04</div>
+          <div class="book-title">Linux, Docker, Nginx &amp; PostgreSQL</div>
+          <div class="book-subtitle">Infrastructure essentials every backend developer needs daily</div>
+          <div class="topics">
+            <span class="topic">linux cli</span>
+            <span class="topic">permissions</span>
+            <span class="topic">processes</span>
+            <span class="topic">docker</span>
+            <span class="topic">docker-compose</span>
+            <span class="topic">nginx</span>
+            <span class="topic">postgres</span>
+            <span class="topic">git</span>
+            <span class="topic">systemd</span>
+            <span class="topic">cron</span>
+          </div>
+        </div>
+        <div class="book-right">
+          <span class="book-badge badge-orange">Infra</span>
+          <span class="book-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 5. Networking -->
+    <a class="book-card" href="book/network.html">
+      <div class="book-spine spine-teal"></div>
+      <div class="book-body">
+        <div class="book-left">
+          <div class="book-num">Vol. 05</div>
+          <div class="book-title">Networking for Developers</div>
+          <div class="book-subtitle">Everything from OSI layers and TCP/IP to HTTP, DNS, TLS, and debugging</div>
+          <div class="topics">
+            <span class="topic">OSI model</span>
+            <span class="topic">IP & subnets</span>
+            <span class="topic">TCP / UDP</span>
+            <span class="topic">HTTP/HTTPS</span>
+            <span class="topic">DNS</span>
+            <span class="topic">TLS/SSL</span>
+            <span class="topic">curl / traceroute</span>
+            <span class="topic">firewalls</span>
+            <span class="topic">proxies</span>
+            <span class="topic">load balancing</span>
+          </div>
+        </div>
+        <div class="book-right">
+          <span class="book-badge badge-teal">Networking</span>
+          <span class="book-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 6. PostgreSQL -->
+    <a class="book-card" href="book/postgres.html">
+      <div class="book-spine spine-red"></div>
+      <div class="book-body">
+        <div class="book-left">
+          <div class="book-num">Vol. 06</div>
+          <div class="book-title">PostgreSQL Reference for Developers</div>
+          <div class="book-subtitle">Queries, joins, indexes, transactions — everything a backend developer needs</div>
+          <div class="topics">
+            <span class="topic">basics & CRUD</span>
+            <span class="topic">JOINs (inner/outer/self)</span>
+            <span class="topic">indexes (B-tree/GIN/GiST)</span>
+            <span class="topic">transactions & isolation</span>
+            <span class="topic">JSONB operations</span>
+            <span class="topic">window functions</span>
+            <span class="topic">full‑text search</span>
+            <span class="topic">vaccum & autovacuum</span>
+            <span class="topic">EXPLAIN analysis</span>
+          </div>
+        </div>
+        <div class="book-right">
+          <span class="book-badge badge-red">PostgreSQL</span>
+          <span class="book-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 7. Rust -->
+    <a class="book-card" href="book/rust.html">
+      <div class="book-spine spine-rust"></div>
+      <div class="book-body">
+        <div class="book-left">
+          <div class="book-num">Vol. 07</div>
+          <div class="book-title">Rust Language Reference</div>
+          <div class="book-subtitle">Ownership, borrowing, lifetimes, traits, enums, concurrency, and Cargo</div>
+          <div class="topics">
+            <span class="topic">ownership & borrowing</span>
+            <span class="topic">lifetimes</span>
+            <span class="topic">structs & enums</span>
+            <span class="topic">pattern matching</span>
+            <span class="topic">traits & generics</span>
+            <span class="topic">Option & Result</span>
+            <span class="topic">error handling (?)</span>
+            <span class="topic">closures & iterators</span>
+            <span class="topic">concurrency (threads/async)</span>
+            <span class="topic">Cargo & crates</span>
+            <span class="topic">testing</span>
+          </div>
+        </div>
+        <div class="book-right">
+          <span class="book-badge badge-rust">Rust</span>
+          <span class="book-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- How to use -->
+  <div class="section-label">How to Use These References</div>
+  <div class="how-grid">
+    <div class="how-card">
+      <h4>📖 For learning</h4>
+      <p>Read top to bottom. Each reference is written to build understanding, not just list syntax. Follow the examples in a real project.</p>
+    </div>
+    <div class="how-card">
+      <h4>🔍 For daily lookup</h4>
+      <p>Use the sticky navigation bar at the top of each file to jump directly to the section you need — ownership, lifetimes, traits, etc.</p>
+    </div>
+    <div class="how-card">
+      <h4>🖨 For printing</h4>
+      <p>Every file has print styles built in. Open the file, hit Cmd/Ctrl+P. The nav bar hides automatically and font sizes adjust.</p>
+    </div>
+    <div class="how-card">
+      <h4>💾 Fully offline</h4>
+      <p>No CDN, no internet required. Keep the entire folder on your machine, USB drive, or shared on a local network.</p>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>"The references you reach for most are the ones you built yourself. These exist so you stop googling the same things twice."</p>
+    <cite>— Dev Library</cite>
+  </div>
+
+</div>
+
+<footer>
+  <p>Dev Library · 7 volumes · All files self-contained HTML</p>
+  <p>Open locally · No server required</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Language Reference for Developers</title>
+    <style>
+        :root {
+            --bg: #fff; --text: #1a1a1a; --muted: #555; --light: #888;
+            --border: #ddd; --code-bg: #f5f5f5; --accent: #7c3100;
+            --green: #2e7d32; --red: #c62828; --orange: #e65100; --blue: #1565c0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: var(--bg); color: var(--text);
+            line-height: 1.7; font-size: 16px;
+        }
+        .wrapper { max-width: 840px; margin: 0 auto; padding: 0 24px 60px; }
+        .tabs {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg); border-bottom: 2px solid var(--border);
+            padding: 10px 0 0;
+        }
+        .tabs ul {
+            list-style: none; margin: 0; padding: 0 24px;
+            display: flex; flex-wrap: wrap; gap: 4px;
+        }
+        .tabs a {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px; color: var(--muted);
+            text-decoration: none; padding: 5px 10px;
+            border: 1px solid var(--border); border-radius: 3px 3px 0 0;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap; transition: color 0.15s, background 0.15s;
+            margin-bottom: -2px;
+        }
+        .tabs a:hover { color: var(--text); background: var(--code-bg); }
+        .tabs a.active {
+            color: var(--text); background: var(--bg);
+            border-bottom-color: var(--bg); font-weight: 700;
+        }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+        .subtitle { color: var(--light); font-size: 14px; margin-bottom: 28px; font-style: italic; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        h2 { font-size: 19px; font-weight: 700; margin: 36px 0 10px; padding-bottom: 5px; border-bottom: 2px solid var(--border); }
+        h3 { font-size: 15px; font-weight: 700; margin: 24px 0 6px; }
+        p { margin-bottom: 10px; color: var(--muted); font-size: 15px; }
+        strong { color: var(--text); }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; background: var(--code-bg);
+            padding: 1px 5px; border-radius: 3px; border: 1px solid #e0e0e0;
+        }
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; line-height: 1.55;
+            background: var(--code-bg); border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 18px;
+            overflow-x: auto; margin: 10px 0 14px; white-space: pre;
+        }
+        .file-label { font-family: 'Courier New', monospace; font-size: 12px; color: var(--light); margin: 10px 0 0; }
+        .cm { color: #999; font-style: italic; }
+        .kw { color: var(--accent); }
+        .st { color: var(--green); }
+        .fn { color: var(--blue); }
+        .nu { color: var(--orange); }
+        .ty { color: #6a1b9a; }
+        .mc { color: #0c5c2c; }
+        .lt { color: var(--red); }
+        ul, ol { margin: 6px 0 14px 22px; color: var(--muted); font-size: 14px; }
+        li { margin-bottom: 3px; }
+        .note { background: #fff8e1; border-left: 3px solid var(--orange); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .warn { background: #fce4ec; border-left: 3px solid var(--red); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .tip { background: #e8f5e9; border-left: 3px solid var(--green); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 13.5px; }
+        th { background: var(--code-bg); text-align: left; padding: 6px 8px; border: 1px solid var(--border); font-weight: 700; font-size: 12px; }
+        td { padding: 6px 8px; border: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+        td:first-child { font-family: 'Courier New', monospace; font-size: 12.5px; white-space: nowrap; }
+        .badge { display: inline-block; font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+        .badge-r { background: #fce4ec; color: var(--red); }
+        .badge-g { background: #e8f5e9; color: var(--green); }
+        .badge-o { background: #fff3e0; color: var(--orange); }
+        .badge-b { background: #e3f2fd; color: var(--blue); }
+        hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+        @media print { body { font-size: 12px; } pre { font-size: 11px; padding: 10px; } .tabs { display: none; } .tab-content { display: block !important; page-break-before: always; } }
+        @media (max-width: 700px) { .tabs a { font-size: 11px; padding: 4px 7px; } td { font-size: 12px; } }
+    </style>
+</head>
+<body>
+
+<nav class="tabs">
+    <ul>
+        <li><a href="#" class="active" data-tab="ownership">Ownership</a></li>
+        <li><a href="#" data-tab="types">Types</a></li>
+        <li><a href="#" data-tab="traits">Traits</a></li>
+        <li><a href="#" data-tab="enums">Enums &amp; Pattern</a></li>
+        <li><a href="#" data-tab="errors">Error Handling</a></li>
+        <li><a href="#" data-tab="lifetimes">Lifetimes</a></li>
+        <li><a href="#" data-tab="concurrency">Concurrency</a></li>
+        <li><a href="#" data-tab="cargo">Cargo &amp; Crates</a></li>
+    </ul>
+</nav>
+
+<div class="wrapper">
+
+<h1>Rust Language Reference for Developers</h1>
+<div class="subtitle">Ownership, borrowing, lifetimes, traits, and the compiler model &mdash; what Rust actually enforces and why.</div>
+
+<!-- ========== OWNERSHIP ========== -->
+<div class="tab-content active" id="tab-ownership">
+
+<h2>The Ownership Model</h2>
+
+<p>Rust enforces memory safety at compile time through three rules: <strong>every value has one owner</strong>, <strong>ownership can be moved or borrowed</strong>, and <strong>values are dropped when their owner goes out of scope</strong>. No garbage collector, no runtime overhead.</p>
+
+<table>
+    <tr><th>Concept</th><th>What It Means</th><th>Compile Error If You Violate It</th></tr>
+    <tr><td><strong>Ownership</strong></td><td>One variable owns the data at any time</td><td>Use after move</td></tr>
+    <tr><td><strong>Move</strong></td><td>Ownership transfers; old variable is gone</td><td>Value used after move</td></tr>
+    <tr><td><strong>Clone</strong></td><td>Deep copy; both variables own separate data</td><td>(No error — explicit)</td></tr>
+    <tr><td><strong>Copy</strong></td><td>Stack-only types (i32, bool, f64) are copied implicitly</td><td>(No error — cheap bitwise copy)</td></tr>
+    <tr><td><strong>Borrow</strong></td><td>Reference to data without taking ownership</td><td>Outlives owner, or mutated while borrowed</td></tr>
+</table>
+
+<pre><span class="cm">// Move: ownership transfers to `b`, `a` is no longer valid</span>
+<span class="kw">let</span> a = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"hello"</span>);
+<span class="kw">let</span> b = a;              <span class="cm">// a is MOVED into b</span>
+<span class="cm">// println!("{}", a);  // COMPILE ERROR: value borrowed after move</span>
+
+<span class="cm">// Clone: explicit deep copy, both live independently</span>
+<span class="kw">let</span> a = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"hello"</span>);
+<span class="kw">let</span> b = a.<span class="fn">clone</span>();      <span class="cm">// b is a new independent String</span>
+<span class="fn">println!</span>(<span class="st">"{} {}"</span>, a, b); <span class="cm">// both valid</span>
+
+<span class="cm">// Copy types: i32, bool, char, f64, tuples of Copy types</span>
+<span class="kw">let</span> x: <span class="ty">i32</span> = <span class="nu">5</span>;
+<span class="kw">let</span> y = x;              <span class="cm">// x is COPIED (not moved), both valid</span>
+<span class="fn">println!</span>(<span class="st">"{} {}"</span>, x, y);</pre>
+
+<h2>Borrowing: Shared and Mutable References</h2>
+
+<p>References let you use a value without taking ownership. The borrow checker enforces the rule at compile time: <strong>you can have many shared references OR one mutable reference — never both at the same time.</strong></p>
+
+<pre><span class="cm">// Shared reference (&T): read-only, many allowed simultaneously</span>
+<span class="kw">let</span> s = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"hello"</span>);
+<span class="kw">let</span> r1 = &s;
+<span class="kw">let</span> r2 = &s;            <span class="cm">// fine — multiple shared refs are OK</span>
+<span class="fn">println!</span>(<span class="st">"{} {}"</span>, r1, r2);
+
+<span class="cm">// Mutable reference (&mut T): exclusive, only one at a time</span>
+<span class="kw">let mut</span> s = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"hello"</span>);
+<span class="kw">let</span> r = &<span class="kw">mut</span> s;
+r.<span class="fn">push_str</span>(<span class="st">", world"</span>);
+<span class="cm">// let r2 = &mut s;    // COMPILE ERROR: cannot borrow `s` as mutable more than once</span>
+
+<span class="cm">// Cannot mix shared and mutable refs to same data simultaneously</span>
+<span class="kw">let</span> r1 = &s;
+<span class="cm">// let r2 = &mut s;    // COMPILE ERROR: cannot borrow `s` as mutable because it is also borrowed as immutable</span></pre>
+
+<div class="note"><strong>The borrow checker works at the scope level, not the line level.</strong> In newer Rust (NLL — Non-Lexical Lifetimes), a borrow ends at its last use, not at the end of its scope. This means you can sometimes take a mutable ref after a shared ref as long as the shared ref is no longer used.</div>
+
+<h2>Ownership in Functions</h2>
+
+<pre><span class="cm">// Passing by value: ownership moves into the function</span>
+<span class="kw">fn</span> <span class="fn">take</span>(s: <span class="ty">String</span>) {
+    <span class="fn">println!</span>(<span class="st">"{}"</span>, s);
+} <span class="cm">// s is dropped here</span>
+
+<span class="kw">let</span> s = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"hi"</span>);
+<span class="fn">take</span>(s);
+<span class="cm">// println!("{}", s); // COMPILE ERROR: s was moved</span>
+
+<span class="cm">// Passing by reference: borrow, caller retains ownership</span>
+<span class="kw">fn</span> <span class="fn">borrow</span>(s: &<span class="ty">String</span>) {
+    <span class="fn">println!</span>(<span class="st">"{}"</span>, s);
+} <span class="cm">// borrow ends here, s is not dropped</span>
+
+<span class="kw">let</span> s = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"hi"</span>);
+<span class="fn">borrow</span>(&s);
+<span class="fn">println!</span>(<span class="st">"{}"</span>, s); <span class="cm">// still valid — we only borrowed</span>
+
+<span class="cm">// Returning ownership: function gives back what it owns</span>
+<span class="kw">fn</span> <span class="fn">make</span>() -> <span class="ty">String</span> {
+    <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"new string"</span>) <span class="cm">// returned, not dropped</span>
+}
+<span class="kw">let</span> s = <span class="fn">make</span>(); <span class="cm">// s owns the string</span></pre>
+
+<h2>The Stack vs the Heap</h2>
+
+<table>
+    <tr><th></th><th>Stack</th><th>Heap</th></tr>
+    <tr><td><strong>Allocation</strong></td><td>Automatic (function call frame)</td><td>Explicit (<code>Box::new</code>, <code>String::from</code>, <code>Vec::new</code>)</td></tr>
+    <tr><td><strong>Size</strong></td><td>Must be known at compile time</td><td>Can grow/shrink at runtime</td></tr>
+    <tr><td><strong>Speed</strong></td><td>Fast (pointer increment)</td><td>Slower (allocator call)</td></tr>
+    <tr><td><strong>Examples</strong></td><td><code>i32</code>, <code>bool</code>, <code>[u8; 4]</code>, references</td><td><code>String</code>, <code>Vec&lt;T&gt;</code>, <code>Box&lt;T&gt;</code>, <code>HashMap</code></td></tr>
+    <tr><td><strong>Drop</strong></td><td>Automatic when frame exits</td><td>When owning variable is dropped</td></tr>
+</table>
+
+<p class="tip"><strong>String vs &str.</strong> <code>String</code> is heap-allocated, owned, growable. <code>&str</code> is a borrowed reference to string data (often a string literal in the binary, or a slice of a <code>String</code>). Functions that only read strings should generally take <code>&str</code> — it's more flexible and avoids forcing the caller to allocate.</p>
+
+</div>
+
+<!-- ========== TYPES ========== -->
+<div class="tab-content" id="tab-types">
+
+<h2>Scalar Types</h2>
+
+<table>
+    <tr><th>Type</th><th>Size</th><th>Notes</th></tr>
+    <tr><td><code>i8 / i16 / i32 / i64 / i128</code></td><td>1–16 bytes</td><td>Signed integers. <code>i32</code> is default.</td></tr>
+    <tr><td><code>u8 / u16 / u32 / u64 / u128</code></td><td>1–16 bytes</td><td>Unsigned integers. <code>u8</code> is a byte.</td></tr>
+    <tr><td><code>isize / usize</code></td><td>Platform width</td><td>Pointer-sized. Used for indexing.</td></tr>
+    <tr><td><code>f32 / f64</code></td><td>4 / 8 bytes</td><td>Floating point. <code>f64</code> is default.</td></tr>
+    <tr><td><code>bool</code></td><td>1 byte</td><td><code>true</code> or <code>false</code>.</td></tr>
+    <tr><td><code>char</code></td><td>4 bytes</td><td>Unicode scalar value (not a byte).</td></tr>
+</table>
+
+<h2>Compound Types</h2>
+
+<pre><span class="cm">// Tuple: fixed-length, can mix types</span>
+<span class="kw">let</span> t: (<span class="ty">i32</span>, <span class="ty">f64</span>, <span class="ty">bool</span>) = (<span class="nu">1</span>, <span class="nu">2.0</span>, <span class="kw">true</span>);
+<span class="fn">println!</span>(<span class="st">"{}"</span>, t.<span class="nu">0</span>); <span class="cm">// access by index</span>
+<span class="kw">let</span> (x, y, z) = t; <span class="cm">// destructure</span>
+
+<span class="cm">// Array: fixed-length, same type, stack-allocated</span>
+<span class="kw">let</span> arr: [<span class="ty">i32</span>; <span class="nu">5</span>] = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>];
+<span class="kw">let</span> zeros = [<span class="nu">0</span>; <span class="nu">10</span>]; <span class="cm">// [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]</span>
+<span class="cm">// arr[5];           // RUNTIME PANIC: index out of bounds (checked)</span>
+
+<span class="cm">// Vec: heap-allocated, growable array</span>
+<span class="kw">let mut</span> v: <span class="ty">Vec</span>&lt;<span class="ty">i32</span>&gt; = <span class="ty">Vec</span>::<span class="fn">new</span>();
+v.<span class="fn">push</span>(<span class="nu">1</span>);
+v.<span class="fn">push</span>(<span class="nu">2</span>);
+<span class="kw">let</span> v2 = <span class="mc">vec!</span>[<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>]; <span class="cm">// macro shorthand</span>
+
+<span class="cm">// Slice: view into an array or Vec (doesn't own data)</span>
+<span class="kw">let</span> slice: &[<span class="ty">i32</span>] = &v[<span class="nu">0</span>..<span class="nu">2</span>]; <span class="cm">// first two elements</span>
+
+<span class="cm">// HashMap</span>
+<span class="kw">use</span> std::collections::<span class="ty">HashMap</span>;
+<span class="kw">let mut</span> map = <span class="ty">HashMap</span>::<span class="fn">new</span>();
+map.<span class="fn">insert</span>(<span class="st">"key"</span>, <span class="nu">42</span>);
+<span class="kw">let</span> val = map.<span class="fn">get</span>(<span class="st">"key"</span>); <span class="cm">// returns Option&lt;&i32&gt;</span></pre>
+
+<h2>Structs</h2>
+
+<pre><span class="cm">// Named-field struct</span>
+<span class="kw">struct</span> <span class="ty">User</span> {
+    name: <span class="ty">String</span>,
+    age: <span class="ty">u32</span>,
+    active: <span class="ty">bool</span>,
+}
+
+<span class="kw">let</span> user = <span class="ty">User</span> {
+    name: <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"Alice"</span>),
+    age: <span class="nu">30</span>,
+    active: <span class="kw">true</span>,
+};
+<span class="fn">println!</span>(<span class="st">"{}"</span>, user.name);
+
+<span class="cm">// Struct update syntax</span>
+<span class="kw">let</span> user2 = <span class="ty">User</span> {
+    name: <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"Bob"</span>),
+    ..user  <span class="cm">// fill remaining fields from `user`</span>
+            <span class="cm">// NOTE: moves `user` if non-Copy fields are used</span>
+};
+
+<span class="cm">// Tuple struct</span>
+<span class="kw">struct</span> <span class="ty">Point</span>(<span class="ty">f64</span>, <span class="ty">f64</span>);
+<span class="kw">let</span> p = <span class="ty">Point</span>(<span class="nu">1.0</span>, <span class="nu">2.0</span>);
+<span class="fn">println!</span>(<span class="st">"{}"</span>, p.<span class="nu">0</span>);
+
+<span class="cm">// Unit struct (no fields, used as marker type)</span>
+<span class="kw">struct</span> <span class="ty">Marker</span>;</pre>
+
+<h2>impl Blocks: Methods on Structs</h2>
+
+<pre><span class="kw">struct</span> <span class="ty">Rectangle</span> {
+    width: <span class="ty">f64</span>,
+    height: <span class="ty">f64</span>,
+}
+
+<span class="kw">impl</span> <span class="ty">Rectangle</span> {
+    <span class="cm">// Associated function (no `self`): called as Rectangle::new()</span>
+    <span class="kw">fn</span> <span class="fn">new</span>(width: <span class="ty">f64</span>, height: <span class="ty">f64</span>) -> <span class="ty">Self</span> {
+        <span class="ty">Self</span> { width, height }
+    }
+
+    <span class="cm">// Method: takes `&self` (shared borrow of the instance)</span>
+    <span class="kw">fn</span> <span class="fn">area</span>(&<span class="kw">self</span>) -> <span class="ty">f64</span> {
+        <span class="kw">self</span>.width * <span class="kw">self</span>.height
+    }
+
+    <span class="cm">// Mutable method: takes `&mut self`</span>
+    <span class="kw">fn</span> <span class="fn">scale</span>(&<span class="kw">mut</span> <span class="kw">self</span>, factor: <span class="ty">f64</span>) {
+        <span class="kw">self</span>.width *= factor;
+        <span class="kw">self</span>.height *= factor;
+    }
+}
+
+<span class="kw">let mut</span> r = <span class="ty">Rectangle</span>::<span class="fn">new</span>(<span class="nu">4.0</span>, <span class="nu">5.0</span>);
+<span class="fn">println!</span>(<span class="st">"{}"</span>, r.<span class="fn">area</span>());  <span class="cm">// 20.0</span>
+r.<span class="fn">scale</span>(<span class="nu">2.0</span>);
+<span class="fn">println!</span>(<span class="st">"{}"</span>, r.<span class="fn">area</span>());  <span class="cm">// 80.0</span></pre>
+
+<div class="tip"><strong><code>self</code>, <code>&self</code>, <code>&mut self</code>.</strong> <code>self</code> consumes the value (rare). <code>&self</code> borrows immutably (most common — for reads). <code>&mut self</code> borrows mutably (for mutations). Pick the least powerful you need.</div>
+
+</div>
+
+<!-- ========== TRAITS ========== -->
+<div class="tab-content" id="tab-traits">
+
+<h2>Traits</h2>
+
+<p>Traits define shared behaviour across types. They're similar to interfaces in other languages, but more powerful — they can have default method implementations, and you can implement them on types you didn't define.</p>
+
+<pre><span class="cm">// Define a trait</span>
+<span class="kw">trait</span> <span class="ty">Summary</span> {
+    <span class="kw">fn</span> <span class="fn">summarize</span>(&<span class="kw">self</span>) -> <span class="ty">String</span>;
+
+    <span class="cm">// Default implementation — types can override or use as-is</span>
+    <span class="kw">fn</span> <span class="fn">preview</span>(&<span class="kw">self</span>) -> <span class="ty">String</span> {
+        <span class="mc">format!</span>(<span class="st">"{}..."</span>, &<span class="kw">self</span>.<span class="fn">summarize</span>()[..<span class="nu">50</span>])
+    }
+}
+
+<span class="cm">// Implement for a struct</span>
+<span class="kw">struct</span> <span class="ty">Article</span> { title: <span class="ty">String</span>, content: <span class="ty">String</span> }
+
+<span class="kw">impl</span> <span class="ty">Summary</span> <span class="kw">for</span> <span class="ty">Article</span> {
+    <span class="kw">fn</span> <span class="fn">summarize</span>(&<span class="kw">self</span>) -> <span class="ty">String</span> {
+        <span class="mc">format!</span>(<span class="st">"{}: {}"</span>, <span class="kw">self</span>.title, <span class="kw">self</span>.content)
+    }
+}
+
+<span class="cm">// Use trait bound in a function (monomorphized at compile time)</span>
+<span class="kw">fn</span> <span class="fn">print_summary</span>&lt;T: <span class="ty">Summary</span>&gt;(item: &T) {
+    <span class="fn">println!</span>(<span class="st">"{}"</span>, item.<span class="fn">summarize</span>());
+}
+
+<span class="cm">// Equivalent using `impl Trait` syntax (simpler for single params)</span>
+<span class="kw">fn</span> <span class="fn">print_summary</span>(item: &<span class="kw">impl</span> <span class="ty">Summary</span>) {
+    <span class="fn">println!</span>(<span class="st">"{}"</span>, item.<span class="fn">summarize</span>());
+}
+
+<span class="cm">// Dynamic dispatch with `dyn Trait` (runtime cost, allows mixed types)</span>
+<span class="kw">fn</span> <span class="fn">print_any</span>(item: &<span class="kw">dyn</span> <span class="ty">Summary</span>) {
+    <span class="fn">println!</span>(<span class="st">"{}"</span>, item.<span class="fn">summarize</span>());
+}</pre>
+
+<h2>Common Standard Traits</h2>
+
+<table>
+    <tr><th>Trait</th><th>What It Provides</th><th>How to Derive</th></tr>
+    <tr><td><code>Debug</code></td><td><code>{:?}</code> formatting for debugging</td><td><code>#[derive(Debug)]</code></td></tr>
+    <tr><td><code>Display</code></td><td><code>{}</code> formatting for user output</td><td>Must implement manually</td></tr>
+    <tr><td><code>Clone</code></td><td><code>.clone()</code> deep copy</td><td><code>#[derive(Clone)]</code></td></tr>
+    <tr><td><code>Copy</code></td><td>Implicit bitwise copy (stack only)</td><td><code>#[derive(Copy, Clone)]</code></td></tr>
+    <tr><td><code>PartialEq / Eq</code></td><td><code>==</code> and <code>!=</code></td><td><code>#[derive(PartialEq, Eq)]</code></td></tr>
+    <tr><td><code>PartialOrd / Ord</code></td><td><code>&lt;</code>, <code>&gt;</code>, sorting</td><td><code>#[derive(PartialOrd, Ord)]</code></td></tr>
+    <tr><td><code>Hash</code></td><td>Use as HashMap key</td><td><code>#[derive(Hash)]</code></td></tr>
+    <tr><td><code>Default</code></td><td><code>Type::default()</code> zero value</td><td><code>#[derive(Default)]</code></td></tr>
+    <tr><td><code>Iterator</code></td><td>Custom iteration with <code>.next()</code></td><td>Must implement manually</td></tr>
+    <tr><td><code>From / Into</code></td><td>Type conversions</td><td>Implement <code>From</code>, get <code>Into</code> free</td></tr>
+</table>
+
+<pre><span class="cm">// Deriving multiple traits</span>
+<span class="mc">#[derive(Debug, Clone, PartialEq)]</span>
+<span class="kw">struct</span> <span class="ty">Point</span> { x: <span class="ty">f64</span>, y: <span class="ty">f64</span> }
+
+<span class="kw">let</span> p1 = <span class="ty">Point</span> { x: <span class="nu">1.0</span>, y: <span class="nu">2.0</span> };
+<span class="kw">let</span> p2 = p1.<span class="fn">clone</span>();
+<span class="fn">println!</span>(<span class="st">"{:?}"</span>, p1); <span class="cm">// Point { x: 1.0, y: 2.0 }</span>
+<span class="fn">println!</span>(<span class="st">"{}"</span>, p1 == p2); <span class="cm">// true</span>
+
+<span class="cm">// Implementing Display manually</span>
+<span class="kw">use</span> std::fmt;
+<span class="kw">impl</span> fmt::<span class="ty">Display</span> <span class="kw">for</span> <span class="ty">Point</span> {
+    <span class="kw">fn</span> <span class="fn">fmt</span>(&<span class="kw">self</span>, f: &<span class="kw">mut</span> fmt::<span class="ty">Formatter</span>) -> fmt::<span class="ty">Result</span> {
+        <span class="mc">write!</span>(f, <span class="st">"({}, {})"</span>, <span class="kw">self</span>.x, <span class="kw">self</span>.y)
+    }
+}
+<span class="fn">println!</span>(<span class="st">"{}"</span>, p1); <span class="cm">// (1.0, 2.0)</span></pre>
+
+<div class="note"><strong>Orphan rule:</strong> You can only implement a trait for a type if <em>either</em> the trait or the type is defined in your crate. You cannot implement <code>Display</code> for <code>Vec&lt;T&gt;</code> — neither is yours. This prevents conflicting implementations across crates.</div>
+
+</div>
+
+<!-- ========== ENUMS & PATTERN MATCHING ========== -->
+<div class="tab-content" id="tab-enums">
+
+<h2>Enums</h2>
+
+<p>Rust enums are algebraic data types — each variant can hold different data. Combined with pattern matching, they're the primary tool for modelling states and outcomes.</p>
+
+<pre><span class="cm">// Simple enum</span>
+<span class="kw">enum</span> <span class="ty">Direction</span> { North, South, East, West }
+
+<span class="cm">// Enum with data in variants</span>
+<span class="kw">enum</span> <span class="ty">Shape</span> {
+    Circle(<span class="ty">f64</span>),              <span class="cm">// radius</span>
+    Rectangle(<span class="ty">f64</span>, <span class="ty">f64</span>),     <span class="cm">// width, height</span>
+    Point { x: <span class="ty">f64</span>, y: <span class="ty">f64</span> }, <span class="cm">// named fields</span>
+}
+
+<span class="kw">let</span> s = <span class="ty">Shape</span>::<span class="fn">Circle</span>(<span class="nu">3.14</span>);
+
+<span class="cm">// Pattern match to extract data</span>
+<span class="kw">let</span> area = <span class="kw">match</span> s {
+    <span class="ty">Shape</span>::<span class="fn">Circle</span>(r)        => std::f64::consts::PI * r * r,
+    <span class="ty">Shape</span>::<span class="fn">Rectangle</span>(w, h)  => w * h,
+    <span class="ty">Shape</span>::<span class="fn">Point</span> { .. }     => <span class="nu">0.0</span>,
+};</pre>
+
+<h2>Option&lt;T&gt;</h2>
+
+<p>Rust has no <code>null</code>. Instead, optional values use <code>Option&lt;T&gt;</code>. The compiler forces you to handle the <code>None</code> case. No null pointer exceptions.</p>
+
+<pre><span class="kw">enum</span> <span class="ty">Option</span>&lt;T&gt; {
+    <span class="ty">Some</span>(T),
+    <span class="ty">None</span>,
+}
+
+<span class="kw">let</span> maybe: <span class="ty">Option</span>&lt;<span class="ty">i32</span>&gt; = <span class="ty">Some</span>(<span class="nu">42</span>);
+<span class="kw">let</span> nothing: <span class="ty">Option</span>&lt;<span class="ty">i32</span>&gt; = <span class="ty">None</span>;
+
+<span class="cm">// Pattern match</span>
+<span class="kw">match</span> maybe {
+    <span class="ty">Some</span>(n) => <span class="fn">println!</span>(<span class="st">"got {}"</span>, n),
+    <span class="ty">None</span>    => <span class="fn">println!</span>(<span class="st">"nothing"</span>),
+}
+
+<span class="cm">// Convenient methods</span>
+maybe.<span class="fn">unwrap</span>();              <span class="cm">// panics if None — use only when certain</span>
+maybe.<span class="fn">unwrap_or</span>(<span class="nu">0</span>);          <span class="cm">// default value if None</span>
+maybe.<span class="fn">unwrap_or_else</span>(|| <span class="fn">compute</span>()); <span class="cm">// lazily computed default</span>
+maybe.<span class="fn">map</span>(|n| n * <span class="nu">2</span>);        <span class="cm">// transform if Some, pass through None</span>
+maybe.<span class="fn">and_then</span>(|n| <span class="fn">lookup</span>(n));<span class="cm">// chain operations that may fail</span>
+maybe.<span class="fn">is_some</span>();              <span class="cm">// bool check</span>
+maybe.<span class="fn">is_none</span>();              <span class="cm">// bool check</span>
+
+<span class="cm">// if let: concise pattern match for one case</span>
+<span class="kw">if let</span> <span class="ty">Some</span>(n) = maybe {
+    <span class="fn">println!</span>(<span class="st">"got {}"</span>, n);
+}</pre>
+
+<h2>Pattern Matching</h2>
+
+<pre><span class="cm">// match must be exhaustive — compiler enforces all cases are covered</span>
+<span class="kw">let</span> n = <span class="nu">7</span>;
+<span class="kw">match</span> n {
+    <span class="nu">1</span>         => <span class="fn">println!</span>(<span class="st">"one"</span>),
+    <span class="nu">2</span> | <span class="nu">3</span>     => <span class="fn">println!</span>(<span class="st">"two or three"</span>),
+    <span class="nu">4</span>..=<span class="nu">6</span>     => <span class="fn">println!</span>(<span class="st">"four to six"</span>),
+    x <span class="kw">if</span> x < <span class="nu">0</span> => <span class="fn">println!</span>(<span class="st">"negative: {}"</span>, x),
+    _          => <span class="fn">println!</span>(<span class="st">"something else"</span>), <span class="cm">// catch-all</span>
+}
+
+<span class="cm">// Destructure structs in match</span>
+<span class="kw">let</span> p = <span class="ty">Point</span> { x: <span class="nu">3.0</span>, y: <span class="nu">4.0</span> };
+<span class="kw">match</span> p {
+    <span class="ty">Point</span> { x: <span class="nu">0.0</span>, y } => <span class="fn">println!</span>(<span class="st">"on y-axis at {}"</span>, y),
+    <span class="ty">Point</span> { x, y }      => <span class="fn">println!</span>(<span class="st">"({}, {})"</span>, x, y),
+}
+
+<span class="cm">// while let: loop while pattern matches</span>
+<span class="kw">let mut</span> stack = <span class="mc">vec!</span>[<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>];
+<span class="kw">while let</span> <span class="ty">Some</span>(top) = stack.<span class="fn">pop</span>() {
+    <span class="fn">println!</span>(<span class="st">"{}"</span>, top);
+}</pre>
+
+</div>
+
+<!-- ========== ERROR HANDLING ========== -->
+<div class="tab-content" id="tab-errors">
+
+<h2>Result&lt;T, E&gt;</h2>
+
+<p>Operations that can fail return <code>Result&lt;T, E&gt;</code>. The compiler forces you to handle failures — you cannot accidentally ignore an error.</p>
+
+<pre><span class="kw">enum</span> <span class="ty">Result</span>&lt;T, E&gt; {
+    <span class="ty">Ok</span>(T),
+    <span class="ty">Err</span>(E),
+}
+
+<span class="cm">// Parsing a string: can succeed (Ok) or fail (Err)</span>
+<span class="kw">let</span> r: <span class="ty">Result</span>&lt;<span class="ty">i32</span>, _&gt; = <span class="st">"42"</span>.<span class="fn">parse</span>();
+<span class="kw">match</span> r {
+    <span class="ty">Ok</span>(n)  => <span class="fn">println!</span>(<span class="st">"parsed: {}"</span>, n),
+    <span class="ty">Err</span>(e) => <span class="fn">println!</span>(<span class="st">"failed: {}"</span>, e),
+}
+
+<span class="cm">// Convenient Result methods (mirror Option)</span>
+r.<span class="fn">unwrap</span>();              <span class="cm">// panic on Err — use in tests or when certain</span>
+r.<span class="fn">unwrap_or</span>(<span class="nu">0</span>);          <span class="cm">// default on Err</span>
+r.<span class="fn">expect</span>(<span class="st">"parse failed"</span>); <span class="cm">// panic with message on Err (better than unwrap)</span>
+r.<span class="fn">map</span>(|n| n * <span class="nu">2</span>);        <span class="cm">// transform Ok value</span>
+r.<span class="fn">map_err</span>(|e| <span class="fn">MyErr</span>(e)); <span class="cm">// transform Err value</span>
+r.<span class="fn">and_then</span>(|n| <span class="fn">next</span>(n)); <span class="cm">// chain fallible operations</span>
+r.<span class="fn">is_ok</span>(); r.<span class="fn">is_err</span>();   <span class="cm">// bool checks</span></pre>
+
+<h2>The ? Operator</h2>
+
+<p>The <code>?</code> operator is shorthand for: if <code>Ok</code>, unwrap and continue; if <code>Err</code>, return the error immediately from the current function. It eliminates boilerplate match chains for error propagation.</p>
+
+<pre><span class="kw">use</span> std::fs;
+<span class="kw">use</span> std::io;
+
+<span class="cm">// Without ?: manual propagation</span>
+<span class="kw">fn</span> <span class="fn">read_file_verbose</span>() -> <span class="ty">Result</span>&lt;<span class="ty">String</span>, io::<span class="ty">Error</span>&gt; {
+    <span class="kw">let</span> content = <span class="kw">match</span> fs::<span class="fn">read_to_string</span>(<span class="st">"file.txt"</span>) {
+        <span class="ty">Ok</span>(s)  => s,
+        <span class="ty">Err</span>(e) => <span class="kw">return</span> <span class="ty">Err</span>(e),
+    };
+    <span class="ty">Ok</span>(content)
+}
+
+<span class="cm">// With ?: concise propagation</span>
+<span class="kw">fn</span> <span class="fn">read_file</span>() -> <span class="ty">Result</span>&lt;<span class="ty">String</span>, io::<span class="ty">Error</span>&gt; {
+    <span class="kw">let</span> content = fs::<span class="fn">read_to_string</span>(<span class="st">"file.txt"</span>)?; <span class="cm">// returns Err if it fails</span>
+    <span class="ty">Ok</span>(content)
+}
+
+<span class="cm">// Chaining with ?</span>
+<span class="kw">fn</span> <span class="fn">parse_config</span>() -> <span class="ty">Result</span>&lt;<span class="ty">Config</span>, <span class="ty">MyError</span>&gt; {
+    <span class="kw">let</span> raw = fs::<span class="fn">read_to_string</span>(<span class="st">"config.toml"</span>)?;
+    <span class="kw">let</span> config: <span class="ty">Config</span> = toml::<span class="fn">from_str</span>(&raw)?;
+    <span class="ty">Ok</span>(config)
+}</pre>
+
+<div class="note"><strong>? works on both Result and Option.</strong> In a function returning <code>Option&lt;T&gt;</code>, <code>?</code> returns <code>None</code> early if applied to a <code>None</code> value. In a function returning <code>Result</code>, it returns the <code>Err</code>. The function's return type determines behavior.</div>
+
+<h2>Custom Error Types</h2>
+
+<pre><span class="cm">// Simple custom error with thiserror crate (recommended)</span>
+<span class="kw">use</span> thiserror::<span class="ty">Error</span>;
+
+<span class="mc">#[derive(Error, Debug)]</span>
+<span class="kw">enum</span> <span class="ty">AppError</span> {
+    <span class="mc">#[error("IO error: {0}")]</span>
+    <span class="ty">Io</span>(#[from] std::io::<span class="ty">Error</span>),
+
+    <span class="mc">#[error("parse failed: {msg}")]</span>
+    <span class="ty">Parse</span> { msg: <span class="ty">String</span> },
+
+    <span class="mc">#[error("not found: {0}")]</span>
+    <span class="ty">NotFound</span>(<span class="ty">String</span>),
+}
+
+<span class="cm">// anyhow crate: for applications where you don't need typed errors</span>
+<span class="kw">use</span> anyhow::<span class="ty">Result</span>;
+<span class="kw">fn</span> <span class="fn">run</span>() -> <span class="ty">Result</span>&lt;()&gt; {   <span class="cm">// Result&lt;(), anyhow::Error&gt;</span>
+    <span class="kw">let</span> s = fs::<span class="fn">read_to_string</span>(<span class="st">"file"</span>)?; <span class="cm">// any error works</span>
+    <span class="ty">Ok</span>(())
+}</pre>
+
+<div class="tip"><strong>thiserror for libraries, anyhow for applications.</strong> <code>thiserror</code> gives you typed errors callers can match on. <code>anyhow</code> is ergonomic for binaries where you just want to propagate and display errors. Use <code>Box&lt;dyn Error&gt;</code> if you want no deps but accept the ergonomic cost.</div>
+
+</div>
+
+<!-- ========== LIFETIMES ========== -->
+<div class="tab-content" id="tab-lifetimes">
+
+<h2>Lifetimes</h2>
+
+<p>Lifetimes are the compiler's way of tracking how long references are valid. Most of the time the compiler infers them (lifetime elision). You only write them explicitly when the compiler can't figure it out — usually when a function returns a reference and the compiler can't determine which input it came from.</p>
+
+<pre><span class="cm">// The problem: which input does the returned reference point to?</span>
+<span class="cm">// The compiler needs to know to ensure the output doesn't outlive the input.</span>
+<span class="kw">fn</span> <span class="fn">longest</span>&lt;<span class="lt">'a</span>&gt;(x: &<span class="lt">'a</span> <span class="ty">str</span>, y: &<span class="lt">'a</span> <span class="ty">str</span>) -> &<span class="lt">'a</span> <span class="ty">str</span> {
+    <span class="kw">if</span> x.<span class="fn">len</span>() > y.<span class="fn">len</span>() { x } <span class="kw">else</span> { y }
+}
+<span class="cm">// 'a means: "the returned reference lives as long as the shorter of x and y"</span>
+
+<span class="cm">// Lifetime in a struct: struct holds a reference, must not outlive what it points to</span>
+<span class="kw">struct</span> <span class="ty">Excerpt</span>&lt;<span class="lt">'a</span>&gt; {
+    text: &<span class="lt">'a</span> <span class="ty">str</span>,
+}
+
+<span class="kw">let</span> novel = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"Call me Ishmael..."</span>);
+<span class="kw">let</span> first = novel.<span class="fn">split</span>(<span class="st">'.'</span>).<span class="fn">next</span>().<span class="fn">unwrap</span>();
+<span class="kw">let</span> excerpt = <span class="ty">Excerpt</span> { text: first };
+<span class="cm">// `excerpt` cannot outlive `novel` — compiler enforces this</span></pre>
+
+<h2>Lifetime Elision Rules</h2>
+
+<p>You don't write lifetimes in most function signatures because the compiler applies three elision rules automatically:</p>
+
+<table>
+    <tr><th>Rule</th><th>What It Says</th></tr>
+    <tr><td>Rule 1</td><td>Each reference parameter gets its own lifetime: <code>fn f(x: &T, y: &U)</code> → <code>fn f&lt;'a,'b&gt;(x: &'a T, y: &'b U)</code></td></tr>
+    <tr><td>Rule 2</td><td>If there's exactly one input lifetime, all outputs get that lifetime.</td></tr>
+    <tr><td>Rule 3</td><td>If one of the inputs is <code>&self</code> or <code>&mut self</code>, all output lifetimes get <code>self</code>'s lifetime.</td></tr>
+</table>
+
+<pre><span class="cm">// These three signatures are equivalent after elision:</span>
+<span class="kw">fn</span> <span class="fn">first_word</span>(s: &<span class="ty">str</span>) -> &<span class="ty">str</span>
+<span class="cm">// is the same as:</span>
+<span class="kw">fn</span> <span class="fn">first_word</span>&lt;<span class="lt">'a</span>&gt;(s: &<span class="lt">'a</span> <span class="ty">str</span>) -> &<span class="lt">'a</span> <span class="ty">str</span>
+
+<span class="cm">// Method on a struct: rule 3 applies</span>
+<span class="kw">impl</span> <span class="ty">Excerpt</span>&lt;'_&gt; {
+    <span class="kw">fn</span> <span class="fn">announce</span>(&<span class="kw">self</span>, msg: &<span class="ty">str</span>) -> &<span class="ty">str</span> {
+        <span class="fn">println!</span>(<span class="st">"Attention: {}"</span>, msg);
+        <span class="kw">self</span>.text  <span class="cm">// lifetime of return = lifetime of &self (rule 3)</span>
+    }
+}</pre>
+
+<h2>The 'static Lifetime</h2>
+
+<pre><span class="cm">// 'static: lives for the entire program duration</span>
+<span class="kw">let</span> s: &<span class="lt">'static</span> <span class="ty">str</span> = <span class="st">"I live forever"</span>; <span class="cm">// string literals are 'static</span>
+
+<span class="cm">// Common in trait objects and thread-spawning</span>
+<span class="kw">fn</span> <span class="fn">spawn_worker</span>(f: <span class="kw">impl</span> <span class="ty">Fn</span>() + <span class="kw">Send</span> + <span class="lt">'static</span>) {
+    std::thread::<span class="fn">spawn</span>(f);
+}
+<span class="cm">// `'static` here means the closure must not borrow from the current stack frame</span>
+<span class="cm">// (the thread might outlive the current function call)</span></pre>
+
+<div class="warn"><strong>Don't reach for lifetimes first.</strong> If you find yourself writing complex lifetime annotations, consider whether you could own the data (use <code>String</code> instead of <code>&str</code>, <code>Vec&lt;T&gt;</code> instead of <code>&[T]</code>) or restructure the code. Explicit lifetimes are sometimes unavoidable but often a design smell.</div>
+
+</div>
+
+<!-- ========== CONCURRENCY ========== -->
+<div class="tab-content" id="tab-concurrency">
+
+<h2>Threads</h2>
+
+<p>Rust's ownership system makes data races <strong>impossible to compile</strong>. The <code>Send</code> and <code>Sync</code> traits mark what's safe to share across thread boundaries — the compiler enforces them automatically.</p>
+
+<pre><span class="kw">use</span> std::thread;
+
+<span class="cm">// Spawn a thread, move data into it</span>
+<span class="kw">let</span> data = <span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"hello"</span>);
+<span class="kw">let</span> handle = thread::<span class="fn">spawn</span>(<span class="kw">move</span> || {
+    <span class="fn">println!</span>(<span class="st">"in thread: {}"</span>, data); <span class="cm">// `move` transfers ownership</span>
+});
+handle.<span class="fn">join</span>().<span class="fn">unwrap</span>(); <span class="cm">// wait for thread to finish</span>
+
+<span class="cm">// Spawn many threads and collect results</span>
+<span class="kw">let</span> handles: <span class="ty">Vec</span>&lt;_&gt; = (<span class="nu">0</span>..<span class="nu">10</span>)
+    .<span class="fn">map</span>(|i| thread::<span class="fn">spawn</span>(<span class="kw">move</span> || i * i))
+    .<span class="fn">collect</span>();
+
+<span class="kw">let</span> results: <span class="ty">Vec</span>&lt;_&gt; = handles.<span class="fn">into_iter</span>()
+    .<span class="fn">map</span>(|h| h.<span class="fn">join</span>().<span class="fn">unwrap</span>())
+    .<span class="fn">collect</span>();</pre>
+
+<h2>Sharing State: Arc and Mutex</h2>
+
+<pre><span class="kw">use</span> std::sync::{<span class="ty">Arc</span>, <span class="ty">Mutex</span>};
+<span class="kw">use</span> std::thread;
+
+<span class="cm">// Arc = Atomically Reference Counted: shared ownership across threads</span>
+<span class="cm">// Mutex = Mutual Exclusion: only one thread can access data at a time</span>
+<span class="kw">let</span> counter = <span class="ty">Arc</span>::<span class="fn">new</span>(<span class="ty">Mutex</span>::<span class="fn">new</span>(<span class="nu">0</span>));
+
+<span class="kw">let</span> handles: <span class="ty">Vec</span>&lt;_&gt; = (<span class="nu">0</span>..<span class="nu">10</span>).<span class="fn">map</span>(|_| {
+    <span class="kw">let</span> c = <span class="ty">Arc</span>::<span class="fn">clone</span>(&counter);
+    thread::<span class="fn">spawn</span>(<span class="kw">move</span> || {
+        <span class="kw">let mut</span> num = c.<span class="fn">lock</span>().<span class="fn">unwrap</span>(); <span class="cm">// lock — blocks until available</span>
+        *num += <span class="nu">1</span>;
+    }) <span class="cm">// lock released automatically when `num` goes out of scope</span>
+}).<span class="fn">collect</span>();
+
+handles.<span class="fn">into_iter</span>().<span class="fn">for_each</span>(|h| h.<span class="fn">join</span>().<span class="fn">unwrap</span>());
+<span class="fn">println!</span>(<span class="st">"count: {}"</span>, *counter.<span class="fn">lock</span>().<span class="fn">unwrap</span>()); <span class="cm">// 10</span></pre>
+
+<h2>Channels: Message Passing</h2>
+
+<pre><span class="kw">use</span> std::sync::mpsc; <span class="cm">// multi-producer, single-consumer</span>
+<span class="kw">use</span> std::thread;
+
+<span class="kw">let</span> (tx, rx) = mpsc::<span class="fn">channel</span>();
+
+<span class="cm">// Sender can be cloned for multiple producers</span>
+<span class="kw">let</span> tx2 = tx.<span class="fn">clone</span>();
+
+thread::<span class="fn">spawn</span>(<span class="kw">move</span> || {
+    tx.<span class="fn">send</span>(<span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"from thread 1"</span>)).<span class="fn">unwrap</span>();
+});
+
+thread::<span class="fn">spawn</span>(<span class="kw">move</span> || {
+    tx2.<span class="fn">send</span>(<span class="ty">String</span>::<span class="fn">from</span>(<span class="st">"from thread 2"</span>)).<span class="fn">unwrap</span>();
+});
+
+<span class="cm">// Receive (blocks until a message arrives)</span>
+<span class="kw">for</span> msg <span class="kw">in</span> rx {
+    <span class="fn">println!</span>(<span class="st">"{}"</span>, msg);
+}</pre>
+
+<h2>Async / Await</h2>
+
+<pre><span class="cm">// Async functions return a Future — they don't run until polled</span>
+<span class="cm">// Requires a runtime like tokio or async-std</span>
+
+<span class="cm">// Cargo.toml: tokio = { version = "1", features = ["full"] }</span>
+
+<span class="kw">use</span> tokio;
+
+<span class="mc">#[tokio::main]</span>
+<span class="kw">async fn</span> <span class="fn">main</span>() {
+    <span class="kw">let</span> result = <span class="fn">fetch_data</span>().<span class="fn">await</span>;
+    <span class="fn">println!</span>(<span class="st">"{:?}"</span>, result);
+}
+
+<span class="kw">async fn</span> <span class="fn">fetch_data</span>() -> <span class="ty">Result</span>&lt;<span class="ty">String</span>, reqwest::<span class="ty">Error</span>&gt; {
+    <span class="kw">let</span> body = reqwest::<span class="fn">get</span>(<span class="st">"https://httpbin.org/get"</span>)
+        .<span class="fn">await</span>?
+        .<span class="fn">text</span>()
+        .<span class="fn">await</span>?;
+    <span class="ty">Ok</span>(body)
+}
+
+<span class="cm">// Spawn concurrent async tasks</span>
+<span class="kw">let</span> (a, b) = tokio::<span class="fn">join!</span>(<span class="fn">task_a</span>(), <span class="fn">task_b</span>()); <span class="cm">// run concurrently, wait for both</span>
+<span class="kw">let</span> handle = tokio::task::<span class="fn">spawn</span>(<span class="fn">task_c</span>());        <span class="cm">// fire and forget (or .await later)</span></pre>
+
+<div class="note"><strong>Async ≠ multithreaded by default.</strong> <code>async/await</code> is cooperative concurrency on one (or a pool of) thread(s). <code>tokio::task::spawn</code> can run on a thread pool, but a <code>Future</code> alone doesn't create threads. Use threads for CPU-bound work; use async for I/O-bound work.</div>
+
+</div>
+
+<!-- ========== CARGO ========== -->
+<div class="tab-content" id="tab-cargo">
+
+<h2>Cargo: The Build Tool and Package Manager</h2>
+
+<pre><span class="cm"># Create a new project</span>
+cargo new my_project         <span class="cm"># binary (has src/main.rs)</span>
+cargo new my_lib --lib       <span class="cm"># library (has src/lib.rs)</span>
+
+<span class="cm"># Build and run</span>
+cargo build                  <span class="cm"># compile (debug mode, fast compile, slow binary)</span>
+cargo build --release        <span class="cm"># optimized (slow compile, fast binary)</span>
+cargo run                    <span class="cm"># build + run</span>
+cargo run --release
+cargo run -- arg1 arg2       <span class="cm"># pass args to the binary</span>
+
+<span class="cm"># Check and test</span>
+cargo check                  <span class="cm"># type-check only, no codegen — very fast</span>
+cargo test                   <span class="cm"># run all tests</span>
+cargo test test_name         <span class="cm"># run tests matching a name</span>
+cargo test -- --nocapture    <span class="cm"># show println! output in tests</span>
+
+<span class="cm"># Dependency management</span>
+cargo add serde              <span class="cm"># add crate (requires cargo-edit or Rust 1.62+)</span>
+cargo add serde --features derive
+cargo update                 <span class="cm"># update Cargo.lock to latest compatible versions</span>
+cargo outdated               <span class="cm"># show outdated deps (requires cargo-outdated)</span>
+
+<span class="cm"># Other</span>
+cargo fmt                    <span class="cm"># format all code with rustfmt</span>
+cargo clippy                 <span class="cm"># lint: catch common mistakes and style issues</span>
+cargo doc --open             <span class="cm"># build and open documentation in browser</span>
+cargo publish                <span class="cm"># publish crate to crates.io</span></pre>
+
+<h2>Cargo.toml</h2>
+
+<div class="file-label">Cargo.toml</div>
+<pre>[package]
+name = <span class="st">"my_project"</span>
+version = <span class="st">"0.1.0"</span>
+edition = <span class="st">"2021"</span>         <span class="cm"># always use 2021</span>
+
+[dependencies]
+serde = { version = <span class="st">"1"</span>, features = [<span class="st">"derive"</span>] }
+serde_json = <span class="st">"1"</span>
+tokio = { version = <span class="st">"1"</span>, features = [<span class="st">"full"</span>] }
+reqwest = { version = <span class="st">"0.12"</span>, features = [<span class="st">"json"</span>] }
+thiserror = <span class="st">"1"</span>
+anyhow = <span class="st">"1"</span>
+
+[dev-dependencies]           <span class="cm"># only for tests and benchmarks</span>
+mockall = <span class="st">"0.12"</span>
+
+[features]
+default = []
+my-feature = [<span class="st">"some-optional-dep"</span>]
+
+[[bin]]                      <span class="cm"># multiple binaries in one project</span>
+name = <span class="st">"server"</span>
+path = <span class="st">"src/bin/server.rs"</span></pre>
+
+<h2>Essential Crates</h2>
+
+<table>
+    <tr><th>Crate</th><th>Purpose</th></tr>
+    <tr><td><code>serde</code> + <code>serde_json</code></td><td>Serialize/deserialize JSON (and many other formats)</td></tr>
+    <tr><td><code>tokio</code></td><td>Async runtime — the standard for async Rust</td></tr>
+    <tr><td><code>reqwest</code></td><td>HTTP client (async, built on tokio)</td></tr>
+    <tr><td><code>axum</code></td><td>Web framework (async, built on tokio)</td></tr>
+    <tr><td><code>sqlx</code></td><td>Async SQL with compile-time query checking</td></tr>
+    <tr><td><code>thiserror</code></td><td>Derive macros for custom error types (libraries)</td></tr>
+    <tr><td><code>anyhow</code></td><td>Ergonomic error handling (applications)</td></tr>
+    <tr><td><code>tracing</code></td><td>Structured logging and diagnostics</td></tr>
+    <tr><td><code>clap</code></td><td>CLI argument parsing with derive macros</td></tr>
+    <tr><td><code>rayon</code></td><td>Data parallelism — parallel iterators</td></tr>
+    <tr><td><code>rand</code></td><td>Random number generation</td></tr>
+    <tr><td><code>regex</code></td><td>Regular expressions</td></tr>
+    <tr><td><code>chrono</code></td><td>Date and time handling</td></tr>
+    <tr><td><code>uuid</code></td><td>UUID generation and parsing</td></tr>
+</table>
+
+<h2>Testing</h2>
+
+<pre><span class="cm">// Unit tests: in the same file, inside a `#[cfg(test)]` module</span>
+<span class="mc">#[cfg(test)]</span>
+<span class="kw">mod</span> tests {
+    <span class="kw">use</span> <span class="kw">super</span>::*; <span class="cm">// bring parent module into scope</span>
+
+    <span class="mc">#[test]</span>
+    <span class="kw">fn</span> <span class="fn">test_add</span>() {
+        <span class="mc">assert_eq!</span>(<span class="fn">add</span>(<span class="nu">2</span>, <span class="nu">3</span>), <span class="nu">5</span>);
+    }
+
+    <span class="mc">#[test]</span>
+    <span class="mc">#[should_panic(expected = "divide by zero")]</span>
+    <span class="kw">fn</span> <span class="fn">test_panic</span>() {
+        <span class="fn">divide</span>(<span class="nu">1</span>, <span class="nu">0</span>);
+    }
+
+    <span class="mc">#[test]</span>
+    <span class="kw">fn</span> <span class="fn">test_result</span>() -> <span class="ty">Result</span>&lt;(), <span class="ty">String</span>&gt; {
+        <span class="kw">let</span> n: <span class="ty">i32</span> = <span class="st">"5"</span>.<span class="fn">parse</span>().<span class="fn">map_err</span>(|e: _| e.<span class="fn">to_string</span>())?;
+        <span class="mc">assert_eq!</span>(n, <span class="nu">5</span>);
+        <span class="ty">Ok</span>(())
+    }
+}
+
+<span class="cm">// Integration tests: in tests/ directory (separate crate, public API only)</span>
+<span class="cm">// tests/integration_test.rs</span>
+<span class="kw">use</span> my_project;
+
+<span class="mc">#[test]</span>
+<span class="kw">fn</span> <span class="fn">it_works</span>() {
+    <span class="mc">assert!</span>(my_project::<span class="fn">public_fn</span>());
+}</pre>
+
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+document.querySelectorAll('.tabs a').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const tab = link.dataset.tab;
+        document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        link.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+    });
+});
+</script>
+</body>
+</html>

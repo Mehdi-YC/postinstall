@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Odoo Dev Reference — Full Stack</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff;
+  --bg2: #f5f5f3;
+  --bg3: #eeede8;
+  --text: #1a1a18;
+  --text2: #6b6b67;
+  --text3: #9a9a96;
+  --border: rgba(0,0,0,0.12);
+  --border2: rgba(0,0,0,0.22);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --mono: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1a;
+    --bg2: #252523;
+    --bg3: #2e2e2b;
+    --text: #e8e8e4;
+    --text2: #9a9a96;
+    --text3: #6b6b67;
+    --border: rgba(255,255,255,0.1);
+    --border2: rgba(255,255,255,0.2);
+  }
+}
+body {
+  font-family: var(--sans);
+  background: var(--bg3);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+header { margin-bottom: 2rem; }
+header h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+header p { font-size: 14px; color: var(--text2); }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+.tab {
+  padding: 6px 14px; font-size: 13px; font-weight: 500;
+  border: 0.5px solid var(--border2); border-radius: 20px; cursor: pointer;
+  background: transparent; color: var(--text2); font-family: var(--sans);
+  transition: all 0.15s;
+}
+.tab:hover { background: var(--bg2); }
+.tab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.section { display: none; }
+.section.active { display: block; }
+.card {
+  background: var(--bg); border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem;
+}
+.card-title {
+  font-size: 13px; font-weight: 600; color: var(--text);
+  margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;
+}
+.badge {
+  font-size: 10px; padding: 2px 7px; border-radius: 10px;
+  font-weight: 500; font-family: var(--sans);
+}
+.b-blue   { background: #E6F1FB; color: #0C447C; }
+.b-teal   { background: #E1F5EE; color: #085041; }
+.b-amber  { background: #FAEEDA; color: #633806; }
+.b-coral  { background: #FAECE7; color: #712B13; }
+.b-purple { background: #EEEDFE; color: #3C3489; }
+.b-green  { background: #EAF3DE; color: #27500A; }
+.b-gray   { background: #F1EFE8; color: #444441; }
+@media (prefers-color-scheme: dark) {
+  .b-blue   { background: #042C53; color: #85B7EB; }
+  .b-teal   { background: #04342C; color: #5DCAA5; }
+  .b-amber  { background: #412402; color: #EF9F27; }
+  .b-coral  { background: #4A1B0C; color: #F0997B; }
+  .b-purple { background: #26215C; color: #AFA9EC; }
+  .b-green  { background: #173404; color: #97C459; }
+  .b-gray   { background: #2C2C2A; color: #B4B2A9; }
+}
+pre {
+  font-size: 12px; line-height: 1.65; color: var(--text);
+  background: var(--bg2); border: 0.5px solid var(--border);
+  border-radius: var(--radius); padding: 0.85rem 1rem;
+  overflow-x: auto; font-family: var(--mono);
+  margin-bottom: 0.5rem;
+}
+.kw { color: #185FA5; }
+.st { color: #3B6D11; }
+.cm { color: var(--text3); }
+.fn { color: #993C1D; }
+@media (prefers-color-scheme: dark) {
+  .kw { color: #85B7EB; }
+  .st { color: #97C459; }
+  .fn { color: #F0997B; }
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+@media (max-width: 700px) {
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+}
+.label { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.desc { font-size: 13px; color: var(--text2); line-height: 1.55; margin-bottom: 0.5rem; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0.5rem; }
+.mono { font-family: var(--mono); font-size: 11px; }
+.divider { height: 0.5px; background: var(--border); margin: 0.75rem 0; }
+.row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; }
+.dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text3); margin-top: 7px; flex-shrink: 0; }
+.tip {
+  background: #E6F1FB; border-left: 3px solid #185FA5;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 8px 12px; margin-bottom: 0.75rem;
+  font-size: 13px; color: #0C447C;
+}
+.warn {
+  background: #FAEEDA; border-left: 3px solid #BA7517;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 8px 12px; margin-bottom: 0.75rem;
+  font-size: 13px; color: #633806;
+}
+@media (prefers-color-scheme: dark) {
+  .tip { background: #042C53; color: #85B7EB; border-color: #378ADD; }
+  .warn { background: #412402; color: #EF9F27; border-color: #BA7517; }
+}
+.box { border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Odoo Dev Reference — Full Stack</h1>
+    <p>Models · Views · Actions · Security · OWL · File Structure · Controllers · Staging · Best Practices</p>
+  </header>
+  <div class="tabs" id="tabs"></div>
+  <div id="content"></div>
+</div>
+
+<script>
+const sections = [
+  { id: 'models',  label: 'Models & Fields' },
+  { id: 'views',   label: 'Views' },
+  { id: 'actions', label: 'Actions' },
+  { id: 'wizards', label: 'Wizards' },
+  { id: 'security',label: 'Security' },
+  { id: 'menus',   label: 'Menus' },
+  { id: 'inherit', label: 'Inheritance' },
+  { id: 'mixins',  label: 'Mixins' },
+  { id: 'reports', label: 'Reports' },
+  { id: 'owl',     label: '⚡ OWL Intro' },
+  { id: 'web',     label: 'Web / Controllers' },
+  { id: 'files',   label: 'File Structure' },
+  { id: 'misc',    label: 'Misc / Advanced' },
+  { id: 'env',     label: 'Staging & Prod' },
+];
+
+const html = {
+
+models: `
+<div class="card">
+  <div class="card-title">Model types <span class="badge b-blue">core concept</span></div>
+  <div class="grid3">
+    <div><div class="label">models.Model</div><div class="desc">Persistent DB table. Standard Odoo model.</div><pre><span class="kw">class</span> <span class="fn">SaleOrder</span>(models.Model):
+    _name = <span class="st">'sale.order'</span>
+    _description = <span class="st">'Sale Order'</span></pre></div>
+    <div><div class="label">models.TransientModel</div><div class="desc">Temp records (wizards). Auto-cleaned by GC.</div><pre><span class="kw">class</span> <span class="fn">MyWizard</span>(models.TransientModel):
+    _name = <span class="st">'my.wizard'</span></pre></div>
+    <div><div class="label">models.AbstractModel</div><div class="desc">No table. Used as mixin base only.</div><pre><span class="kw">class</span> <span class="fn">MyMixin</span>(models.AbstractModel):
+    _name = <span class="st">'my.mixin'</span></pre></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Field types & ORM essentials</div>
+  <div class="grid2"><div><pre>name = fields.<span class="fn">Char</span>(string=<span class="st">'Name'</span>, required=<span class="kw">True</span>)
+price = fields.<span class="fn">Monetary</span>(currency_field=<span class="st">'currency_id'</span>)
+partner_id = fields.<span class="fn">Many2one</span>(<span class="st">'res.partner'</span>)
+line_ids = fields.<span class="fn">One2many</span>(<span class="st">'sale.line'</span>, <span class="st">'order_id'</span>)
+state = fields.<span class="fn">Selection</span>([(<span class="st">'draft'</span>,<span class="st">'Draft'</span>),(<span class="st">'done'</span>,<span class="st">'Done'</span>)])
+total = fields.<span class="fn">Float</span>(compute=<span class="st">'_compute_total'</span>, store=<span class="kw">True</span>)</pre></div>
+<div><pre>@api.<span class="fn">depends</span>(<span class="st">'line_ids.price'</span>)
+<span class="kw">def</span> <span class="fn">_compute_total</span>(self): ...
+
+@api.<span class="fn">onchange</span>(<span class="st">'partner_id'</span>)
+<span class="kw">def</span> <span class="fn">_onchange_partner</span>(self): ...
+
+@api.<span class="fn">constrains</span>(<span class="st">'qty'</span>)
+<span class="kw">def</span> <span class="fn">_check_qty</span>(self): ...
+
+<span class="cm"># Common ORM shortcuts</span>
+records.<span class="fn">mapped</span>(<span class="st">'line_ids.product_id.name'</span>)
+records.<span class="fn">filtered</span>(<span class="kw">lambda</span> r: r.state == <span class="st">'draft'</span>)
+self.env[<span class="st">'res.partner'</span>].<span class="fn">browse</span>([1,2])</pre></div></div>
+</div>
+`,
+
+views: `
+<div class="card">
+  <div class="card-title">Form, Tree, Search & modern widgets</div>
+  <div class="grid2">
+    <div><pre><span class="kw">&lt;form</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;header&gt;</span><span class="kw">&lt;button</span> name=<span class="st">"confirm"</span> type=<span class="st">"object"</span> class=<span class="st">"btn-primary"</span><span class="kw">/&gt;</span><span class="kw">&lt;/header&gt;</span>
+  <span class="kw">&lt;sheet&gt;</span>
+    <span class="kw">&lt;group&gt;</span><span class="kw">&lt;field</span> name=<span class="st">"name"</span><span class="kw">/&gt;</span><span class="kw">&lt;/group&gt;</span>
+    <span class="kw">&lt;notebook&gt;</span><span class="kw">&lt;page</span> string=<span class="st">"Lines"</span><span class="kw">&gt;</span><span class="kw">&lt;field</span> name=<span class="st">"line_ids"</span><span class="kw">/&gt;</span><span class="kw">&lt;/page&gt;</span><span class="kw">&lt;/notebook&gt;</span>
+  <span class="kw">&lt;/sheet&gt;</span>
+  <span class="kw">&lt;div</span> class=<span class="st">"oe_chatter"</span><span class="kw">/&gt;</span>
+<span class="kw">&lt;/form&gt;</span></pre></div>
+    <div><pre><span class="kw">&lt;tree</span> decoration-danger=<span class="st">"state=='cancel'"</span> editable=<span class="st">"bottom"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"name"</span><span class="kw">/&gt;</span><span class="kw">&lt;field</span> name=<span class="st">"amount_total"</span> sum=<span class="st">"Total"</span><span class="kw">/&gt;</span>
+<span class="kw">&lt;/tree&gt;</span>
+<span class="kw">&lt;search&gt;</span><span class="kw">&lt;field</span> name=<span class="st">"name"</span><span class="kw">/&gt;</span><span class="kw">&lt;filter</span> string=<span class="st">"Active"</span> domain=<span class="st">"[('active','=',True)]"</span><span class="kw">/&gt;</span><span class="kw">&lt;/search&gt;</span></pre></div>
+  </div>
+  <div class="label">Common form widgets</div>
+  <div class="tag-row"><span class="badge b-gray">statusbar</span><span class="badge b-gray">many2many_tags</span><span class="badge b-gray">progressbar</span><span class="badge b-gray">handle</span><span class="badge b-gray">badge</span><span class="badge b-gray">gauge</span><span class="badge b-gray">image</span><span class="badge b-gray">radio</span></div>
+</div>
+`,
+
+actions: `
+<div class="card"><div class="card-title">Actions (5 types) — ir.actions.*</div>
+<div class="grid2"><div><pre><span class="cm">&lt;!-- act_window (standard) --&gt;</span>
+<span class="kw">&lt;record</span> id=<span class="st">"action_sale"</span> model=<span class="st">"ir.actions.act_window"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"res_model"</span><span class="kw">&gt;</span>sale.order<span class="kw">&lt;/field&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"view_mode"</span><span class="kw">&gt;</span>tree,form<span class="kw">&lt;/field&gt;</span>
+<span class="kw">&lt;/record&gt;</span>
+
+<span class="cm">&lt;!-- server action (bulk / cron) --&gt;</span>
+<span class="kw">&lt;record</span> id=<span class="st">"server_action"</span> model=<span class="st">"ir.actions.server"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"code"</span><span class="kw">&gt;</span>records.write({'state':'done'})<span class="kw">&lt;/field&gt;</span>
+<span class="kw">&lt;/record&gt;</span></pre></div>
+<div><pre><span class="cm">// client action (custom dashboard)</span>
+<span class="kw">&lt;record</span> id=<span class="st">"client_action"</span> model=<span class="st">"ir.actions.client"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"tag"</span><span class="kw">&gt;</span>my_module.MyDashboard<span class="kw">&lt;/field&gt;</span>
+<span class="kw">&lt;/record&gt;</span>
+
+<span class="cm"># Python return action</span>
+<span class="kw">def</span> <span class="fn">action_view</span>(self):
+    <span class="kw">return</span> {<span class="st">'type'</span>: <span class="st">'ir.actions.act_window'</span>, <span class="st">'res_model'</span>: <span class="st">'x'</span>, <span class="st">'view_mode'</span>: <span class="st">'form'</span>}</pre></div></div>
+<div class="tip">Server actions are extremely versatile: they can be used for buttons, automated actions (crons), and list view bulk operations.</div>
+</div>
+`,
+
+wizards: `
+<div class="card">
+  <div class="card-title">TransientModel wizard pattern</div>
+  <pre><span class="kw">class</span> <span class="fn">MyWizard</span>(models.TransientModel):
+    _name = <span class="st">'my.wizard'</span>
+    partner_id = fields.<span class="fn">Many2one</span>(<span class="st">'res.partner'</span>)
+    active_ids = fields.<span class="fn">Many2many</span>(<span class="st">'sale.order'</span>)
+
+    <span class="kw">def</span> <span class="fn">action_apply</span>(self):
+        self.active_ids.<span class="fn">write</span>({<span class="st">'partner_id'</span>: self.partner_id.id})
+        <span class="kw">return</span> {<span class="st">'type'</span>: <span class="st">'ir.actions.act_window_close'</span>}</pre>
+  <div class="desc">In XML: target="new". Use context to pass active_ids. Standard pattern for multi-record updates.</div>
+</div>
+`,
+
+security: `
+<div class="card">
+  <div class="card-title">Access rights (CSV) & Record rules</div>
+  <pre><span class="cm"># ir.model.access.csv</span>
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_my_model_user,my.model.user,model_my_model,base.group_user,1,1,1,0
+
+<span class="cm">&lt;!-- Record rule: only your own documents --&gt;</span>
+<span class="kw">&lt;record</span> id=<span class="st">"rule_own"</span> model=<span class="st">"ir.rule"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"domain_force"</span><span class="kw">&gt;</span>[('user_id','=',user.id)]<span class="kw">&lt;/field&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"groups"</span> eval=<span class="st">"[(4, ref('my_group'))]"</span><span class="kw">/&gt;</span>
+<span class="kw">&lt;/record&gt;</span></pre>
+<div class="tip">Group visibility in views: <span class="mono">&lt;field name="cost" groups="my_module.group_manager"/&gt;</span></div>
+</div>
+`,
+
+menus: `
+<div class="card">
+  <div class="card-title">Menu hierarchy (root → categories → leaf)</div>
+  <pre><span class="kw">&lt;menuitem</span> id=<span class="st">"menu_root"</span> name=<span class="st">"My App"</span> web_icon=<span class="st">"my_module,static/description/icon.png"</span><span class="kw">/&gt;</span>
+<span class="kw">&lt;menuitem</span> id=<span class="st">"menu_cat"</span> name=<span class="st">"Orders"</span> parent=<span class="st">"menu_root"</span><span class="kw">/&gt;</span>
+<span class="kw">&lt;menuitem</span> id=<span class="st">"menu_leaf"</span> name=<span class="st">"Sale Orders"</span> parent=<span class="st">"menu_cat"</span> action=<span class="st">"action_sale_order"</span><span class="kw">/&gt;</span></pre>
+</div>
+`,
+
+inherit: `
+<div class="card">
+  <div class="card-title">3 inheritance modes + XPath view inheritance</div>
+  <div class="grid3">
+    <div><div class="label">_inherit (extend)</div><pre><span class="kw">class</span> <span class="fn">ResPartner</span>(models.Model):
+    _inherit = <span class="st">'res.partner'</span>
+    new_field = fields.<span class="fn">Char</span>()</pre></div>
+    <div><div class="label">_name + _inherit (copy)</div><pre><span class="kw">class</span> <span class="fn">MyOrder</span>(models.Model):
+    _name = <span class="st">'my.order'</span>
+    _inherit = <span class="st">'sale.order'</span></pre></div>
+    <div><div class="label">_inherits (delegation)</div><pre><span class="kw">_inherits</span> = {<span class="st">'res.partner'</span>: <span class="st">'partner_id'</span>}</pre></div>
+  </div>
+  <pre><span class="cm">&lt;!-- View inheritance --&gt;</span>
+<span class="kw">&lt;xpath</span> expr=<span class="st">"//field[@name='partner_id']"</span> position=<span class="st">"after"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"my_field"</span><span class="kw">/&gt;</span>
+<span class="kw">&lt;/xpath&gt;</span></pre>
+</div>
+`,
+
+mixins: `
+<div class="card">
+  <div class="card-title">Essential built-in mixins</div>
+  <div class="grid2">
+    <div><div class="label">mail.thread + mail.activity.mixin</div><div class="desc">Chatter, followers, activities, tracking. Add <span class="mono">tracking=True</span> on fields.</div><pre>_inherit = [<span class="st">'mail.thread'</span>, <span class="st">'mail.activity.mixin'</span>]</pre></div>
+    <div><div class="label">image.mixin</div><div class="desc">Auto-resized images (image_1920, image_128, etc.)</div><pre>_inherit = [<span class="st">'image.mixin'</span>]</pre></div>
+    <div><div class="label">portal.mixin</div><div class="desc">Customer portal access, access_token, get_portal_url()</div><pre>_inherit = [<span class="st">'portal.mixin'</span>]</pre></div>
+    <div><div class="label">website.published.mixin</div><div class="desc">is_published, website_url, toggle publish on website</div></div>
+    <div><div class="label">sequence.mixin</div><div class="desc">Auto-sequence with ir.sequence</div><pre>_inherit = [<span class="st">'sequence.mixin'</span>]</pre></div>
+    <div><div class="label">analytic.mixin</div><div class="desc">analytic_distribution field for accounting</div></div>
+  </div>
+</div>
+`,
+
+reports: `
+<div class="card">
+  <div class="card-title">QWeb PDF Reports</div>
+  <pre><span class="kw">&lt;record</span> id=<span class="st">"action_report"</span> model=<span class="st">"ir.actions.report"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"model"</span><span class="kw">&gt;</span>my.model<span class="kw">&lt;/field&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"report_type"</span><span class="kw">&gt;</span>qweb-pdf<span class="kw">&lt;/field&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"report_name"</span><span class="kw">&gt;</span>my_module.report_my_model<span class="kw">&lt;/field&gt;</span>
+<span class="kw">&lt;/record&gt;</span>
+
+<span class="kw">&lt;template</span> id=<span class="st">"report_my_model"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;t</span> t-call=<span class="st">"web.html_container"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;t</span> t-foreach=<span class="st">"docs"</span> t-as=<span class="st">"doc"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;t</span> t-call=<span class="st">"web.external_layout"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;div</span> class=<span class="st">"page"</span><span class="kw">&gt;</span><span class="kw">&lt;h2</span> t-field=<span class="st">"doc.name"</span><span class="kw">/&gt;</span><span class="kw">&lt;/div&gt;</span>
+      <span class="kw">&lt;/t&gt;</span>
+    <span class="kw">&lt;/t&gt;</span>
+  <span class="kw">&lt;/t&gt;</span>
+<span class="kw">&lt;/template&gt;</span></pre>
+</div>
+`,
+
+owl: `
+<div class="card">
+  <div class="card-title">🌿 OWL (Odoo Web Library) — Introduction</div>
+  <div class="desc">OWL is a modern, components-based framework used in Odoo 16+ for the backend UI. It replaces legacy widgets. Fully reactive, similar to Vue/React but lightweight and tightly integrated with the Odoo ORM and environment.</div>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div><div class="label">⚡ Basic OWL Component</div>
+    <pre><span class="cm">// static/src/js/my_component.js</span>
+<span class="kw">import</span> { Component, useState } <span class="kw">from</span> <span class="st">"@odoo/owl"</span>;
+<span class="kw">import</span> { registry } <span class="kw">from</span> <span class="st">"@web/core/registry"</span>;
+
+<span class="kw">class</span> <span class="fn">Counter</span> <span class="kw">extends</span> Component {
+    setup() {
+        this.state = <span class="fn">useState</span>({ count: 0 });
+    }
+    increment() {
+        this.state.count++;
+    }
+    static template = <span class="st">'my_module.Counter'</span>;
+}
+
+<span class="cm">// XML template: static/src/xml/counter.xml</span>
+<span class="kw">&lt;templates&gt;</span>
+  <span class="kw">&lt;div</span> t-name=<span class="st">"my_module.Counter"</span><span class="kw">&gt;</span>
+    &lt;button t-on-click=<span class="st">"increment"</span>&gt;Click me!&lt;/button&gt;
+    &lt;p&gt;Count: &lt;t t-esc=<span class="st">"state.count"</span>/&gt;&lt;/p&gt;
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/templates&gt;</span></pre>
+    <div class="tip">Add template in manifest: 'assets': {'web.assets_backend': ['my_module/static/src/xml/*.xml']}</div>
+    </div>
+    <div><div class="label">🔌 Register as field widget</div>
+    <pre>registry.category(<span class="st">"fields"</span>).<span class="fn">add</span>(<span class="st">"counter_widget"</span>, { component: Counter });
+
+<span class="cm">&lt;!-- Use in form view --&gt;</span>
+<span class="kw">&lt;field</span> name=<span class="st">"x_stored"</span> widget=<span class="st">"counter_widget"</span><span class="kw">/&gt;</span></pre>
+    <div class="label">🧩 Client Action (full view)</div>
+    <pre>registry.category(<span class="st">"actions"</span>).<span class="fn">add</span>(<span class="st">"my_module.dashboard"</span>, DashboardComponent);</pre>
+    </div>
+  </div>
+  <div class="warn">OWL components are mandatory for any custom large UI in Odoo 17/18. Use <span class="mono">@web/core/registry</span> to register widgets, actions, views. The legacy JS framework is deprecated.</div>
+  <div class="divider"></div>
+  <div class="label">Key OWL concepts:</div>
+  <div class="tag-row"><span class="badge b-purple">useState</span><span class="badge b-purple">useEnv</span><span class="badge b-purple">useService</span><span class="badge b-purple">props</span><span class="badge b-purple">t-on-click</span><span class="badge b-purple">t-esc</span><span class="badge b-purple">t-foreach</span><span class="badge b-purple">t-if</span><span class="badge b-purple">useEffect</span></div>
+</div>
+`,
+
+web: `
+<div class="card">
+  <div class="card-title">🌐 Web Controllers (public endpoints)</div>
+  <pre><span class="cm"># controllers/main.py</span>
+<span class="kw">from</span> odoo <span class="kw">import</span> http
+<span class="kw">from</span> odoo.http <span class="kw">import</span> request
+
+<span class="kw">class</span> <span class="fn">MyController</span>(http.Controller):
+    
+    @http.<span class="fn">route</span>(<span class="st">'/my/endpoint'</span>, type=<span class="st">'http'</span>, auth=<span class="st">'public'</span>, website=<span class="kw">True</span>)
+    <span class="kw">def</span> <span class="fn">public_page</span>(self, **kw):
+        <span class="kw">return</span> request.<span class="fn">render</span>(<span class="st">'my_module.my_template'</span>, {<span class="st">'hello'</span>: <span class="st">'world'</span>})
+
+    @http.<span class="fn">route</span>(<span class="st">'/my/api'</span>, type=<span class="st">'json'</span>, auth=<span class="st">'user'</span>)
+    <span class="kw">def</span> <span class="fn">json_endpoint</span>(self):
+        records = request.env[<span class="st">'res.partner'</span>].<span class="fn">search</span>([], limit=<span class="st">5</span>)
+        <span class="kw">return</span> {<span class="st">'data'</span>: records.<span class="fn">read</span>([<span class="st">'name'</span>, <span class="st">'email'</span>])}</pre>
+<div class="tip">auth='public' allows non-authenticated access; auth='user' requires login; website=True sets layout with portal header. Always add security checks.</div>
+</div>
+<div class="card">
+  <div class="card-title">QWeb templates for website</div>
+  <pre><span class="kw">&lt;template</span> id=<span class="st">"my_template"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;t</span> t-call=<span class="st">"website.layout"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> class=<span class="st">"container"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;h1</span> t-esc=<span class="st">"hello"</span><span class="kw">/&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/t&gt;</span>
+<span class="kw">&lt;/template&gt;</span></pre>
+</div>
+`,
+
+files: `
+<div class="card">
+  <div class="card-title">📁 Standard Odoo Module File Structure</div>
+  <pre>my_module/
+├── __manifest__.py          # module metadata, depends, data, assets, hooks
+├── models/
+│   ├── __init__.py
+│   └── my_model.py          # class MyModel(models.Model)
+├── views/
+│   ├── my_model_views.xml   # form, tree, search, actions
+│   └── menu_views.xml       # menuitems
+├── security/
+│   ├── ir.model.access.csv  # mandatory access rights
+│   └── my_security.xml      # groups, record rules
+├── data/
+│   ├── demo_data.xml        # demo data (only for demo mode)
+│   └── sequences.xml        # ir.sequence records
+├── wizard/                  # transient models
+│   ├── my_wizard.py
+│   └── my_wizard_views.xml
+├── reports/
+│   ├── report_my_model.xml  # ir.actions.report + QWeb template
+│   └── my_report.py         # optional custom _get_report_values
+├── static/
+│   ├── description/icon.png # module icon (128x128)
+│   ├── src/
+│   │   ├── js/              # OWL components
+│   │   ├── css/             # custom styles
+│   │   └── xml/             # OWL templates
+│   └── lib/                 # third-party libraries
+├── controllers/
+│   └── main.py              # http routes
+└── i18n/                    # .pot translation files</pre>
+<div class="tip">__manifest__.py minimal example: <span class="mono">{'name': 'My Module', 'version': '17.0.1.0', 'depends': ['base', 'sale'], 'data': ['views/views.xml'], 'assets': {...}, 'installable': True}</span></div>
+</div>
+`,
+
+misc: `
+<div class="card">
+  <div class="card-title">Cron / Scheduled actions & system parameters</div>
+  <div class="grid2">
+    <div><pre><span class="kw">&lt;record</span> id=<span class="st">"ir_cron_cleanup"</span> model=<span class="st">"ir.cron"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"model_id"</span> ref=<span class="st">"model_my_model"</span><span class="kw">/&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"code"</span><span class="kw">&gt;</span>model.cleanup_old()<span class="kw">&lt;/field&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"interval_number"</span><span class="kw">&gt;</span>1<span class="kw">&lt;/field&gt;</span>
+  <span class="kw">&lt;field</span> name=<span class="st">"interval_type"</span><span class="kw">&gt;</span>days<span class="kw">&lt;/field&gt;</span>
+<span class="kw">&lt;/record&gt;</span></pre></div>
+    <div><pre><span class="cm"># System parameters (ir.config_parameter)</span>
+self.env[<span class="st">'ir.config_parameter'</span>].<span class="fn">get_param</span>(<span class="st">'my_module.api_key'</span>)
+self.env[<span class="st">'ir.config_parameter'</span>].<span class="fn">set_param</span>(<span class="st">'my_module.timeout'</span>, <span class="st">'30'</span>)</pre></div>
+  </div>
+  <div class="card-title">Useful decorators & tips</div>
+  <div class="row"><div class="dot"></div><div class="desc"><b>@api.model_create_multi</b> — create multiple records efficiently</div></div>
+  <div class="row"><div class="dot"></div><div class="desc"><b>@api.ondelete</b> — custom cleanup when records are deleted</div></div>
+  <div class="row"><div class="dot"></div><div class="desc"><b>sudo() / with_user()</b> — bypass security (use carefully!)</div></div>
+  <div class="row"><div class="dot"></div><div class="desc"><b>with_context(active_test=False)</b> — include inactive records</div></div>
+  <div class="row"><div class="dot"></div><div class="desc"><b>ir.attachment</b> — store files, link to any res_id/model</div></div>
+  <div class="row"><div class="dot"></div><div class="desc"><b>mail.template</b> — send emails with QWeb content & placeholders</div></div>
+</div>
+`,
+
+env: `
+<div class="card">
+  <div class="card-title">Odoo.sh vs self-hosted staging/production</div>
+  <div class="grid2">
+    <div><div class="label">☁️ Odoo.sh best practices</div><div class="desc">Production: main branch auto-deploy. Staging: dedicated branch, clone from prod DB. Dev: fresh DB. Use <span class="mono">--dev=all</span> for local. Always test migrations and neutralize emails on staging.</div></div>
+    <div><div class="label">🐧 Self-hosted essential commands</div><pre><span class="cm"># Dump prod, clone to staging</span>
+pg_dump mydb_prod | gzip > /tmp/prod.sql.gz
+dropdb mydb_staging && createdb mydb_staging
+gunzip -c /tmp/prod.sql.gz | psql mydb_staging
+
+<span class="cm"># Disable crons & outgoing mails on staging</span>
+psql mydb_staging -c "UPDATE ir_cron SET active=false;"
+psql mydb_staging -c "UPDATE ir_mail_server SET active=false;"
+
+<span class="cm"># Update all modules on staging</span>
+./odoo-bin -c stage.conf -u all --stop-after-init</pre></div>
+  </div>
+  <div class="warn">⚠️ Never run automated emails from staging — always neutralize <span class="mono">ir_mail_server</span> and crons. Use separate database and config ports.</div>
+  <div class="divider"></div>
+  <div class="label">Git strategy example</div>
+  <pre>main        ← production
+  └─ staging ← auto-deploy staging branch
+      └─ feature/xyz (develop locally, merge into staging for testing, then to main)</pre>
+</div>
+`
+};
+
+const tabsEl = document.getElementById('tabs');
+const contentEl = document.getElementById('content');
+
+sections.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab' + (i === 0 ? ' active' : '');
+  btn.textContent = s.label;
+  btn.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sec-' + s.id).classList.add('active');
+  };
+  tabsEl.appendChild(btn);
+
+  const sec = document.createElement('div');
+  sec.className = 'section' + (i === 0 ? ' active' : '');
+  sec.id = 'sec-' + s.id;
+  sec.innerHTML = html[s.id] || '<div class="card">Content not available</div>';
+  contentEl.appendChild(sec);
+});
+</script>
+</body>
+</html>

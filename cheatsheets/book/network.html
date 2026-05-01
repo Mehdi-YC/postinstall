@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networking Reference for Developers</title>
+    <style>
+        :root {
+            --bg: #fff; --text: #1a1a1a; --muted: #555; --light: #888;
+            --border: #ddd; --code-bg: #f5f5f5; --accent: #0c5c2c;
+            --green: #2e7d32; --red: #c62828; --orange: #e65100; --blue: #1565c0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: var(--bg); color: var(--text);
+            line-height: 1.7; font-size: 16px;
+        }
+        .wrapper { max-width: 840px; margin: 0 auto; padding: 0 24px 60px; }
+        .tabs {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg); border-bottom: 2px solid var(--border);
+            padding: 10px 0 0;
+        }
+        .tabs ul {
+            list-style: none; margin: 0; padding: 0 24px;
+            display: flex; flex-wrap: wrap; gap: 4px;
+        }
+        .tabs a {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px; color: var(--muted);
+            text-decoration: none; padding: 5px 10px;
+            border: 1px solid var(--border); border-radius: 3px 3px 0 0;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap; transition: color 0.15s, background 0.15s;
+            margin-bottom: -2px;
+        }
+        .tabs a:hover { color: var(--text); background: var(--code-bg); }
+        .tabs a.active {
+            color: var(--text); background: var(--bg);
+            border-bottom-color: var(--bg); font-weight: 700;
+        }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+        .subtitle { color: var(--light); font-size: 14px; margin-bottom: 28px; font-style: italic; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        h2 { font-size: 19px; font-weight: 700; margin: 36px 0 10px; padding-bottom: 5px; border-bottom: 2px solid var(--border); }
+        h3 { font-size: 15px; font-weight: 700; margin: 24px 0 6px; }
+        p { margin-bottom: 10px; color: var(--muted); font-size: 15px; }
+        strong { color: var(--text); }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; background: var(--code-bg);
+            padding: 1px 5px; border-radius: 3px; border: 1px solid #e0e0e0;
+        }
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; line-height: 1.55;
+            background: var(--code-bg); border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 18px;
+            overflow-x: auto; margin: 10px 0 14px; white-space: pre;
+        }
+        .file-label { font-family: 'Courier New', monospace; font-size: 12px; color: var(--light); margin: 10px 0 0; }
+        .cm { color: #999; font-style: italic; }
+        .kw { color: var(--accent); }
+        .st { color: var(--green); }
+        .fn { color: var(--blue); }
+        .nu { color: var(--orange); }
+        .fl { color: var(--red); }
+        .ht { color: #6a1b9a; }
+        ul, ol { margin: 6px 0 14px 22px; color: var(--muted); font-size: 14px; }
+        li { margin-bottom: 3px; }
+        .note { background: #fff8e1; border-left: 3px solid var(--orange); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .warn { background: #fce4ec; border-left: 3px solid var(--red); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .tip { background: #e8f5e9; border-left: 3px solid var(--green); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 13.5px; }
+        th { background: var(--code-bg); text-align: left; padding: 6px 8px; border: 1px solid var(--border); font-weight: 700; font-size: 12px; }
+        td { padding: 6px 8px; border: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+        td:first-child { font-family: 'Courier New', monospace; font-size: 12.5px; white-space: nowrap; }
+        .badge { display: inline-block; font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+        .badge-r { background: #fce4ec; color: var(--red); }
+        .badge-g { background: #e8f5e9; color: var(--green); }
+        .badge-o { background: #fff3e0; color: var(--orange); }
+        .badge-b { background: #e3f2fd; color: var(--blue); }
+        hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+        .flow {
+            background: var(--code-bg); border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 18px; margin: 10px 0 14px;
+            font-family: 'Courier New', monospace; font-size: 13px;
+            line-height: 2; color: var(--muted);
+        }
+        .flow .step { color: var(--text); font-weight: 700; }
+        .flow .arr { color: var(--light); }
+        .flow .layer { color: var(--accent); }
+        @media print { body { font-size: 12px; } pre { font-size: 11px; padding: 10px; } .tabs { display: none; } .tab-content { display: block !important; page-break-before: always; } }
+        @media (max-width: 700px) { .tabs a { font-size: 11px; padding: 4px 7px; } td { font-size: 12px; } }
+    </style>
+</head>
+<body>
+
+<nav class="tabs">
+    <ul>
+        <li><a href="#" class="active" data-tab="layers">Layers</a></li>
+        <li><a href="#" data-tab="tcp">TCP/UDP</a></li>
+        <li><a href="#" data-tab="http">HTTP</a></li>
+        <li><a href="#" data-tab="dns">DNS</a></li>
+        <li><a href="#" data-tab="tls">TLS</a></li>
+        <li><a href="#" data-tab="tools">Tools</a></li>
+        <li><a href="#" data-tab="infra">Infrastructure</a></li>
+    </ul>
+</nav>
+
+<div class="wrapper">
+
+<h1>Networking Reference for Developers</h1>
+<div class="subtitle">What actually happens on the wire &mdash; layers, protocols, tools, and infrastructure a developer needs to understand.</div>
+
+<!-- ========== LAYERS ========== -->
+<div class="tab-content active" id="tab-layers">
+
+<h2>The Model: What a Dev Needs to Know</h2>
+
+<p>The OSI model has 7 layers. In practice, the internet collapses into roughly <strong>4 functional layers</strong> that matter to developers. You don't need the academic version &mdash; you need to know which layer a problem lives in so you can debug it.</p>
+
+<table>
+    <tr><th>What You Call It</th><th>What It Does</th><th>Protocols</th><th>What You Debug Here</th></tr>
+    <tr><td><strong>Application</strong></td><td>What your app sends/receives</td><td>HTTP, DNS, SSH, FTP, SMTP</td><td>HTTP status codes, malformed requests, wrong data format</td></tr>
+    <tr><td><strong>Transport</strong></td><td>Reliable delivery between apps</td><td>TCP, UDP</td><td>Connection refused, timeouts, connection reset</td></tr>
+    <tr><td><strong>Network / IP</strong></td><td>Addressing and routing between machines</td><td>IP, ICMP (ping), ARP</td><td>Host unreachable, no route to host, wrong IP</td></tr>
+    <tr><td><strong>Physical / Link</strong></td><td>Bits on the wire, frame delivery on a segment</td><td>Ethernet, WiFi, MAC</td><td>Cable unplugged, wrong VLAN, MAC filtering</td></tr>
+</table>
+
+<p class="tip"><strong>The layer determines where to look.</strong> "Connection refused" is transport (TCP). "No route to host" is network (IP). "HTTP 400" is application (HTTP). Knowing the difference saves hours of debugging.</p>
+
+<h2>Physical vs Logical: The Key Distinction</h2>
+
+<p><strong>Physical</strong> = the actual cables, radio waves, electrical signals. A wire is a physical thing. A WiFi signal is a physical thing.</p>
+
+<p><strong>Logical</strong> = the addressing and organization built on top of physical connections. IP addresses, subnets, VLANs, ports, protocols &mdash; these are all logical constructs that exist in software/config, not in the wire itself.</p>
+
+<div class="flow">
+<span class="layer">Physical layer:</span>  cable/wireless carries electrical signals
+<span class="arr">│</span>
+<span class="layer">Data link (logical):</span>  signals grouped into frames with MAC addresses (Ethernet)
+<span class="arr">│</span>
+<span class="layer">Network (logical):</span>  frames grouped into packets with IP addresses
+<span class="arr">│</span>
+<span class="layer">Transport (logical):</span>  packets broken into segments with ports (TCP/UDP)
+<span class="arr">│</span>
+<span class="layer">Application (logical):</span>  segments carry your actual data (HTTP body, SQL query, etc.)
+</div>
+
+<p class="note"><strong>A switch operates at the data link layer.</strong> It sees MAC addresses, not IP addresses. It delivers frames within a local network. A <code>switch port</code> is a physical jack. A <code>VLAN</code> is a logical partition of that switch &mdash; same physical cables, but logically isolated networks.</p>
+
+<h2>What Happens When You Type a URL (Simplified)</h2>
+
+<div class="flow">
+<span class="step">1. Browser</span> parses "https://example.com/page" &rarr; <span class="cm">extracts host, path</span>
+<span class="arr">│</span>
+<span class="step">2. DNS</span> lookup: example.com &rarr; <span class="cm">93.184.216.34</span>
+<span class="arr">│</span>
+<span class="step">3. TCP</span> handshake with 93.184.216.34:443 (3-way: SYN, SYN-ACK, ACK)
+<span class="arr">│</span>
+<span class="step">4. TLS</span> handshake: negotiate encryption (if HTTPS)
+<span class="arr">│</span>
+<span class="step">5. HTTP</span> request sent:
+<span class="cm">GET /page HTTP/1.1</span>
+<span class="cm">Host: example.com</span>
+<span class="cm">Connection: keep-alive</span>
+<span class="arr">│</span>
+<span class="step">6. Server</span> processes request, runs app code, generates HTML
+<span class="arr">│</span>
+<span class="step">7. HTTP</span> response sent:
+<span class="cm">HTTP/1.1 200 OK</span>
+<span class="cm">Content-Type: text/html</span>
+<span class="cm">Content-Length: 1234</span>
+
+<span class="cm">&lt;html&gt;...&lt;/html&gt;</span>
+<span class="arr">│</span>
+<span class="step">8. Browser</span> renders the page
+</div>
+
+<p>Steps 2-4 happen in milliseconds. Step 5-7 is what your code controls. If something fails at step 2, it's a DNS problem. Step 3, it's network/firewall. Step 5-7, it's your app or the server.</p>
+
+<h2>Frames, Packets, Segments, Messages</h2>
+
+<p>These are all names for "data on the wire" at different layers:</p>
+
+<table>
+    <tr><th>Name</th><th>Layer</th><th>Contains</th><th>Addressed By</th></tr>
+    <tr><td><strong>Frame</strong></td><td>Data link (Ethernet)</td><td>Packet + MAC addresses + checksum</td><td>MAC address (AA:BB:CC:DD:EE:FF)</td></tr>
+    <tr><td><strong>Packet</strong></td><td>Network (IP)</td><td>Segment + source/dest IP + TTL</td><td>IP address (192.168.1.1)</td></tr>
+    <tr><td><strong>Segment</strong></td><td>Transport (TCP/UDP)</td><td>Your data + source/dest port + sequence numbers</td><td>Port (80, 443, 5432)</td></tr>
+    <tr><td><strong>Message</strong></td><td>Application (HTTP)</td><td>Headers + body (the actual content)</td><td>URL path (/page)</td></tr>
+</table>
+
+<p class="note"><strong>Nesting: Frame wraps Packet wraps Segment wraps Message.</strong> When you send an HTTP request, it gets wrapped in a TCP segment, which gets wrapped in an IP packet, which gets wrapped in an Ethernet frame. Each layer adds its own header. This is called <strong>encapsulation</strong>.</p>
+
+<h2>MAC Address vs IP Address</h2>
+
+<table>
+    <tr><th></th><th>MAC Address</th><th>IP Address</th></tr>
+    <tr><td><strong>Layer</strong></td><td>Data link (2)</td><td>Network (3)</td></tr>
+    <tr><td><strong>Format</strong></td><td>AA:BB:CC:DD:EE:FF (48-bit, hex)</td><td>192.168.1.1 (32-bit, decimal)</td></tr>
+    <tr><td><strong>Scope</strong></td><td>Local network segment only</td><td>Global (routable)</td></tr>
+    <tr><td><strong>Assigned by</strong></td><td>Hardware manufacturer (burned in)</td><td>Network admin / DHCP</td></tr>
+    <tr><td><strong>Changes?</strong></td><td>No (per interface)</td><td>Yes (different network = different IP)</td></tr>
+    <tr><td><strong>What a switch sees</strong></td><td>MAC addresses</td><td>Nothing (switches don't look at IP)</td></tr>
+    <tr><td><strong>What a router sees</strong></td><td>Nothing (routers strip MAC, add new one)</td><td>IP addresses</td></tr>
+</table>
+
+<p class="tip"><strong>MAC addresses don't cross routers.</strong> When a packet goes through a router, the router strips the source/dest MAC from the frame and adds new ones pointing to the next hop. MAC addresses are only meaningful on a local network segment. This is why you can't find someone's MAC address from across the internet.</p>
+
+</div>
+
+<!-- ========== TCP/UDP ========== -->
+<div class="tab-content" id="tab-tcp">
+
+<h2>TCP (Transmission Control Protocol)</h2>
+
+<p>TCP is <strong>reliable</strong>. It guarantees that data arrives intact, in order, and without duplication. It does this through:</p>
+
+<ul>
+    <li><strong>Handshake:</strong> 3-way exchange before data flows</li>
+    <li><strong>Sequence numbers:</strong> Every byte is numbered so the receiver can reorder and detect gaps</li>
+    <li><strong>Acknowledgments (ACKs):</strong> Receiver tells sender "I got bytes up to N"</li>
+    <li><strong>Retransmission:</strong> If sender doesn't get an ACK within a timeout, it resends</li>
+    <li><strong>Flow control:</strong> Receiver tells sender to slow down if it's overwhelmed</li>
+    <li><strong>Connection teardown:</strong> 4-way handshake to close gracefully</li>
+</ul>
+
+<h3>The TCP Handshake (3-Way)</h3>
+
+<div class="flow">
+<span class="step">Client</span> &rarr; <span class="cm">SYN</span> (I want to talk, my sequence starts at X)
+<span class="arr">│</span>
+<span class="step">Server</span> &rarr; <span class="cm">SYN-ACK</span> (OK, I acknowledge X, my sequence starts at Y)
+<span class="arr">│</span>
+<span class="step">Client</span> &rarr; <span class="cm">ACK</span> (I acknowledge Y)
+<span class="arr">│</span>
+<span class="cm">            === connection established ===</span>
+<span class="arr">│</span>
+<span class="cm">Data flows in both directions...</span>
+<span class="arr">│</span>
+<span class="step">Either side</span> &rarr; <span class="cm">FIN</span> (I'm done sending)
+<span class="arr">│</span>
+<span class="step">Other side</span> &rarr; <span class="cm">ACK + FIN</span> (OK, I'm done too)
+<span class="arr">│</span>
+<span class="step">First side</span> &rarr; <span class="cm">ACK</span> (confirmed)
+<span class="arr">│</span>
+<span class="cm">            === connection closed ===</span>
+</div>
+
+<p class="note"><strong>"Connection refused" = the server sent a RST instead of SYN-ACK.</strong> Either nothing is listening on that port, or a firewall rejected it. "Connection timed out" = no response at all (firewall dropping packets, or host unreachable).</p>
+
+<h3>TCP State Machine (The Important Parts)</h3>
+
+<table>
+    <tr><th>State</th><th>Meaning</th></tr>
+    <tr><td><code>LISTEN</code></td><td>Server is waiting for connections on a port</td></tr>
+    <tr><td><code>SYN_SENT</code></td><td>Client sent SYN, waiting for SYN-ACK</td></tr>
+    <tr><td><code>ESTABLISHED</code></td><td>Handshake complete, data can flow</td></tr>
+    <tr><td><code>FIN_WAIT_1</code></td><td>Initiated close, waiting for ACK</td></tr>
+    <tr><td><code>FIN_WAIT_2</code></td><td>Sent FIN + got ACK, waiting for other side's FIN</td></tr>
+    <tr><td><code>CLOSE_WAIT</code></td><td>Got other side's FIN, haven't closed yet (app hasn't called close())</td></tr>
+    <tr><td><code>TIME_WAIT</code></td><td>Closed, waiting 2MSL (~60s) to ensure the other side got the ACK</td></tr>
+    <tr><td><code>CLOSED</code></td><td>Connection fully closed</td></tr>
+</table>
+
+<p class="warn"><strong><code>TIME_WAIT</code> is normal, not an error.</strong> After closing a connection, the side that initiated the close stays in TIME_WAIT for ~60 seconds. It prevents old packets from a previous connection from being confused with a new one. Thousands of TIME_WAIT connections can exhaust ports &mdash; this is why connection reuse and keep-alive matter.</p>
+
+<h2>UDP (User Datagram Protocol)</h2>
+
+<p>UDP is <strong>unreliable</strong>. No handshake, no acknowledgments, no ordering, no retransmission. It just sends data and hopes it arrives. So why use it?</p>
+
+<ul>
+    <li><strong>Speed:</strong> No overhead from handshakes or ACKs. Lower latency.</li>
+    <li><strong>Simplicity:</strong> No connection state to manage.</li>
+    <li><strong>Broadcast/multicast:</strong> TCP can't do this. UDP can send to multiple recipients.</li>
+    <li><strong>Tolerates loss:</strong> DNS queries, metrics, streaming &mdash; losing a packet is fine.</li>
+</ul>
+
+<table>
+    <tr><th>Protocol</th><th>Transport</th><th>Why</th></tr>
+    <tr><td>HTTP/1.1</td><td>TCP</td><td>Reliable page delivery matters</td></tr>
+    <tr><td>HTTP/2, HTTP/3</td><td>TCP / UDP (QUIC)</td><td>HTTP/3 uses UDP (QUIC) for faster connection setup</td></tr>
+    <tr><td>DNS</td><td>UDP</td><td>Small queries, retry if no response is faster than TCP handshake</td></tr>
+    <tr><td>SSH</td><td>TCP</td><td>Reliable shell session</td></tr>
+    <tr><td>Video streaming</td><td>UDP</td><td>Dropped frames = momentary glitch, not a broken page</td></tr>
+    <tr><td>Databases (PostgreSQL, MySQL)</td><td>TCP</td><td>Data integrity is non-negotiable</td></tr>
+    <tr><td>Logging/metrics</td><td>UDP</td><td>Losing a log line is acceptable</td></tr>
+    <tr><td>VPN (WireGuard)</td><td>UDP</td><td>Implements its own reliability on top of UDP</td></tr>
+</table>
+
+<h2>Ports</h2>
+
+<p>Ports are <strong>transport-layer addresses</strong>. They identify which application on a machine should receive the data. They range from 0 to 65535.</p>
+
+<table>
+    <tr><th>Range</th><th>Name</th><th>Examples</th></tr>
+    <tr><td><code>0-1023</code></td><td>Well-known (need root/admin)</td><td>80 (HTTP), 443 (HTTPS), 22 (SSH), 53 (DNS), 25 (SMTP)</td></tr>
+    <tr><td><code>1024-49151</code></td><td>Registered (assigned to specific apps)</td><td>3306 (MySQL), 5432 (PostgreSQL), 6379 (Redis), 8080 (HTTP alt)</td></tr>
+    <tr><td><code>49152-65535</code></td><td>Ephemeral (temporary, auto-assigned)</td><td>Your outgoing connections use these</td></tr>
+</table>
+
+<p class="note"><strong>A port is just a number in a header field.</strong> It's not a physical thing. When you say "port 80 is open," it means "a program on this machine is listening for TCP segments addressed to port 80." Multiple programs can use port 80 on different IP addresses (different interfaces).</p>
+
+<p class="warn"><strong>"Address already in use" means another process is already bound to that port.</strong> Use <code>ss -tlnp | grep :8000</code> to find what's using it. <code>kill &lt;PID&gt;</code> to stop it. Or use a different port.</p>
+
+<h3>How Your OS Handles Connections</h3>
+<pre><span class="cm"># A TCP connection is defined by 4 things (a socket tuple):</span>
+<span class="cm">#   source IP + source port + dest IP + dest port</span>
+<span class="cm"># Same dest IP+port, different source port = different connection</span>
+<span class="cm"># This is why your browser can open 6 connections to the same server at once</span>
+
+<span class="cm"># Only ONE process can bind to a specific local IP+port at a time.</span>
+<span class="cm"># That's why you can't start two apps on port 8000.</span></pre>
+
+<h2>What Your Code Actually Controls</h2>
+<pre><span class="cm"># When you write this in Python:</span>
+<span class="fn">socket</span>.connect((<span class="st">"93.184.216.34"</span>, <span class="nu">443</span>))
+
+<span class="cm"># Your OS:</span>
+<span class="cm"># 1. Picks a random ephemeral source port (e.g., 51234)</span>
+<span class="cm"># 2. Sends SYN to 93.184.216.34:443 with source 192.168.1.100:51234</span>
+<span class="cm"># 3. Handles the TCP handshake, ACKs, retransmissions for you</span>
+<span class="cm"># 4. Delivers the data you write() to the transport layer</span>
+<span class="cm"># 5. Wraps it in IP packet with dest 93.184.216.34, source 192.168.1.100</span>
+<span class="cm"># 6. Wraps that in an Ethernet frame with your router's MAC as dest</span>
+
+<span class="cm"># When you write:</span>
+server = socket.socket()
+server.bind((<span class="st">"0.0.0.0"</span>, <span class="nu">8000</span>))
+
+<span class="cm"># Your OS:</span>
+<span class="cm"># 1. Tells the network stack: "accept TCP segments for port 8000"</span>
+<span class="cm"># 2. When a SYN arrives, responds with SYN-ACK (enters SYN_RCVD state)</span>
+<span class="cm"># 3. When ACK comes back, moves to ESTABLISHED</span>
+<span class="cm"># 4. Calls your accept() callback</span></pre>
+
+</div>
+
+<!-- ========== HTTP ========== -->
+<div class="tab-content" id="tab-http">
+
+<h2>HTTP Overview</h2>
+
+<p>HTTP is a <strong>text-based protocol</strong> that runs on top of TCP. It's just formatted text sent over a TCP connection. That's it. No magic. Every HTTP message is either a request (client to server) or a response (server to client), and both follow the same basic structure.</p>
+
+<h2>HTTP Request Structure</h2>
+
+<div class="file-label">What actually gets sent on the wire</div>
+<pre><span class="cm"># Request line</span>
+<span class="fn">GET</span> <span class="ht">/api/users?page=2&limit=50</span> <span class="fn">HTTP/1.1</span>
+<span class="cm"># ↑ method  ↑ path+query       ↑ version</span>
+
+<span class="cm"># Headers (key: value, one per line)</span>
+<span class="ht">Host</span>: example.com
+<span class="ht">Accept</span>: application/json
+<span class="ht">Authorization</span>: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...
+<span class="ht">Content-Type</span>: application/json
+<span class="ht">User-Agent</span>: Mozilla/5.0
+<span class="ht">Accept-Encoding</span>: gzip, deflate
+<span class="ht">Connection</span>: keep-alive
+
+<span class="cm"># Empty line separates headers from body</span>
+
+<span class="cm"># Body (optional - present in POST/PUT/PATCH, absent in GET/DELETE)</span>
+{<span class="st">"name"</span>: <span class="st">"Alice"</span>, <span class="st">"email"</span>: <span class="st">"alice@example.com"</span>}</pre>
+
+<p class="note"><strong>The empty line between headers and body is mandatory.</strong> Without it, the server can't tell where headers end and body begins. If you get "400 Bad Request" and can't figure out why, check for a missing blank line between headers and body.</p>
+
+<h2>HTTP Response Structure</h2>
+
+<div class="file-label">What the server sends back</div>
+<pre><span class="cm"># Status line</span>
+<span class="fn">HTTP/1.1</span> <span class="nu">200</span> <span class="fn">OK</span>
+<span class="cm"># ↑ version  ↑ status code  ↑ reason phrase</span>
+
+<span class="cm"># Headers</span>
+<span class="ht">Content-Type</span>: application/json
+<span class="ht">Content-Length</span>: 47
+<span class="ht">Cache-Control</span>: max-age=3600
+<span class="ht">Server</span>: nginx/1.24
+<span class="ht">X-Request-Id</span>: abc-123-def
+
+<span class="cm"># Empty line</span>
+
+<span class="cm"># Body</span>
+{<span class="st">"id"</span>: 1, <span class="st">"name"</span>: <span class="st">"Alice"</span>}</pre>
+
+<h2>HTTP Methods (Verbs)</h2>
+
+<table>
+    <tr><th>Method</th><th>Has Body?</th><th>Idempotent?</th><th>Safe?</th><th>Purpose</th></tr>
+    <tr><td><code>GET</code></td><td>No</td><td>Yes</td><td>Yes</td><td>Retrieve a resource</td></tr>
+    <tr><td><code>POST</code></td><td>Yes</td><td>No</td><td>No</td><td>Create a resource (or trigger an action)</td></tr>
+    <tr><td><code>PUT</code></td><td>Yes</td><td>Yes</td><td>No</td><td>Replace a resource entirely (full update)</td></tr>
+    <tr><td><code>PATCH</code></td><td>Yes</td><td>No</td><td>No</td><td>Partial update (change only the fields you send)</td></tr>
+    <tr><td><code>DELETE</code></td><td>No</td><td>Yes</td><td>No</td><td>Delete a resource</td></tr>
+    <tr><td><code>HEAD</code></td><td>No</td><td>Yes</td><td>Yes</td><td>Like GET but only returns headers (check if exists, get Content-Length)</td></tr>
+    <tr><td><code>OPTIONS</td><td>No</td><td>Yes</td><td>Yes</td><td>Ask server what methods are allowed (CORS preflight)</td></tr>
+</table>
+
+<p class="note"><strong>Idempotent</strong> = doing it once has the same effect as doing it 100 times. <code>GET</code> the same page 10 times = same result. <code>POST</code> create 10 orders = 10 different orders. This matters for retry logic: if a request fails mid-flight, safe to retry idempotent methods.</p>
+
+<p class="warn"><strong>GET with a body is technically allowed by the spec but practically never used.</strong> Proxies and caches may strip it. Use <code>POST</code> if you need to send data, even if you're just retrieving.</p>
+
+<h2>Status Codes</h2>
+
+<table>
+    <tr><th>Range</th><th>Meaning</th><th>Common Codes</th></tr>
+    <tr><td><strong>1xx</strong></td><td>Informational</td><td>100 Continue, 101 Switching Protocols</td></tr>
+    <tr><td><strong>2xx</strong></td><td>Success</td><td>200 OK, 201 Created, 204 No Content</td></tr>
+    <tr><td><strong>3xx</strong></td><td>Redirection</td><td>301 Moved Permanently, 302 Found, 304 Not Modified</td></tr>
+    <tr><td><strong>4xx</strong></td><td>Client error (your fault)</td><td>400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 405 Method Not Allowed, 413 Payload Too Large, 429 Too Many Requests, 422 Unprocessable Entity</td></tr>
+    <tr><td><strong>5xx</strong></td><td>Server error (their fault)</td><td>500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout</td></tr>
+</table>
+
+<h3>The Ones That Confuse Developers</h3>
+
+<table>
+    <tr><th>Code</th><th>What It Actually Means</th></tr>
+    <tr><td><code>400</code></td><td>Your request is malformed (bad JSON, missing required header, syntax error in URL). Read the response body for details.</td></tr>
+    <tr><td><code>401</code></td><td>"I don't know who you are." Missing or invalid authentication (wrong token, expired session).</td></tr>
+    <tr><td><code>403</code></td><td>"I know who you are, but you're not allowed." Authentication OK, authorization denied. Wrong role, wrong permissions.</td></tr>
+    <tr><td><code>404</code></td><td>"This URL doesn't exist on this server." Route not found. Not "server not found" (that's DNS).</td></tr>
+    <tr><td><code>405</code></td><td>"You used the wrong HTTP method." GET on an endpoint that only accepts POST. Or POST on one that only accepts GET.</td></tr>
+    <tr><td><code>413</code></td><td>"Your request body is too big." Usually a server config limit (nginx default: 1MB).</td></tr>
+    <tr><td><code>422</code></td><td>"I understood your request but the data is wrong." Validation error: missing required field, wrong data type, business rule violation.</td></tr>
+    <tr><td><code>429</code></td><td>"You're sending too many requests." Rate limiting. Slow down.</td></tr>
+    <tr><td><code>500</code></td><td>"Something broke on our end." Unhandled exception in the app code. Check server logs.</td></tr>
+    <tr><td><code>502</code></td><td>"The server in front of me is broken." Nginx got an invalid response from the app. App is down or crashed.</td></tr>
+    <tr><td><code>503</code></td><td>"The server is overloaded or down for maintenance." App isn't accepting connections yet.</td></tr>
+    <tr><td><code>504</code></td><td>"The server in front of me timed out waiting for the app." App took too long to respond.</td></tr>
+    <tr><td><code>301 vs 302</code></td><td><code>301</code>: "Moved permanently, update your URL." <code>302</code>: "Moved temporarily, keep using the old URL." Browsers cache 301s by default. Use 302 for POST redirects (to prevent method change to GET).</td></tr>
+    <tr><td><code>304</code></td><td>"Nothing changed since last time you asked." Your cached version is still valid. No body returned.</td></tr>
+</table>
+
+<h2>Headers That Actually Matter</h2>
+
+<table>
+    <tr><th>Header</th><th>Direction</th><th>What It Does</th></tr>
+    <tr><td><code>Host</td><td>Request</td><td>The domain name. <strong>Mandatory in HTTP/1.1.</strong> Without it, the server can't route the request to the right virtual host. "400 Bad Request" if missing.</td></tr>
+    <tr><td><code>Content-Type</td><td>Both</td><td>MIME type of the body. <code>application/json</code>, <code>text/html</code>, <code>multipart/form-data</code>. <strong>Mandatory</strong> when there's a body.</td></tr>
+    <tr><td><code>Content-Length</td><td>Response</td><td>Body size in bytes. Lets the client know when the response is complete. Replaced by <code>Transfer-Encoding: chunked</code> for streaming.</td></tr>
+    <tr><td><code>Authorization</td><td>Request</td><td>Credentials. Usually <code>Bearer &lt;token&gt;</code> for JWT, or <code>Basic base64(user:pass)</code> for simple auth.</td></tr>
+    <tr><td><code>Accept</code></td><td>Request</td><td>"I can understand these formats." <code>application/json</code>, <code>text/html</code>. Server picks the best match.</td></tr>
+    <tr><td><code>Cache-Control</td><td>Response</td><td>"You can cache this for N seconds." <code>max-age=3600</code>, <code>no-cache</code>, <code>no-store</code>, <code>private</code>.</td></tr>
+    <tr><td><code>Set-Cookie</code></td><td><strong>Response only</strong></td><td>Tell the browser to store a cookie. <strong>Cannot be set by JavaScript.</strong> This is why you can't read <code>HttpOnly</code> cookies from <code>document.cookie</code>.</td></tr>
+    <tr><td><code>Access-Control-Allow-Origin</code></td><td><strong>Response only</strong></td><td>CORS: which origins can call this API. <code>*</code> = any origin. <strong>Never use <code>*</code> with credentials.</strong></td></tr>
+    <tr><td><code>Access-Control-Allow-Headers</code></td><td><strong>Response only</strong></td><td>CORS: which request headers are allowed in preflight.</td></tr>
+    <tr><td><code>X-Forwarded-For</code></td><td>Request</td><td>Original client IP when behind a proxy. <code>X-Forwarded-For: client_ip, proxy1_ip</code>. Trust chain.</td></tr>
+    <tr><td><code>X-Request-Id</code></td><td>Response</td><td>Unique ID for the request. Essential for tracing issues through logs across services.</td></tr>
+    <tr><td><code>User-Agent</code></td><td>Request</td><td>Browser/app identification string. Used by servers for analytics and compatibility.</td></tr>
+    <tr><td><code>Connection</td></td><td>Both</td><td><code>keep-alive</code> = reuse the TCP connection for multiple requests. <code>close</code> = close after one request.</td></tr>
+    <tr><td><code>Transfer-Encoding</code></td><td>Response</td><td><code>chunked</code> = send body in chunks (no need to know Content-Length upfront). Enables streaming.</td></tr>
+</table>
+
+<h2>HTTP/1.1 vs HTTP/2 vs HTTP/3</h2>
+
+<table>
+    <tr><th></th><th>HTTP/1.1</th><th>HTTP/2</th><th>HTTP/3</th></tr>
+    <tr><td><strong>Transport</strong></td><td>TCP</td><td>TCP</td><td>UDP (QUIC)</td></tr>
+    <tr><td><strong>Connections</strong></td><td>1 request per TCP connection (or pipelined)</td><td>Multiplexed: many requests over one TCP connection</td><td>Multiple streams over one UDP "connection"</td></tr>
+    <tr><td><strong>Headers</strong></td><td>Full headers repeated every request</td><td>HPACK compression: headers sent once, referenced after</td><td>QPACK: similar to HPACK</td></tr>
+    <tr><td><strong>Ordering</strong></td><td>Sequential (head-of-line blocking)</td><td>Streams can interleave freely</td><td>Same as HTTP/2</td></tr>
+    <tr><td><strong>TLS</strong></td><td>Separate handshake (2 RTTs added)</td><td>Embedded (saves ~1 RTT)</td><td>Embedded (same as HTTP/2)</td></tr>
+    <tr><td><strong>Connection setup</strong></td><td>TCP handshake (1 RTT) + TLS (1-2 RTTs) = 2-3 RTTs</td><td>TCP + TLS = 2-3 RTTs</td><td>TLS (no TCP) = 1 RTT</td></tr>
+    <tr><td><strong>Head-of-line blocking</strong></td><td>Yes: browser waits for one response before sending next request on same connection</td><td>No: multiplexed, no HOL blocking</td><td>No</td></tr>
+</table>
+
+<p class="note"><strong>HTTP/3 is not "HTTP over UDP" in the simple sense.</strong> It uses QUIC, which adds its own reliability, ordering, and congestion control on top of UDP. Applications still see an HTTP-like interface. The complexity is pushed into the library, not your code.</p>
+
+<h2>Keep-Alive and Connection Reuse</h2>
+
+<pre><span class="cm"># HTTP/1.1 default: keep-alive is ON</span>
+<span class="cm"># Without keep-alive (Connection: close):</span>
+<span class="cm">#   Request 1: TCP handshake (1 RTT) + HTTP request/response (1 RTT) = 2 RTTs</span>
+<span class="cm">#   Request 2: TCP handshake + HTTP = 2 RTTs</span>
+<span class="cm">#   Request 3: same = 2 RTTs</span>
+<span class="cm">#   Total: 6 RTTs for 3 requests</span>
+
+<span class="cm"># With keep-alive (Connection: keep-alive):</span>
+<span class="cm">#   Request 1: TCP handshake (1 RTT) + HTTP request/response = 2 RTTs</span>
+<span class="cm">#   Request 2: just HTTP = 1 RTT</span>
+<span class="cm">#   Request 3: just HTTP = 1 RTT</span>
+<span class="cm">#   Total: 4 RTTs for 3 requests</span>
+
+<span class="cm"># HTTP/2/3: all requests multiplexed over ONE connection:</span>
+<span class="cm">#   Setup: 1 RTT (HTTP/3) or 2-3 RTTs (HTTP/2)</span>
+<span class="cm">#   Requests 1-3 (and hundreds more): 1 RTT each (all in parallel if server allows)</span>
+<span class="cm">#   Total: 2-4 RTTs for 3 requests</span></pre>
+
+<h2>Form Data: Content-Type Matters</h2>
+
+<div class="file-label">application/x-www-form-urlencoded (default for HTML forms)</div>
+<pre><span class="cm"># What your browser sends when you submit &lt;form&gt; without enctype</span>
+<span class="fn">POST</span> <span class="ht">/submit</span> <span class="fn">HTTP/1.1</span>
+<span class="ht">Content-Type</span>: application/x-www-form-urlencoded
+<span class="ht">Content-Length</span>: 27
+
+name=Alice&email=alice%40example.com&age=30
+<span class="cm"># URL-encoded: spaces become +, special chars become %XX</span></pre>
+
+<div class="file-label">multipart/form-data (for file uploads)</div>
+<pre><span class="cm"># What your browser sends when &lt;form enctype="multipart/form-data"&gt;</span>
+<span class="fn">POST</span> <span class="ht">/upload</span> <span class="fn">HTTP/1.1</span>
+<span class="ht">Content-Type</span>: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+<span class="ht">Content-Length</span>: 342
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+<span class="cm">[binary data]</span>
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+A photo of Alice
+------WebKitFormBoundary7MA4YWxkTrZu0gW--</pre>
+
+<div class="file-label">application/json (APIs)</div>
+<pre><span class="fn">POST</span> <span class="ht">/api/users</span> <span class="fn">HTTP/1.1</span>
+<span class="ht">Content-Type</span>: application/json
+<span class="ht">Content-Length</span>: 47
+
+{<span class="st">"name"</span>: <span class="st">"Alice"</span>, <span class="st">"email"</span>: <span class="st">"alice@example.com"</span>}
+<span class="cm"># No URL encoding needed — JSON is the raw body, not form fields</span></pre>
+
+<p class="warn"><strong>Wrong Content-Type = wrong parsing.</strong> Sending JSON with <code>application/x-www-form-urlencoded</code> (or no Content-Type) will make the server try to parse JSON as form fields, which silently fails. Always set Content-Type when you have a body.</p>
+
+</div>
+
+<!-- ========== DNS ========== -->
+<div class="tab-content" id="tab-dns">
+
+<h2>What DNS Does</h2>
+
+<p>DNS translates <strong>domain names</strong> (human-readable) into <strong>IP addresses</strong> (machine-readable). It's the phonebook of the internet. Without it, every URL would be <code>http://93.184.216.34/</code>.</p>
+
+<h2>The Resolution Process</h2>
+
+<div class="flow">
+<span class="step">1. Browser cache</span> &rarr; "Have I looked up example.com recently?" (check TTL)
+<span class="cm">If not found ↓</span>
+<span class="arr">│</span>
+<span class="step">2. OS cache</span> &rarr; <span class="cm">check /etc/hosts, nscd, systemd-resolved</span>
+<span class="cm">If not found ↓</span>
+<span class="arr">│</span>
+<span class="step">3. Recursive resolver</span> (usually your ISP's DNS, e.g., 8.8.8.8 or 1.1.1.1)
+<span class="cm">  ├─ Check its own cache</span>
+<span class="cm">  ├─ If cached: return IP immediately</span>
+<span class="cm">  └─ If not: continue ↓</span>
+<span class="arr">│</span>
+<span class="step">4. Root nameserver</span> → "Who handles .com?"
+<span class="cm">Returns the address of .com's authoritative servers</span>
+<span class="arr">│</span>
+<span class="step">5. .com TLD server</span> → "Who handles example.com?"
+<span class="cm">Returns the address of example.com's nameserver (usually your DNS provider's)</span>
+<span class="arr">│</span>
+<span class="step">6. Authoritative nameserver</span> → "What is example.com?"
+<span class="cm">Returns: 93.184.216.34</span>
+<span class="arr">│</span>
+<span class="cm">Result is cached at every level for the TTL duration</span>
+</div>
+
+<p class="note"><strong>DNS lookups typically take 20-120ms.</strong> But they're cached aggressively. Once resolved, subsequent requests are instant. The TTL (Time To Live) in the DNS record controls cache duration. Low TTL = fresh data, more lookups. High TTL = stale data, fewer lookups.</p>
+
+<h2>Record Types</h2>
+
+<table>
+    <tr><th>Type</th><th>Points To</th><th>Example</th></tr>
+    <tr><td><code>A</code></td><td>IPv4 address</td><td><code>example.com → 93.184.216.34</code></td></tr>
+    <tr><td><code>AAAA</code></td><td>IPv6 address</td><td><code>example.com → 2606:2800:220:1:248:1893:25c8:1946</code></td></tr>
+    <tr><td><code>CNAME</code></td><td>Alias (redirects one domain to another)</td><td><code>www.example.com → example.com</code></td></tr>
+    <tr><td><code>MX</code></td><td>Mail server</td><td><code>example.com → mail.example.com</code> (with priority)</td></tr>
+    <tr><td><code>NS</code></td><td>Nameserver (who is authoritative for this domain)</td><td><code>example.com → ns1.dnsprovider.com</code></td></tr>
+    <tr><td><code>TXT</code></td><td>Arbitrary text (SPF, verification, etc.)</td><td><code>"v=spf1 include:_spf.google.com ~all"</code></td></tr>
+    <tr><td><code>SRV</code></td><td>Service (hostname + port)</td><td><code>_sip._tcp.example.com → sip.example.com:5060</code></td></tr>
+    <tr><td><code>PTR</code></td><code>Reverse DNS (IP → name)</code><td><code>93.184.216.34 → example.com</code></td></tr>
+    <tr><td><code>SOA</code></td><td>Start of Authority (zone metadata)</td><td>Primary NS, admin email, serial, refresh, retry, expire, minimum TTL</td></tr>
+</table>
+
+<h2>Common DNS Tools</h2>
+
+<pre><span class="cm"># Query specific record type</span>
+<span class="cmd">dig</span> example.com A                    <span class="cm"># IPv4 address</span>
+<span class="cmd">dig</span> example.com AAAA                 <span class="cm"># IPv6 address</span>
+<span class="cmd">dig</span> example.com MX                   <span class="cm"># mail servers</span>
+<span class="cm"># dig example.com CNAME               # alias</span>
+<span class="cm"># dig example.com TXT                 # text records (SPF, verification)</span>
+
+<span class="cm"># Trace the full resolution path (see every step)</span>
+<span class="cmd">dig</span> +trace example.com
+
+<span class="cm"># Query a specific DNS server</span>
+<span class="cm"># dig @8.8.8.8 example.com</span>
+<span class="cmd">dig</span> @1.1.1.1 example.com A
+
+<span class="cm"># Short output</span>
+<span class="cm"># dig +short example.com</span>
+<span class="cmd">dig</span> +short example.com A
+
+<span class="cm"># Reverse DNS (IP → name)</span>
+<span class="cm"># dig -x 93.184.216.34</span>
+<span class="cmd">dig</span> -x 93.184.216.34 +short
+
+<span class="cm"># Check DNS propagation after a change</span>
+<span class="cmd">dig</span> example.com @8.8.8.8 +short
+
+<span class="cm"># Alternative tools</span>
+<span class="cmd">nslookup</span> example.com                <span class="cm"># simpler output, fewer options</span>
+<span class="cmd">host</span> -t A example.com               <span class="cm"># another alternative</span>
+
+<span class="cm"># Check your DNS resolver</span>
+<span class="cm"># cat /etc/resolv.conf</span>
+<span class="cm"># nmcli dev show | grep DNS</span>       <span class="cm"># NetworkManager DNS (Linux)</span>
+
+<span class="cm"># Flush local DNS cache (macOS)</span>
+<span class="cm"># sudo dscacheutil -flushcache</span>
+<span class="cm"># sudo discoveryutil mdnsflushcache</span>
+
+<span class="cm"># Flush local DNS cache (Linux with systemd-resolved)</span>
+<span class="cmd">sudo</span> systemd-resolve --flush-caches
+
+<span class="cm"># Flush local DNS cache (Linux with nscd)</span>
+<span class="cmd">sudo</span> nscd -i hosts
+
+<span class="cm"># Flush browser DNS: clear browsing data or use devtools > Network > Disable cache (temporarily)</span></pre>
+
+<h2>DNS Propagation</h2>
+
+<p>When you change a DNS record, it doesn't take effect everywhere instantly. Propagation happens gradually:</p>
+
+<ul>
+    <li><strong>Authoritative server:</strong> Updated immediately (TTL clock starts ticking)</li>
+    <li><strong>Recursive resolver (ISP):</strong> Updates after current TTL expires (up to the old TTL value, usually 300-3600 seconds for common records)</li>
+    <li><strong>Browser cache:</strong> Respects TTL but may override with heuristics</li>
+    <li><strong>OS cache:</strong> Follows TTL</li>
+</ul>
+
+<p class="tip"><strong>Set low TTLs (300s) before making changes.</strong> If your TTL is 86400 (1 day), you'll wait up to a day for changes to propagate. Set it to 300 a day before, then make the change, then set it back to 86400 after confirming it works.</p>
+
+<h2>Common DNS Problems</h2>
+
+<table>
+    <tr><th>Symptom</th><th>Likely Cause</th></tr>
+    <tr><td>Works with IP, fails with domain</td><td>DNS not resolving. Check with <code>dig</code>. Check propagation.</td></tr>
+    <tr><td>Works on one device, not another</td><td>DNS cache on the failing device. Flush it.</td></tr>
+    <tr><td>"Server Not Found" (NXDOMAIN)</td><td>Domain doesn't exist at all, or a typo</td></tr>
+                    <tr><td>"Server Failure" (SERVFAIL)</td><td>The authoritative server is misconfigured or down</td></tr>
+    <tr><td>"Refused" (REFUSED)</td><td>The authoritative server refuses to answer (wrong name server, no access)</td></tr>
+                    <tr><td>"No answer" (NOERROR, empty response)</td><td>The domain exists but has no records of the queried type (e.g., no AAAA records)</td></tr>
+    <tr><td>Sporadic failures</td><td>TTL expiring on one resolver but not another. Inconsistent propagation.</td></tr>
+    <tr><td>Works in browser, fails in curl</td><td>curl doesn't use the system DNS. Use <code>curl --resolve</code> or check <code>/etc/resolv.conf</code>.</td></tr>
+    <tr><td>CNAME loop</td><td>Domain A → Domain B → Domain A. Cannot resolve.</td></tr>
+</table>
+
+</div>
+
+<!-- ========== TLS ========== -->
+<div class="tab-content" id="tab-tls">
+
+<h2>What TLS Does</h2>
+
+<p>TLS (Transport Layer Security) encrypts the data between your browser and the server so eavesdroppers on the network can't read it. That's it. It doesn't make your app secure — it protects data <strong>in transit</strong>.</p>
+
+<p class="note"><strong>HTTPS = HTTP over TLS over TCP.</strong> The data on the wire is encrypted, but the server and browser see plaintext. TLS is between transport endpoints, not end-to-end encryption.</p>
+
+<h2>The TLS Handshake (What Actually Happens)</h2>
+
+<div class="flow">
+<span class="step">Client Hello</span> → <span class="cm">I want to talk HTTPS. Here are TLS version + cipher suites I support + random number (ClientHello)</span>
+<span class="arr">│</span>
+<span class="step">Server Hello</span> → <span class="cm">OK, using TLS 1.3, this cipher suite, my certificate, and random number (ServerHello)</span>
+<span class="arr">│</span>
+<span class="step">Server Certificate</span> → <span class="cm">Here's my certificate proving I am example.com (signed by a CA your browser trusts)</span>
+<span class="arr">│</span>
+<span class="step">Client validates</span> → <span class="cm">"Is this cert valid? Not expired? Correct domain? Signed by a trusted CA?"</span>
+<span class="arr">│</span>
+<span class="step">Key Exchange</span> → <span class="cm">Client and server agree on a shared secret without sending it in the clear</span>
+<span class="cm">  (using the server's public key in the certificate)</span>
+<span class="arr">│</span>
+<span class="cm">            === encryption established ===</span>
+<span class="arr"></span>
+<span class="cm">Application data is now encrypted before being sent</span>
+</div>
+
+<h2>Certificates &amp;Chain of Trust</span>
+
+<pre><span class="cm"># Certificate contains:</span>
+<span class="cm"># - Domain name (e.g., example.com)</span>
+<span class="cm"># - Public key of the server</span>
+<span class="cm">#> - Who issued it (the CA)</span>
+<span class="cm"># - Validity period (not before / not after)</span>
+<span class="cm"># - Signature from the CA (cryptographic proof the CA issued it)</span>
+
+<span class="cm"># Chain of trust:</span>
+<span class="cm"># Browser trusts Root CAs (built into OS/browser)</span>
+<span class="cm"># Root CA signs Intermediate CA certificates</span>
+<span class="cm"># Intermediate CA signs your certificate</span>
+<span class="cm"># Browser validates: your cert → intermediate → root (must be unbroken chain)</span>
+
+<span class="cm"># Self-signed cert: you sign it yourself. Browsers don't trust it by default.</span>
+<span class="cm"># Fine for dev/testing. Never use in production.</span></pre>
+
+<h2>Common TLS Issues</h2>
+
+<table>
+    <tr><th>Symptom</th><th>Likely Cause</th></tr>
+    <tr><td>"Your connection is not private" (NET::ERR_CERT_AUTHORITY_INVALID)</td><td>Self-signed cert, expired cert, cert for wrong domain, or cert signed by untrusted CA</td></tr>
+    <tr><td>"Certificate has expired"</td><td>Cert's not-after date has passed. Renew it.</td></tr>
+<td><td>"Hostname mismatch"</td><td>Cert is for <code>api.example.com</code> but you're connecting to <code>staging.example.com</td></td></tr>
+    <tr><td>"Mixed content" warning</td><td>HTTPS page loading HTTP resources (images, scripts). Browser blocks or warns.</td></tr>
+    <tr><td>Cert works in browser, fails in curl/Python</td><td>curl/Python don't use the OS certificate store. Use <code>curl -k</code> (insecure, but confirms DNS/TCP works) or set <code>REQUESTS_CA_BUNDLE</code> in Python.</td></tr>
+</table>
+
+<h2>Certificate Types (Let's Encrypt vs Commercial)</h2>
+
+<table>
+    <tr><th></th><th>Let's Encrypt</th><th>Commercial (DigiCert, etc.)</th></tr>
+    <tr><td><strong>Cost</strong></td><td>Free</td><td>$50-$2000+/year</td></tr>
+    <tr><td><strong>Validity</strong></td><td>90 days max (must renew frequently)</td><td>1-3 years</td></tr>
+    <tr><td><strong>Automation</strong></td><td>Designed for full automation (certbot)</td><td>Often requires manual steps</td></tr>
+    <tr><td><strong>Wildcard certs</strong></td><td>Supported (via DNS-01 challenge)</td><td>Supported</td></tr>
+<tr><td><strong>EV (green bar in browser)</td><td>Not offered</td><td>Available (requires business verification)</td></tr>
+<tr><td><strong>Support</td><td>Community (forums, docs)</td><td>Dedicated support</td></tr>
+</table>
+
+<h2>Renewal and Expiry</h2>
+
+<pre><span class="cm"># Check when a cert expires:</span>
+<span class="cmd">echo | openssl s_client -connect example.com:443 2>/dev/null | openssl x509 -noout -enddate -startdate</span>
+
+<span class="cm"># Or with dig:</span>
+<span class="cm"># dig +short -t cert example.com @8.8.8.8</span>
+
+<span class="cm"># Let's Encrypt renewal (via certbot):</span>
+<span class="cm"># certbot automatically handles this with a cron/systemd timer</span>
+<span class="cmd">sudo</span> certbot renew --dry-run          <span class="cm"># test renewal without making changes</span>
+<span class="cmd">sudo</span> certbot renew                 <span class="cm"># actually renew</span>
+<span class="cm"># certbot installs a timer that auto-renews when cert is 30 days old</span></pre>
+
+<h2>Mixed Content</h2>
+
+<pre><span class="cm"># HTTPS page loading HTTP resource → browser blocks or warns</span>
+<span class="cm"># Common causes:</span>
+<span class="cm"># &lt;img src="http://example.com/img.jpg"&gt;           ← blocks the image</span>
+<span class="cm"># &lt;script src="http://cdn.example.com/lib.js"&gt;   ← blocks the script</span>
+<span class="cm"># &lt;iframe src="http://..."&gt;                     ← blocks the iframe</span>
+
+<span class="cm"># Fix: use https:// for ALL resources, or upgrade-insecure-requests in CSP</span>
+<span class="cm"># Or for dev: chrome://flags/#allow-insecure-localhost</span></pre>
+
+</div>
+
+<!-- ========== TOOLS ========== -->
+<div class="tab-content" id="tab-tools">
+
+<h2>curl</h2>
+
+<pre><span class="cm"># Basic GET (same as opening in a browser)</span>
+<span class="cmd">curl</span> https://api.example.com/users
+
+<span class="cm"># Verbose (see the full request and response including headers)</span>
+<span class="cmd">curl</span> -v https://api.example.com/users
+
+<span class="cm"># Show only response headers</span>
+<span class="cm"># curl -I https://api.example.com/users</span>
+
+<span class="cm"># Silent mode (no progress bar)</span>
+<span class="cm"># curl -s https://api.example.com/users</span>
+
+<span class="cm"># Follow redirects</span>
+<span class="cm"># curl -L https://example.com/nonexistent-page</span>
+
+<span class="cm"># Download a file</span>
+<span class="cm"># curl -O https://example.com/file.zip</span>
+<span class="cm"># curl -o myfile.zip https://example.com/file.zip</span>  <span class="cm"># custom filename</span>
+
+<span class="cm"># POST with JSON</span>
+<span class="cmd">curl</span> -X POST https://api.example.com/users \
+  -H <span class="st">"Content-Type: application/json"</span> \
+  -d '{"name":"Alice","email":"alice@example.com"}'
+
+<span class="cm"># POST with form data</span>
+<span class="cm"># curl -X POST https://example.com/login -d "username=alice&password=secret"</span>
+
+<span class="cm"># POST from a file</span>
+<span class="cm"># curl -X POST -H "Content-Type: application/json" -d @data.json https://api.example.com/users</span>
+
+<span class="cm"># Add auth header</span>
+<span class="cm"># curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." https://api.example.com/me</span>
+
+<span class="cm"># Send a header multiple times</span>
+<span class="cm"># curl -H "X-Custom: value1" -H "X-Custom: value2"</span>
+
+<span class="cm"># Measure response time</span>
+<span class="cm"># curl -w "\nTime: %{time_total}s\n" -o /dev/null -s https://example.com</span>
+
+<span class="cm"># Show only status code</span>
+<span class="cm"># curl -o /dev/null -s -w "%{http_code}\n" https://example.com</span>
+
+<span class="cm"># Show response headers + body</span>
+<span class="cm"># curl -i https://api.example.com/users</span>
+
+<span class="cm"># Ignore SSL certificate errors (only for debugging!)</span>
+<span class="cm"># curl -k https://self-signed.example.com</span>
+
+<span class="cm"># Resolve using a specific DNS server</span>
+<span class="cm"># curl --resolve "example.com:443:127.0.0.1" https://example.com</span>
+
+<span class="cm"># Send a cookie</span>
+<span class="cm"># curl -b "session=abc123" https://example.com/dashboard</span>
+
+<span class="cm"># Save cookies to a file, then use them in next request</span>
+<span class="cm"># curl -c cookies.txt -X POST https://example.com/login -d "user=alice"
+<span class="cm"># curl -b cookies.txt https://example.com/dashboard</span>
+
+<span class="cm"># Upload a file</span>
+<span class="cm"># curl -F "file=@localfile.jpg" https://example.com/upload</span>
+<span class="cm"># curl -F "file=@localfile.jpg;type=image/jpeg" https://example.com/upload</span>
+<span class="cm"># curl -F "file=@localfile.jpg;filename=photo.jpg" https://example.com/upload</span>
+
+<span class="cm"># Verbose + show request headers only (no response body)</span>
+<span class="cm"># curl -v --trace-ascii https://api.example.com/users 2>&1 | head -30</span></pre>
+
+<h2>netcat (nc)</h2>
+
+<pre><span class="cm"># Listen on a port and respond manually</span>
+<span class="cmd">nc</span> -l -p 8080
+<span class="cm"># (type HTTP response manually, Ctrl+C to close)</span>
+
+<span class="cm"># Connect to a port (test if something is listening)</span>
+<span class="cm"># nc -v example.com 80</span>
+<span class="cm"># If connected: something is listening. If refused: nothing there.</span>
+
+<span class="cm"># Connect and send raw HTTP</span>
+<span class="cm"># printf "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n" | nc example.com 80</span>
+
+<span class="cm"># Port scan a single port range</span>
+<span class="cm"># nc -zv example.com 80 443 8000-8010</span>
+<span class="cm"># -z: scan without sending data (connect-only)</span>
+<span class="cm"># -v: verbose (shows open/closed/filtered)</span>
+
+<span class="cm"># Simple chat between two machines</span>
+<span class="cm"># Machine A: nc -l 9999</span>
+<span class="cm"># Machine B: nc machine-a-ip 9999</span>
+<span class="cm"># Both can now type and see each other's text</span>
+
+<span class="cm"># Test if a port is open locally</span>
+<span class="cm"># nc -z localhost 8000</span></pre>
+
+<h2>ss (Socket Statistics)</h2>
+
+<pre><span class="cm"># All listening TCP ports</span>
+<span class="cmd">ss -tlnp</span>
+
+<span class="cm"># All TCP connections (listening + established)</span>
+<span class="cm"># ss -tamp</span>
+
+<span class="cm"># Filter by port</span>
+<span class="cm"># ss -tlnp | grep :5432</span>
+
+<span class="cm"># Filter by process</span>
+<span class="cm"># ss -tlnp | grep python</span>
+
+<span class="cm"># All listening sockets (TCP + UDP)</span>
+<span class="cm"># ss -tulnp</span>
+
+<span class="cm"># Show process info</span>
+<span class="cm"># ss -tulnp -p</span></pre>
+
+<h2>tcpdump (Packet Capture)</h2>
+
+<pre><span class="cm"># Capture all traffic on eth0</span>
+<span class="cmd">sudo</span> tcpdump -i eth0
+
+<span class="cm"># Capture only port 80 (HTTP)</span>
+<span class="cm"># sudo tcpdump -i eth0 port 80</span>
+
+<span class="cm"># Capture HTTP requests (show readable text content)</span>
+<span class="cm"># sudo tcpdump -i eth0 -A -s 0:0 -c "tcp port 80 and (((ip[2:2] != 10) or (ip[2:2] != 0))"</span>
+
+<span class="cm"># Capture DNS queries</span>
+<span class="cm"># sudo tcpdump -i any port 53</span>
+
+<span class="cm"># Save capture to file</span>
+<span class="cm"># sudo tcpdump -i eth0 -w capture.pcap</span>
+
+<span class="cm"># Read a capture file</span>
+<span class="cm"># tcpdump -r capture.pcap</span>
+
+<span class="cm"># Human-readable output</span>
+<span class="cm"># sudo tcpdump -i eth0 -A -nn</span>
+
+<span class="cm"># Filter by host</span>
+<span class="cm"># sudo tcpdump -i eth0 host example.com</span>
+
+<span class="cm"># Filter by source</span>
+<span class="cm"># sudo tcpdump -i eth0 src host 192.168.1.100</span>
+
+<span class="cm"># Combination filter</span>
+<span class="cm"># sudo tcpdump -i eth0 "host example.com and port 443"</span>
+
+<span class="cm"># Capture only SYN packets (new connections)</span>
+<span class="cm"># sudo tcpdump -i eth0 "tcp[tcpflags] & (tcp[tcpflags] & (tcp[13] != 0x10))"</span>
+
+<span class="cm"># -i = interface</span>
+<span class="cm"># -A = print ASCII text alongside hex</span>
+<span class="cm"># -nn = no name resolution (faster)</span>
+<span class="cm"># -w file = write to file</span>
+<span class="cm"># -c count = stop after N packets</span>
+<span class="cm"># -C snapshot length (default 262144 bytes)</span></pre>
+
+<h2>traceroute / tracepath</h2>
+
+<pre><span class="cm"># Trace the route packets take to reach a host</span>
+<span class="cmd">traceroute example.com</span>      <span class="cm"># Linux/macOS (uses UDP by default)</span>
+<span class="cm"># tracepath example.com</span>      <span class="cm"># modern Linux (uses ICMP)</span>
+
+<span class="cm"># Output: each hop shows the router/intermediate node and the round-trip time to reach it</span>
+<span class="cm"># If you see * * * * at some hop, that hop blocks ICMP (common for cloud providers)</span></pre>
+
+<h2>dig (DNS Lookup)</h2>
+
+<pre><span class="cm"># Basic lookup (same as above, repeated here for completeness)</span>
+<span class="cm"># dig example.com A</span>
+<span class="cm"># dig example.com AAAA</span>
+<span class="cm"># dig example.com MX</span>
+<span class="cm"># dig example.com TXT</span>
+<span class="cm"># dig example.com CNAME</span>
+<span class="cm"># dig +short example.com A</span>
+
+<span class="cm"># Full resolution trace</span>
+<span class="cm"># dig +trace example.com</span>
+
+<span class="cm"># Check all record types for a domain</span>
+<span class="cm"># dig ANY example.com</span>
+
+<span class="cm"># Query a specific server</span>
+<span class="cm"># dig @8.8.8.8 example.com A</span>
+<span class="cm"># dig @1.1.1.1 example.com A</span>
+
+<span class="cm"># Check SOA (start of authority)</span>
+<span class="cm"># dig SOA example.com</span>
+
+<span class="cm"># Check DNSSEC (signed DNS)</span>
+<span class="cm"># dig +dnssec example.com DNSKEY</span>
+<span class="cm"># dig +dnssec example.com A +multiline</span>
+
+<span class="cm"># Reverse DNS</span>
+<span class="cm"># dig -x 93.184.216.34</span>
+<span class="cm"># dig -x 93.184.216.104 +short</span>
+
+<span class="cm"># Check specific nameserver's info</span>
+<span class="cm"># dig @ns1.example.com example.com NS</span></pre>
+
+<h2>wireshark</h2>
+
+<pre><span class="cm"># Wireshark is a GUI packet analyzer. It does what tcpdump does but with a proper interface.</span>
+
+<span class="cm"># Open it, select your network interface, start capture, do the action, stop capture, then inspect.</span>
+
+<span class="cm"># Key features:</span>
+<span class="cm"># - Color-coded protocol dissection (HTTP, TCP, DNS, TLS are highlighted differently)</span>
+<span class="cm"># - "Follow TCP stream" to see the full conversation between two endpoints</span>
+<span class="cm"># - Filters: "http" shows only HTTP, "tcp.port == 5432" shows only PostgreSQL traffic</span>
+<span class="cm"># - "Follow TCP stream" → right-click a packet → Follow → see full conversation</span>
+<span class="cm"># - Statistics → Conversations → shows all TCP streams</span>
+<span class="cm"># - Analyze → Expert Info → automated problem detection</span>
+
+<span class="cm"># Export → "Export specified packets" → save as .pcap for later analysis or sharing</span></pre>
+
+</div>
+
+<!-- ========== INFRASTRUCTURE ========== -->
+<div class="tab-content" id="infra">
+
+<h2>Switch</h2>
+
+<p>A switch connects devices on a <strong>local network (LAN)</strong>. It operates at the data link layer (layer 2) and uses <strong>MAC addresses</strong> to decide where to send frames. It builds a table mapping MAC addresses to ports, and learns which device is on which port by watching source MAC addresses in incoming frames.</p>
+
+<pre><span class="cm"># What a switch actually does with a frame:</span>
+<span class="cm"># Frame arrives on port 1 from MAC AA:BB:CC:DD:EE:01, dest MAC FF:FF:FF:FF:FF:FF
+<span class="cm"># Switch looks up FF:FF:FF:FF:FF:FF → it's on port 5
+<span class="cm"># Switch forwards frame out port 5
+<span class="cm"># It does NOT look at IP addresses. The IP inside the frame is irrelevant to the switch.</span>
+
+<span class="cm"># Broadcast frame (dest MAC FF:FF:FF:FF:FF:FF:FF):
+<span class="cm"># Switch forwards to ALL ports (except the one it arrived on)</span>
+<span class="cm"># This is how ARP ("Who has 192.168.1.1? Tell 192.168.1.1 → replies to that port</span></pre>
+
+<p class="note"><strong>A switch connects devices on the same network.</strong> Two switches can be connected to expand the network. Routers connect different networks.</p>
+
+<h2>Router</h2>
+
+<p>A router connects <strong>different networks</strong> (e.g., your LAN and the internet). It operates at the network layer (layer 3) and uses <strong>IP addresses</strong> to decide where to send packets.</p>
+
+<pre><span class="cm"># What a router does:</span>
+<span class="cm"># Packet arrives from 192.168.1.100 destined for 93.184.216.34
+<span class="cm"># Router checks its routing table: "93.184.216.34 → send via WAN port"
+<span class="cm"># Before forwarding: strips the source MAC, adds its own MAC as source MAC
+<span class="cm"># (because the previous MAC is only valid on the local segment)
+#></span>
+<span class="cm"># This is why your app sees the server's public IP as the source IP in logs</span>
+<span class="cm"># not your machine's local IP</span></pre>
+
+<p class="tip"><strong>Your app usually sees the router's public IP, not your machine's local IP.</strong> If you need the real client IP behind a proxy/CDN, use <code>X-Forwarded-For</code> header parsing. The first IP in the chain is usually the real client IP.</p>
+
+<h2>NAT (Network Address Translation)</h2>
+
+<p>NAT maps <strong>private IP + port</strong> to <strong>public IP + port</strong>. This solves two problems:</p>
+
+<pre><span class="cm"># Problem 1: IPv4 exhaustion (not enough public IPs for every device)</span>
+<span class="cm"># Problem 2: private IPs aren't routable on the internet</span>
+
+<span class="cm"># What NAT does:</span>
+<span class="cm"># Internal: 192.168.1.10:51234 → External: 93.184.216.34:51234</span>
+<span class="cm"># Your app connects to example.com:443 from 192.168.1.10
+<span class="cm"># Router translates source IP: 192.168.1.10 → 93.184.216.34
+<span class="cm"># When response comes back, router translates dest IP back: 93.184.216.34 → 192.168.1.10
+<span class="cm"># Your app thinks it's talking to 192.168.1.10 but it's actually going through the router</span>
+<span class="cm"># with the public IP</span></pre>
+
+<p class="note"><strong>Port forwarding is manual NAT for incoming connections.</strong> Outgoing connections are NAT'd automatically. But if you run a web server on 192.168.1.10:8000, the internet can't reach it because no incoming NAT mapping exists yet. You must explicitly configure: "forward port 443 to 192.168.1.10:8000" on the router.</p>
+
+<h2>Firewall</h2>
+
+<p>A firewall controls <strong>which packets are allowed through</strong> based on rules: source/dest IP, port, protocol, connection state (new/established/related).</p>
+
+<pre><span class="cm"># Types:</span>
+<span class="cm"># - Network firewall: on your router (controls traffic between LAN and internet)</span>
+<span class="cm"># - Host firewall: on your machine (controls traffic to/from your machine)</span>
+<span class="cm"># - Cloud security groups: on your cloud provider (controls traffic to/from VMs)</span>
+
+<span class="cm"># How rules are evaluated (usually, in order):</span>
+<span class="cm"># 1. Allow established connections (return traffic for existing connections)</span>
+<span class="cm"># 2. Block specific things (drop packets matching deny rules)</span>
+<span class="cm"># 3. Allow everything else (default allow or default deny)</span>
+
+<span class="cm"># Common patterns:</span>
+<span class="cm"># Allow all outgoing (default on most setups)</span>
+<span class="cm"># Allow incoming: only specific ports (SSH=22, HTTP=80, HTTPS=443)</span>
+<span class="cm"># Deny all incoming by default</span>
+<span class="cm"># Allow ping (ICMP) for diagnostics</span>
+<span class="cm"># Block specific IPs (e.g., known bad actors)</span></pre>
+
+<p class="warn"><strong>"Connection timed out" with nothing in logs = silently dropped by firewall.</strong> Firewalls often drop packets without logging. Check both the cloud security group AND the server's host firewall. Try <code>curl -v</code> on the server itself to see if the port is actually listening. If yes, it's the firewall. If "Connection refused," it's not.</p>
+
+<h2>VPN (Virtual Private Network)</h2>
+
+<p>A VPN creates an encrypted tunnel through the internet to a private network. What this actually means:</p>
+
+<pre><span class="cm"># Without VPN:</span>
+<span class="cm"># Your laptop → open internet → raw packets → server on 203.0.113.1 → MySQL on 3306</span>
+<span class="cm"># Anyone between you and the server can see you're connecting to 203.0.113.1 on port 3306</span>
+<span class="cm"># They don't see what's inside the packets (TLS helps, but the metadata is visible)</span>
+
+<span class="cm"># With VPN:</span>
+<span class="cm"># Your laptop → VPN client → encrypted tunnel → VPN server → private network → MySQL on 10.0.0.5:3306</span>
+<span class="cm"># Outsiders only see: you're sending encrypted data to 203.0.113.1</span>
+<span class="cm"># They cannot see: the destination (10.0.0.5) or the port (3306)</span>
+<span class="cm"># It looks like you're on the private network</span></pre>
+
+<p class="note"><strong>A VPN does NOT encrypt your app's actual data.</strong> It encrypts the transport. The app inside the VPN tunnel is still HTTP/JSON/&lt;whatever&gt; — it's just delivered through an encrypted tunnel. You still need HTTPS for application-level encryption.</p>
+
+<h2>Subnets</h2>
+
+<pre><span class="cm"># A subnet divides one IP range into smaller networks</span>
+<span class="cm"># 192.168.1.0/24 means:</span>
+<span class="cm">#   Network: 192.168.1.0</span>
+<span class="cm">#   First usable: 192.168.1.1</span>
+<span class="cm">#   Last usable: 192.168.1.254</span>
+<span class="cm">#   Broadcast: 192.168.1.255</span>
+<span class="cm">#   Total usable IPs: 254</span>
+<span class="cm"># /24 = 255 addresses (256 total, 1 network, 254 usable)</span>
+<span class="cm"># /25 = 128 addresses (126 usable)</span>
+<span class="cm"># /26 = 64 addresses (62 usable)</span>
+<span class="cm"># /27 = 32 addresses (30 usable)</span>
+<span class="cm"># /28 = 16 addresses (14 usable)</span>
+<span class="cm"># /32 = 1 address (1 usable, commonly used for single hosts)</span>
+
+<span class="cm"># Subnet mask tells the OS which part of the IP is "network" and which is "host"</span>
+<span class="cm"># 255.255.255.0 → /24 → last octet is host (254 usable hosts)</span>
+<span class="cm"># 255.255.255.128 → /25 → last 7 bits are host (126 usable hosts)</span>
+<span class="cm"># 255.255.255.192 → /26 → last 6 bits are host (62 usable hosts)</span>
+
+<span class="cm"># Default gateway: the router's IP in the subnet (usually .1)</span>
+<span class="cm"># DNS server: usually the router's IP (same as default gateway)</span>
+<span class="cm"># Subnet vs broadcast: don't use .0 (network) or .255 (broadcast) as host addresses</span>
+<span class="cm"># Those have special meaning in the protocol</span></pre>
+
+<h2>Load Balancer</h2>
+
+<p>A load balancer distributes incoming requests across multiple backend servers. What it actually does:</p>
+
+<pre><span class="cm"># Client → load balancer → picks backend</span>
+<span class="cm"># Load balancer → backend-1 (forwards request, remembers which client went where)</span>
+<span class="cm"># Same client → same backend (session affinity / sticky sessions)</span>
+<span class="cm"># Backend-1 goes down → health check fails → stop sending traffic to it</span>
+<span class="cm"># Load balancer → routes around it to healthy backends</span>
+
+<span class="cm"># Common algorithms:</span>
+<span class="cm"># Round-robin: 1→1→1→1→1 (fair distribution)</span>
+<span class="cm"># Least connections: to the backend with fewest active connections</span>
+<span class="cm"># IP hash: same client → same backend (sticky sessions)</span>
+<span class="cm"># Weighted round-robin: weighted 3:1 means backend-1 gets 3 requests for every 1 to backend-2</span>
+<span class="cm"># Random: random backend each time (good for APIs with caching)</span>
+
+<span class="cm"># Health checks (how the balancer knows if a backend is alive):</span>
+<span class="cm"># GET /health → 200 OK → healthy</span>
+<span class="cm"># GET /health → 500 → unhealthy</span>
+<span class="cm"># Run on every 5-10 seconds per backend</span></pre>
+
+<h2>Proxy</h2>
+
+<pre><span class="cm"># Forward proxy: client → proxy → server (client doesn't know about the real server)</span>
+<span class="cm"># Example: Nginx sitting in front of your app, forwarding to localhost:8000</span>
+<span class="cm"># Client connects to proxy's port, proxy connects to app</span>
+
+<span class="cm"># Reverse proxy: client → reverse proxy → backend (client doesn't know about backends)</span>
+<span class="cm"># Example: Nginx receives all traffic for example.com and routes it to different backends based on path:</span>
+<span class="cm">#   / → app-server:8000</span>
+<span class="cm">#   /api → api-server:8001</span>
+<span class="cm">#   /ws → websocket-server:8002</span>
+
+<span class="cm"># A reverse proxy also handles:</span>
+<span class="cm"># - SSL termination (proxy handles TLS, backend sees plain HTTP internally)</span>
+<span class="cm"># - Buffering (proxy buffers responses, not the app)</span>
+<span class="cm"># - Compression (proxy compresses responses)</span>
+<span class="cm"># - Rate limiting (proxy rejects excessive requests)</span>
+<span class="cm"># - Static file serving (proxy serves images/CSS/JS directly, never hits your app)</span></pre>
+
+<p class="tip"><strong>Nginx as reverse proxy is extremely common.</strong> Almost every production deployment has one. It handles SSL, static files, compression, and routing. Your app only ever receives requests that need dynamic content.</p>
+
+<h2>CDN (Content Delivery Network)</h2>
+
+<pre><span class="cm"># What it does: cache your static files at edge locations worldwide</span>
+<span class="cm"># User in Tokyo requests image.jpg → CDN edge server in Tokyo serves it locally (20ms instead of 200ms from your server)</span>
+
+<span class="cm"># What it caches: static files (images, CSS, JS, fonts, videos, PDFs)</span>
+<span class="cm"># What it doesn't cache: dynamic responses (API calls, personalized pages, authenticated pages)</span>
+<span class="cm"># (unless configured otherwise)</span>
+
+<span class="cm"># Common: Cloudflare, Fastly, AWS CloudFront, Vercel, Netlify</span>
+
+<span class="cm"># CDN → checks cache → cache hit: served immediately</span>
+<span class="cm"># CDN → cache miss → fetches from origin → stores and serves</span>
+
+<span class="cm"># Cache invalidation:</span>
+<span class="cm"># Manual: "Purge all" or "Purge by URL" in CDN dashboard</span>
+<span class="cm"># Cache-Control header: "no-cache" or "max-age=0" tells CDN not to cache</span>
+<span class="cm"># Versioned files: style.css?v=2 → changing the ?v=3 invalidates the old version</span>
+<span class="cm"># (this is why you see ?v=hash on CSS/JS files in browsers)</span></pre>
+
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+document.querySelectorAll('.tabs a').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const tab = link.dataset.tab;
+        document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        link.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+    });
+});
+</script>
+</body>
+</html>

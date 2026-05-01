@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL Reference for Developers</title>
+    <style>
+        :root {
+            --bg: #fff; --text: #1a1a1a; --muted: #555; --light: #888;
+            --border: #ddd; --code-bg: #f5f5f5; --accent: #1a3a6b;
+            --green: #2e7d32; --red: #c62828; --orange: #e65100; --blue: #1565c0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: var(--bg); color: var(--text);
+            line-height: 1.7; font-size: 16px;
+        }
+        .wrapper { max-width: 840px; margin: 0 auto; padding: 0 24px 60px; }
+        .tabs {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg); border-bottom: 2px solid var(--border);
+            padding: 10px 0 0;
+        }
+        .tabs ul {
+            list-style: none; margin: 0; padding: 0 24px;
+            display: flex; flex-wrap: wrap; gap: 4px;
+        }
+        .tabs a {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px; color: var(--muted);
+            text-decoration: none; padding: 5px 10px;
+            border: 1px solid var(--border); border-radius: 3px 3px 0 0;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap; transition: color 0.15s, background 0.15s;
+            margin-bottom: -2px;
+        }
+        .tabs a:hover { color: var(--text); background: var(--code-bg); }
+        .tabs a.active {
+            color: var(--text); background: var(--bg);
+            border-bottom-color: var(--bg); font-weight: 700;
+        }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+        .subtitle { color: var(--light); font-size: 14px; margin-bottom: 28px; font-style: italic; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        h2 { font-size: 19px; font-weight: 700; margin: 36px 0 10px; padding-bottom: 5px; border-bottom: 2px solid var(--border); }
+        h3 { font-size: 15px; font-weight: 700; margin: 24px 0 6px; }
+        p { margin-bottom: 10px; color: var(--muted); font-size: 15px; }
+        strong { color: var(--text); }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; background: var(--code-bg);
+            padding: 1px 5px; border-radius: 3px; border: 1px solid #e0e0e0;
+        }
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; line-height: 1.55;
+            background: var(--code-bg); border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 18px;
+            overflow-x: auto; margin: 10px 0 14px; white-space: pre;
+        }
+        .file-label { font-family: 'Courier New', monospace; font-size: 12px; color: var(--light); margin: 10px 0 0; }
+        .cm  { color: #999; font-style: italic; }
+        .kw  { color: var(--accent); font-weight: 700; }
+        .fn  { color: var(--blue); }
+        .st  { color: var(--green); }
+        .nu  { color: var(--orange); }
+        .ty  { color: #6a1b9a; }
+        .op  { color: var(--red); }
+        ul, ol { margin: 6px 0 14px 22px; color: var(--muted); font-size: 14px; }
+        li { margin-bottom: 3px; }
+        .note { background: #fff8e1; border-left: 3px solid var(--orange); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .warn { background: #fce4ec; border-left: 3px solid var(--red); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .tip  { background: #e8f5e9; border-left: 3px solid var(--green); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 13.5px; }
+        th { background: var(--code-bg); text-align: left; padding: 6px 8px; border: 1px solid var(--border); font-weight: 700; font-size: 12px; }
+        td { padding: 6px 8px; border: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+        td:first-child { font-family: 'Courier New', monospace; font-size: 12.5px; white-space: nowrap; }
+        .badge { display: inline-block; font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+        .badge-r { background: #fce4ec; color: var(--red); }
+        .badge-g { background: #e8f5e9; color: var(--green); }
+        .badge-o { background: #fff3e0; color: var(--orange); }
+        .badge-b { background: #e3f2fd; color: var(--blue); }
+        hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+        @media print { body { font-size: 12px; } pre { font-size: 11px; padding: 10px; } .tabs { display: none; } .tab-content { display: block !important; page-break-before: always; } }
+        @media (max-width: 700px) { .tabs a { font-size: 11px; padding: 4px 7px; } td { font-size: 12px; } }
+    </style>
+</head>
+<body>
+
+<nav class="tabs">
+    <ul>
+        <li><a href="#" class="active" data-tab="basics">Basics</a></li>
+        <li><a href="#" data-tab="queries">Queries</a></li>
+        <li><a href="#" data-tab="joins">Joins</a></li>
+        <li><a href="#" data-tab="indexes">Indexes</a></li>
+        <li><a href="#" data-tab="transactions">Transactions</a></li>
+        <li><a href="#" data-tab="types">Types &amp; Schema</a></li>
+        <li><a href="#" data-tab="advanced">Advanced SQL</a></li>
+        <li><a href="#" data-tab="admin">Admin &amp; Ops</a></li>
+    </ul>
+</nav>
+
+<div class="wrapper">
+
+<h1>PostgreSQL Reference for Developers</h1>
+<div class="subtitle">Queries, joins, indexes, transactions, and the things that actually matter when building on Postgres.</div>
+
+<!-- ========== BASICS ========== -->
+<div class="tab-content active" id="tab-basics">
+
+<h2>Data Definition: Tables</h2>
+
+<pre><span class="cm">-- Create a table</span>
+<span class="kw">CREATE TABLE</span> users (
+    id          <span class="ty">BIGSERIAL</span> <span class="kw">PRIMARY KEY</span>,        <span class="cm">-- auto-incrementing integer PK</span>
+    email       <span class="ty">TEXT</span>      <span class="kw">NOT NULL UNIQUE</span>,     <span class="cm">-- enforced at DB level</span>
+    name        <span class="ty">TEXT</span>      <span class="kw">NOT NULL</span>,
+    age         <span class="ty">INTEGER</span>   <span class="kw">CHECK</span> (age >= <span class="nu">0</span>),
+    role        <span class="ty">TEXT</span>      <span class="kw">NOT NULL DEFAULT</span> <span class="st">'user'</span>,
+    created_at  <span class="ty">TIMESTAMPTZ</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>(),
+    deleted_at  <span class="ty">TIMESTAMPTZ</span>                   <span class="cm">-- NULL = not deleted (soft delete)</span>
+);
+
+<span class="cm">-- Prefer BIGSERIAL or BIGINT GENERATED ALWAYS AS IDENTITY over SERIAL</span>
+id  <span class="ty">BIGINT</span> <span class="kw">GENERATED ALWAYS AS IDENTITY PRIMARY KEY</span>
+
+<span class="cm">-- Or use UUID as primary key (requires pgcrypto or gen_random_uuid())</span>
+id  <span class="ty">UUID</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>()
+
+<span class="cm">-- Alter an existing table</span>
+<span class="kw">ALTER TABLE</span> users <span class="kw">ADD COLUMN</span> bio <span class="ty">TEXT</span>;
+<span class="kw">ALTER TABLE</span> users <span class="kw">ALTER COLUMN</span> name <span class="kw">SET NOT NULL</span>;
+<span class="kw">ALTER TABLE</span> users <span class="kw">DROP COLUMN</span> bio;
+<span class="kw">ALTER TABLE</span> users <span class="kw">RENAME COLUMN</span> name <span class="kw">TO</span> full_name;
+<span class="kw">ALTER TABLE</span> users <span class="kw">RENAME TO</span> accounts;
+
+<span class="cm">-- Drop</span>
+<span class="kw">DROP TABLE</span> users;
+<span class="kw">DROP TABLE IF EXISTS</span> users <span class="kw">CASCADE</span>; <span class="cm">-- CASCADE drops dependent views/FKs</span></pre>
+
+<h2>Foreign Keys</h2>
+
+<pre><span class="kw">CREATE TABLE</span> posts (
+    id         <span class="ty">BIGSERIAL</span> <span class="kw">PRIMARY KEY</span>,
+    user_id    <span class="ty">BIGINT</span> <span class="kw">NOT NULL REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+    title      <span class="ty">TEXT</span> <span class="kw">NOT NULL</span>,
+    body       <span class="ty">TEXT</span>,
+    published  <span class="ty">BOOLEAN</span> <span class="kw">NOT NULL DEFAULT</span> <span class="kw">false</span>,
+    created_at <span class="ty">TIMESTAMPTZ</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="cm">-- ON DELETE options:</span>
+<span class="cm">-- CASCADE     → delete child rows when parent is deleted</span>
+<span class="cm">-- SET NULL    → set FK column to NULL when parent is deleted</span>
+<span class="cm">-- SET DEFAULT → set FK column to its default value</span>
+<span class="cm">-- RESTRICT    → prevent parent deletion if children exist (default)</span>
+<span class="cm">-- NO ACTION   → like RESTRICT but deferred until end of transaction</span>
+
+<span class="cm">-- Always index foreign key columns (Postgres does NOT do this automatically)</span>
+<span class="kw">CREATE INDEX ON</span> posts(user_id);</pre>
+
+<div class="warn"><strong>Postgres does not automatically create indexes on foreign key columns.</strong> Every FK column that you JOIN or filter on needs a manual <code>CREATE INDEX</code>. Missing FK indexes cause sequential scans and are one of the most common Postgres performance mistakes.</div>
+
+<h2>INSERT, UPDATE, DELETE</h2>
+
+<pre><span class="cm">-- Insert a single row</span>
+<span class="kw">INSERT INTO</span> users (email, name) <span class="kw">VALUES</span> (<span class="st">'alice@example.com'</span>, <span class="st">'Alice'</span>);
+
+<span class="cm">-- Insert and return the generated id</span>
+<span class="kw">INSERT INTO</span> users (email, name) <span class="kw">VALUES</span> (<span class="st">'bob@example.com'</span>, <span class="st">'Bob'</span>) <span class="kw">RETURNING</span> id;
+
+<span class="cm">-- Insert multiple rows</span>
+<span class="kw">INSERT INTO</span> users (email, name) <span class="kw">VALUES</span>
+    (<span class="st">'carol@example.com'</span>, <span class="st">'Carol'</span>),
+    (<span class="st">'dave@example.com'</span>,  <span class="st">'Dave'</span>);
+
+<span class="cm">-- Upsert: insert or update on conflict</span>
+<span class="kw">INSERT INTO</span> users (email, name)
+<span class="kw">VALUES</span> (<span class="st">'alice@example.com'</span>, <span class="st">'Alice Updated'</span>)
+<span class="kw">ON CONFLICT</span> (email)
+<span class="kw">DO UPDATE SET</span> name = <span class="kw">EXCLUDED</span>.name, updated_at = <span class="fn">now</span>();
+
+<span class="cm">-- Ignore on conflict (do nothing)</span>
+<span class="kw">INSERT INTO</span> users (email, name) <span class="kw">VALUES</span> (<span class="st">'alice@example.com'</span>, <span class="st">'Alice'</span>)
+<span class="kw">ON CONFLICT DO NOTHING</span>;
+
+<span class="cm">-- Update</span>
+<span class="kw">UPDATE</span> users <span class="kw">SET</span> name = <span class="st">'Alice Smith'</span>, role = <span class="st">'admin'</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+
+<span class="cm">-- Update and return modified rows</span>
+<span class="kw">UPDATE</span> users <span class="kw">SET</span> role = <span class="st">'admin'</span> <span class="kw">WHERE</span> email = <span class="st">'alice@example.com'</span> <span class="kw">RETURNING</span> *;
+
+<span class="cm">-- Delete</span>
+<span class="kw">DELETE FROM</span> users <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+<span class="kw">DELETE FROM</span> users <span class="kw">WHERE</span> deleted_at &lt; <span class="fn">now</span>() - <span class="kw">INTERVAL</span> <span class="st">'30 days'</span> <span class="kw">RETURNING</span> id;</pre>
+
+</div>
+
+<!-- ========== QUERIES ========== -->
+<div class="tab-content" id="tab-queries">
+
+<h2>SELECT Fundamentals</h2>
+
+<pre><span class="cm">-- Basic select</span>
+<span class="kw">SELECT</span> id, name, email <span class="kw">FROM</span> users;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users;                     <span class="cm">-- avoid * in production queries</span>
+
+<span class="cm">-- Filter</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> role = <span class="st">'admin'</span> <span class="kw">AND</span> age > <span class="nu">18</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> id <span class="kw">IN</span> (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>);
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> id <span class="kw">NOT IN</span> (<span class="kw">SELECT</span> user_id <span class="kw">FROM</span> banned);
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> deleted_at <span class="kw">IS NULL</span>;       <span class="cm">-- NULL check</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> deleted_at <span class="kw">IS NOT NULL</span>;
+
+<span class="cm">-- LIKE and ILIKE (case-insensitive)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> name <span class="kw">LIKE</span> <span class="st">'A%'</span>;       <span class="cm">-- starts with A</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email <span class="kw">ILIKE</span> <span class="st">'%@gmail.com'</span>;
+
+<span class="cm">-- Sort</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">ORDER BY</span> created_at <span class="kw">DESC</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">ORDER BY</span> role <span class="kw">ASC</span>, name <span class="kw">ASC</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">ORDER BY</span> name <span class="kw">NULLS LAST</span>;    <span class="cm">-- push NULLs to the end</span>
+
+<span class="cm">-- Limit and offset (pagination)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">ORDER BY</span> id <span class="kw">LIMIT</span> <span class="nu">20</span> <span class="kw">OFFSET</span> <span class="nu">40</span>; <span class="cm">-- page 3 of 20</span></pre>
+
+<div class="note"><strong>OFFSET pagination is slow on large tables.</strong> <code>OFFSET 10000 LIMIT 20</code> requires scanning 10020 rows to return 20. Use keyset (cursor) pagination instead: <code>WHERE id &gt; :last_id ORDER BY id LIMIT 20</code>. Much faster and consistent under inserts.</div>
+
+<h2>Aggregates and GROUP BY</h2>
+
+<pre><span class="cm">-- Aggregate functions</span>
+<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> users;
+<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> users <span class="kw">WHERE</span> role = <span class="st">'admin'</span>;
+<span class="kw">SELECT</span> <span class="fn">AVG</span>(age), <span class="fn">MIN</span>(age), <span class="fn">MAX</span>(age), <span class="fn">SUM</span>(age) <span class="kw">FROM</span> users;
+
+<span class="cm">-- GROUP BY</span>
+<span class="kw">SELECT</span> role, <span class="fn">COUNT</span>(*) <span class="kw">AS</span> total
+<span class="kw">FROM</span> users
+<span class="kw">GROUP BY</span> role
+<span class="kw">ORDER BY</span> total <span class="kw">DESC</span>;
+
+<span class="cm">-- HAVING: filter on aggregated values (WHERE runs before aggregation, HAVING after)</span>
+<span class="kw">SELECT</span> user_id, <span class="fn">COUNT</span>(*) <span class="kw">AS</span> post_count
+<span class="kw">FROM</span> posts
+<span class="kw">GROUP BY</span> user_id
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) > <span class="nu">5</span>
+<span class="kw">ORDER BY</span> post_count <span class="kw">DESC</span>;
+
+<span class="cm">-- Count distinct values</span>
+<span class="kw">SELECT</span> <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> user_id) <span class="kw">FROM</span> posts;
+
+<span class="cm">-- Conditional aggregation</span>
+<span class="kw">SELECT</span>
+    <span class="fn">COUNT</span>(*) <span class="kw">AS</span> total,
+    <span class="fn">COUNT</span>(*) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> role = <span class="st">'admin'</span>) <span class="kw">AS</span> admins,
+    <span class="fn">COUNT</span>(*) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> deleted_at <span class="kw">IS NOT NULL</span>) <span class="kw">AS</span> deleted
+<span class="kw">FROM</span> users;</pre>
+
+<h2>Subqueries and CTEs</h2>
+
+<pre><span class="cm">-- Subquery in WHERE</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> posts
+<span class="kw">WHERE</span> user_id <span class="kw">IN</span> (
+    <span class="kw">SELECT</span> id <span class="kw">FROM</span> users <span class="kw">WHERE</span> role = <span class="st">'admin'</span>
+);
+
+<span class="cm">-- EXISTS: often faster than IN for large subqueries</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users u
+<span class="kw">WHERE EXISTS</span> (
+    <span class="kw">SELECT</span> <span class="nu">1</span> <span class="kw">FROM</span> posts p <span class="kw">WHERE</span> p.user_id = u.id
+);
+
+<span class="cm">-- CTE (Common Table Expression): named subquery, run once, referenced multiple times</span>
+<span class="kw">WITH</span> active_users <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> id, name <span class="kw">FROM</span> users <span class="kw">WHERE</span> deleted_at <span class="kw">IS NULL</span>
+),
+prolific <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> user_id, <span class="fn">COUNT</span>(*) <span class="kw">AS</span> post_count
+    <span class="kw">FROM</span> posts
+    <span class="kw">GROUP BY</span> user_id
+    <span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) > <span class="nu">10</span>
+)
+<span class="kw">SELECT</span> u.name, p.post_count
+<span class="kw">FROM</span> active_users u
+<span class="kw">JOIN</span> prolific p <span class="kw">ON</span> p.user_id = u.id
+<span class="kw">ORDER BY</span> p.post_count <span class="kw">DESC</span>;
+
+<span class="cm">-- Recursive CTE: for trees and hierarchies</span>
+<span class="kw">WITH RECURSIVE</span> org_tree <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> id, name, manager_id, <span class="nu">0</span> <span class="kw">AS</span> depth
+    <span class="kw">FROM</span> employees <span class="kw">WHERE</span> manager_id <span class="kw">IS NULL</span>     <span class="cm">-- base case: root</span>
+    <span class="kw">UNION ALL</span>
+    <span class="kw">SELECT</span> e.id, e.name, e.manager_id, t.depth + <span class="nu">1</span>
+    <span class="kw">FROM</span> employees e
+    <span class="kw">JOIN</span> org_tree t <span class="kw">ON</span> e.manager_id = t.id          <span class="cm">-- recursive case</span>
+)
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> org_tree <span class="kw">ORDER BY</span> depth, name;</pre>
+
+</div>
+
+<!-- ========== JOINS ========== -->
+<div class="tab-content" id="tab-joins">
+
+<h2>JOIN Types</h2>
+
+<table>
+    <tr><th>Join Type</th><th>Returns</th><th>When to Use</th></tr>
+    <tr><td><code>INNER JOIN</code></td><td>Rows where the condition matches in both tables</td><td>You only want rows that have a matching partner</td></tr>
+    <tr><td><code>LEFT JOIN</code></td><td>All rows from left table; NULLs where no match in right</td><td>Optional relationship — keep left rows even if no match</td></tr>
+    <tr><td><code>RIGHT JOIN</code></td><td>All rows from right table; NULLs where no match in left</td><td>Rarely used; just flip the tables and use LEFT JOIN</td></tr>
+    <tr><td><code>FULL OUTER JOIN</code></td><td>All rows from both tables; NULLs where no match</td><td>Find rows that exist in one table but not the other</td></tr>
+    <tr><td><code>CROSS JOIN</code></td><td>Cartesian product — every combination</td><td>Generating test data; matrix comparisons</td></tr>
+</table>
+
+<pre><span class="cm">-- INNER JOIN: only posts that have a matching user</span>
+<span class="kw">SELECT</span> p.title, u.name
+<span class="kw">FROM</span> posts p
+<span class="kw">JOIN</span> users u <span class="kw">ON</span> u.id = p.user_id;  <span class="cm">-- JOIN = INNER JOIN</span>
+
+<span class="cm">-- LEFT JOIN: all users, even those with no posts</span>
+<span class="kw">SELECT</span> u.name, <span class="fn">COUNT</span>(p.id) <span class="kw">AS</span> post_count
+<span class="kw">FROM</span> users u
+<span class="kw">LEFT JOIN</span> posts p <span class="kw">ON</span> p.user_id = u.id
+<span class="kw">GROUP BY</span> u.id, u.name
+<span class="kw">ORDER BY</span> post_count <span class="kw">DESC</span>;
+
+<span class="cm">-- LEFT JOIN to find rows with NO match (anti-join pattern)</span>
+<span class="kw">SELECT</span> u.* <span class="kw">FROM</span> users u
+<span class="kw">LEFT JOIN</span> posts p <span class="kw">ON</span> p.user_id = u.id
+<span class="kw">WHERE</span> p.id <span class="kw">IS NULL</span>;  <span class="cm">-- users who have never posted</span>
+
+<span class="cm">-- Multiple joins</span>
+<span class="kw">SELECT</span> p.title, u.name <span class="kw">AS</span> author, c.body <span class="kw">AS</span> comment
+<span class="kw">FROM</span> posts p
+<span class="kw">JOIN</span> users u <span class="kw">ON</span> u.id = p.user_id
+<span class="kw">LEFT JOIN</span> comments c <span class="kw">ON</span> c.post_id = p.id
+<span class="kw">WHERE</span> p.published = <span class="kw">true</span>
+<span class="kw">ORDER BY</span> p.created_at <span class="kw">DESC</span>;
+
+<span class="cm">-- Self-join: join a table to itself (e.g., employee → manager)</span>
+<span class="kw">SELECT</span> e.name <span class="kw">AS</span> employee, m.name <span class="kw">AS</span> manager
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> employees m <span class="kw">ON</span> m.id = e.manager_id;</pre>
+
+<div class="tip"><strong>JOIN order doesn't change results, but it hints to the planner.</strong> Put the smaller/more-filtered table first for readability. Postgres's query planner will reorder joins for efficiency regardless — but explicit <code>JOIN</code> instead of comma-separated <code>FROM</code> makes intent clear and avoids accidental cartesian products.</div>
+
+<h2>UNION, INTERSECT, EXCEPT</h2>
+
+<pre><span class="cm">-- UNION: combine results, remove duplicates</span>
+<span class="kw">SELECT</span> email <span class="kw">FROM</span> users
+<span class="kw">UNION</span>
+<span class="kw">SELECT</span> email <span class="kw">FROM</span> pending_users;
+
+<span class="cm">-- UNION ALL: combine results, keep duplicates (faster — no dedup step)</span>
+<span class="kw">SELECT</span> id, name, <span class="st">'user'</span> <span class="kw">AS</span> source <span class="kw">FROM</span> users
+<span class="kw">UNION ALL</span>
+<span class="kw">SELECT</span> id, name, <span class="st">'admin'</span> <span class="kw">AS</span> source <span class="kw">FROM</span> admins;
+
+<span class="cm">-- INTERSECT: rows in both result sets</span>
+<span class="kw">SELECT</span> email <span class="kw">FROM</span> newsletter_subscribers
+<span class="kw">INTERSECT</span>
+<span class="kw">SELECT</span> email <span class="kw">FROM</span> paying_customers;
+
+<span class="cm">-- EXCEPT: rows in first set but not second</span>
+<span class="kw">SELECT</span> email <span class="kw">FROM</span> users
+<span class="kw">EXCEPT</span>
+<span class="kw">SELECT</span> email <span class="kw">FROM</span> unsubscribed;</pre>
+
+</div>
+
+<!-- ========== INDEXES ========== -->
+<div class="tab-content" id="tab-indexes">
+
+<h2>Index Basics</h2>
+
+<p>Indexes speed up reads by creating a separate data structure the planner can use instead of scanning the whole table. They cost write overhead and storage. Add them where you filter, sort, or join — not everywhere.</p>
+
+<pre><span class="cm">-- Basic B-tree index (default, best for equality and range queries)</span>
+<span class="kw">CREATE INDEX</span> idx_users_email <span class="kw">ON</span> users(email);
+<span class="kw">CREATE INDEX ON</span> posts(user_id);    <span class="cm">-- auto-named</span>
+<span class="kw">CREATE INDEX ON</span> posts(created_at <span class="kw">DESC</span>);
+
+<span class="cm">-- Unique index (enforces uniqueness, equivalent to UNIQUE constraint)</span>
+<span class="kw">CREATE UNIQUE INDEX ON</span> users(email);
+
+<span class="cm">-- Composite index: column order matters</span>
+<span class="cm">-- Useful when you filter on (status, created_at) together</span>
+<span class="cm">-- Also usable for queries on just `status` (leftmost prefix rule)</span>
+<span class="kw">CREATE INDEX ON</span> posts(status, created_at <span class="kw">DESC</span>);
+
+<span class="cm">-- Partial index: only indexes rows matching a condition</span>
+<span class="cm">-- Smaller, faster for queries that always include that condition</span>
+<span class="kw">CREATE INDEX ON</span> users(email) <span class="kw">WHERE</span> deleted_at <span class="kw">IS NULL</span>;
+<span class="kw">CREATE INDEX ON</span> orders(created_at) <span class="kw">WHERE</span> status = <span class="st">'pending'</span>;
+
+<span class="cm">-- Concurrent index creation: doesn't lock the table (use in production)</span>
+<span class="kw">CREATE INDEX CONCURRENTLY</span> idx_posts_title <span class="kw">ON</span> posts(title);
+
+<span class="cm">-- Drop</span>
+<span class="kw">DROP INDEX</span> idx_users_email;
+<span class="kw">DROP INDEX CONCURRENTLY</span> idx_posts_title; <span class="cm">-- non-blocking drop</span>
+
+<span class="cm">-- List indexes on a table</span>
+\d users  <span class="cm">-- psql: shows table structure and indexes</span></pre>
+
+<h2>Index Types</h2>
+
+<table>
+    <tr><th>Type</th><th>Best For</th><th>Notes</th></tr>
+    <tr><td><code>B-tree</code></td><td>Equality, range, sorting, LIKE 'prefix%'</td><td>Default. Use for almost everything.</td></tr>
+    <tr><td><code>Hash</code></td><td>Equality only (<code>=</code>)</td><td>Slightly faster than B-tree for pure equality, but B-tree is usually fine.</td></tr>
+    <tr><td><code>GIN</code></td><td>Arrays, JSONB, full-text search, <code>@&gt;</code>, <code>?</code></td><td>Required for indexing JSONB keys/values and array containment.</td></tr>
+    <tr><td><code>GiST</code></td><td>Geometric types, full-text, ranges</td><td>Used by PostGIS. Also for <code>tsvector</code> full-text search.</td></tr>
+    <tr><td><code>BRIN</code></td><td>Very large tables with naturally ordered data (time-series, logs)</td><td>Tiny. Fast to build. Poor selectivity. Good for append-only partitioned tables.</td></tr>
+</table>
+
+<pre><span class="cm">-- GIN index for JSONB (required for @>, ?, ?|, ?& operators)</span>
+<span class="kw">CREATE INDEX ON</span> events <span class="kw">USING</span> gin(data);
+
+<span class="cm">-- GIN index for full-text search</span>
+<span class="kw">CREATE INDEX ON</span> articles <span class="kw">USING</span> gin(<span class="fn">to_tsvector</span>(<span class="st">'english'</span>, title || <span class="st">' '</span> || body));
+
+<span class="cm">-- BRIN index for a large log table (created_at is always increasing)</span>
+<span class="kw">CREATE INDEX ON</span> logs <span class="kw">USING</span> brin(created_at);</pre>
+
+<h2>EXPLAIN: Reading the Query Plan</h2>
+
+<pre><span class="cm">-- Show the query plan (no execution)</span>
+<span class="kw">EXPLAIN SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email = <span class="st">'alice@example.com'</span>;
+
+<span class="cm">-- Show plan WITH actual execution stats (run the query)</span>
+<span class="kw">EXPLAIN (ANALYZE, BUFFERS) SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email = <span class="st">'alice@example.com'</span>;
+
+<span class="cm">-- Key things to look for in EXPLAIN output:</span>
+<span class="cm">-- Seq Scan     → full table scan. BAD on large tables. Missing index?</span>
+<span class="cm">-- Index Scan   → uses index to find rows, fetches from heap. GOOD.</span>
+<span class="cm">-- Index Only Scan → all data in index, no heap access. BEST.</span>
+<span class="cm">-- Bitmap Scan  → index scan for many rows, batch heap access. OK.</span>
+<span class="cm">-- Nested Loop  → for each row in outer, scan inner. Fast if inner is small.</span>
+<span class="cm">-- Hash Join    → build hash table from smaller side. Fast for large joins.</span>
+<span class="cm">-- Merge Join   → merge two sorted inputs. Fast when both sides are sorted.</span>
+<span class="cm">-- cost=X..Y    → estimated startup cost .. total cost (arbitrary planner units)</span>
+<span class="cm">-- rows=N       → estimated row count (inaccurate = stale statistics → ANALYZE)</span>
+<span class="cm">-- actual time=X..Y rows=N loops=N → real execution data (with ANALYZE)</span>
+
+<span class="cm">-- Update statistics if estimates are way off</span>
+<span class="kw">ANALYZE</span> users;
+<span class="kw">ANALYZE</span>;  <span class="cm">-- analyze all tables</span></pre>
+
+<div class="tip"><strong>Use explain.dalibo.com.</strong> Paste your <code>EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)</code> output into explain.dalibo.com for a visual tree with highlighted bottlenecks. Far easier to read than raw text output for complex plans.</div>
+
+</div>
+
+<!-- ========== TRANSACTIONS ========== -->
+<div class="tab-content" id="tab-transactions">
+
+<h2>Transactions</h2>
+
+<p>A transaction groups statements into an all-or-nothing unit. Either all statements succeed and commit, or any failure rolls everything back. Postgres transactions are fully ACID compliant.</p>
+
+<pre><span class="cm">-- Basic transaction</span>
+<span class="kw">BEGIN</span>;
+    <span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="nu">100</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+    <span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance + <span class="nu">100</span> <span class="kw">WHERE</span> id = <span class="nu">2</span>;
+<span class="kw">COMMIT</span>;  <span class="cm">-- both updates committed atomically</span>
+
+<span class="cm">-- Rollback on error</span>
+<span class="kw">BEGIN</span>;
+    <span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="nu">1000</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+    <span class="cm">-- something goes wrong in application code...</span>
+<span class="kw">ROLLBACK</span>;  <span class="cm">-- undoes the UPDATE, balance unchanged</span>
+
+<span class="cm">-- Savepoints: partial rollback within a transaction</span>
+<span class="kw">BEGIN</span>;
+    <span class="kw">INSERT INTO</span> orders (...) <span class="kw">VALUES</span> (...);
+    <span class="kw">SAVEPOINT</span> after_order;
+    <span class="kw">INSERT INTO</span> order_items (...) <span class="kw">VALUES</span> (...);
+    <span class="cm">-- if items insert fails:</span>
+    <span class="kw">ROLLBACK TO SAVEPOINT</span> after_order;
+    <span class="cm">-- order still exists, items rolled back</span>
+<span class="kw">COMMIT</span>;</pre>
+
+<h2>Isolation Levels</h2>
+
+<p>Isolation levels control what concurrent transactions can see of each other's changes. Higher isolation = fewer anomalies but more contention.</p>
+
+<table>
+    <tr><th>Level</th><th>Dirty Read</th><th>Non-repeatable Read</th><th>Phantom Read</th><th>Use Case</th></tr>
+    <tr><td><code>READ COMMITTED</code></td><td>No</td><td>Yes</td><td>Yes</td><td>Default. Fine for most apps.</td></tr>
+    <tr><td><code>REPEATABLE READ</code></td><td>No</td><td>No</td><td>No*</td><td>Reports, consistent snapshots.</td></tr>
+    <tr><td><code>SERIALIZABLE</code></td><td>No</td><td>No</td><td>No</td><td>Financial ops, strict correctness.</td></tr>
+</table>
+
+<pre><span class="cm">-- Set isolation level for a transaction</span>
+<span class="kw">BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ</span>;
+    <span class="kw">SELECT</span> <span class="fn">SUM</span>(balance) <span class="kw">FROM</span> accounts;  <span class="cm">-- consistent snapshot for this tx</span>
+    <span class="cm">-- other transactions can commit changes, but we don't see them</span>
+<span class="kw">COMMIT</span>;</pre>
+
+<h2>Locking</h2>
+
+<pre><span class="cm">-- SELECT FOR UPDATE: lock rows for update, block other writers</span>
+<span class="cm">-- Use when you read a row and intend to update it (prevents lost updates)</span>
+<span class="kw">BEGIN</span>;
+<span class="kw">SELECT</span> balance <span class="kw">FROM</span> accounts <span class="kw">WHERE</span> id = <span class="nu">1</span> <span class="kw">FOR UPDATE</span>;
+<span class="cm">-- now we own a lock: other transactions block on this row</span>
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="nu">50</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+<span class="kw">COMMIT</span>;
+
+<span class="cm">-- SELECT FOR UPDATE SKIP LOCKED: skip rows locked by others</span>
+<span class="cm">-- Pattern: job queue — workers grab available jobs without blocking each other</span>
+<span class="kw">BEGIN</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> jobs
+<span class="kw">WHERE</span> status = <span class="st">'pending'</span>
+<span class="kw">ORDER BY</span> created_at
+<span class="kw">LIMIT</span> <span class="nu">1</span>
+<span class="kw">FOR UPDATE SKIP LOCKED</span>;
+<span class="cm">-- process the job...</span>
+<span class="kw">UPDATE</span> jobs <span class="kw">SET</span> status = <span class="st">'done'</span> <span class="kw">WHERE</span> id = :job_id;
+<span class="kw">COMMIT</span>;
+
+<span class="cm">-- Advisory locks: application-level locks (no table/row needed)</span>
+<span class="kw">SELECT</span> <span class="fn">pg_try_advisory_lock</span>(<span class="nu">12345</span>);  <span class="cm">-- returns true if acquired, false if not</span>
+<span class="kw">SELECT</span> <span class="fn">pg_advisory_unlock</span>(<span class="nu">12345</span>);</pre>
+
+<div class="warn"><strong>Deadlocks happen when two transactions each hold a lock the other needs.</strong> Postgres detects them and kills one transaction. Prevent them by always acquiring locks in the same order across transactions, and keeping transactions short.</div>
+
+<h2>VACUUM and Autovacuum</h2>
+
+<pre><span class="cm">-- Why VACUUM exists:
+-- Postgres uses MVCC: UPDATE and DELETE don't remove old row versions.
+-- They mark them dead. Dead rows pile up ("table bloat").
+-- VACUUM reclaims dead row space and updates the visibility map.</span>
+
+<span class="cm">-- Manual vacuum (autovacuum usually handles this)</span>
+<span class="kw">VACUUM</span> users;
+<span class="kw">VACUUM ANALYZE</span> users;   <span class="cm">-- vacuum + update statistics</span>
+<span class="kw">VACUUM FULL</span> users;       <span class="cm">-- rewrite table, reclaim OS space — locks table, use sparingly</span>
+
+<span class="cm">-- Check autovacuum health</span>
+<span class="kw">SELECT</span> relname, n_dead_tup, n_live_tup, last_autovacuum, last_autoanalyze
+<span class="kw">FROM</span> pg_stat_user_tables
+<span class="kw">ORDER BY</span> n_dead_tup <span class="kw">DESC</span>;</pre>
+
+</div>
+
+<!-- ========== TYPES & SCHEMA ========== -->
+<div class="tab-content" id="tab-types">
+
+<h2>Data Types</h2>
+
+<table>
+    <tr><th>Type</th><th>Use For</th><th>Notes</th></tr>
+    <tr><td><code>TEXT</code></td><td>Variable-length strings</td><td>Preferred over VARCHAR(n) — no performance difference, less hassle.</td></tr>
+    <tr><td><code>VARCHAR(n)</code></td><td>Strings with length limit</td><td>Only use if you need DB-level length enforcement.</td></tr>
+    <tr><td><code>INTEGER / INT</code></td><td>32-bit integer</td><td>Max ~2.1 billion. Use BIGINT if IDs may exceed that.</td></tr>
+    <tr><td><code>BIGINT</code></td><td>64-bit integer</td><td>Preferred for IDs on tables that will grow.</td></tr>
+    <tr><td><code>NUMERIC(p,s)</code></td><td>Exact decimals (money)</td><td>No floating-point errors. Use for currency. Slower than float.</td></tr>
+    <tr><td><code>FLOAT8 / DOUBLE PRECISION</code></td><td>Approximate decimals</td><td>Fast. Imprecise. Not for money.</td></tr>
+    <tr><td><code>BOOLEAN</code></td><td>true/false</td><td>Accepts true/false, 't'/'f', 'yes'/'no', 1/0.</td></tr>
+    <tr><td><code>TIMESTAMPTZ</code></td><td>Timestamps</td><td>Always use TIMESTAMPTZ (with time zone) — stores UTC internally.</td></tr>
+    <tr><td><code>DATE</code></td><td>Calendar date only</td><td>No time component.</td></tr>
+    <tr><td><code>INTERVAL</code></td><td>Duration</td><td><code>INTERVAL '3 days'</code>, <code>INTERVAL '1 hour 30 minutes'</code>.</td></tr>
+    <tr><td><code>UUID</code></td><td>Universally unique IDs</td><td>Use <code>gen_random_uuid()</code> (built-in since Pg 13).</td></tr>
+    <tr><td><code>JSONB</code></td><td>JSON data</td><td>Binary JSON — indexable, queryable. Prefer over <code>JSON</code>.</td></tr>
+    <tr><td><code>ARRAY</code></td><td>Arrays of any type</td><td><code>TEXT[]</code>, <code>INTEGER[]</code>. Indexable with GIN.</td></tr>
+    <tr><td><code>ENUM</code></td><td>Fixed set of string values</td><td>Enforced at DB level. Adding values requires ALTER TYPE.</td></tr>
+</table>
+
+<div class="note"><strong>Always use TIMESTAMPTZ, never TIMESTAMP.</strong> <code>TIMESTAMP</code> (without time zone) stores no timezone info. When you insert a value, Postgres strips the offset. You lose the ability to reason about time correctly across timezones. <code>TIMESTAMPTZ</code> always stores UTC and converts on display.</div>
+
+<h2>JSONB</h2>
+
+<pre><span class="cm">-- Store and query semi-structured data</span>
+<span class="kw">CREATE TABLE</span> events (
+    id    <span class="ty">BIGSERIAL</span> <span class="kw">PRIMARY KEY</span>,
+    data  <span class="ty">JSONB</span> <span class="kw">NOT NULL</span>
+);
+
+<span class="cm">-- Insert JSON</span>
+<span class="kw">INSERT INTO</span> events (data) <span class="kw">VALUES</span>
+    (<span class="st">'{"type": "click", "user_id": 42, "tags": ["mobile", "nav"]}'</span>);
+
+<span class="cm">-- Access operators</span>
+data-><span class="st">'user_id'</span>           <span class="cm">-- returns JSON value: 42</span>
+data->><span class="st">'user_id'</span>          <span class="cm">-- returns TEXT value: '42'  (use for WHERE comparisons)</span>
+data-><span class="st">'address'</span>-><span class="st">'city'</span>  <span class="cm">-- nested access</span>
+data#>'{address,city}'     <span class="cm">-- path access (array of keys)</span>
+data#>><span class="st">'{address,city}'</span>  <span class="cm">-- path access returning TEXT</span>
+
+<span class="cm">-- Query</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> events <span class="kw">WHERE</span> data->><span class="st">'type'</span> = <span class="st">'click'</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> events <span class="kw">WHERE</span> (data->><span class="st">'user_id'</span>)::<span class="ty">INT</span> = <span class="nu">42</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> events <span class="kw">WHERE</span> data @> <span class="st">'{"type": "click"}'</span>;  <span class="cm">-- containment (use GIN index)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> events <span class="kw">WHERE</span> data ? <span class="st">'user_id'</span>;             <span class="cm">-- key exists</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> events <span class="kw">WHERE</span> data-><span class="st">'tags'</span> @> <span class="st">'["mobile"]'</span>; <span class="cm">-- array contains value</span>
+
+<span class="cm">-- Update a key in JSONB</span>
+<span class="kw">UPDATE</span> events <span class="kw">SET</span> data = data || <span class="st">'{"processed": true}'</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+<span class="kw">UPDATE</span> events <span class="kw">SET</span> data = <span class="fn">jsonb_set</span>(data, <span class="st">'{user_id}'</span>, <span class="st">'99'</span>) <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+
+<span class="cm">-- Index for fast JSONB queries</span>
+<span class="kw">CREATE INDEX ON</span> events <span class="kw">USING</span> gin(data);</pre>
+
+<h2>ENUMs and Custom Types</h2>
+
+<pre><span class="cm">-- Create an ENUM type</span>
+<span class="kw">CREATE TYPE</span> order_status <span class="kw">AS ENUM</span> (<span class="st">'pending'</span>, <span class="st">'processing'</span>, <span class="st">'shipped'</span>, <span class="st">'delivered'</span>, <span class="st">'cancelled'</span>);
+
+<span class="kw">CREATE TABLE</span> orders (
+    id     <span class="ty">BIGSERIAL</span> <span class="kw">PRIMARY KEY</span>,
+    status order_status <span class="kw">NOT NULL DEFAULT</span> <span class="st">'pending'</span>
+);
+
+<span class="cm">-- Add a value to an existing ENUM (can only add, not remove)</span>
+<span class="kw">ALTER TYPE</span> order_status <span class="kw">ADD VALUE</span> <span class="st">'refunded'</span> <span class="kw">AFTER</span> <span class="st">'delivered'</span>;</pre>
+
+</div>
+
+<!-- ========== ADVANCED SQL ========== -->
+<div class="tab-content" id="tab-advanced">
+
+<h2>Window Functions</h2>
+
+<p>Window functions perform a calculation across a set of rows related to the current row — without collapsing them into a single group like <code>GROUP BY</code> would.</p>
+
+<pre><span class="cm">-- ROW_NUMBER: rank each row within a partition</span>
+<span class="kw">SELECT</span>
+    name,
+    department,
+    salary,
+    <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> department <span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> rank
+<span class="kw">FROM</span> employees;
+
+<span class="cm">-- RANK and DENSE_RANK: same as ROW_NUMBER but ties get same rank</span>
+<span class="cm">-- RANK skips numbers after a tie (1,1,3), DENSE_RANK doesn't (1,1,2)</span>
+<span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> score <span class="kw">DESC</span>)
+<span class="fn">DENSE_RANK</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> score <span class="kw">DESC</span>)
+
+<span class="cm">-- LAG / LEAD: access previous / next row's value</span>
+<span class="kw">SELECT</span>
+    date,
+    revenue,
+    <span class="fn">LAG</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> prev_revenue,
+    revenue - <span class="fn">LAG</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> change
+<span class="kw">FROM</span> daily_revenue;
+
+<span class="cm">-- Running total with SUM OVER</span>
+<span class="kw">SELECT</span>
+    date,
+    amount,
+    <span class="fn">SUM</span>(amount) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> running_total
+<span class="kw">FROM</span> transactions;
+
+<span class="cm">-- Top N per group (e.g., top 3 posts per user)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> (
+    <span class="kw">SELECT</span> *,
+        <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> user_id <span class="kw">ORDER BY</span> created_at <span class="kw">DESC</span>) <span class="kw">AS</span> rn
+    <span class="kw">FROM</span> posts
+) sub
+<span class="kw">WHERE</span> rn &lt;= <span class="nu">3</span>;</pre>
+
+<h2>Full-Text Search</h2>
+
+<pre><span class="cm">-- tsvector: processed text for searching</span>
+<span class="cm">-- tsquery: a search query</span>
+
+<span class="cm">-- Basic full-text search</span>
+<span class="kw">SELECT</span> title <span class="kw">FROM</span> articles
+<span class="kw">WHERE</span> <span class="fn">to_tsvector</span>(<span class="st">'english'</span>, title || <span class="st">' '</span> || body) @@ <span class="fn">to_tsquery</span>(<span class="st">'english'</span>, <span class="st">'postgres &amp; index'</span>);
+
+<span class="cm">-- Ranking results by relevance</span>
+<span class="kw">SELECT</span> title,
+    <span class="fn">ts_rank</span>(<span class="fn">to_tsvector</span>(<span class="st">'english'</span>, body), <span class="fn">to_tsquery</span>(<span class="st">'postgres'</span>)) <span class="kw">AS</span> rank
+<span class="kw">FROM</span> articles
+<span class="kw">WHERE</span> <span class="fn">to_tsvector</span>(<span class="st">'english'</span>, body) @@ <span class="fn">to_tsquery</span>(<span class="st">'postgres'</span>)
+<span class="kw">ORDER BY</span> rank <span class="kw">DESC</span>;
+
+<span class="cm">-- Store tsvector in a column for performance (update with trigger or generated column)</span>
+<span class="kw">ALTER TABLE</span> articles <span class="kw">ADD COLUMN</span> search_vector <span class="ty">TSVECTOR</span>
+    <span class="kw">GENERATED ALWAYS AS</span> (<span class="fn">to_tsvector</span>(<span class="st">'english'</span>, <span class="fn">coalesce</span>(title, <span class="st">''</span>) || <span class="st">' '</span> || <span class="fn">coalesce</span>(body, <span class="st">''</span>))) <span class="kw">STORED</span>;
+
+<span class="kw">CREATE INDEX ON</span> articles <span class="kw">USING</span> gin(search_vector);
+
+<span class="cm">-- plainto_tsquery: user input (no operators, just words)</span>
+<span class="kw">WHERE</span> search_vector @@ <span class="fn">plainto_tsquery</span>(<span class="st">'english'</span>, user_input)
+
+<span class="cm">-- websearch_to_tsquery: supports "phrases", -exclusions (Pg 11+)</span>
+<span class="kw">WHERE</span> search_vector @@ <span class="fn">websearch_to_tsquery</span>(<span class="st">'english'</span>, <span class="st">'"exact phrase" -exclude'</span>)</pre>
+
+<h2>Generated Columns and Constraints</h2>
+
+<pre><span class="cm">-- Generated (computed) column: value is always derived from other columns</span>
+<span class="kw">ALTER TABLE</span> products
+    <span class="kw">ADD COLUMN</span> price_with_tax <span class="ty">NUMERIC</span>
+    <span class="kw">GENERATED ALWAYS AS</span> (price * <span class="nu">1.20</span>) <span class="kw">STORED</span>;
+
+<span class="cm">-- Table-level constraints</span>
+<span class="kw">CREATE TABLE</span> bookings (
+    id         <span class="ty">BIGSERIAL</span> <span class="kw">PRIMARY KEY</span>,
+    start_date <span class="ty">DATE</span> <span class="kw">NOT NULL</span>,
+    end_date   <span class="ty">DATE</span> <span class="kw">NOT NULL</span>,
+    <span class="kw">CONSTRAINT</span> valid_dates <span class="kw">CHECK</span> (end_date > start_date),
+    <span class="kw">CONSTRAINT</span> unique_booking <span class="kw">UNIQUE</span> (user_id, start_date)
+);
+
+<span class="cm">-- Exclusion constraint: no overlapping date ranges (requires btree_gist extension)</span>
+<span class="kw">CREATE EXTENSION IF NOT EXISTS</span> btree_gist;
+<span class="kw">ALTER TABLE</span> bookings
+    <span class="kw">ADD CONSTRAINT</span> no_overlap
+    <span class="kw">EXCLUDE USING</span> gist (room_id <span class="kw">WITH</span> =, daterange(start_date, end_date) <span class="kw">WITH</span> &&);</pre>
+
+</div>
+
+<!-- ========== ADMIN & OPS ========== -->
+<div class="tab-content" id="tab-admin">
+
+<h2>psql CLI</h2>
+
+<pre><span class="cm"># Connect</span>
+psql -U username -d dbname
+psql -U username -h hostname -p 5432 -d dbname
+psql "postgresql://user:password@host:5432/dbname"
+
+<span class="cm"># Meta-commands (no semicolon needed)</span>
+\l          <span class="cm">-- list databases</span>
+\c dbname   <span class="cm">-- connect to database</span>
+\dt         <span class="cm">-- list tables in current schema</span>
+\dt *.*     <span class="cm">-- list tables in all schemas</span>
+\d tablename <span class="cm">-- describe table (columns, indexes, constraints)</span>
+\di         <span class="cm">-- list indexes</span>
+\df         <span class="cm">-- list functions</span>
+\dv         <span class="cm">-- list views</span>
+\dn         <span class="cm">-- list schemas</span>
+\du         <span class="cm">-- list users/roles</span>
+\timing     <span class="cm">-- toggle query timing</span>
+\x          <span class="cm">-- toggle expanded output (useful for wide tables)</span>
+\e          <span class="cm">-- open query in $EDITOR</span>
+\i file.sql <span class="cm">-- run SQL file</span>
+\copy       <span class="cm">-- client-side COPY (works over remote connections)</span>
+\q          <span class="cm">-- quit</span>
+
+<span class="cm"># Run a query from the shell</span>
+psql -U postgres -d mydb -c "SELECT COUNT(*) FROM users;"
+
+<span class="cm"># Run a SQL file</span>
+psql -U postgres -d mydb -f schema.sql</pre>
+
+<h2>Users, Roles, and Permissions</h2>
+
+<pre><span class="cm">-- Create a role (roles can login, groups cannot — but the distinction is just flags)</span>
+<span class="kw">CREATE ROLE</span> app_user <span class="kw">LOGIN PASSWORD</span> <span class="st">'securepassword'</span>;
+<span class="kw">CREATE ROLE</span> readonly <span class="kw">NOLOGIN</span>;  <span class="cm">-- group role</span>
+
+<span class="cm">-- Grant connect and usage</span>
+<span class="kw">GRANT CONNECT ON DATABASE</span> mydb <span class="kw">TO</span> app_user;
+<span class="kw">GRANT USAGE ON SCHEMA</span> public <span class="kw">TO</span> app_user;
+
+<span class="cm">-- Grant table permissions</span>
+<span class="kw">GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA</span> public <span class="kw">TO</span> app_user;
+<span class="kw">GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA</span> public <span class="kw">TO</span> app_user;
+
+<span class="cm">-- Grant on future tables automatically</span>
+<span class="kw">ALTER DEFAULT PRIVILEGES IN SCHEMA</span> public
+    <span class="kw">GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO</span> app_user;
+
+<span class="cm">-- Read-only role pattern</span>
+<span class="kw">GRANT USAGE ON SCHEMA</span> public <span class="kw">TO</span> readonly;
+<span class="kw">GRANT SELECT ON ALL TABLES IN SCHEMA</span> public <span class="kw">TO</span> readonly;
+<span class="kw">GRANT</span> readonly <span class="kw">TO</span> reporting_user;  <span class="cm">-- assign group role to a user</span>
+
+<span class="cm">-- Revoke</span>
+<span class="kw">REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA</span> public <span class="kw">FROM</span> readonly;</pre>
+
+<h2>Backup and Restore</h2>
+
+<pre><span class="cm"># pg_dump: logical backup (SQL or custom format)</span>
+pg_dump -U postgres mydb > mydb.sql                         <span class="cm"># plain SQL</span>
+pg_dump -U postgres -Fc mydb > mydb.dump                   <span class="cm"># custom format (preferred)</span>
+pg_dump -U postgres -Fc -t users mydb > users.dump         <span class="cm"># single table</span>
+pg_dump -U postgres -Fc --schema-only mydb > schema.dump   <span class="cm"># schema only</span>
+pg_dump -U postgres -Fc --data-only mydb > data.dump       <span class="cm"># data only</span>
+
+<span class="cm"># Restore custom format</span>
+pg_restore -U postgres -d mydb mydb.dump
+pg_restore -U postgres -d mydb --clean mydb.dump           <span class="cm"># drop objects first</span>
+pg_restore -U postgres -d mydb -j 4 mydb.dump              <span class="cm"># parallel restore (4 workers)</span>
+
+<span class="cm"># Restore plain SQL</span>
+psql -U postgres -d mydb < mydb.sql
+
+<span class="cm"># pg_dumpall: dump all databases + roles + tablespaces</span>
+pg_dumpall -U postgres > all.sql
+
+<span class="cm"># COPY: fast bulk import/export</span>
+<span class="cm"># Server-side (must be superuser, reads/writes server filesystem)</span>
+COPY users TO '/tmp/users.csv' CSV HEADER;
+COPY users FROM '/tmp/users.csv' CSV HEADER;
+
+<span class="cm"># Client-side (works over remote connections)</span>
+\copy users TO 'users.csv' CSV HEADER
+\copy users FROM 'users.csv' CSV HEADER</pre>
+
+<h2>Useful Diagnostic Queries</h2>
+
+<pre><span class="cm">-- Show running queries</span>
+<span class="kw">SELECT</span> pid, now() - pg_stat_activity.query_start <span class="kw">AS</span> duration,
+       query, state
+<span class="kw">FROM</span> pg_stat_activity
+<span class="kw">WHERE</span> state != <span class="st">'idle'</span>
+<span class="kw">ORDER BY</span> duration <span class="kw">DESC</span>;
+
+<span class="cm">-- Kill a query</span>
+<span class="kw">SELECT</span> <span class="fn">pg_cancel_backend</span>(pid);   <span class="cm">-- graceful cancel</span>
+<span class="kw">SELECT</span> <span class="fn">pg_terminate_backend</span>(pid); <span class="cm">-- force kill</span>
+
+<span class="cm">-- Show locks and what's blocking what</span>
+<span class="kw">SELECT</span> blocked.pid, blocked.query,
+       blocking.pid <span class="kw">AS</span> blocking_pid, blocking.query <span class="kw">AS</span> blocking_query
+<span class="kw">FROM</span> pg_stat_activity blocked
+<span class="kw">JOIN</span> pg_stat_activity blocking
+    <span class="kw">ON</span> blocking.pid = <span class="kw">ANY</span>(pg_blocking_pids(blocked.pid));
+
+<span class="cm">-- Slowest queries (requires pg_stat_statements extension)</span>
+<span class="kw">CREATE EXTENSION IF NOT EXISTS</span> pg_stat_statements;
+<span class="kw">SELECT</span> query, <span class="fn">round</span>(mean_exec_time::numeric, <span class="nu">2</span>) <span class="kw">AS</span> avg_ms,
+       calls, <span class="fn">round</span>(total_exec_time::numeric, <span class="nu">2</span>) <span class="kw">AS</span> total_ms
+<span class="kw">FROM</span> pg_stat_statements
+<span class="kw">ORDER BY</span> mean_exec_time <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="nu">20</span>;
+
+<span class="cm">-- Table sizes</span>
+<span class="kw">SELECT</span> relname <span class="kw">AS</span> table,
+    <span class="fn">pg_size_pretty</span>(<span class="fn">pg_total_relation_size</span>(relid)) <span class="kw">AS</span> total_size,
+    <span class="fn">pg_size_pretty</span>(<span class="fn">pg_relation_size</span>(relid)) <span class="kw">AS</span> table_size,
+    <span class="fn">pg_size_pretty</span>(<span class="fn">pg_total_relation_size</span>(relid) - <span class="fn">pg_relation_size</span>(relid)) <span class="kw">AS</span> index_size
+<span class="kw">FROM</span> pg_stat_user_tables
+<span class="kw">ORDER BY</span> <span class="fn">pg_total_relation_size</span>(relid) <span class="kw">DESC</span>;
+
+<span class="cm">-- Unused indexes (wasting write overhead)</span>
+<span class="kw">SELECT</span> indexrelname, idx_scan, <span class="fn">pg_size_pretty</span>(<span class="fn">pg_relation_size</span>(indexrelid)) <span class="kw">AS</span> size
+<span class="kw">FROM</span> pg_stat_user_indexes
+<span class="kw">WHERE</span> idx_scan = <span class="nu">0</span>
+<span class="kw">ORDER BY</span> <span class="fn">pg_relation_size</span>(indexrelid) <span class="kw">DESC</span>;</pre>
+
+<div class="tip"><strong>pg_stat_statements is essential.</strong> Enable it in <code>postgresql.conf</code> with <code>shared_preload_libraries = 'pg_stat_statements'</code> and restart. It tracks query statistics across all executions — the single most useful tool for finding slow queries in production.</div>
+
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+document.querySelectorAll('.tabs a').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const tab = link.dataset.tab;
+        document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        link.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+    });
+});
+</script>
+</body>
+</html>

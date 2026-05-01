@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odoo 19 Development Reference</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --text: #1a1a1a;
+            --muted: #555;
+            --light: #888;
+            --border: #ddd;
+            --code-bg: #f5f5f5;
+            --accent: #714b67;
+            --green: #2e7d32;
+            --red: #c62828;
+            --orange: #e65100;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        .wrapper {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        /* ---- Navigation ---- */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0 14px;
+        }
+        .nav-bar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .nav-bar a {
+            position: relative;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11.5px;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 3px 8px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            white-space: nowrap;
+            transition: color 0.15s, background 0.15s, border-color 0.15s;
+        }
+        .nav-bar a:hover {
+            color: var(--text);
+            background: var(--code-bg);
+            border-color: #bbb;
+        }
+        .nav-bar a::after {
+            content: attr(data-tip);
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: Georgia, serif;
+            font-size: 11px;
+            font-style: italic;
+            color: var(--light);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+            background: var(--bg);
+            padding: 0 4px;
+        }
+        .nav-bar a:hover::after {
+            opacity: 1;
+        }
+
+        /* ---- Content ---- */
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+        .subtitle { color: var(--light); font-size: 14px; margin-bottom: 32px; font-style: italic; }
+        h2 { font-size: 20px; font-weight: 700; margin: 48px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--border); scroll-margin-top: 56px; }
+        h3 { font-size: 16px; font-weight: 700; margin: 28px 0 8px; }
+        p { margin-bottom: 10px; color: var(--muted); }
+        strong { color: var(--text); }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13.5px;
+            background: var(--code-bg);
+            padding: 1px 5px;
+            border-radius: 3px;
+            border: 1px solid #e0e0e0;
+        }
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 12px 0 16px;
+            white-space: pre;
+        }
+        .file-label {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--light);
+            margin: 12px 0 0;
+        }
+        .cm { color: #999; font-style: italic; }
+        .kw { color: var(--accent); }
+        .st { color: var(--green); }
+        .tg { color: var(--red); }
+        .at { color: #6a1b9a; }
+        .fn { color: #0d47a1; }
+        .nu { color: #e65100; }
+        ul, ol { margin: 8px 0 16px 24px; color: var(--muted); }
+        li { margin-bottom: 4px; }
+        .note { background: #fff8e1; border-left: 3px solid var(--orange); padding: 10px 14px; margin: 12px 0 16px; font-size: 14px; color: var(--muted); }
+        .warn { background: #fce4ec; border-left: 3px solid var(--red); padding: 10px 14px; margin: 12px 0 16px; font-size: 14px; color: var(--muted); }
+        .tip { background: #e8f5e9; border-left: 3px solid var(--green); padding: 10px 14px; margin: 12px 0 16px; font-size: 14px; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; margin: 12px 0 16px; font-size: 14px; }
+        th { background: var(--code-bg); text-align: left; padding: 8px 10px; border: 1px solid var(--border); font-weight: 700; font-size: 13px; }
+        td { padding: 8px 10px; border: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+        td:first-child { font-family: 'Courier New', monospace; font-size: 13px; white-space: nowrap; }
+        .tree {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+        }
+        .tree .c { color: #999; font-style: italic; }
+        .tree .d { color: var(--accent); font-weight: 700; }
+        .tree .f { color: var(--green); }
+        .tree .x { color: var(--orange); }
+        .tree .j { color: #0d47a1; }
+        .tree .s { color: #6a1b9a; }
+        .tree .i { padding-left: 20px; display: block; }
+        .tree .i2 { padding-left: 40px; display: block; }
+        .badge { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 3px; font-weight: 700; vertical-align: middle; margin-left: 6px; }
+        .badge-r { background: #fce4ec; color: var(--red); }
+        .badge-g { background: #e8f5e9; color: var(--green); }
+        .badge-o { background: #fff3e0; color: var(--orange); }
+        hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+        .cmd { color: var(--green); }
+        .flag { color: var(--accent); }
+        @media print {
+            body { font-size: 12px; }
+            pre { font-size: 11px; padding: 10px; }
+            .nav-bar { display: none; }
+            h2 { scroll-margin-top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav-bar">
+    <ul>
+        <li><a href="#file-structure" data-tip="Module layout and folder conventions">File Structure</a></li>
+        <li><a href="#manifest" data-tip="Module identity, dependencies, asset bundles">__manifest__.py</a></li>
+        <li><a href="#models" data-tip="ORM fields, constraints, computed, inheritance">Models</a></li>
+        <li><a href="#views" data-tip="Form, list, search views, actions, menus">Views</a></li>
+        <li><a href="#security" data-tip="ACL, groups, record-level rules">Security</a></li>
+        <li><a href="#data" data-tip="Initial data, sequences, noupdate flag">Data Files</a></li>
+        <li><a href="#static" data-tip="JS, CSS, images, asset registration">Static Assets</a></li>
+        <li><a href="#missed" data-tip="Frequent mistakes that waste hours">Commonly Missed</a></li>
+        <li><a href="#best-practices" data-tip="Naming, conventions, patterns to follow">Best Practices</a></li>
+        <li><a href="#owl" data-tip="What OWL is, core concepts, vs legacy">OWL Intro</a></li>
+        <li><a href="#owl-component" data-tip="Class, state, lifecycle, services">OWL Component</a></li>
+        <li><a href="#owl-template" data-tip="QWeb directives and examples">OWL Template</a></li>
+        <li><a href="#owl-advanced" data-tip="Composition, useState, event bus, registration">OWL Advanced</a></li>
+        <li><a href="#devops" data-tip="CLI, PostgreSQL, backups, logging, debug mode">DevOps</a></li>
+    </ul>
+</nav>
+
+<div class="wrapper">
+
+<h1>Odoo 19 Module Development Reference</h1>
+<div class="subtitle">File structure, conventions, commonly missed details, OWL introduction, and dev operations.</div>
+
+<!-- ============================== -->
+<h2 id="file-structure">Module File Structure</h2>
+<!-- ============================== -->
+
+<p>Every Odoo module follows a standard directory layout. Not all folders are required. Only include what your module needs, but what you do include must follow this structure exactly.</p>
+
+<div class="tree">
+<span class="d">my_module/</span>
+<span class="i"><span class="f">__manifest__.py</span>          <span class="c"># Required. Without this, Odoo ignores the folder entirely.</span></span>
+<span class="i"><span class="f">__init__.py</span>              <span class="c"># Required. Makes this a Python package. Can be empty but must exist.</span></span>
+<span class="i"><span class="c"># --- Models ---</span></span>
+<span class="i"><span class="d">models/</span></span>
+<span class="i2"><span class="f">__init__.py</span>              <span class="c"># Must import every model file in this directory.</span></span>
+<span class="i2"><span class="f">my_model.py</span></span>
+<span class="i2"><span class="f">my_model_line.py</span></span>
+<span class="i"><span class="c"># --- Views ---</span></span>
+<span class="i"><span class="d">views/</span></span>
+<span class="i2"><span class="x">my_model_views.xml</span>       <span class="c"># Form, list, search, kanban views + actions + menus</span></span>
+<span class="i2"><span class="x">templates.xml</span>            <span class="c"># QWeb templates (email, reports, snippets)</span></span>
+<span class="i"><span class="c"># --- Security ---</span></span>
+<span class="i"><span class="d">security/</span></span>
+<span class="i2"><span class="s">ir.model.access.csv</span>     <span class="c"># Who can read/write/create/delete on each model</span></span>
+<span class="i2"><span class="s">ir.rule.csv</span>               <span class="c"># Row-level rules (e.g. "only see own records")</span></span>
+<span class="i2"><span class="x">groups.xml</span>               <span class="c"># Custom user groups / roles</span></span>
+<span class="i"><span class="c"># --- Data (initial records, mail templates, sequences) ---</span></span>
+<span class="i"><span class="d">data/</span></span>
+<span class="i2"><span class="x">mail_template.xml</span></span>
+<span class="i2"><span class="x">sequence.xml</span></span>
+<span class="i"><span class="c"># --- Static assets (JS, CSS, images) ---</span></span>
+<span class="i"><span class="d">static/</span></span>
+<span class="i2"><span class="d">description/</span></span>
+<span class="i2"><span class="i2">icon.png                  <span class="c"># Module icon. 120x120 transparent PNG.</span></span></span>
+<span class="i2"><span class="d">src/</span></span>
+<span class="i2"><span class="i2"><span class="d">js/</span></span></span>
+<span class="i2"><span class="i2"><span class="i2"><span class="j">my_component.js</span>        <span class="c"># OWL components</span></span></span></span>
+<span class="i2"><span class="i2"><span class="i2"><span class="d">xml/</span></span></span></span>
+<span class="i2"><span class="i2"><span class="i2"><span class="i2"><span class="x">my_templates.xml</span>       <span class="c"># QWeb templates for OWL</span></span></span></span></span>
+<span class="i2"><span class="i2"><span class="i2"><span class="d">css/</span></span></span></span>
+<span class="i2"><span class="i2"><span class="i2"><span class="i2">style.css</span></span></span></span>
+<span class="i"><span class="c"># --- Tests ---</span></span>
+<span class="i"><span class="d">tests/</span></span>
+<span class="i2"><span class="f">__init__.py</span></span>
+<span class="i2"><span class="f">test_my_model.py</span></span>
+<span class="i"><span class="c"># --- Wizards (transient multi-step flows) ---</span></span>
+<span class="i"><span class="d">wizard/</span></span>
+<span class="i2"><span class="f">__init__.py</span></span>
+<span class="i2"><span class="f">my_wizard.py</span></span>
+<span class="i2"><span class="x">my_wizard_views.xml</span></span>
+<span class="i"><span class="c"># --- Reports ---</span></span>
+<span class="i"><span class="d">report/</span></span>
+<span class="i2"><span class="f">__init__.py</span></span>
+<span class="i2"><span class="f">my_report.py</span></span>
+<span class="i2"><span class="x">my_report_templates.xml</span></span>
+</div>
+
+<p class="note"><strong>Only three things are truly mandatory:</strong> <code>__manifest__.py</code>, root <code>__init__.py</code>, and <code>static/description/icon.png</code>. Everything else is optional.</p>
+
+<!-- ============================== -->
+<h2 id="manifest">__manifest__.py</h2>
+<!-- ============================== -->
+
+<p>The manifest tells Odoo everything about your module before loading it.</p>
+
+<div class="file-label">my_module/__manifest__.py</div>
+<pre>{
+    <span class="cm"># Internal technical name. Must be unique. Convention: snake_case.</span>
+    <span class="st">'name'</span>: <span class="st">'My Module'</span>,
+
+    <span class="cm"># Version: Odoo_major.series.iteration.patch.build</span>
+    <span class="st">'version'</span>: <span class="st">'19.0.1.0.0'</span>,
+
+    <span class="st">'summary'</span>: <span class="st">'Does X and Y'</span>,
+
+    <span class="st">'description'</span>: <span class="st">"""
+        Detailed explanation of what this module does.
+    """</span>,
+
+    <span class="st">'author'</span>: <span class="st">'Your Name'</span>,
+    <span class="st">'website'</span>: <span class="st">'https://example.com'</span>,
+    <span class="st">'license'</span>: <span class="st">'LGPL-3'</span>,
+    <span class="st">'category'</span>: <span class="st">'Sales'</span>,
+
+    <span class="cm"># Modules that must be installed first.</span>
+    <span class="cm"># If your code references sale.order, 'sale' MUST be here.</span>
+    <span class="st">'depends'</span>: [<span class="st">'base'</span>, <span class="st">'sale'</span>, <span class="st">'mail'</span>],
+
+    <span class="cm"># Files loaded on install/update. ORDER MATTERS.</span>
+    <span class="cm"># Security first, then data, then views, then wizards/reports.</span>
+    <span class="st">'data'</span>: [
+        <span class="st">'security/groups.xml'</span>,
+        <span class="st">'security/ir.model.access.csv'</span>,
+        <span class="st">'security/ir.rule.csv'</span>,
+        <span class="st">'data/mail_template.xml'</span>,
+        <span class="st">'views/my_model_views.xml'</span>,
+        <span class="st">'views/templates.xml'</span>,
+        <span class="st">'wizard/my_wizard_views.xml'</span>,
+        <span class="st">'report/my_report_templates.xml'</span>,
+    ],
+
+    <span class="cm"># Demo data: only loaded in databases with demo data enabled.</span>
+    <span class="st">'demo'</span>: [<span class="st">'data/demo_data.xml'</span>],
+
+    <span class="st">'assets'</span>: {
+        <span class="st">'web.assets_backend'</span>: [
+            <span class="st">'my_module/static/src/js/my_component.js'</span>,
+            <span class="st">'my_module/static/src/css/style.css'</span>,
+        ],
+        <span class="st">'web.assets_qweb'</span>: [
+            <span class="st">'my_module/static/src/xml/my_templates.xml'</span>,
+        ],
+    },
+
+    <span class="st">'installable'</span>: <span class="kw">True</span>,
+    <span class="st">'auto_install'</span>: <span class="kw">False</span>,
+    <span class="st">'application'</span>: <span class="kw">True</span>,
+
+    <span class="st">'external_dependencies'</span>: {
+        <span class="st">'python'</span>: [<span class="st">'requests'</span>],
+    },
+
+    <span class="cm"># Hooks: format is 'file:function' (function at module root level)</span>
+    <span class="st">'post_init_hook'</span>: <span class="st">'_post_init_hook'</span>,
+    <span class="st">'uninstall_hook'</span>: <span class="st">'_uninstall_hook'</span>,
+}</pre>
+
+<p class="warn"><strong>Data file order is critical.</strong> Security files must come first. If a view references a model and its access CSV hasn't loaded yet, installation fails with an access error.</p>
+
+<!-- ============================== -->
+<h2 id="models">Models (models/)</h2>
+<!-- ============================== -->
+
+<div class="file-label">models/__init__.py</div>
+<pre><span class="cm"># MUST import every model file. Miss one = Odoo doesn't discover it.</span>
+<span class="kw">from</span> . <span class="kw">import</span> my_model
+<span class="kw">from</span> . <span class="kw">import</span> my_model_line</pre>
+
+<div class="file-label">models/my_model.py</div>
+<pre><span class="kw">from</span> odoo <span class="kw">import</span> models, fields, api, _
+<span class="kw">from</span> odoo.exceptions <span class="kw">import</span> ValidationError, UserError
+
+
+<span class="kw">class</span> <span class="fn">MyModel</span>(models.Model):
+
+    _name = <span class="st">'my.module'</span>
+    _description = <span class="st">'My Module Record'</span>
+    _order = <span class="st">'name asc, create_date desc'</span>
+    _rec_name = <span class="st">'name'</span>
+
+    <span class="cm"># ---- Field Types ----</span>
+
+    name = fields.Char(string=<span class="st">'Name'</span>, required=<span class="kw">True</span>, translate=<span class="kw">True</span>)
+    description = fields.Text(string=<span class="st">'Description'</span>)
+
+    state = fields.Selection([
+        (<span class="st">'draft'</span>, <span class="st">'Draft'</span>),
+        (<span class="st">'confirmed'</span>, <span class="st">'Confirmed'</span>),
+        (<span class="st">'done'</span>, <span class="st">'Done'</span>),
+        (<span class="st">'cancelled'</span>, <span class="st">'Cancelled'</span>),
+    ], string=<span class="st">'Status'</span>, default=<span class="st">'draft'</span>, tracking=<span class="kw">True</span>)
+
+    priority = fields.Integer(string=<span class="st">'Priority'</span>, default=<span class="nu">0</span>)
+
+    <span class="cm"># Float: ALWAYS specify digits to avoid rounding issues.</span>
+    amount = fields.Float(string=<span class="st">'Amount'</span>, digits=(<span class="nu">10</span>, <span class="nu">2</span>))
+
+    <span class="cm"># Monetary: use for currency amounts, NOT Float.</span>
+    total = fields.Monetary(string=<span class="st">'Total'</span>, currency_field=<span class="st">'currency_id'</span>)
+    currency_id = fields.Many2one(<span class="st">'res.currency'</span>, string=<span class="st">'Currency'</span>)
+
+    <span class="cm"># Many2one: foreign key. index=True on searched/grouped fields.</span>
+    partner_id = fields.Many2one(
+        <span class="st">'res.partner'</span>, string=<span class="st">'Customer'</span>,
+        ondelete=<span class="st">'set null'</span>, index=<span class="kw">True</span>,
+    )
+
+    <span class="cm"># One2many: inverse of Many2one. Virtual (not a real DB column).</span>
+    line_ids = fields.One2many(<span class="st">'my.module.line'</span>, <span class="st">'order_id'</span>, string=<span class="st">'Lines'</span>)
+
+    <span class="cm"># Many2many: stored via a relational table.</span>
+    tag_ids = fields.Many2many(<span class="st">'my.module.tag'</span>, string=<span class="st">'Tags'</span>)
+
+    date = fields.Date(string=<span class="st">'Date'</span>)
+    date_done = fields.Datetime(string=<span class="st">'Done At'</span>)
+
+    <span class="cm"># 'active' is special: False = archived, hidden from searches by default.</span>
+    active = fields.Boolean(string=<span class="st">'Active'</span>, default=<span class="kw">True</span>)
+
+    <span class="cm"># attachment=True: stores in ir.attachment instead of base64 in DB.</span>
+    document = fields.Binary(string=<span class="st">'Document'</span>, attachment=<span class="kw">True</span>)
+
+    notes = fields.Html(string=<span class="st">'Notes'</span>)
+
+    <span class="cm"># ---- Computed Fields ----</span>
+    <span class="cm"># store=True: required for search, sort, group by.</span>
+    <span class="cm"># depends: fields that trigger recomputation when changed.</span>
+    display_name = fields.Char(compute=<span class="st">'_compute_display_name'</span>, store=<span class="kw">True</span>)
+
+    <span class="kw">def</span> <span class="fn">_compute_display_name</span>(self):
+        <span class="kw">for</span> rec <span class="kw">in</span> self:
+            rec.display_name = rec.name <span class="kw">or</span> <span class="st">'(unnamed)'</span>
+
+    <span class="cm"># ---- Related Fields ----</span>
+    <span class="cm"># Shortcut to a field on a related model. Same as computed+stored.</span>
+    partner_email = fields.Email(
+        related=<span class="st">'partner_id.email'</span>, string=<span class="st">'Customer Email'</span>,
+        readonly=<span class="kw">False</span>, store=<span class="kw">True</span>,
+    )
+
+    <span class="cm"># ---- Constraints ----</span>
+    _sql_constraints = [
+        (<span class="st">'name_uniq'</span>, <span class="st">'UNIQUE(name)'</span>, <span class="st">'Name must be unique.'</span>),
+    ]
+
+    <span class="kw">@api</span>.constrains(<span class="st">'amount'</span>, <span class="st">'state'</span>)
+    <span class="kw">def</span> <span class="fn">_check_amount</span>(self):
+        <span class="kw">for</span> rec <span class="kw">in</span> self:
+            <span class="kw">if</span> rec.state == <span class="st">'confirmed'</span> <span class="kw">and</span> rec.amount <= <span class="nu">0</span>:
+                <span class="kw">raise</span> ValidationError(_(<span class="st">'Amount must be positive when confirmed.'</span>))
+
+    <span class="cm"># ---- Methods ----</span>
+    <span class="cm"># self is ALWAYS a recordset. Use 'for rec in self' for per-record logic.</span>
+
+    <span class="kw">def</span> <span class="fn">action_confirm</span>(self):
+        <span class="kw">for</span> rec <span class="kw">in</span> self:
+            <span class="kw">if</span> rec.state != <span class="st">'draft'</span>:
+                <span class="kw">raise</span> UserError(_(<span class="st">'Only draft records can be confirmed.'</span>))
+        self.write({<span class="st">'state'</span>: <span class="st">'confirmed'</span>})
+
+    <span class="cm"># ---- Overrides: always call super() ----</span>
+    <span class="kw">def</span> <span class="fn">write</span>(self, vals):
+        result = <span class="kw">super</span>().write(vals)
+        <span class="kw">return</span> result
+
+    <span class="kw">def</span> <span class="fn">unlink</span>(self):
+        <span class="kw">for</span> rec <span class="kw">in</span> self:
+            <span class="kw">if</span> rec.state == <span class="st">'confirmed'</span>:
+                <span class="kw">raise</span> UserError(_(<span class="st">'Cannot delete confirmed records.'</span>))
+        <span class="kw">return</span> <span class="kw">super</span>().unlink()
+
+
+<span class="cm"># ---- Transient Model (wizard) ----</span>
+<span class="kw">class</span> <span class="fn">MyWizard</span>(models.TransientModel):
+    _name = <span class="st">'my.module.wizard'</span>
+    _description = <span class="st">'My Module Wizard'</span>
+
+    date_from = fields.Date(required=<span class="kw">True</span>)
+    date_to = fields.Date(required=<span class="kw">True</span>)
+
+    <span class="kw">def</span> <span class="fn">action_execute</span>(self):
+        records = self.env[<span class="st">'my.module'</span>].search([
+            (<span class="st">'date'</span>, <span class="st">'&gt;='</span>, self.date_from),
+            (<span class="st">'date'</span>, <span class="st">'&lt;='</span>, self.date_to),
+        ])
+        <span class="kw">return</span> {<span class="st">'type'</span>: <span class="st">'ir.actions.act_window_close'</span>}</pre>
+
+<p class="tip"><strong>Access models via <code>self.env['model.name']</code>,</strong> never by importing the class. This ensures correct database, user context, and cache.</p>
+
+<h3>Inheritance: Extending Existing Models</h3>
+
+<pre><span class="cm"># Inherit WITHOUT _name: extends the existing model in place.</span>
+<span class="cm"># This is what you want 95% of the time.</span>
+<span class="kw">from</span> odoo <span class="kw">import</span> models, fields
+
+<span class="kw">class</span> <span class="fn">SaleOrder</span>(models.Model):
+    _inherit = <span class="st">'sale.order'</span>
+
+    my_custom_field = fields.Char(string=<span class="st">'Custom Field'</span>)
+
+    <span class="kw">def</span> <span class="fn">action_confirm</span>(self):
+        result = <span class="kw">super</span>().action_confirm()
+        <span class="kw">return</span> result</pre>
+
+<p class="warn"><strong>If you set both <code>_name</code> and <code>_inherit</code>,</strong> it creates a NEW model that copies the parent (prototype inheritance). This is rarely what you want.</p>
+
+<h3>Useful Mixins</h3>
+
+<table>
+    <tr><th>Mixin</th><th>Adds</th></tr>
+    <tr><td><code>mail.thread</code></td><td>Chatter: messages, notes, followers</td></tr>
+    <tr><td><code>mail.activity.mixin</code></td><td>Scheduled activities with deadlines</td></tr>
+    <tr><td><code>image.mixin</code></td><td>image_1920 field with auto-thumbnail</td></tr>
+    <tr><td><code>portal.mixin</code></td><td>Share records with portal users via link</td></tr>
+</table>
+
+<pre><span class="cm"># Usage:</span>
+_name = <span class="st">'my.module'</span>
+_inherit = [<span class="st">'mail.thread'</span>, <span class="st">'mail.activity.mixin'</span>]</pre>
+
+<!-- ============================== -->
+<h2 id="views">Views (views/)</h2>
+<!-- ============================== -->
+
+<table>
+    <tr><th>Type</th><th>Purpose</th><th>Key Detail</th></tr>
+    <tr><td><code>form</code></td><td>Create/edit one record</td><td>Header, sheet, notebook, chatter</td></tr>
+    <tr><td><code>list</code></td><td>Table of records (was "tree")</td><td><code>editable="bottom"</code> for inline editing</td></tr>
+    <tr><td><code>kanban</code></td><td>Card board</td><td>Needs inner QWeb template</td></tr>
+    <tr><td><code>search</code></td><td>Filters, group-by, search fields</td><td>Separate from other views</td></tr>
+    <tr><td><code>graph</code></td><td>Bar/line/pie charts</td><td><code>type="bar|line|pie"</code></td></tr>
+    <tr><td><code>pivot</code></td><td>Pivot table analysis</td><td>OLAP-style data exploration</td></tr>
+    <tr><td><code>calendar</code></td><td>Calendar view</td><td>Requires <code>date_start</code> field</td></tr>
+</table>
+
+<div class="file-label">views/my_model_views.xml</div>
+<pre><span class="tg">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="tg">&lt;odoo&gt;</span>
+
+<span class="cm">&lt;!-- FORM VIEW --&gt;</span>
+<span class="tg">&lt;record</span> id=<span class="st">"my_module_form"</span> model=<span class="st">"ir.ui.view"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>my.module.form<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"model"</span><span class="tg">&gt;</span>my.module<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"arch"</span> type=<span class="st">"xml"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;form&gt;</span>
+            <span class="tg">&lt;header&gt;</span>
+                <span class="cm">&lt;!-- type="object" calls a Python method --&gt;</span>
+                <span class="tg">&lt;button</span> name=<span class="st">"action_confirm"</span> string=<span class="st">"Confirm"</span>
+                        type=<span class="st">"object"</span> class=<span class="st">"btn-primary"</span>
+                        invisible=<span class="st">"state != 'draft'"</span> <span class="tg">/&gt;</span>
+                <span class="tg">&lt;button</span> name=<span class="st">"action_done"</span> string=<span class="st">"Done"</span>
+                        type=<span class="st">"object"</span>
+                        invisible=<span class="st">"state != 'confirmed'"</span> <span class="tg">/&gt;</span>
+                <span class="tg">&lt;button</span> name=<span class="st">"action_cancel"</span> string=<span class="st">"Cancel"</span>
+                        type=<span class="st">"object"</span>
+                        invisible=<span class="st">"state in ('done', 'cancelled')"</span> <span class="tg">/&gt;</span>
+                <span class="tg">&lt;field</span> name=<span class="st">"state"</span> widget=<span class="st">"statusbar"</span>
+                       statusbar_visible=<span class="st">"draft,confirmed"</span> clickable=<span class="st">"0"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;/header&gt;</span>
+
+            <span class="tg">&lt;sheet&gt;</span>
+                <span class="tg">&lt;div</span> class=<span class="st">"oe_title"</span><span class="tg">&gt;</span>
+                    <span class="tg">&lt;h1&gt;&lt;field</span> name=<span class="st">"name"</span> placeholder=<span class="st">"Enter name..."</span> <span class="tg">/&gt;&lt;/h1&gt;</span>
+                <span class="tg">&lt;/div&gt;</span>
+                <span class="cm">&lt;!-- GROUP: 4-col layout (label,field,label,field). col="2" for single col --&gt;</span>
+                <span class="tg">&lt;group&gt;</span>
+                    <span class="tg">&lt;group</span> string=<span class="st">"Information"</span><span class="tg">&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"partner_id"</span> <span class="tg">/&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"date"</span> <span class="tg">/&gt;</span>
+                    <span class="tg">&lt;/group&gt;</span>
+                    <span class="tg">&lt;group</span> string=<span class="st">"Amounts"</span><span class="tg">&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"currency_id"</span> <span class="tg">/&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"amount"</span> <span class="tg">/&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"total"</span> <span class="tg">/&gt;</span>
+                    <span class="tg">&lt;/group&gt;</span>
+                <span class="tg">&lt;/group&gt;</span>
+                <span class="tg">&lt;notebook&gt;</span>
+                    <span class="tg">&lt;page</span> string=<span class="st">"Lines"</span><span class="tg">&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"line_ids"</span><span class="tg">&gt;</span>
+                            <span class="tg">&lt;list</span> editable=<span class="st">"bottom"</span><span class="tg">&gt;</span>
+                                <span class="tg">&lt;field</span> name=<span class="st">"product_id"</span> <span class="tg">/&gt;</span>
+                                <span class="tg">&lt;field</span> name=<span class="st">"quantity"</span> <span class="tg">/&gt;</span>
+                                <span class="tg">&lt;field</span> name=<span class="st">"price_unit"</span> <span class="tg">/&gt;</span>
+                            <span class="tg">&lt;/list&gt;</span>
+                        <span class="tg">&lt;/field&gt;</span>
+                    <span class="tg">&lt;/page&gt;</span>
+                    <span class="tg">&lt;page</span> string=<span class="st">"Notes"</span><span class="tg">&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"description"</span> <span class="tg">/&gt;</span>
+                        <span class="tg">&lt;field</span> name=<span class="st">"notes"</span> <span class="tg">/&gt;</span>
+                    <span class="tg">&lt;/page&gt;</span>
+                <span class="tg">&lt;/notebook&gt;</span>
+            <span class="tg">&lt;/sheet&gt;</span>
+
+            <span class="cm">&lt;!-- CHATTER: outside sheet. Requires mail.thread. --&gt;</span>
+            <span class="tg">&lt;div</span> class=<span class="st">"oe_chatter"</span><span class="tg">&gt;</span>
+                <span class="tg">&lt;field</span> name=<span class="st">"message_follower_ids"</span> <span class="tg">/&gt;</span>
+                <span class="tg">&lt;field</span> name=<span class="st">"message_ids"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;/div&gt;</span>
+        <span class="tg">&lt;/form&gt;</span>
+    <span class="tg">&lt;/field&gt;</span>
+<span class="tg">&lt;/record&gt;</span>
+
+<span class="cm">&lt;!-- LIST VIEW --&gt;</span>
+<span class="tg">&lt;record</span> id=<span class="st">"my_module_list"</span> model=<span class="st">"ir.ui.view"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>my.module.list<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"model"</span><span class="tg">&gt;</span>my.module<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"arch"</span> type=<span class="st">"xml"</span><span class="tg">&gt;</span>
+        <span class="cm">&lt;!-- decoration-*: danger, success, info, warning, muted --&gt;</span>
+        <span class="tg">&lt;list</span> string=<span class="st">"Records"</span>
+              decoration-danger=<span class="st">"state == 'cancelled'"</span>
+              decoration-success=<span class="st">"state == 'done'"</span><span class="tg">&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"name"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"partner_id"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"amount"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"state"</span> widget=<span class="st">"badge"</span>
+                   decoration-success=<span class="st">"state == 'done'"</span>
+                   decoration-info=<span class="st">"state == 'confirmed'"</span>
+                   decoration-danger=<span class="st">"state == 'cancelled'"</span> <span class="tg">/&gt;</span>
+        <span class="tg">&lt;/list&gt;</span>
+    <span class="tg">&lt;/field&gt;</span>
+<span class="tg">&lt;/record&gt;</span>
+
+<span class="cm">&lt;!-- SEARCH VIEW --&gt;</span>
+<span class="tg">&lt;record</span> id=<span class="st">"my_module_search"</span> model=<span class="st">"ir.ui.view"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>my.module.search<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"model"</span><span class="tg">&gt;</span>my.module<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"arch"</span> type=<span class="st">"xml"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;search&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"name"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"partner_id"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;filter</span> name=<span class="st">"draft"</span> string=<span class="st">"Drafts"</span>
+                    domain=<span class="st">"[('state', '=', 'draft')]"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;separator</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;filter</span> name=<span class="st">"by_partner"</span> string=<span class="st">"Customer"</span>
+                    context=<span class="st">"{'group_by': 'partner_id'}"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;filter</span> name=<span class="st">"by_state"</span> string=<span class="st">"Status"</span>
+                    context=<span class="st">"{'group_by': 'state'}"</span> <span class="tg">/&gt;</span>
+        <span class="tg">&lt;/search&gt;</span>
+    <span class="tg">&lt;/field&gt;</span>
+<span class="tg">&lt;/record&gt;</span>
+
+<span class="cm">&lt;!-- ACTION --&gt;</span>
+<span class="tg">&lt;record</span> id=<span class="st">"my_module_action"</span> model=<span class="st">"ir.actions.act_window"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>My Records<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"res_model"</span><span class="tg">&gt;</span>my.module<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"view_mode"</span><span class="tg">&gt;</span>list,form<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"view_id"</span> ref=<span class="st">"my_module_list"</span> <span class="tg">/&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"search_view_id"</span> ref=<span class="st">"my_module_search"</span> <span class="tg">/&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"context"</span><span class="tg">&gt;</span>{'search_default_draft': 1}<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"help"</span> type=<span class="st">"html"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;p</span> class=<span class="st">"o_view_nocontent_smiling_face"</span><span class="tg">&gt;</span>Create your first record!<span class="tg">&lt;/p&gt;</span>
+    <span class="tg">&lt;/field&gt;</span>
+<span class="tg">&lt;/record&gt;</span>
+
+<span class="cm">&lt;!-- MENUS --&gt;</span>
+<span class="tg">&lt;menuitem</span> id=<span class="st">"my_module_menu_root"</span> name=<span class="st">"My Module"</span> sequence=<span class="st">"40"</span> <span class="tg">/&gt;</span>
+<span class="tg">&lt;menuitem</span> id=<span class="st">"my_module_menu_records"</span> name=<span class="st">"Records"</span>
+          parent=<span class="st">"my_module_menu_root"</span> action=<span class="st">"my_module_action"</span> <span class="tg">/&gt;</span>
+
+<span class="tg">&lt;/odoo&gt;</span></pre>
+
+<p class="warn"><strong>Chatter goes OUTSIDE <code>&lt;sheet&gt;</code>.</strong> Putting it inside won't render correctly.</p>
+
+<!-- ============================== -->
+<h2 id="security">Security (security/)</h2>
+<!-- ============================== -->
+
+<div class="file-label">security/ir.model.access.csv</div>
+<pre><span class="cm"># id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink</span>
+<span class="cm"># group_id empty = public. base.group_user = all internal users.</span>
+access_my_module_manager,my.module.manager,model_my_module,my_module.group_manager,1,1,1,1
+access_my_module_user,my.module.user,model_my_module,my_module.group_user,1,1,1,0</pre>
+
+<div class="file-label">security/groups.xml</div>
+<pre><span class="tg">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="tg">&lt;odoo&gt;</span>
+    <span class="tg">&lt;record</span> id=<span class="st">"module_category_my_module"</span> model=<span class="st">"ir.module.category"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>My Module<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;/record&gt;</span>
+    <span class="tg">&lt;record</span> id=<span class="st">"group_user"</span> model=<span class="st">"res.groups"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>My Module User<span class="tg">&lt;/field&gt;</span>
+        <span class="tg">&lt;field</span> name=<span class="st">"category_id"</span> ref=<span class="st">"module_category_my_module"</span> <span class="tg">/&gt;</span>
+        <span class="tg">&lt;field</span> name=<span class="st">"implied_ids"</span> eval=<span class="st">"[(4, ref('base.group_user'))]"</span> <span class="tg">/&gt;</span>
+    <span class="tg">&lt;/record&gt;</span>
+    <span class="tg">&lt;record</span> id=<span class="st">"group_manager"</span> model=<span class="st">"res.groups"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>My Module Manager<span class="tg">&lt;/field&gt;</span>
+        <span class="tg">&lt;field</span> name=<span class="st">"category_id"</span> ref=<span class="st">"module_category_my_module"</span> <span class="tg">/&gt;</span>
+        <span class="tg">&lt;field</span> name=<span class="st">"implied_ids"</span> eval=<span class="st">"[(4, ref('my_module.group_user'))]"</span> <span class="tg">/&gt;</span>
+    <span class="tg">&lt;/record&gt;</span>
+<span class="tg">&lt;/odoo&gt;</span></pre>
+
+<div class="file-label">security/ir.rule.csv <span class="badge badge-o">optional</span></div>
+<pre><span class="cm"># Row-level security</span>
+my_module_rule_user,my.module.user.rule,model_my_module,[('create_uid','=',user.id)],my_module.group_user,1,1,1,0</pre>
+
+<p class="warn"><strong>Missing ACL = silent access denied.</strong> If a model has no row in <code>ir.model.access.csv</code>, even admin gets errors in the UI.</p>
+
+<!-- ============================== -->
+<h2 id="data">Data Files (data/)</h2>
+<!-- ============================== -->
+
+<div class="file-label">data/sequence.xml (example)</div>
+<pre><span class="tg">&lt;odoo&gt;</span>
+    <span class="cm">&lt;!-- noupdate="1": user modifications survive module updates --&gt;</span>
+    <span class="tg">&lt;data</span> noupdate=<span class="st">"1"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;record</span> id=<span class="st">"my_module_sequence"</span> model=<span class="st">"ir.sequence"</span><span class="tg">&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>My Module Sequence<span class="tg">&lt;/field&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"code"</span><span class="tg">&gt;</span>my.module<span class="tg">&lt;/field&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"prefix"</span><span class="tg">&gt;</span>MYM/<span class="tg">&lt;/field&gt;</span>
+            <span class="tg">&lt;field</span> name=<span class="st">"padding"</span> eval=<span class="st">"5"</span> <span class="tg">/&gt;</span>
+        <span class="tg">&lt;/record&gt;</span>
+    <span class="tg">&lt;/data&gt;</span>
+<span class="tg">&lt;/odoo&gt;</span></pre>
+
+<p class="note"><strong><code>noupdate="1"</code> matters.</strong> Without it, every module update resets sequences, mail templates, and settings to defaults, erasing user customizations.</p>
+
+<!-- ============================== -->
+<h2 id="static">Static Assets (static/)</h2>
+<!-- ============================== -->
+
+<pre><span class="cm"># In __manifest__.py:</span>
+<span class="st">'assets'</span>: {
+    <span class="st">'web.assets_backend'</span>: [
+        <span class="st">'my_module/static/src/js/my_component.js'</span>,
+        <span class="st">'my_module/static/src/css/style.css'</span>,
+    ],
+    <span class="st">'web.assets_qweb'</span>: [
+        <span class="st">'my_module/static/src/xml/my_templates.xml'</span>,
+    ],
+    <span class="st">'web.assets_frontend'</span>: [
+        <span class="st">'my_module/static/src/js/website_stuff.js'</span>,
+    ],
+},</pre>
+
+<p class="note"><strong>After editing static files, clear your browser cache</strong> (Ctrl+Shift+R). In development, enable <strong>Developer Mode &rarr; Debug Assets</strong> or start Odoo with <code>--dev=reload</code>.</p>
+
+<!-- ============================== -->
+<h2 id="missed">Commonly Missed Things</h2>
+<!-- ============================== -->
+
+<ol>
+    <li><strong>Forgetting to import in <code>__init__.py</code>.</strong> Every model file must be imported in its directory's <code>__init__.py</code>, and every sub-directory in the root <code>__init__.py</code>.</li>
+    <li><strong>Missing ACL entries.</strong> No row in <code>ir.model.access.csv</code> for a model = "Access Denied" when clicking the menu.</li>
+    <li><strong>Wrong data file order in manifest.</strong> Security must load first.</li>
+    <li><strong>Not calling <code>super()</code> in overrides.</strong> Silently breaks other modules overriding the same method.</li>
+    <li><strong>Missing <code>store=True</code> on computed fields.</strong> Without it, can't search, sort, or group by that field.</li>
+    <li><strong>No <code>index=True</code> on frequently searched Many2one fields.</strong></li>
+    <li><strong>Treating <code>self</code> as a single record.</strong> Always use <code>for rec in self</code>.</li>
+    <li><strong>Not using <code>_()</code> for translatable strings.</strong></li>
+    <li><strong>Chatter inside <code>&lt;sheet&gt;</code>.</strong> Must be outside.</li>
+    <li><strong>No <code>noupdate="1"</code> on user-configurable data.</strong></li>
+    <li><strong>Forgetting <code>active</code> filter.</strong> To include archived: <code>[('active', 'in', [True, False])]</code>.</li>
+    <li><strong>Using Float for money.</strong> Use <code>fields.Monetary</code>.</li>
+    <li><strong>Not clearing cache after asset changes.</strong></li>
+    <li><strong>Duplicate XML IDs across modules.</strong> Last one loaded wins silently.</li>
+    <li><strong>Using <code>sudo()</code> carelessly.</strong> Use <code>with_user()</code> when possible. Scope <code>sudo()</code> narrowly.</li>
+</ol>
+
+<!-- ============================== -->
+<h2 id="best-practices">Best Practices</h2>
+<!-- ============================== -->
+
+<ul>
+    <li>Prefix all XML IDs: <code>my_module_form_view</code>, not <code>form_view</code></li>
+    <li>Prefix model names: <code>my_module.order</code>, not <code>order</code></li>
+    <li>Use built-in automatic fields: <code>create_date</code>, <code>write_date</code>, <code>create_uid</code>, <code>write_uid</code></li>
+    <li>Keep models under ~30 fields &mdash; split with One2many if larger</li>
+    <li><code>self.env.context.get('key')</code> to read context safely</li>
+    <li><code>with_context()</code> to pass context without modifying current environment</li>
+    <li><code>_logger = logging.getLogger(__name__)</code> instead of <code>print()</code></li>
+    <li>Write tests for critical business logic</li>
+    <li>Bump version after schema changes: <code>19.0.1.0.0</code> &rarr; <code>19.0.1.0.1</code></li>
+    <li>Use <code>useService("orm")</code> over <code>useService("rpc")</code> in OWL</li>
+</ul>
+
+<hr>
+
+<!-- ============================== -->
+<h2 id="owl">OWL &mdash; Odoo Web Library: Introduction</h2>
+<!-- ============================== -->
+
+<p><strong>OWL</strong> is Odoo's internal UI framework since Odoo 16, replacing the old <code>odoo.Widget</code> system. Not a general-purpose framework &mdash; built specifically for Odoo.</p>
+
+<ul>
+    <li><strong>Is:</strong> Lightweight component framework with reactive state, QWeb templates, lifecycle hooks. Similar concept to Vue/React but much smaller.</li>
+    <li><strong>Isn't:</strong> Usable outside Odoo. No router, no state library, no CLI.</li>
+    <li><strong>Replaces:</strong> <code>odoo.Widget</code> (Odoo 15 and earlier). If you see it, it's old code.</li>
+    <li><strong>Used for:</strong> Custom views, field widgets, client actions, systray items.</li>
+</ul>
+
+<table>
+    <tr><th>Concept</th><th>What It Means</th></tr>
+    <tr><td><code>Component</code></td><td>JS class extending <code>owl.Component</code>. Has state, methods, template.</td></tr>
+    <tr><td><code>Template</code></td><td>QWeb XML with <code>t-if</code>, <code>t-foreach</code>, <code>t-on-click</code> etc.</td></tr>
+    <tr><td><code>State</code></td><td>Reactive properties. Change them &rarr; template re-renders automatically.</td></tr>
+    <tr><td><code>Props</code></td><td>Data from parent to child (one-way, top-down).</td></tr>
+    <tr><td><code>Lifecycle</code></td><td><code>willStart()</code>, <code>mounted()</code>, <code>willUpdate()</code>, <code>updated()</code>, <code>willUnmount()</code></td></tr>
+    <tr><td><code>useService</code></td><td>Access Odoo services: ORM, RPC, notifications, router.</td></tr>
+    <tr><td><code>Registry</code></td><td>How components are registered for Odoo to use.</td></tr>
+</table>
+
+<p><strong>Reactivity loop:</strong> State changes &rarr; Template re-renders &rarr; DOM updates. Never touch the DOM directly.</p>
+
+<h3>Where OWL Files Go</h3>
+
+<div class="tree">
+<span class="d">static/src/</span>
+<span class="i"><span class="d">js/</span></span>
+<span class="i2"><span class="j">my_component.js</span>     <span class="c"># Component class (web.assets_backend)</span></span>
+<span class="i"><span class="d">xml/</span></span>
+<span class="i2"><span class="x">my_templates.xml</span>   <span class="c"># QWeb templates (web.assets_qweb, NOT backend)</span></span>
+<span class="i"><span class="d">css/</span></span>
+<span class="i2">style.css                <span class="c"># Use a scoping class name</span></span>
+</div>
+
+<h3>OWL vs Legacy Widget</h3>
+
+<table>
+    <tr><th>Aspect</th><th>Legacy (odoo.Widget)</th><th>OWL</th></tr>
+    <tr><td>Rendering</td><td>Manual <code>this.$el.append()</code></td><td>Declarative QWeb, auto-re-render</td></tr>
+    <tr><td>State</td><td>No reactivity; manual <code>render()</code></td><td>Automatic on property change</td></tr>
+    <tr><td>Performance</td><td>Slower</td><td>Faster (compiled templates)</td></tr>
+    <tr><td>Lifecycle</td><td><code>init()</code>, <code>start()</code>, <code>destroy()</code></td><td><code>setup()</code>, <code>willStart()</code>, <code>mounted()</code>, <code>willUnmount()</code></td></tr>
+    <tr><td>Files</td><td>JS + inline template strings</td><td>Separate .js and .xml</td></tr>
+    <tr><td>Era</td><td>Odoo 15 and earlier</td><td>Odoo 16+</td></tr>
+</table>
+
+<p class="tip"><strong>They can coexist during migration.</strong> Start new components in OWL, migrate old ones incrementally.</p>
+
+<!-- ============================== -->
+<h2 id="owl-component">OWL Components</h2>
+<!-- ============================== -->
+
+<div class="file-label">static/src/js/my_component.js</div>
+<pre><span class="cm">/** @odoo-module */</span>
+<span class="cm">// Required for Odoo's bundler. Without it, imports break.</span>
+
+<span class="kw">import</span> { Component } <span class="kw">from</span> <span class="st">"@odoo/owl"</span>;
+<span class="kw">import</span> { registry } <span class="kw">from</span> <span class="st">"@web/core/registry"</span>;
+<span class="kw">import</span> { useService } <span class="kw">from</span> <span class="st">"@web/core/utils/hooks"</span>;
+
+<span class="kw">class</span> <span class="fn">MyCounter</span> <span class="kw">extends</span> Component {
+
+    <span class="cm">// Must match template's t-name exactly.</span>
+    <span class="kw">static</span> template = <span class="st">"my_module.MyCounter"</span>;
+
+    <span class="cm">// Declare expected props (optional but recommended).</span>
+    <span class="kw">static</span> props = {
+        initialValue: { type: Number, optional: <span class="kw">true</span> },
+    };
+
+    <span class="fn">setup</span>() {
+        <span class="kw">super</span>.setup();  <span class="cm">// MUST be first line</span>
+
+        <span class="cm">// State: reactive. Changing this.count triggers re-render.</span>
+        <span class="kw">this</span>.count = <span class="kw">this</span>.props.initialValue || <span class="nu">0</span>;
+
+        <span class="cm">// Odoo services (singletons).</span>
+        <span class="kw">this</span>.orm = useService(<span class="st">"orm"</span>);
+        <span class="kw">this</span>.rpc = useService(<span class="st">"rpc"</span>);
+        <span class="kw">this</span>.notification = useService(<span class="st">"notification"</span>);
+        <span class="kw">this</span>.router = useService(<span class="st">"router"</span>);
+        <span class="kw">this</span>.action = useService(<span class="st">"action"</span>);
+    }
+
+    <span class="cm">// ---- Lifecycle ----</span>
+
+    <span class="kw">async</span> <span class="fn">willStart</span>() {
+        <span class="kw">await super</span>.willStart();
+        <span class="cm">// Fetch initial data: this.data = await this.orm.searchRead(...)</span>
+    }
+
+    <span class="fn">mounted</span>() {
+        <span class="kw">super</span>.mounted();
+        <span class="cm">// DOM ready. Init third-party libs here.</span>
+    }
+
+    <span class="fn">willUnmount</span>() {
+        <span class="kw">super</span>.willUnmount();
+        <span class="cm">// CRITICAL: clean up timers, listeners, subscriptions.</span>
+    }
+
+    <span class="cm">// ---- Methods ----</span>
+
+    <span class="fn">increment</span>() {
+        <span class="kw">this</span>.count++;  <span class="cm">// No manual update. OWL detects change.</span>
+    }
+
+    <span class="kw">async</span> <span class="fn">saveToServer</span>() {
+        <span class="kw">try</span> {
+            <span class="kw">await this</span>.orm.write(<span class="st">"my.module"</span>, [<span class="kw">this</span>.props.recordId], {
+                count: <span class="kw">this</span>.count,
+            });
+            <span class="kw">this</span>.notification.add({ type: <span class="st">"success"</span>, message: <span class="st">"Saved!"</span> });
+        } <span class="kw">catch</span> (e) {
+            <span class="kw">this</span>.notification.add({ type: <span class="st">"danger"</span>, message: e.message });
+        }
+    }
+}
+
+<span class="cm">// Register as client action (openable from menu).</span>
+registry.category(<span class="st">"actions"</span>).add(<span class="st">"my_module.counter_action"</span>, MyCounter);</pre>
+
+<h3>Common Odoo Services</h3>
+
+<table>
+    <tr><th>Service</th><th>What</th><th>Key Methods</th></tr>
+    <tr><td><code>orm</code></td><td>Model access</td><td><code>searchRead()</code>, <code>create()</code>, <code>write()</code>, <code>unlink()</code>, <code>read()</code></td></tr>
+    <tr><td><code>rpc</code></td><td>Raw RPC</td><td><code>rpc('/my/route', params)</code></td></tr>
+    <tr><td><code>notification</code></td><td>Toasts</td><td><code>add({type, message, title})</code></td></tr>
+    <tr><td><code>router</code></td><td>Navigation</td><td><code>navigate('/')</code>, <code>currentRoute</code></td></tr>
+    <tr><td><code>action</code></td><td>Odoo actions</td><td><code>doAction(action)</code></td></tr>
+    <tr><td><code>dialog</code></td><td>Dialogs</td><td><code>add(Component, {props})</code></td></tr>
+    <tr><td><code>user</code></td><td>Current user</td><td><code>userId</code>, <code>isAdmin</code>, <code>hasGroup()</code></td></tr>
+    <tr><td><code>http</code></td><td>HTTP requests</td><td><code>get()</code>, <code>post()</code>, <code>put()</code>, <code>delete()</code></td></tr>
+</table>
+
+<h3>Lifecycle Order</h3>
+
+<table>
+    <tr><th>Hook</th><th>When</th><th>Use For</th></tr>
+    <tr><td><code>setup()</code></td><td>Instantiation (before render)</td><td>State, useService, bind methods</td></tr>
+    <tr><td><code>willStart()</code></td><td>Before first render (async OK)</td><td>Fetch initial data</td></tr>
+    <tr><td><code>mounted()</code></td><td>After first render, DOM ready</td><td>DOM measurements, init libs</td></tr>
+    <tr><td><code>willUpdate()</code></td><td>Before re-renders (not first)</td><td>Save scroll position</td></tr>
+    <tr><td><code>updated()</code></td><td>After re-renders (not first)</td><td>Restore scroll position</td></tr>
+    <tr><td><code>willUnmount()</code></td><td>Before removal</td><td>Clean up timers, listeners</td></tr>
+</table>
+
+<!-- ============================== -->
+<h2 id="owl-template">OWL Templates (QWeb)</h2>
+<!-- ============================== -->
+
+<div class="file-label">static/src/xml/my_templates.xml</div>
+<pre><span class="tg">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tg">&lt;templates</span> xml:space=<span class="st">"preserve"</span><span class="tg">&gt;</span>
+
+<span class="cm">&lt;!-- t-name must match static template in component class --&gt;</span>
+<span class="tg">&lt;t</span> t-name=<span class="st">"my_module.MyCounter"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;div</span> class=<span class="st">"my_counter"</span><span class="tg">&gt;</span>
+
+        <span class="cm">&lt;!-- t-esc: escaped text (XSS safe). Use for all user data. --&gt;</span>
+        <span class="tg">&lt;h2&gt;&lt;t</span> t-esc=<span class="st">"props.title or 'Counter'"</span> <span class="tg">/&gt;&lt;/h2&gt;</span>
+
+        <span class="cm">&lt;!-- t-if: conditional. Element removed from DOM if false. --&gt;</span>
+        <span class="tg">&lt;div</span> t-if=<span class="st">"state.count &gt; 10"</span> class=<span class="st">"alert alert-warning"</span><span class="tg">&gt;</span>
+            Count is getting high!
+        <span class="tg">&lt;/div&gt;</span>
+
+        <span class="cm">&lt;!-- t-attf-class: dynamic class with {{interpolation}} --&gt;</span>
+        <span class="tg">&lt;span</span> t-attf-class=<span class="st">"badge {{state.count &gt; 0 ? 'bg-success' : 'bg-secondary'}}"</span><span class="tg">&gt;</span>
+            <span class="tg">&lt;t</span> t-esc=<span class="st">"state.count"</span> <span class="tg">/&gt;</span>
+        <span class="tg">&lt;/span&gt;</span>
+
+        <span class="cm">&lt;!-- t-on-click: event. "->" calls a method. --&gt;</span>
+        <span class="tg">&lt;button</span> class=<span class="st">"btn btn-primary"</span> t-on-click=<span class="st">"increment"</span><span class="tg">&gt;</span>+<span class="tg">&lt;/button&gt;</span>
+        <span class="tg">&lt;button</span> class=<span class="st">"btn btn-secondary"</span> t-on-click=<span class="st">"decrement"</span><span class="tg">&gt;</span>-<span class="tg">&lt;/button&gt;</span>
+
+        <span class="cm">&lt;!-- t-foreach + t-as + t-key (required for efficient DOM patching) --&gt;</span>
+        <span class="tg">&lt;ul&gt;</span>
+            <span class="tg">&lt;li</span> t-foreach=<span class="st">"state.items"</span> t-as=<span class="st">"item"</span> t-key=<span class="st">"item.id"</span><span class="tg">&gt;</span>
+                <span class="tg">&lt;t</span> t-esc=<span class="st">"item.name"</span> <span class="tg">/&gt;</span>
+            <span class="tg">&lt;/li&gt;</span>
+        <span class="tg">&lt;/ul&gt;</span>
+
+        <span class="cm">&lt;!-- t-model: two-way binding on inputs --&gt;</span>
+        <span class="tg">&lt;input</span> t-model=<span class="st">"state.searchQuery"</span> placeholder=<span class="st">"Search..."</span> <span class="tg">/&gt;</span>
+
+    <span class="tg">&lt;/div&gt;</span>
+<span class="tg">&lt;/t&gt;</span>
+
+<span class="tg">&lt;/templates&gt;</span></pre>
+
+<h3>Key QWeb Directives</h3>
+
+<table>
+    <tr><th>Directive</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td><code>t-esc</code></td><td>Escaped text (safe)</td><td><code>&lt;t t-esc="name" /&gt;</code></td></tr>
+    <tr><td><code>t-raw</code></td><td>Unescaped HTML (XSS risk)</td><td><code>&lt;t t-raw="html" /&gt;</code></td></tr>
+    <tr><td><code>t-if</code></td><td>Conditional</td><td><code>&lt;div t-if="x &gt; 0"&gt;</code></td></tr>
+    <tr><td><code>t-elif</code> / <code>t-else</code></td><td>Else chains</td><td><code>&lt;div t-elif="..."&gt;</code></td></tr>
+    <tr><td><code>t-foreach</code> + <code>t-as</code></td><td>Loop</td><td><code>&lt;li t-foreach="items" t-as="item"&gt;</code></td></tr>
+    <tr><td><code>t-key</code></td><td>Unique key for loops (required)</td><td><code>t-key="item.id"</code></td></tr>
+    <tr><td><code>t-on-*</code></td><td>Event binding</td><td><code>t-on-click="method"</code></td></tr>
+    <tr><td><code>t-att-*</code></td><td>HTML attribute</td><td><code>t-att-href="url"</code></td></tr>
+    <tr><td><code>t-attf-*</code></td><td>Attribute with interpolation</td><td><code>t-attf-class="btn {{type}}"</code></td></tr>
+    <tr><td><code>t-model</code></td><td>Two-way binding</td><td><code>&lt;input t-model="state.name" /&gt;</code></td></tr>
+</table>
+
+<p class="note"><strong><code>t-key</code> is required in loops.</strong> Use a unique stable ID, not an index.</p>
+
+<!-- ============================== -->
+<h2 id="owl-advanced">OWL Advanced</h2>
+<!-- ============================== -->
+
+<h3>Opening an OWL Component from a Menu</h3>
+
+<pre><span class="cm"># In component JS:</span>
+registry.category(<span class="st">"actions"</span>).add(<span class="st">"my_module.counter_action"</span>, MyCounter);
+
+<span class="cm"># In views XML:</span>
+<span class="tg">&lt;record</span> id=<span class="st">"my_module_counter_action"</span> model=<span class="st">"ir.actions.client"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"name"</span><span class="tg">&gt;</span>My Counter<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"tag"</span><span class="tg">&gt;</span>my_module.counter_action<span class="tg">&lt;/field&gt;</span>
+    <span class="tg">&lt;field</span> name=<span class="st">"context"</span><span class="tg">&gt;</span>{'initial_value': 42}<span class="tg">&lt;/field&gt;</span>
+<span class="tg">&lt;/record&gt;</span>
+
+<span class="tg">&lt;menuitem</span> id=<span class="st">"my_module_menu_counter"</span> name=<span class="st">"Counter"</span>
+          parent=<span class="st">"my_module_menu_root"</span>
+          action=<span class="st">"my_module_counter_action"</span> <span class="tg">/&gt;</span></pre>
+
+<p class="note"><strong><code>tag</code> must match the registry key.</strong> Context dict is spread into props automatically.</p>
+
+<h3>Component Composition (Parent + Child)</h3>
+
+<div class="file-label">static/src/js/child_component.js</div>
+<pre><span class="cm">/** @odoo-module */</span>
+<span class="kw">import</span> { Component } <span class="kw">from</span> <span class="st">"@odoo/owl"</span>;
+
+<span class="kw">class</span> <span class="fn">ChildBadge</span> <span class="kw">extends</span> Component {
+    <span class="kw">static</span> template = <span class="st">"my_module.ChildBadge"</span>;
+    <span class="kw">static</span> props = { label: String, color: { type: String, optional: <span class="kw">true</span> } };
+}</pre>
+
+<div class="file-label">static/src/xml/child_templates.xml</div>
+<pre><span class="tg">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tg">&lt;templates</span> xml:space=<span class="st">"preserve"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;t</span> t-name=<span class="st">"my_module.ChildBadge"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;span</span> t-attf-class=<span class="st">"badge {{props.color || 'bg-secondary'}}"</span>
+          t-esc=<span class="st">"props.label"</span> <span class="tg">/&gt;</span>
+<span class="tg">&lt;/t&gt;</span>
+<span class="tg">&lt;/templates&gt;</span></pre>
+
+<div class="file-label">Parent using the child</div>
+<pre><span class="cm">/** @odoo-module */</span>
+<span class="kw">import</span> { Component } <span class="kw">from</span> <span class="st">"@odoo/owl"</span>;
+<span class="kw">import</span> { ChildBadge } <span class="kw">from</span> <span class="st">"./child_component"</span>;
+
+<span class="kw">class</span> <span class="fn">MyCounter</span> <span class="kw">extends</span> Component {
+    <span class="kw">static</span> template = <span class="st">"my_module.MyCounter"</span>;
+    <span class="kw">static</span> components = { ChildBadge };  <span class="cm"># REQUIRED: declare child components</span>
+}
+
+<span class="cm">&lt;!-- In parent template XML: --&gt;</span>
+<span class="tg">&lt;ChildBadge</span> label=<span class="st">"Active"</span> color=<span class="st">"bg-success"</span> <span class="tg">/&gt;</span>
+<span class="tg">&lt;ChildBadge</span> label=<span class="st">"Draft"</span> <span class="tg">/&gt;</span></pre>
+
+<h3>useState for Reactive Objects and Arrays</h3>
+
+<p>Plain objects/arrays on <code>this</code> are <strong>not</strong> deeply reactive. Use <code>useState()</code>:</p>
+
+<pre><span class="kw">import</span> { Component, useState } <span class="kw">from</span> <span class="st">"@odoo/owl"</span>;
+
+<span class="kw">class</span> <span class="fn">MyList</span> <span class="kw">extends</span> Component {
+    <span class="kw">static</span> template = <span class="st">"my_module.MyList"</span>;
+
+    <span class="fn">setup</span>() {
+        <span class="kw">super</span>.setup();
+        <span class="kw">this</span>.state = useState({ items: [], loading: <span class="kw">false</span> });
+    }
+
+    <span class="kw">async</span> <span class="fn">loadItems</span>() {
+        <span class="kw">this</span>.state.loading = <span class="kw">true</span>;
+        <span class="kw">this</span>.state.items = <span class="kw">await this</span>.orm.searchRead(<span class="st">"my.module"</span>, [], [<span class="st">"name"</span>]);
+        <span class="kw">this</span>.state.loading = <span class="kw">false</span>;
+    }
+
+    <span class="fn">addItem</span>(item) {
+        <span class="cm"># DON'T: this.state.items.push(item) -- OWL won't detect it.</span>
+        <span class="cm"># DO: reassign the array.</span>
+        <span class="kw">this</span>.state.items = [...<span class="kw">this</span>.state.items, item];
+    }
+
+    <span class="fn">removeItem</span>(id) {
+        <span class="kw">this</span>.state.items = <span class="kw">this</span>.state.items.filter(i => i.id !== id);
+    }
+}</pre>
+
+<p class="warn"><strong>Never mutate in place.</strong> <code>push()</code>, <code>splice()</code>, and direct property assignment on nested objects won't trigger re-renders. Always reassign.</p>
+
+<h3>Event Bus for Cross-Component Communication</h3>
+
+<pre><span class="kw">import</span> { Component, useState, onWillUnmount } <span class="kw">from</span> <span class="st">"@odoo/owl"</span>;
+<span class="kw">import</span> { useService } <span class="kw">from</span> <span class="st">"@web/core/utils/hooks"</span>;
+
+<span class="cm"># Emitter component:</span>
+<span class="kw">class</span> <span class="fn">Emitter</span> <span class="kw">extends</span> Component {
+    <span class="fn">setup</span>() {
+        <span class="kw">super</span>.setup();
+        <span class="kw">this</span>.bus = useService(<span class="st">"bus"</span>);
+    }
+    <span class="fn">notifyOthers</span>() {
+        <span class="kw">this</span>.bus.emit(<span class="st">"my_module:updated"</span>, { id: <span class="nu">42</span> });
+    }
+}
+
+<span class="cm"># Listener component:</span>
+<span class="kw">class</span> <span class="fn">Listener</span> <span class="kw">extends</span> Component {
+    <span class="kw">static</span> template = <span class="st">"my_module.Listener"</span>;
+    <span class="fn">setup</span>() {
+        <span class="kw">super</span>.setup();
+        <span class="kw">this</span>.bus = useService(<span class="st">"bus"</span>);
+        <span class="kw">this</span>.state = useState({ lastId: <span class="kw">null</span> });
+        <span class="kw">this</span>._handler = <span class="kw">this</span>._handler.bind(<span class="kw">this</span>);
+        <span class="kw">this</span>.bus.addEventListener(<span class="st">"my_module:updated"</span>, <span class="kw">this</span>._handler);
+        <span class="cm"># MUST clean up:</span>
+        onWillUnmount(() => {
+            <span class="kw">this</span>.bus.removeEventListener(<span class="st">"my_module:updated"</span>, <span class="kw">this</span>._handler);
+        });
+    }
+    <span class="fn">_handler</span>({ detail }) { <span class="kw">this</span>.state.lastId = detail.id; }
+}</pre>
+
+<h3>Other Registration Types</h3>
+
+<pre><span class="cm"># Custom field widget:</span>
+registry.category(<span class="st">"fields"</span>).add(<span class="st">"my_color_picker"</span>, MyColorPicker);
+<span class="cm"># Use: &lt;field name="color" widget="my_color_picker" /&gt;</span>
+
+<span class="cm"># Custom view type:</span>
+registry.category(<span class="st">"views"</span>).add(<span class="st">"my_custom_view"</span>, MyCustomView);
+<span class="cm"># Use: &lt;field name="view_mode"&gt;list,my_custom_view&lt;/field&gt;</span></pre>
+
+<h3>Common OWL Mistakes</h3>
+
+<ol>
+    <li><strong>Forgetting <code>/** @odoo-module */</code></strong> at top of JS files</li>
+    <li><strong>Templates in wrong bundle.</strong> XML goes in <code>web.assets_qweb</code>, JS in <code>web.assets_backend</code></li>
+    <li><strong>Missing <code>t-key</code> in <code>t-foreach</code></strong></li>
+    <li><strong>Not cleaning up in <code>willUnmount()</code></strong> &mdash; memory leaks</li>
+    <li><strong>Mutating arrays/objects in place</strong> &mdash; reassign instead</li>
+    <li><strong>Mismatched <code>t-name</code> and <code>static template</code></strong> &mdash; blank render, no error</li>
+    <li><strong><code>t-raw</code> with user data</strong> &mdash; XSS. Use <code>t-esc</code></li>
+    <li><strong>Missing <code>static components = { Child }</code></strong> in parent</li>
+    <li><strong>Not binding <code>this</code> in event callbacks</strong> &mdash; use <code>.bind(this)</code> or arrow functions</li>
+    <li><strong><code>super.setup()</code> not first line of <code>setup()</code></strong></li>
+</ol>
+
+<hr>
+
+<!-- ============================== -->
+<h2 id="devops">DevOps: CLI, PostgreSQL, Backups</h2>
+<!-- ============================== -->
+
+<h3>Starting Odoo</h3>
+
+<pre><span class="cmd">odoo-bin</span> <span class="flag">-c</span> odoo.conf <span class="flag">--dev=reload</span>
+<span class="cm"># -c odoo.conf     : config file (recommended over CLI flags)</span>
+<span class="cm"># --dev=reload      : auto-reload Python + assets on file changes</span>
+<span class="cm"># --dev=all         : reload + verbose SQL logging + asset debug</span></pre>
+
+<p class="tip"><strong>Use a config file.</strong> CLI flags work but get unwieldy. Put database settings, paths, and addons paths in <code>odoo.conf</code>. Only use CLI flags for development overrides.</p>
+
+<div class="file-label">odoo.conf (minimal)</div>
+<pre>[options]
+addons_path = /path/to/odoo/addons,/path/to/custom_addons
+db_host = localhost
+db_port = 5432
+db_user = odoo
+db_password = yourpassword
+http_port = 8069
+logfile = /path/to/odoo.log
+log_level = info
+<span class="cm"># log_level: debug_sql shows all queries (slow but useful)</span></pre>
+
+<h3>Common CLI Commands</h3>
+
+<table>
+    <tr><th>Command</th><th>What It Does</th></tr>
+    <tr><td><code>odoo-bin -c odoo.conf</code></td><td>Start Odoo with config file</td></tr>
+    <tr><td><code>odoo-bin -d mydb -i my_module</code></td><td>Create DB + install module</td></tr>
+    <tr><td><code>odoo-bin -d mydb -u my_module</code></td><td>Update module (apply changes)</td></tr>
+    <tr><td><code>odoo-bin -d mydb -u my_module --test-enable</code></td><td>Update + run tests</td></tr>
+    <tr><td><code>odoo-bin -s</code></td><td>Save current config to <code>odoo.conf</code> and exit</td></tr>
+    <tr><td><code>odoo-bin --stop-after-init -i base</code></td><td>Initialize DB then stop (useful for CI)</td></tr>
+    <tr><td><code>odoo-bin shell -d mydb</code></td><td>Interactive Python shell with Odoo env loaded</td></tr>
+    <tr><td><code>odoo-bin scaffold my_module /path/to/addons</code></td><td>Generate a module skeleton</td></tr>
+</table>
+
+<p class="warn"><strong><code>-i</code> creates the database if it doesn't exist.</strong> Be careful &mdash; if you typo the database name, you get a fresh empty DB instead of updating your existing one. Always use <code>-u</code> for updates.</p>
+
+<h3>Odoo Shell</h3>
+
+<p>The shell gives you a Python REPL with <code>self.env</code> (the Odoo environment) already set up. Useful for quick debugging without writing tests.</p>
+
+<pre><span class="cmd">odoo-bin</span> <span class="flag">-c</span> odoo.conf <span class="flag">shell</span> <span class="flag">-d</span> mydb
+
+<span class="cm"># Inside the shell:</span>
+>>> self.env['sale.order'].search_count([])
+42
+>>> order = self.env['sale.order'].browse(1)
+>>> order.name
+'SO001'
+>>> order.partner_id.name
+'Azure Interior'
+>>> self.env['sale.order'].search([('state', '=', 'draft')], limit=5)
+<span class="cm"># Returns a recordset</span>
+>>> exit()</pre>
+
+<h3>Working with PostgreSQL</h3>
+
+<pre><span class="cm"># Connect (default Odoo user is usually "odoo")</span>
+<span class="cmd">psql</span> <span class="flag">-U</span> odoo <span class="flag">-d</span> mydb <span class="flag">-h</span> localhost
+
+<span class="cm"># If you get "peer authentication failed", use:</span>
+<span class="cmd">sudo</span> <span class="flag">-u</span> postgres psql <span class="flag">-d</span> mydb</pre>
+
+<h4>Useful Queries</h4>
+
+<pre><span class="cm"># List all tables in the Odoo database</span>
+<span class="cmd">\dt</span>
+
+<span class="cm"># Describe a model's table structure (dots become underscores)</span>
+<span class="cmd">\d</span> sale_order
+
+<span class="cm"># Count records in a model</span>
+<span class="cmd">SELECT</span> count(*) <span class="cmd">FROM</span> sale_order;
+
+<span class="cm"># Find records by state</span>
+<span class="cmd">SELECT</span> id, name, state <span class="cmd">FROM</span> sale_order <span class="cmd">WHERE</span> state = <span class="st">'draft'</span>;
+
+<span class="cm"># Check ir.model.access.csv coverage (models without ACL)</span>
+<span class="cmd">SELECT</span> m.model
+<span class="cmd">FROM</span> ir_model m
+<span class="cmd">LEFT JOIN</span> ir_model_access a <span class="cmd">ON</span> a.model_id = m.id
+<span class="cmd">WHERE</span> a.id <span class="cmd">IS NULL</span> <span class="cmd">AND</span> m.state = <span class="st">'base'</span>;
+
+<span class="cm"># List all installed modules</span>
+<span class="cmd">SELECT</span> name, state <span class="cmd">FROM</span> ir_module_module <span class="cmd">WHERE</span> state = <span class="st">'installed'</span>;
+
+<span class="cm"># Find which module owns a view (by XML ID)</span>
+<span class="cmd">SELECT</span> * <span class="cmd">FROM</span> ir_model_data <span class="cmd">WHERE</span> name = <span class="st">'my_module_form'</span>;
+
+<span class="cm"># Check table size (useful for finding bloated models)</span>
+<span class="cmd">SELECT</span> relname <span class="cmd">AS</span> table_name,
+       pg_size_pretty(pg_total_relation_size(relid)) <span class="cmd">AS</span> size
+<span class="cmd">FROM</span> pg_stat_user_tables
+<span class="cmd">ORDER BY</span> pg_total_relation_size(relid) <span class="cmd">DESC</span>
+<span class="cmd">LIMIT</span> 20;
+
+<span class="cm"># Kill all connections to a database (needed before dropping it)</span>
+<span class="cmd">SELECT</span> pg_terminate_backend(pid)
+<span class="cmd">FROM</span> pg_stat_activity <span class="cmd">WHERE</span> datname = <span class="st">'mydb'</span> <span class="cmd">AND</span> pid <> pg_backend_pid();</pre>
+
+<p class="warn"><strong>Never modify Odoo tables directly via SQL</strong> unless you know exactly what you're doing. The ORM manages caches, computed fields, and triggers that raw SQL bypasses. For data fixes, use the shell or an <code>_post_init_hook</code>.</p>
+
+<h3>Database Backup and Restore</h3>
+
+<h4>Method 1: CLI (recommended for automation/scripts)</h4>
+
+<pre><span class="cm"># Backup: dump the database</span>
+<span class="cmd">pg_dump</span> <span class="flag">-U</span> odoo <span class="flag">-d</span> mydb <span class="flag">-F</span> c <span class="flag">-f</span> mydb_backup.dump
+<span class="cm"># -F c: custom format (compressed, supports parallel restore)</span>
+
+<span class="cm"># Restore: create a fresh database first</span>
+<span class="cmd">createdb</span> <span class="flag">-U</span> odoo mydb_restored
+<span class="cmd">pg_restore</span> <span class="flag">-U</span> odoo <span class="flag">-d</span> mydb_restored <span class="flag">-j</span> 4 <span class="flag">--no-owner</span> mydb_backup.dump
+<span class="cm"># -j 4: use 4 parallel jobs (much faster)</span>
+<span class="cm"># --no-owner: ignore original ownership (avoids permission issues)</span>
+
+<span class="cm"># Quick SQL dump (smaller file, slower restore)</span>
+<span class="cmd">pg_dump</span> <span class="flag">-U</span> odoo <span class="flag">-d</span> mydb <span class="flag">-f</span> mydb_backup.sql
+<span class="cmd">psql</span> <span class="flag">-U</span> odoo <span class="flag">-d</span> mydb_restored <span class="flag">-f</span> mydb_backup.sql</pre>
+
+<h4>Method 2: Odoo UI (Settings &rarr; Database)</h4>
+
+<p>Go to <code>http://localhost:8069/web/database/manager</code>. Backup and restore from the browser. This handles the filestore (attachments) automatically.</p>
+
+<p class="warn"><strong>Filestore is separate from the database.</strong> When using <code>pg_dump</code>, you only get the database. The filestore (actual file attachments stored on disk) lives at <code>~/.local/share/Odoo/filestore/mydb/</code>. You must back this up separately. The UI backup handles this automatically.</p>
+
+<pre><span class="cm"># Filestore location (default):</span>
+~/.local/share/Odoo/filestore/<span class="st">&lt;database_name&gt;</span>/
+
+<span class="cm"># Back it up:</span>
+<span class="cmd">tar</span> <span class="flag">-czf</span> mydb_filestore.tar.gz ~/.local/share/Odoo/filestore/mydb/
+
+<span class="cm"># Restore it:</span>
+<span class="cmd">tar</span> <span class="flag">-xzf</span> mydb_filestore.tar.gz <span class="flag">-C</span> ~/.local/share/Odoo/filestore/
+<span class="cm"># Make sure the folder name matches the new database name exactly.</span></pre>
+
+<h3>Complete Backup Script</h3>
+
+<pre><span class="cm">#!/bin/bash
+<span class="cm"># backup_odoo.sh &lt;database_name&gt;</span>
+<span class="cm"># Usage: ./backup_odoo.sh mydb</span>
+
+DB=$1
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="./backups/$DATE"
+FILESTORE_DIR="$HOME/.local/share/Odoo/filestore"
+
+mkdir -p $BACKUP_DIR
+
+echo "Dumping database..."
+pg_dump -U odoo -d $DB -F c -f "$BACKUP_DIR/${DB}.dump"
+
+echo "Backing up filestore..."
+if [ -d "$FILESTORE_DIR/$DB" ]; then
+    cp -r "$FILESTORE_DIR/$DB" "$BACKUP_DIR/filestore"
+fi
+
+echo "Done: $BACKUP_DIR"</pre>
+
+<h3>Debug Mode</h3>
+
+<p>Activate via the URL: append <code>?debug=1</code> (or <code>?debug=assets</code> for asset debugging only).</p>
+
+<table>
+    <tr><th>Feature</th><th>Where to Find</th></tr>
+    <tr><td>View field technical names</td><td>Hover over any field label</td></tr>
+    <tr><td>Edit view XML directly</td><td>Click the bug icon on any view</td></tr>
+    <tr><td>View model records</td><td>Settings &rarr; Technical &rarr; Models</td></tr>
+    <tr><td>View IR records (views, actions, etc.)</td><td>Settings &rarr; Technical &rarr; corresponding menu</td></tr>
+    <tr><td>Run SQL queries</td><td>Does NOT exist natively. Use shell or pgAdmin.</td></tr>
+    <tr><td>Asset debug mode</td><td><code>?debug=assets</code> &mdash; non-minified JS/CSS, no cache</td></tr>
+    <tr><td>Show translated fields</td><td>Icon in top-right when multiple languages installed</td></tr>
+</table>
+
+<p class="note"><strong><code>?debug=1</code> is persistent per session.</strong> Once activated, it stays on until you click "Leave Developer Mode" in the user menu or remove <code>?debug=1</code> from the URL.</p>
+
+<h3>Logging</h3>
+
+<div class="file-label">In Python code</div>
+<pre><span class="kw">import</span> logging
+
+_logger = logging.getLogger(__name__)
+
+<span class="cm"># Use these instead of print():</span>
+_logger.debug(<span class="st">"Detailed info for debugging: %s"</span>, value)
+_logger.info(<span class="st">"Normal operational info"</span>)
+_logger.warning(<span class="st">"Something unexpected happened"</span>)
+_logger.error(<span class="st">"Something went wrong: %s"</span>, error.message)</pre>
+
+<div class="file-label">In odoo.conf</div>
+<pre>[options]
+<span class="cm"># Log levels (from least to most verbose): critical, error, warning, info, debug</span>
+log_level = warn
+
+<span class="cm"># Log only specific modules at debug level (very useful):</span>
+log_handler = odoo.models:DEBUG
+log_handler = odoo.http:DEBUG
+
+<span class="cm"># Log to file instead of stdout:</span>
+logfile = /var/log/odoo/odoo.log
+
+<span class="cm"># Log database queries (very slow, only for debugging):</span>
+<span class="cm"># Either use --dev=debug_sql or:</span>
+log_level = debug_sql</pre>
+
+<p class="tip"><strong><code>log_handler</code> with module-level filtering is the best approach.</strong> Instead of setting the entire log to debug (which floods output), log only the module you're working on: <code>log_handler = odoo.addons.my_module:DEBUG</code>.</p>
+
+<h3>Development Workflow Tips</h3>
+
+<ul>
+    <li><strong>Use <code>--dev=reload</code></strong> during development. It watches Python files for changes and reloads the server automatically. No need to restart after every model change.</li>
+    <li><strong>Use <code>--dev=all</code></strong> when debugging hard issues. It adds SQL query logging and asset debugging on top of reload.</li>
+    <li><strong>Keep your custom addons in a separate directory</strong> from the Odoo source. Point to both in <code>addons_path</code>. This makes updates and git management much cleaner.</li>
+    <li><strong>Use a separate database per project.</strong> Don't develop multiple features in the same DB. Create/restore backups to test fresh installs.</li>
+    <li><strong>Version your addons directory with git.</strong> Commit after every working change. Makes it trivial to revert when experiments go wrong.</li>
+    <li><strong>Test module install on a fresh database</strong> before deploying. Update-only testing misses issues in <code>__init__.py</code>, security CSV, and data files.</li>
+    <li><strong>Use <code>odoo-bin scaffold</code></strong> to start new modules. It generates the correct folder structure, manifest, and __init__.py files.</li>
+    <li><strong>Don't edit core Odoo files.</strong> Ever. Always extend via inheritance. If you must patch core behavior, use <code>_patch()</code> or a monkey-patch in <code>post_init_hook</code>, and document it heavily.</li>
+</ul>
+
+</div>
+</body>
+</html>

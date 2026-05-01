@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Dev Reference</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --text: #1a1a1a;
+            --muted: #555;
+            --light: #888;
+            --border: #ddd;
+            --code-bg: #f5f5f5;
+            --accent: #0c5c2c;
+            --green: #2e7d32;
+            --red: #c62828;
+            --orange: #e65100;
+            --blue: #1565c0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        .wrapper { max-width: 840px; margin: 0 auto; padding: 0 24px 60px; }
+
+        /* Tabs */
+        .tabs {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg);
+            border-bottom: 2px solid var(--border);
+            padding: 10px 0 0;
+        }
+        .tabs ul {
+            list-style: none; margin: 0; padding: 0 24px;
+            display: flex; flex-wrap: wrap; gap: 4px;
+        }
+        .tabs a {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px; color: var(--muted);
+            text-decoration: none; padding: 5px 10px;
+            border: 1px solid var(--border); border-radius: 3px 3px 0 0;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: color 0.15s, background 0.15s;
+            margin-bottom: -2px;
+        }
+        .tabs a:hover { color: var(--text); background: var(--code-bg); }
+        .tabs a.active {
+            color: var(--text); background: var(--bg);
+            border-bottom-color: var(--bg); font-weight: 700;
+        }
+
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+        .subtitle { color: var(--light); font-size: 14px; margin-bottom: 28px; font-style: italic; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        h2 { font-size: 19px; font-weight: 700; margin: 36px 0 10px; padding-bottom: 5px; border-bottom: 2px solid var(--border); }
+        h3 { font-size: 15px; font-weight: 700; margin: 24px 0 6px; }
+        p { margin-bottom: 10px; color: var(--muted); font-size: 15px; }
+        strong { color: var(--text); }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; background: var(--code-bg);
+            padding: 1px 5px; border-radius: 3px; border: 1px solid #e0e0e0;
+        }
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px; line-height: 1.55;
+            background: var(--code-bg); border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 18px;
+            overflow-x: auto; margin: 10px 0 14px; white-space: pre;
+        }
+        .file-label { font-family: 'Courier New', monospace; font-size: 12px; color: var(--light); margin: 10px 0 0; }
+        .cm { color: #999; font-style: italic; }
+        .kw { color: var(--accent); }
+        .st { color: var(--green); }
+        .fn { color: var(--blue); }
+        .nu { color: var(--orange); }
+        .fl { color: var(--red); }
+        ul, ol { margin: 6px 0 14px 22px; color: var(--muted); font-size: 14px; }
+        li { margin-bottom: 3px; }
+        .note { background: #fff8e1; border-left: 3px solid var(--orange); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .warn { background: #fce4ec; border-left: 3px solid var(--red); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        .tip { background: #e8f5e9; border-left: 3px solid var(--green); padding: 8px 12px; margin: 10px 0 14px; font-size: 13.5px; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 13.5px; }
+        th { background: var(--code-bg); text-align: left; padding: 6px 8px; border: 1px solid var(--border); font-weight: 700; font-size: 12px; }
+        td { padding: 6px 8px; border: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+        td:first-child { font-family: 'Courier New', monospace; font-size: 12.5px; white-space: nowrap; }
+        .badge { display: inline-block; font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+        .badge-r { background: #fce4ec; color: var(--red); }
+        .badge-g { background: #e8f5e9; color: var(--green); }
+        .badge-o { background: #fff3e0; color: var(--orange); }
+        .badge-b { background: #e3f2fd; color: var(--blue); }
+        hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+        .cmd { color: var(--green); }
+        .flag { color: var(--accent); }
+        @media print { body { font-size: 12px; } pre { font-size: 11px; padding: 10px; } .tabs { display: none; } .tab-content { display: block !important; page-break-before: always; } }
+        @media (max-width: 700px) {
+            .tabs a { font-size: 11px; padding: 4px 7px; }
+            td { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="tabs">
+    <ul>
+        <li><a href="#" class="active" data-tab="git">Git</a></li>
+        <li><a href="#" data-tab="docker">Docker</a></li>
+        <li><a href="#" data-tab="compose">Compose</a></li>
+        <li><a href="#" data-tab="nginx">Nginx</a></li>
+        <li><a href="#" data-tab="linux">Linux</a></li>
+        <li><a href="#" data-tab="tools">Other Tools</a></li>
+    </ul>
+</nav>
+
+<div class="wrapper">
+
+<h1>General Dev Reference</h1>
+<div class="subtitle">Git, Docker, Nginx, Linux, and essential dev tools &mdash; commands, patterns, and gotchas.</div>
+
+<!-- ========== GIT ========== -->
+<div class="tab-content active" id="tab-git">
+
+<h2>Setup &amp; Config</h2>
+<pre><span class="cmd">git</span> config --global user.name <span class="st">"Your Name"</span>
+<span class="cmd">git</span> config --global user.email <span class="st">"you@example.com"</span>
+<span class="cmd">git</span> config --global init.defaultBranch main
+<span class="cmd">git</span> config --global core.autocrlf input   <span class="cm"># Windows: fix line endings</span>
+<span class="cmd">git</span> config --global pull.rebase false      <span class="cm"># merge on pull (default)</span>
+<span class="cmd">git</span> config --global --list                  <span class="cm"># show all config</span></pre>
+
+<h2>Basic Workflow</h2>
+<pre><span class="cmd">git</span> init                                    <span class="cm"># init repo in current dir</span>
+<span class="cmd">git</span> clone <span class="st">https://github.com/user/repo.git</span>   <span class="cm"># clone remote</span>
+<span class="cmd">git</span> clone --depth 1 <span class="st">https://...</span>             <span class="cm"># shallow clone (no history)</span>
+<span class="cmd">git</span> status                                  <span class="cm"># see changes</span>
+<span class="cmd">git</span> add .                                    <span class="cm"># stage everything</span>
+<span class="cmd">git</span> add file.py                              <span class="cm"># stage one file</span>
+<span class="cmd">git</span> add -p                                   <span class="cm"># stage interactively (per hunk)</span>
+<span class="cmd">git</span> commit -m <span class="st">"add user authentication"</span>
+<span class="cmd">git</span> push origin main                         <span class="cm"># push to remote</span>
+<span class="cmd">git</span> pull origin main                         <span class="cm"># pull + merge</span>
+<span class="cmd">git</span> fetch origin                             <span class="cm"># download without merging</span></pre>
+
+<h2>Branching</h2>
+<pre><span class="cmd">git</span> branch                                  <span class="cm"># list local branches</span>
+<span class="cmd">git</span> branch -a                               <span class="cm"># list all (including remote)</span>
+<span class="cmd">git</span> checkout -b feature/login               <span class="cm"># create + switch</span>
+<span class="cmd">git</span> switch -c feature/login                  <span class="cm"># same (newer syntax)</span>
+<span class="cmd">git</span> switch main                             <span class="cm"># switch back</span>
+<span class="cmd">git</span> merge feature/login                      <span class="cm"># merge into current branch</span>
+<span class="cmd">git</span> branch -d feature/login                 <span class="cm"># delete merged branch</span>
+<span class="cmd">git</span> branch -D feature/login                 <span class="cm"># delete even if not merged</span>
+<span class="cmd">git</span> push origin --delete feature/login       <span class="cm"># delete remote branch</span></pre>
+
+<h2>Undoing Things</h2>
+<table>
+    <tr><th>Scenario</th><th>Command</th></tr>
+    <tr><td>Unstage a file</td><td><code>git restore --staged file.py</code></td></tr>
+    <tr><td>Discard working dir changes</td><td><code>git restore file.py</code></td></tr>
+    <tr><td>Amend last commit (no push yet)</td><td><code>git commit --amend -m "new msg"</code></td></tr>
+    <tr><td>Undo last commit, keep changes</td><td><code>git reset --soft HEAD~1</code></td></tr>
+    <tr><td>Undo last commit, discard changes</td><td><code>git reset --hard HEAD~1</code></td></tr>
+    <tr><td>Undo last commit (safe, if pushed)</td><td><code>git revert HEAD</code> (creates new commit)</td></tr>
+    <tr><td>Unstage everything</td><td><code>git restore --staged .</code></td></tr>
+    <tr><td>See what changed in a commit</td><td><code>git show HEAD</code> or <code>git show abc123</code></td></tr>
+</table>
+
+<p class="warn"><strong><code>reset --hard</code> is destructive.</strong> It discards working changes. Use <code>--soft</code> if you want to keep changes staged, or <code>revert</code> if the commit was already pushed.</p>
+
+<h2>Rebase vs Merge</h2>
+<table>
+    <tr><th></th><th>Merge</th><th>Rebase</th></tr>
+    <tr><td>History</td><td>Preserves all branches (messy)</td><td>Linear history (clean)</td></tr>
+    <tr><td>Safety</td><td>Safe, doesn't rewrite history</td><td>Rewrites commit hashes</td></tr>
+    <tr><td>When to use</td><td>Shared branches, merges to main</td><td>Local feature branches before merging</td></tr>
+    <tr><td>Rule</td><td>Default for shared work</td><td>Never rebase commits that others have pulled</td></tr>
+</table>
+<pre><span class="cm"># Interactive rebase: edit/squash/reorder last 3 commits</span>
+<span class="cmd">git</span> rebase -i HEAD~3
+
+<span class="cm"># Rebase feature branch onto latest main (before merging)</span>
+<span class="cmd">git</span> checkout feature/login
+<span class="cmd">git</span> rebase main
+
+<span class="cm"># Abort a rebase if it goes wrong</span>
+<span class="cmd">git</span> rebase --abort</pre>
+
+<h2>Stash</h2>
+<pre><span class="cmd">git</span> stash                                   <span class="cm"># save current changes</span>
+<span class="cmd">git</span> stash save <span class="st">"work in progress"</span>        <span class="cm"># with message</span>
+<span class="cmd">git</span> stash list                              <span class="cm"># list stashes</span>
+<span class="cmd">git</span> stash pop                               <span class="cm"># restore + remove from list</span>
+<span class="cmd">git</span> stash apply                              <span class="cm"># restore + keep in list</span>
+<span class="cmd">git</span> stash drop                              <span class="cm"># remove specific stash</span></pre>
+
+<h2>Log &amp; Diff</h2>
+<pre><span class="cmd">git</span> log --oneline --graph --all             <span class="cm"># visual branch history</span>
+<span class="cmd">git</span> log --oneline -10                        <span class="cm"># last 10 commits</span>
+<span class="cmd">git</span> log --author="name"                     <span class="cm"># filter by author</span>
+<span class="cmd">git</span> log --since="2 weeks ago"               <span class="cm"># filter by date</span>
+<span class="cmd">git</span> log -p file.py                          <span class="cm"># log + diffs for one file</span>
+<span class="cmd">git</span> diff                                    <span class="cm"># unstaged changes</span>
+<span class="cmd">git</span> diff --staged                           <span class="cm"># staged changes</span>
+<span class="cmd">git</span> diff main..feature                      <span class="cm"># diff between branches</span>
+<span class="cmd">git</span> blame file.py                           <span class="cm"># who changed each line</span>
+<span class="cmd">git</span> shortlog -sn                            <span class="cm"># commit count per author</span></pre>
+
+<h2>.gitignore Essentials</h2>
+<pre><span class="cm"># Files</span>
+.env
+*.log
+*.pyc
+__pycache__/
+node_modules/
+.DS_Store
+
+<span class="cm"># Directories</span>
+db.sqlite3
+media/
+staticfiles/
+*.egg-info/
+dist/
+build/
+
+<span class="cm"># Patterns</span>
+*.swp
+*.swo
+*~
+.idea/
+.vscode/</pre>
+
+<h2>Fixing Mistakes</h2>
+<pre><span class="cm"># Remove a file from git tracking (keep on disk)</span>
+<span class="cmd">git</span> rm --cached file.py
+
+<span class="cm"># Remove a file from git AND disk</span>
+<span class="cmd">git</span> rm file.py
+
+<span class="cm"># Undo a pushed commit (creates a new commit that undoes it)</span>
+<span class="cmd">git</span> revert <span class="st">abc123</span>
+
+<span class="cm"># Change last commit message (before push)</span>
+<span class="cmd">git</span> commit --amend -m <span class="st">"corrected message"</span>
+
+<span class="cm"># Recover a deleted branch (find hash in reflog first)</span>
+<span class="cmd">git</span> reflog
+<span class="cmd">git</span> checkout -b recovered-branch <span class="st">abc123</span>
+
+<span class="cm"># Clean untracked files and directories (dry run first)</span>
+<span class="cmd">git</span> clean -n -d
+<span class="cmd">git</span> clean -f -d</pre>
+
+</div>
+
+<!-- ========== DOCKER ========== -->
+<div class="tab-content" id="tab-docker">
+
+<h2>Basic Commands</h2>
+<table>
+    <tr><th>Command</th><th>What It Does</th></tr>
+    <tr><td><code>docker run nginx</code></td><td>Pull + run an image</td></tr>
+    <tr><td><code>docker run -d nginx</code></td><td>Run in background (detached)</td></tr>
+    <tr><td><code>docker run -it ubuntu bash</code></td><td>Interactive shell inside container</td></tr>
+    <tr><td><code>docker run -p 8080:80 nginx</code></td><td>Map host 8080 to container 80</td></tr>
+    <tr><td><code>docker run --rm nginx</code></td><td>Auto-remove container when it stops</td></tr>
+    <tr><td><code>docker run --name mynginx nginx</code></td><td>Name the container</td></tr>
+    <tr><td><code>docker run -e VAR=val nginx</code></td><td>Set environment variable</td></tr>
+    <tr><td><code>docker run -v /host:/container nginx</code></td><td>Bind mount a volume</td></tr>
+    <tr><td><code>docker run -v myvol:/data nginx</code></td><td>Mount a named volume</td></tr>
+    <tr><td><code>docker run --network mynet nginx</code></td><td>Connect to a network</td></tr>
+    <tr><td><code>docker build -t myapp .</code></td><td>Build image from Dockerfile</td></tr>
+    <tr><td><code>docker ps</code></td><td>List running containers</td></tr>
+    <tr><td><code>docker ps -a</code></td><td>List all containers (including stopped)</td></tr>
+    <tr><td><code>docker stop &lt;id&gt;</code></td><td>Graceful stop</td></tr>
+    <tr><td><code>docker kill &lt;id&gt;</code></td><td>Force kill</td></tr>
+    <tr><td><code>docker start &lt;id&gt;</code></td><td>Start a stopped container</td></td>
+    <tr><td><code>docker restart &lt;id&gt;</code></td><td>Restart</td></tr>
+    <tr><td><code>docker rm &lt;id&gt;</code></td><td>Remove stopped container</td></tr>
+    <tr><td><code>docker rm -f &lt;id&gt;</code></td><td>Force remove (even if running)</td></tr>
+    <tr><td><code>docker logs &lt;id&gt;</code></td><td>View container logs</td></tr>
+    <tr><td><code>docker logs -f &lt;id&gt;</code></td><td>Follow logs (like tail -f)</td></tr>
+    <tr><td><code>docker exec -it &lt;id&gt; bash</code></td><td>Shell into running container</td></tr>
+    <tr><td><code>docker cp &lt;id&gt;:/file ./local</code></td><td>Copy file from container</td></tr>
+    <tr><td><code>docker images</code></td><td>List local images</td></tr>
+    <tr><td><code>docker rmi &lt;image&gt;</code></td><td>Remove an image</td></tr>
+    <tr><td><code>docker system prune</code></td><td>Remove all unused containers, images, networks</td></tr>
+    <tr><td><code>docker system prune -a --volumes</code></td><td>Nuclear: remove everything unused</td></tr>
+</table>
+
+<h2>Dockerfile Example</h2>
+
+<div class="file-label">Dockerfile (Python app)</div>
+<pre><span class="cm"># ---- Build stage ----</span>
+<span class="kw">FROM</span> python:3.12-slim <span class="kw">AS</span> builder
+
+WORKDIR /build
+<span class="cm"># Install build dependencies only (not in final image)</span>
+<span class="kw">RUN</span> apt-get update && apt-get install -y --no-install-recommends \
+    gcc libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+<span class="kw">COPY</span> requirements.txt .
+<span class="kw">RUN</span> pip install --no-cache-dir --user -r requirements.txt
+
+<span class="cm"># ---- Runtime stage ----</span>
+<span class="kw">FROM</span> python:3.12-slim
+
+WORKDIR /app
+
+<span class="cm"># Copy only installed packages from builder (no build tools)</span>
+<span class="kw">COPY</span> --from=builder /root/.local /root/.local
+<span class="kw">ENV</span> PATH=/root/.local/bin:$PATH
+
+<span class="cm"># Install only runtime dependencies</span>
+<span class="kw">RUN</span> apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 curl && \
+    rm -rf /var/lib/apt/lists/*
+
+<span class="kw">COPY</span> . .
+
+<span class="cm"># Non-root user for security</span>
+<span class="kw">RUN</span> useradd --create-home appuser
+<span class="kw">USER</span> appuser
+
+<span class="kw">EXPOSE</span> 8000
+
+<span class="kw">CMD</span> ["gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8000"]</pre>
+
+<div class="file-label">Dockerfile (Node.js app)</div>
+<pre><span class="kw">FROM</span> node:20-alpine <span class="kw">AS</span> builder
+WORKDIR /app
+<span class="kw">COPY</span> package*.json ./
+<span class="kw">RUN</span> npm ci
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> npm run build
+
+<span class="kw">FROM</span> node:20-alpine
+WORKDIR /app
+<span class="kw">COPY</span> --from=builder /app/dist ./dist
+<span class="kw">COPY</span> --from=builder /app/node_modules ./node_modules
+<span class="kw">COPY</span> --from=builder /app/package.json ./
+<span class="kw">EXPOSE</span> 3000
+<span class="kw">CMD</span> ["node", "server.js"]</pre>
+
+<p class="note"><strong>Multi-stage builds reduce image size dramatically.</strong> The builder stage has compilers and build tools; the runtime stage only has what's needed to run. A Python build stage might be 800MB; the runtime stage can be 150MB.</p>
+
+<h2>Useful Flags</h2>
+<table>
+    <tr><th>Flag</th><th>Purpose</th></tr>
+    <tr><td><code>-d</code></td><td>Detached mode (background)</td></tr>
+    <tr><td><code>-it</code></td><td>Interactive + TTY (for shell access)</td></tr>
+    <tr><td><code>--rm</code></td><td>Remove container after it exits</td></tr>
+    <tr><td><code>-p 8080:80</code></td><td>Port mapping (host:container)</td></tr>
+    <tr><td><code>-P</code></td><td>Map all exposed ports to random host ports</td></tr>
+    <tr><td><code>-v /host:/container</code></td><td>Bind mount (two-way, not copied)</td></tr>
+    <tr><td><code>-e KEY=VAL</code></td><td>Environment variable</td></tr>
+    <tr><td><code>--env-file .env</code></td><td>Load env vars from file</td></tr>
+    <tr><td><code>--name</code></td><td>Name the container</td></tr>
+    <tr><td><code>--network</code></td><td>Connect to a specific network</td></tr>
+    <tr><td><code>--restart unless-stopped</code></td><td>Auto-restart (except after manual stop)</td></tr>
+    <tr><td><code>--read-only</code></td><td>Read-only filesystem (security)</td></tr>
+    <tr><td><code>--memory 512m</code></td><td>Limit memory</td></tr>
+    <tr><td><code>--cpus 1.5</code></td><td>Limit CPU</td></tr>
+    <tr><td><code>-w /app</code></td><td>Set working directory</td></tr>
+    <tr><td><code>--no-cache</code></td><td>Build without cache (docker build)</td></tr>
+</table>
+
+<h2>Volumes</h2>
+<pre><span class="cm"># Named volume (managed by Docker, stored in /var/lib/docker/volumes/)</span>
+<span class="cmd">docker</span> volume create mydata
+<span class="cmd">docker</span> run -v mydata:/var/lib/postgresql/data postgres
+
+<span class="cm"># Bind mount (maps a host path directly)</span>
+<span class="cmd">docker</span> run -v $(pwd)/src:/app/src myapp
+
+<span class="cm"># Anonymous volume (removed with container)</span>
+<span class="cmd">docker</span> run -v /app/data myapp
+
+<span class="cm"># List volumes</span>
+<span class="cmd">docker</span> volume ls
+
+<span class="cm"># Remove unused volumes</span>
+<span class="cmd">docker</span> volume prune</pre>
+
+<p class="tip"><strong>Named volumes for persistent data, bind mounts for development.</strong> Named volumes are portable across hosts. Bind mounts are faster for dev because edits on the host are immediately visible in the container.</p>
+
+<h2>Networks</h2>
+<pre><span class="cmd">docker</span> network create mynet
+<span class="cmd">docker</span> run --network mynet --name app myapp
+<span class="cmd">docker</span> run --network mynet --name db postgres
+<span class="cm"># app can now reach db at hostname "db" (the container name)</span>
+
+<span class="cm"># Default bridge: containers can reach each other by IP, NOT by name.</span>
+<span class="cm"># Custom bridge (like mynet): DNS resolution by container name works.</span>
+<span class="cm"># host network: container shares host's network stack (no port mapping needed).</span>
+<span class="cm"># none: no network access.</span></pre>
+
+</div>
+
+<!-- ========== COMPOSE ========== -->
+<div class="tab-content" id="tab-compose">
+
+<h2>Commands</h2>
+<table>
+    <tr><th>Command</th><th>What It Does</th></tr>
+    <tr><td><code>docker compose up -d</code></td><td>Build + start all services (detached)</td></tr>
+    <tr><td><code>docker compose up --build</code></td><td>Rebuild images before starting</td></tr>
+    <tr><td><code>docker compose down</code></td><td>Stop + remove containers + networks</td></tr>
+    <tr><td><code>docker compose down -v</code></td><td>Also remove volumes (destroys data)</td></tr>
+    <tr><td><code>docker compose logs -f app</code></td><td>Follow logs for one service</td></tr>
+    <tr><td><code>docker compose ps</code></td><td>Status of all services</td></tr>
+    <tr><td><code>docker compose exec app bash</code></td><td>Shell into a service container</td></tr>
+    <tr><td><code>docker compose run --rm app python manage.py migrate</code></td><td>Run one-off command in a service</td></tr>
+    <tr><td><code>docker compose build</code></td><td>Build all images</td></tr>
+    <tr><td><code>docker compose build app</code></td><td>Build one service</td></tr>
+    <tr><td><code>docker compose pull</code></td><td>Pull latest images</td></tr>
+    <tr><td><code>docker compose restart app</code></td><td>Restart one service</td></tr>
+    <tr><td><code>docker compose stop</code></td><td>Stop without removing</td></tr>
+    <tr><td><code>docker compose start</code></td><td>Start stopped services</td></tr>
+    <tr><td><code>docker compose config</code></td><td>Validate + view merged config</td></tr>
+    <tr><td><code>docker compose top</code></td><td>Show running processes in services</td></tr>
+</table>
+
+<h2>docker-compose.yml (Django + PostgreSQL)</h2>
+
+<div class="file-label">docker-compose.yml</div>
+<pre><span class="kw">services:</span>
+  <span class="fn">db:</span>
+    image: postgres:16-alpine
+    <span class="fl">restart</span>: unless-stopped
+    <span class="fl">volumes:</span>
+      - postgres_data:/var/lib/postgresql/data
+    <span class="fl">environment:</span>
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    <span class="fl">ports:</span>
+      - <span class="st">"5432:5432"</span>
+    <span class="fl">healthcheck:</span>
+      test: [<span class="st">"CMD-SHELL"</span>, <span class="st">"pg_isready -U myuser -d mydb"</span>]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  <span class="fn">web:</span>
+    build: .
+    <span class="fl">restart</span>: unless-stopped
+    <span class="fl">volumes:</span>
+      - .:/app                          <span class="cm"># bind mount source code</span>
+      - static_files:/app/staticfiles   <span class="cm"># named volume for collectstatic</span>
+      - media_files:/app/media
+    <span class="fl">ports:</span>
+      - <span class="st">"8000:8000"</span>
+    <span class="fl">environment:</span>
+      - DEBUG=False
+      - SECRET_KEY=changeme-in-production
+      - DB_HOST=db
+      - DB_NAME=mydb
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+    <span class="fl">depends_on:</span>
+      db:
+        condition: service_healthy    <span class="cm"># wait until db is ready</span>
+
+  <span class="fn">nginx:</span>
+    image: nginx:alpine
+    <span class="fl">restart</span>: unless-stopped
+    <span class="fl">ports:</span>
+      - <span class="st">"80:80"</span>
+      - <span class="st">"443:443"</span>
+    <span class="fl">volumes:</span>
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_files:/usr/share/nginx/static:ro
+      - media_files:/usr/share/nginx/media:ro
+      - ./certs:/etc/nginx/certs:ro
+    <span class="fl">depends_on:</span>
+      - web
+
+<span class="kw">volumes:</span>
+  postgres_data:
+  static_files:
+  media_files:</pre>
+
+<p class="note"><strong><code>depends_on</code> with <code>condition: service_healthy</code></strong> is the right pattern. Without it, web might start before the database is ready to accept connections. Always add healthchecks to databases.</p>
+
+<h2>Override Files</h2>
+
+<div class="file-label">docker-compose.override.yml <span class="badge badge-g">dev only</span></div>
+<pre><span class="cm"># This file is automatically loaded by docker compose.</span>
+<span class="cm"># Add it to .gitignore so dev overrides don't reach production.</span>
+<span class="kw">services:</span>
+  <span class="fn">web:</span>
+    <span class="fl">command:</span> python manage.py runserver 0.0.0.0:8000
+    <span class="fl">environment:</span>
+      - DEBUG=True
+    <span class="fl">volumes:</span>
+      - .:/app
+    <span class="cm"># No restart policy, no port restriction in dev</span></pre>
+
+<p class="tip"><strong><code>docker-compose.override.yml</code> is auto-loaded.</strong> Use it for dev-only settings (debug mode, different command, extra volumes). Keep <code>docker-compose.yml</code> production-ready. Add <code>docker-compose.override.yml</code> to <code>.gitignore</code>.</p>
+
+<h2>Common Patterns</h2>
+
+<pre><span class="cm"># Run a one-off command (migrate, createsuperuser, etc.)</span>
+<span class="cmd">docker</span> compose run --rm web python manage.py migrate
+<span class="cmd">docker</span> compose run --rm web python manage.py createsuperuser
+
+<span class="cm"># Run tests</span>
+<span class="cmd">docker</span> compose run --rm web python manage.py test
+
+<span class="cm"># Rebuild only one service</span>
+<span class="cmd">docker</span> compose build web
+<span class="cmd">docker</span> compose up -d web
+
+<span class="cm"># View resource usage</span>
+<span class="cmd">docker</span> stats
+
+<span class="cm"># Use multiple compose files</span>
+<span class="cmd">docker</span> compose -f docker-compose.yml -f docker-compose.prod.yml up -d</pre>
+
+</div>
+
+<!-- ========== NGINX ========== -->
+<div class="tab-content" id="tab-nginx">
+
+<h2>Config File Location</h2>
+<pre><span class="cm"># Main config:</span>
+/etc/nginx/nginx.conf
+
+<span class="cm"># Server blocks (virtual hosts):</span>
+/etc/nginx/conf.d/default.conf      <span class="cm"># Debian/Ubuntu</span>
+/etc/nginx/sites-available/        <span class="cm"># Debian (with sites-enabled symlink pattern)</span>
+/etc/nginx/conf.d/*.conf           <span class="cm"># All .conf files here are auto-loaded</span></pre>
+
+<h2>Reverse Proxy (Python/Django)</h2>
+
+<div class="file-label">/etc/nginx/conf.d/myapp.conf</div>
+<pre><span class="kw">upstream</span> django_app {
+    server 127.0.0.1:8000;
+}
+
+<span class="kw">server</span> {
+    listen 80;
+    server_name example.com www.example.com;
+
+    <span class="cm"># Redirect HTTP to HTTPS</span>
+    <span class="kw">return</span> 301 https://$host$request_uri;
+
+    <span class="cm"># Or serve directly on HTTP (no SSL):</span>
+    <span class="cm"># location / {</span>
+    <span class="cm">#     proxy_pass http://django_app;</span>
+    <span class="cm"># }</span>
+}
+
+<span class="kw">server</span> {
+    listen 443 ssl http2;
+    server_name example.com www.example.com;
+
+    <span class="fl">ssl_certificate</span>     /etc/letsencrypt/live/example.com/fullchain.pem;
+    <span class="fl">ssl_certificate_key</span> /etc/letsencrypt/live/example.com/privkey.pem;
+    <span class="fl">ssl_protocols</span>       TLSv1.2 TLSv1.3;
+    <span class="fl">ssl_ciphers</span>         HIGH:!aNULL:!MD5;
+
+    <span class="cm"># Security headers</span>
+    <span class="fl">add_header</span> X-Frame-Options DENY;
+    <span class="fl">add_header</span> X-Content-Type-Options nosniff;
+    <span class="fl">add_header</span> X-XSS-Protection "1; mode=block";
+    <span class="fl">add_header</span> Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    <span class="cm"># Max upload size (default: 1MB, often too small)</span>
+    <span class="fl">client_max_body_size</span> 50M;
+
+    <span class="cm"># Static files (served directly by nginx, no app needed)</span>
+    <span class="kw">location</span> /static/ {
+        alias /usr/share/nginx/static/;
+        expires 30d;
+        <span class="fl">add_header</span> Cache-Control "public, immutable";
+    }
+
+    <span class="cm"># Media files (user uploads)</span>
+    <span class="kw">location</span> /media/ {
+        alias /usr/share/nginx/media/;
+        expires 7d;
+    }
+
+    <span class="cm"># Proxy to app</span>
+    <span class="kw">location</span> / {
+        <span class="fl">proxy_pass</span> http://django_app;
+        <span class="fl">proxy_set_header</span> Host $host;
+        <span class="fl">proxy_set_header</span> X-Real-IP $remote_addr;
+        <span class="fl">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;
+        <span class="fl">proxy_set_header</span> X-Forwarded-Proto $scheme;
+    }
+
+    <span class="cm"># Block common attack paths</span>
+    <span class="kw">location</span> ~ /\.(git|env|htpasswd|htaccess) {
+        <span class="kw">deny</span> all;
+        <span class="kw">return</span> 404;
+    }
+}</pre>
+
+<h2>Reverse Proxy (Node.js)</h2>
+
+<div class="file-label">/etc/nginx/conf.d/nodeapp.conf</div>
+<pre><span class="kw">upstream</span> node_app {
+    server 127.0.0.1:3000;
+}
+
+<span class="kw">server</span> {
+    listen 80;
+    server_name app.example.com;
+
+    <span class="kw">location</span> / {
+        <span class="fl">proxy_pass</span> http://node_app;
+        <span class="fl">proxy_set_header</span> Host $host;
+        <span class="fl">proxy_set_header</span> X-Real-IP $remote_addr;
+        <span class="fl">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;
+        <span class="fl">proxy_set_header</span> X-Forwarded-Proto $scheme;
+
+        <span class="cm"># WebSocket support (for hot reload / Socket.io)</span>
+        <span class="fl">proxy_http_version</span> 1.1;
+        <span class="fl">proxy_set_header</span> Upgrade $http_upgrade;
+        <span class="fl">proxy_set_header</span> Connection "upgrade";
+    }
+}</pre>
+
+<h2>Useful Directives</h2>
+<table>
+    <tr><th>Directive</th><th>Purpose</th></tr>
+    <tr><td><code>listen 80;</code></td><td>Port to listen on</td></tr>
+    <tr><td><code>listen 443 ssl http2;</code></td><td>HTTPS + HTTP/2</td></tr>
+    <tr><td><code>server_name</code></td><td>Domain names this block matches</td></tr>
+    <tr><td><code>root</code></td><td>Document root directory</td></tr>
+    <tr><td><code>index</code></td><td>Default files to serve (index.html)</td></tr>
+    <tr><td><code>location /path/</code></td><td>URL matching (prefix, regex, exact)</td></tr>
+    <tr><td><code>location = /exact</code></td><td>Exact match (no sub-paths)</td></tr>
+    <tr><td><code>location ~ \.php$</code></td><td>Case-sensitive regex match</td></tr>
+    <tr><td><code>location ~* \.(jpg|png)$</code></td><td>Case-insensitive regex</td></tr>
+    <tr><td><code>proxy_pass</code></td><td>Forward requests to upstream</td></tr>
+    <tr><td><code>rewrite</code></td><td>URL rewriting</td></tr>
+    <tr><td><code>return</code></td><td>Return status code + redirect</td></tr>
+    <tr><td><code>try_files</code></td><td>Fallback chain: try file, try dir, return</td></tr>
+    <tr><td><code>client_max_body_size</code></td><td>Max upload size (default 1MB)</td></tr>
+    <tr><td><code>expires</code></td><td>Cache expiration for responses</td></tr>
+    <tr><td><code>add_header</code></td><td>Add response header</td></tr>
+    <tr><td><code>gzip on;</code></td><td>Enable gzip compression</td></tr>
+    <tr><td><code>access_log</code> / <code>error_log</code></td><td>Log file paths</td></tr>
+    <tr><td><code>deny / allow</code></td><td>IP-based access control</td></tr>
+</table>
+
+<h2>Common Operations</h2>
+<pre><span class="cmd">nginx</span> -t                <span class="cm"># test config syntax (always run before reload)</span>
+<span class="cmd">nginx</span> -s reload        <span class="cm"># reload config without dropping connections</span>
+<span class="cmd">nginx</span> -s stop           <span class="cm"># stop</span>
+<span class="cmd">nginx</span> -s reopen        <span class="cm"># reopen log files (for log rotation)</span></pre>
+
+<p class="warn"><strong>Always run <code>nginx -t</code> before <code>nginx -s reload</code>.</strong> A syntax error in any conf file will prevent the reload and leave nginx in its last working state, but it's still good practice.</p>
+
+<h2>SPA Fallback (Vue/React/Angular)</h2>
+<pre><span class="kw">location</span> / {
+    <span class="fl">root</span> /usr/share/nginx/html;
+    <span class="fl">try_files</span> $uri $uri/ /index.html;   <span class="cm"># serve index.html for all routes</span>
+}</pre>
+
+<h2>Gzip Compression</h2>
+<pre><span class="kw">gzip</span> on;
+<span class="kw">gzip_types</span> text/plain text/css application/json application/javascript
+             text/xml application/xml application/xml+rss text/javascript
+             image/svg+xml;
+<span class="kw">gzip_min_length</span> 256;
+<span class="kw">gzip_vary</span> on;</pre>
+
+</div>
+
+<!-- ========== LINUX ========== -->
+<div class="tab-content" id="tab-linux">
+
+<h2>Navigation &amp; Files</h2>
+<pre><span class="cmd">pwd</span>                    <span class="cm"># print working directory</span>
+<span class="cmd">cd</span> /path/to/dir        <span class="cm"># change directory</span>
+<span class="cmd">cd</span> ..                   <span class="cm"># parent directory</span>
+<span class="cmd">cd</span> -                    <span class="cm"># previous directory</span>
+<span class="cmd">ls</span> -la                  <span class="cm"># list all (including hidden) with details</span>
+<span class="cmd">ls</span> -lh                  <span class="cm"># human-readable file sizes</span>
+<span class="cmd">tree</span> -L 2               <span class="cm"># directory tree (2 levels)</span>
+<span class="cmd">find</span> . -name "*.py"      <span class="cm"># find files by name</span>
+<span class="cmd">find</span> . -type f -mtime -7  <span class="cm"># files modified in last 7 days</span>
+<span class="cmd">find</span> . -size +100M       <span class="cm"># files larger than 100MB</span>
+<span class="cmd">find</span> . -name "__pycache__" -type d -exec rm -rf {} +  <span class="cm"># find + delete</span></pre>
+
+<h2>File Operations</h2>
+<pre><span class="cmd">cp</span> file.py backup.py   <span class="cm"># copy</span>
+<span class="cmd">cp</span> -r dir/ dir_copy/   <span class="cm"># copy directory recursively</span>
+<span class="cmd">mv</span> old.py new.py       <span class="cm"># move / rename</span>
+<span class="cmd">rm</span> file.py             <span class="cm"># delete</span>
+<span class="cmd">rm</span> -r dir/              <span class="cm"># delete directory recursively</span>
+<span class="cmd">rm</span> -rf dir/             <span class="cm"># force delete (no prompts)</span>
+<span class="cmd">mkdir</span> -p a/b/c          <span class="cm"># create nested directories</span>
+<span class="cmd">ln</span> -s target link       <span class="cm"># create symbolic link</span>
+<span class="cmd">touch</span> file.py           <span class="cm"># create empty file / update timestamp</span>
+<span class="cmd">du</span> -sh dir/             <span class="cm"># directory size (human-readable, summary)</span>
+<span class="cmd">du</span> -sh * | sort -rh     <span class="cm"># largest items in current dir</span>
+<span class="cmd">df</span> -h                   <span class="cm"># disk space usage per filesystem</span>
+<span class="cmd">df</span> -h /                  <span class="cm"># disk space for root filesystem</span></pre>
+
+<h2>Viewing Files</h2>
+<pre><span class="cmd">cat</span> file.py             <span class="cm"># print entire file</span>
+<span class="cmd">less</span> file.py            <span class="cm"># pager (q to quit, / to search)</span>
+<span class="cmd">head</span> -20 file.py        <span class="cm"># first 20 lines</span>
+<span class="cmd">tail</span> -20 file.py        <span class="cm"># last 20 lines</span>
+<span class="cmd">tail</span> -f log.txt        <span class="cm"># follow file (like tail -f)</span>
+<span class="cmd">wc</span> -l file.py          <span class="cm"># line count</span>
+<span class="cmd">file</span> file.py            <span class="cm"># file type detection</span></pre>
+
+<h2>Search &amp; Text Processing</h2>
+<pre><span class="cmd">grep</span> "pattern" file.py              <span class="cm"># search in file</span>
+<span class="cmd">grep</span> -r "pattern" .                <span class="cm"># recursive search</span>
+<span class="cmd">grep</span> -ri "pattern" --include="*.py" .  <span class="cm"># recursive, case-insensitive, specific files</span>
+<span class="cmd">grep</span> -n "pattern" file.py          <span class="cm"># show line numbers</span>
+<span class="cmd">grep</span> -C 3 "pattern" file.py        <span class="cm"># 3 lines of context around match</span>
+<span class="cmd">grep</span> -v "pattern" file.py          <span class="cm"># lines NOT matching</span>
+<span class="cmd">grep</span> -c "pattern" file.py          <span class="cm"># count matching lines</span>
+
+<span class="cmd">sed</span> -i 's/old/new/g' file.py       <span class="cm"># find and replace in file</span>
+<span class="cmd">sed</span> -i 's/old/new/g' *.py          <span class="cm"># find and replace in multiple files</span>
+
+<span class="cmd">sort</span> file.txt                     <span class="cm"># sort lines</span>
+<span class="cmd">sort</span> -u file.txt                  <span class="cm"># sort + remove duplicates</span>
+<span class="cmd">sort</span> -n file.txt                  <span class="cm"># numeric sort</span>
+<span class="cmd">sort</span> -k2 -n file.txt             <span class="cm"># sort by 2nd field numerically</span>
+
+<span class="cmd">uniq</span> file.txt                     <span class="cm"># remove adjacent duplicates (pipe after sort)</span>
+<span class="cmd">sort file.txt | <span class="fl">uniq</span> -c            <span class="cm"># count duplicates</span>
+
+<span class="cmd">awk</span> '{print $1}' file.txt          <span class="cm"># print first column</span>
+<span class="cmd">awk</span> '{sum+=$1} END {print sum}'   <span class="cm"># sum first column</span>
+
+<span class="cmd">cut</span> -d: -f1 file.txt             <span class="cm"># extract first field (delimiter :)</span>
+<span class="cmd">cut</span> -d, -f1,3 file.txt           <span class="cm"># extract fields 1 and 3 (delimiter ,)</span></pre>
+
+<h2>Permissions</h2>
+<pre><span class="cm"># r=4, w=2, x=1. Owner | Group | Others</span>
+<span class="cmd">chmod</span> 755 script.sh       <span class="cm"># rwxr-xr-x (owner: full, others: read+exec)</span>
+<span class="cmd">chmod</span> 644 file.txt        <span class="cm"># rw-r--r-- (standard file)</span>
+<span class="cmd">chmod</span> +x script.sh        <span class="cm"># make executable</span>
+<span class="cmd">chmod</span> -R 755 dir/         <span class="cm"># recursive</span>
+<span class="cmd">chown</span> user:group file    <span class="cm"># change owner and group</span>
+<span class="cmd">chown</span> -R user:group dir/ <span class="cm"># recursive</span></pre>
+
+<h2>Processes</h2>
+<pre><span class="cmd">ps</span> aux                          <span class="cm"># all processes</span>
+<span class="cmd">ps</span> aux | grep python            <span class="cm"># find python processes</span>
+<span class="cmd">ps</span> -p 1234 -o pid,cmd          <span class="cm"># info about specific PID</span>
+<span class="cmd">top</span>                             <span class="cm"># interactive process viewer</span>
+<span class="cmd">htop</span>                            <span class="cm"># better top (install separately)</span>
+<span class="cmd">kill</span> 1234                       <span class="cm"># send SIGTERM (graceful stop)</span>
+<span class="cmd">kill</span> -9 1234                    <span class="cm"># send SIGKILL (force kill)</span>
+<span class="cmd">killall</span> python                  <span class="cm"># kill all processes by name</span>
+<span class="cmd">lsof</span> -i :8000                   <span class="cm"># what's using port 8000</span>
+<span class="cmd">ss</span> -tlnp                        <span class="cm"># listening ports (modern, faster than netstat)</span>
+<span class="cmd">nohup</span> python app.py &            <span class="cm"># run in background, survives logout</span>
+<span class="cmd">disown</span>                          <span class="cm"># detach from current shell</span></pre>
+
+<h2>Systemd (Service Management)</h2>
+<pre><span class="cmd">sudo</span> systemctl start myapp.service      <span class="cm"># start</span>
+<span class="cmd">sudo</span> systemctl stop myapp.service       <span class="cm"># stop</span>
+<span class="cmd">sudo</span> systemctl restart myapp.service    <span class="cm"># restart</span>
+<span class="cmd">sudo</span> systemctl enable myapp.service     <span class="cm"># start on boot</span>
+<span class="cmd">sudo</span> systemctl disable myapp.service    <span class="cm"># don't start on boot</span>
+<span class="cmd">sudo</span> systemctl status myapp.service     <span class="cm"># check status</span>
+<span class="cmd">sudo</span> systemctl reload nginx.service     <span class="cm"># reload config (no downtime)</span>
+<span class="cmd">journalctl</span> -u myapp -f                 <span class="cm"># follow logs for a service</span>
+<span class="cmd">journalctl</span> -u myapp --since "1 hour ago"  <span class="cm"># logs since time</span></pre>
+
+<h2>Archives</h2>
+<pre><span class="cmd">tar</span> -czf archive.tar.gz dir/       <span class="cm"># create compressed archive</span>
+<span class="cmd">tar</span> -xzf archive.tar.gz           <span class="cm"># extract</span>
+<span class="cmd">tar</span> -xzf archive.tar.gz -C /dest  <span class="cm"># extract to specific directory</span>
+<span class="cmd">tar</span> -tzf archive.tar.gz           <span class="cm"># list contents</span>
+<span class="cmd">zip</span> -r archive.zip dir/            <span class="cm"># create zip</span>
+<span class="cmd">unzip</span> archive.zip                   <span class="cm"># extract zip</span></pre>
+
+<h2>Networking</h2>
+<pre><span class="cmd">curl</span> -I https://example.com           <span class="cm"># fetch headers only</span>
+<span class="cmd">curl</span> -s https://api.example.com/data | jq .  <span class="cm"># fetch + parse JSON</span>
+<span class="cmd">curl</span> -X POST -H "Content-Type: application/json" -d '{"key":"val"}' url
+<span class="cmd">curl</span> -o file.zip https://example.com/file.zip  <span class="cm"># download file</span>
+<span class="cmd">wget</span> https://example.com/file.zip   <span class="cm"># download (simpler than curl for files)</span>
+<span class="cmd">ping</span> example.com                    <span class="cm"># check if host is reachable</span>
+<span class="cmd">dig</span> example.com                     <span class="cm"># DNS lookup</span>
+<span class="cmd">nslookup</span> example.com                <span class="cm"># DNS lookup (simpler)</span>
+<span class="cmd">ssh</span> user@server.com                <span class="cm"># SSH into server</span>
+<span class="cmd">scp</span> file.py user@server:~/         <span class="cm"># copy file to server</span>
+<span class="cmd">scp</span> user@server:~/file.py .       <span class="cm"># copy file from server</span></pre>
+
+<h2>Pipes &amp; Redirection</h2>
+<pre><span class="cmd">command</span> > file.txt           <span class="cm"># redirect stdout to file (overwrite)</span>
+<span class="cmd">command</span> >> file.txt          <span class="cm"># redirect stdout to file (append)</span>
+<span class="cmd">command</span> 2> error.log         <span class="cm"># redirect stderr to file</span>
+<span class="cmd">command</span> > /dev/null 2>&1     <span class="cm"># discard all output</span>
+<span class="cmd">command1</span> | <span class="cmd">command2</span>        <span class="cm"># pipe stdout of cmd1 to stdin of cmd2</span>
+<span class="cmd">command</span> | <span class="cmd">tee</span> output.txt    <span class="cm"># output to stdout AND file</span>
+<span class="cmd">command</span> | <span class="cmd">xargs</span> -I {} cmd  <span class="cm"># use output as arguments (replaces {})</span>
+<span class="cmd">cat</span> files.txt | <span class="cmd">xargs</span> rm   <span class="cm"># delete files listed in a file</span></pre>
+
+<h2>Disk &amp; Memory</h2>
+<pre><span class="cmd">free</span> -h                   <span class="cm"># memory usage</span>
+<span class="cmd">df</span> -h                     <span class="cm"># disk usage per filesystem</span>
+<span class="cmd">du</span> -sh /path/to/dir       <span class="cm"># directory size</span>
+<span class="cmd">du</span> -sh * | sort -rh | head  <span class="cm"># top 10 largest in current dir</span>
+<span class="cmd">ncdu</span> /path               <span class="cm"># interactive disk usage explorer (install separately)</span></pre>
+
+<h2>Cron (Scheduled Tasks)</h2>
+<pre><span class="cmd">crontab</span> -e                  <span class="cm"># edit your crontab</span>
+<span class="cmd">crontab</span> -l                  <span class="cm"># list your crontab</span>
+
+<span class="cm"># Format: minute hour day-of-month month day-of-week command</span>
+<span class="cm"># */5 * * * * = every 5 minutes</span>
+<span class="cm"># 0 2 * * *   = every day at 2 AM</span>
+<span class="cm"># 0 */6 * * * = every 6 hours</span>
+<span class="cm"># 0 0 * * 1   = every Monday at midnight</span>
+<span class="cm"># 30 4 * * 1-5 = Monday-Friday at 4:30 AM</span>
+
+<span class="cm"># Examples:</span>
+*/5 * * * * /usr/bin/python3 /app/manage.py runcrons >> /var/log/cron.log 2>&1
+0 3 * * * /usr/bin/docker system prune -f >> /var/log/docker-prune.log 2>&1</pre>
+
+<h2>SSH Config</h2>
+
+<div class="file-label">~/.ssh/config</div>
+<pre><span class="fn">Host</span> myserver
+    HostName 192.168.1.100
+    User deploy
+    Port 22
+    IdentityFile ~/.ssh/mykey
+    ForwardAgent yes
+
+<span class="fn">Host</span> github
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/github_key</pre>
+
+</div>
+
+<!-- ========== OTHER TOOLS ========== -->
+<div class="tab-content" id="tab-tools">
+
+<h2>tmux (Terminal Multiplexer)</h2>
+<pre><span class="cmd">tmux</span>                        <span class="cm"># start new session</span>
+<span class="cmd">tmux</span> new -s mysession     <span class="cm"># named session</span>
+<span class="cmd">tmux</span> ls                      <span class="cm"># list sessions</span>
+<span class="cmd">tmux</span> attach -t mysession  <span class="cm"># reattach (survives disconnect)</span>
+<span class="cmd">tmux</span> kill-session -t s     <span class="cm"># kill session</span>
+
+<span class="cm"># Inside tmux (prefix = Ctrl+b by default):</span>
+Ctrl+b c                       <span class="cm"># new window</span>
+Ctrl+b %                       <span class="cm"># split pane horizontally</span>
+Ctrl+b "                       <span class="cm"># split pane vertically</span>
+Ctrl+b n / Ctrl+b p            <span class="cm"># next / previous pane</span>
+Ctrl+b arrow-keys             <span class="cm"># navigate between panes</span>
+Ctrl+b d                       <span class="cm"># detach (session keeps running)</span>
+Ctrl+b [                       <span class="cm"># scroll mode (q to quit, arrows to scroll)</span>
+Ctrl+b ,                       <span class="cm"># rename window</span></pre>
+
+<p class="tip"><strong>tmux is essential for remote servers.</strong> Start a long-running task, detach, close your laptop, reconnect later. The process keeps running. No more lost SSH sessions.</p>
+
+<h2>jq (JSON Processor)</h2>
+<pre><span class="cmd">echo</span> '{"name": "Alice", "age": 30}' | <span class="cmd">jq</span> .
+<span class="cmd">echo</span> '{"name": "Alice"}' | <span class="cmd">jq</span> .name
+<span class="cmd">echo</span> '[1,2,3]' | <span class="cmd">jq</span> '.[]'
+<span class="cmd">echo</span> '{"items": [{"id":1},{"id":2}]}' | <span class="cmd">jq</span> '.items[].id'
+<span class="cmd">curl</span> -s https://api.example.com/data | <span class="cmd">jq</span> '.results | length'
+<span class="cmd">curl</span> -s https://api.example.com/data | <span class="cmd">jq</span> 'select(.active)'
+<span class="cmd">cat</span> file.json | <span class="cmd">jq</span> 'sort_by(.created_at) | reverse | .[0:10]'</pre>
+
+<h2>curl (HTTP Client)</h2>
+<pre><span class="cmd">curl</span> url                       <span class="cm"># GET request</span>
+<span class="cmd">curl</span> -I url                     <span class="cm"># headers only</span>
+<span class="cmd">curl</span> -s url                     <span class="cm"># silent (no progress bar)</span>
+<span class="cmd">curl</span> -o file url               <span class="cm"># download to file</span>
+<span class="cmd">curl</span> -X POST url -d "key=val"  <span class="cm"># POST form data</span>
+<span class="cmd">curl</span> -X POST url -H "Content-Type: application/json" -d '{"key":"val"}'
+<span class="cmd">curl</span> -H "Authorization: Bearer TOKEN" url  <span class="cm"># with auth header</span>
+<span class="cmd">curl</span> -v url                     <span class="cm"># verbose (see full request/response)</span>
+<span class="cmd">curl</span> -w "\n%{http_code}\n" url  <span class="cm"># print only status code</span>
+<span class="cmd">curl</span> -w "\n%{time_total}\n" url  <span class="cm"># measure response time</span></pre>
+
+<h2>xargs (Argument Builder)</h2>
+<pre><span class="cm"># Run a command on every line of input</span>
+<span class="cmd">echo</span> -e "file1\nfile2\nfile3" | <span class="cmd">xargs</span> rm
+
+<span class="cm"># Run with placeholder</span>
+<span class="cmd">find</span> . -name "*.log" | <span class="cmd">xargs</span> -I {} mv {} /logs/
+
+<span class="cm"># Parallel execution</span>
+<span class="cmd">find</span> . -name "*.py" | <span class="cmd">xargs</span> -P 4 python -m py_compile
+
+<span class="cm"># Limit arguments per command</span>
+<span class="cmd">find</span> . -name "*.py" | <span class="cmd">xargs</span> -n 1 rm</pre>
+
+<h2>watch (Run Command Repeatedly)</h2>
+<pre><span class="cmd">watch</span> -n 2 "docker ps"              <span class="cm"># run every 2 seconds</span>
+<span class="cmd">watch</span> -n 1 "ls -la /app"          <span class="cm"># run every second</span>
+<span class="cmd">watch</span> -d "ls -la"                  <span class="cm"># highlight differences between runs</span></pre>
+
+<h2>envsubst (Environment Variable Substitution)</h2>
+<pre><span class="cm"># Replace $VAR placeholders in a file with env vars</span>
+<span class="cmd">export</span> DB_HOST=localhost DB_PASS=secret
+<span class="cmd">envsubst</span> < <span class="cmd">cat</span> config.template > config.yml
+
+<span class="cm"># With a specific env file</span>
+<span class="cmd">envsubst</span> $(<span class="cmd">grep</span> -v '^#' .env | <span class="cmd">sed</span> 's/=.*//') <span class="cmd">cat</span> template.conf > app.conf</pre>
+
+<h2>rsync (File Sync)</h2>
+<pre><span class="cmd">rsync</span> -avz source/ user@server:/dest/    <span class="cm"># sync to remote (archive, verbose, compress)</span>
+<span class="cmd">rsync</span> -avz --delete source/ dest/          <span class="cm"># sync + delete extras in dest</span>
+<span class="cmd">rsync</span> -avz --dry-run source/ dest/       <span class="cm"># preview without making changes</span>
+<span class="cmd">rsync</span> -avz --exclude='node_modules' source/ dest/  <span class="cm"># exclude patterns</span></pre>
+
+<h2>htop / ncdu (Install Separately)</h2>
+<pre><span class="cmd">sudo</span> apt install htop ncdu       <span class="cm"># Debian/Ubuntu</span>
+<span class="cmd">sudo</span> yum install htop ncdu       <span class="cm"># RHEL/CentOS</span>
+
+<span class="cmd">htop</span>                           <span class="cm"># interactive process viewer</span>
+<span class="cmd">ncdu</span> /path                      <span class="cm"># interactive disk usage explorer</span></pre>
+
+<h2>Quick Reference Card</h2>
+<table>
+    <tr><th>Task</th><th>Command</th></tr>
+    <tr><td>What's my IP</td><td><code>curl ifconfig.me</code></td></tr>
+    <tr><td>Public IP of a server</td><td><code>curl -s ifconfig.me</code></td></tr>
+    <tr><td>What OS am I on</td><td><code>cat /etc/os-release</code></td></tr>
+    <tr><td>Disk free</td><td><code>df -h</code></td></tr>
+    <tr><td>Memory free</td><td><code>free -h</code></td></tr>
+    <tr><td>CPU info</td><td><code>lscpu</code></td></tr>
+    <tr><td>Last login</td><td><code>last</code></td></tr>
+    <tr><td>Uptime</td><td><code>uptime</code></td></tr>
+    <tr><td>Path to a command</td><td><code>which python</code> or <code>type python</code></td></tr>
+    <tr><td>Environment vars</td><td><code>env</code> or <code>printenv</code></td></tr>
+    <tr><td>Screenshot from CLI</td><td><code>scrot</code> (install separately)</td></tr>
+    <tr><td>Base64 encode</td><td><code>echo -n "text" | base64</code></td></tr>
+    <tr><td>Base64 decode</td><td><code>echo "dGV4dA==" | base64 -d</code></td></tr>
+    <tr><td>UUID generate</td><td><code>uuidgen</code></td></tr>
+    <tr><td>Random string</td><td><code>openssl rand -hex 16</code></td></tr>
+    <tr><td>Download a file</td><td><code>wget url</code> or <code>curl -O url</code></td></tr>
+    <tr><td>Port scan (simple)</td><td><code>nc -zv host port</code></td></tr>
+    <tr><td>Disk I/O stats</td><td><code>iostat</code></td></tr>
+    <tr><td>Network connections</td><td><code>ss -tunlp</code></td></tr>
+    <tr><td>Python version</td><td><code>python3 --version</code></td></tr>
+    <tr><td>Pip packages</td><td><code>pip list</code></td></tr>
+    <tr><td>Node version</td><td><code>node --version</code></td></tr>
+    <tr><td>Docker version</td><td><code>docker --version</code></td></tr>
+</table>
+
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+document.querySelectorAll('.tabs a').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const tab = link.dataset.tab;
+        document.querySelectorAll('.tabs a').forEach(a => a.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        link.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+    });
+});
+</script>
+</body>
+</html>
