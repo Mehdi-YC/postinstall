@@ -187,6 +187,7 @@
         <li><a href="#owl-template" data-tip="QWeb directives and examples">OWL Template</a></li>
         <li><a href="#owl-advanced" data-tip="Composition, useState, event bus, registration">OWL Advanced</a></li>
         <li><a href="#devops" data-tip="CLI, PostgreSQL, backups, logging, debug mode">DevOps</a></li>
+        <li><a href="#technical-terms" data-tip="Technical / OPS terms">Technical terms ref</a></li>
     </ul>
 </nav>
 
@@ -1326,7 +1327,95 @@ log_level = debug_sql</pre>
     <li><strong>Use <code>odoo-bin scaffold</code></strong> to start new modules. It generates the correct folder structure, manifest, and __init__.py files.</li>
     <li><strong>Don't edit core Odoo files.</strong> Ever. Always extend via inheritance. If you must patch core behavior, use <code>_patch()</code> or a monkey-patch in <code>post_init_hook</code>, and document it heavily.</li>
 </ul>
+<!-- ============================== -->
+<h2 id="technical-terms">Odoo Technical Terms Reference</h2>
+<!-- ============================== -->
 
+<p>Comprehensive reference of key Odoo terms, their French translations, module locations, and workflow connections. Use this as a quick lookup for what each term means and where to find it in the UI.</p>
+
+<table>
+    <thead>
+        <tr><th>Term (English)</th><th>Term (French)</th><th>Module</th><th>Example Workflow / Connection</th></tr>
+    </thead>
+    <tbody>
+        <!-- CRM & Sales -->
+        <tr><td><strong>Lead / Opportunity</strong></td><td>Prospect / Opportunité</td><td>CRM</td><td>Convert to Quotation → Sales Order → Invoice</td></tr>
+        <tr><td><strong>Quotation</strong></td><td>Devis</td><td>Sales</td><td>Create → Send to customer → Confirm as Sales Order</td></tr>
+        <tr><td><strong>Sales Order</strong></td><td>Commande client / Bon de commande</td><td>Sales</td><td>Confirm → Deliver products → Invoice customer</td></tr>
+        <tr><td><strong>Order Tracking</strong></td><td>Suivi des commandes</td><td>Sales</td><td>Track order status from confirmation to delivery</td></tr>
+        <tr><td><strong>Loyalty</strong></td><td>Fidélité</td><td>Sales</td><td>Reward repeat customers</td></tr>
+
+        <!-- Accounting / Compta -->
+        <tr><td><strong>Invoice</strong></td><td>Facture (client)</td><td>Accounting</td><td>Create → Validate → Send to customer → Register payment</td></tr>
+        <tr><td><strong>Bill / Supplier Invoice</strong></td><td>Facture fournisseur</td><td>Accounting / Purchasing</td><td>Receive bill → Validate → Schedule payment → Register payment</td></tr>
+        <tr><td><strong>Credit Note</strong></td><td>Avoir</td><td>Accounting</td><td>Cancel or refund part/all of an invoice, often linked to returns</td></tr>
+        <tr><td><strong>Chart of Accounts</strong></td><td>Plan Comptable</td><td>Accounting</td><td>Base of accounting: defines all accounts for financial transactions</td></tr>
+        <tr><td><strong>Accounting Journal</strong></td><td>Journal Comptable</td><td>Accounting</td><td>Register where all financial transactions are recorded</td></tr>
+        <tr><td><strong>Customer Payment</strong></td><td>Paiement Client</td><td>Accounting</td><td>Payment received from customer to settle an invoice</td></tr>
+        <tr><td><strong>Supplier Payment</strong></td><td>Paiement Fournisseur</td><td>Accounting</td><td>Payment made to supplier to settle a supplier invoice</td></tr>
+        <tr><td><strong>Bank Reconciliation</strong></td><td>Rapprochement Bancaire</td><td>Accounting</td><td>Match bank transactions with recorded entries</td></tr>
+        <tr><td><strong>General Ledger</strong></td><td>Grand Livre</td><td>Accounting</td><td>Register of all accounting transactions in a single document</td></tr>
+        <tr><td><strong>Balance Sheet</strong></td><td>Bilan</td><td>Accounting</td><td>Assets, liabilities, and equity at a given date</td></tr>
+        <tr><td><strong>Profit and Loss</strong></td><td>Compte de Résultat</td><td>Accounting</td><td>Revenue and expenses over a period</td></tr>
+        <tr><td><strong>Taxes</strong></td><td>Taxes / TVA</td><td>Accounting</td><td>Tax rules applied to sales and purchase transactions</td></tr>
+        <tr><td><strong>Journal Entries</strong></td><td>Écritures Comptables</td><td>Accounting</td><td>Individual entries documenting financial transactions</td></tr>
+        <tr><td><strong>Depreciation</strong></td><td>Amortissement</td><td>Accounting</td><td>Loss of value of fixed assets over time</td></tr>
+        <tr><td><strong>Open Invoices</strong></td><td>Encours</td><td>Accounting</td><td>Invoices still open and unpaid</td></tr>
+        <tr><td><strong>Accounting Analysis</strong></td><td>Analyse Comptable</td><td>Accounting</td><td>Examine financial flows by account categories</td></tr>
+
+        <!-- HR / Payroll -->
+        <tr><td><strong>Payroll</strong></td><td>Paie</td><td>HR</td><td>Employee contract → Generate payslip → Approve → Process payment</td></tr>
+        <tr><td><strong>Leave Request</strong></td><td>Demande de congé</td><td>HR</td><td>Employee submits → Manager approves → Track absence</td></tr>
+
+        <!-- Purchasing -->
+        <tr><td><strong>Purchase Order</strong></td><td>Bon de commande / Commande fournisseur</td><td>Purchasing</td><td>Create PO → Approve → Receive goods → Register bill</td></tr>
+        <tr><td><strong>Purchase</strong></td><td>Achat</td><td>Purchasing</td><td>Link to supplier orders and stock replenishment</td></tr>
+
+        <!-- Inventory / Stock -->
+        <tr><td><strong>Stock Move</strong></td><td>Mouvement de stock</td><td>Inventory</td><td>Receive stock → Store in warehouse → Deliver to customer</td></tr>
+        <tr><td><strong>Picking</strong></td><td>Préparation de commande</td><td>Inventory</td><td>Pick items from stock → Pack → Ship to customer</td></tr>
+        <tr><td><strong>Pack</strong></td><td>Emballage</td><td>Inventory</td><td>Group picked items → Prepare for shipping</td></tr>
+        <tr><td><strong>Ship</strong></td><td>Expédition</td><td>Inventory</td><td>Send packed items to customers</td></tr>
+        <tr><td><strong>Receipt</strong></td><td>Réception</td><td>Inventory</td><td>Stock update when products are received from suppliers</td></tr>
+        <tr><td><strong>Inventory / Stock</strong></td><td>Stock</td><td>Inventory</td><td>Updated with sales, purchases, receipts → linked to warehouse management</td></tr>
+        <tr><td><strong>Warehouse</strong></td><td>Entrepôt / Stockage</td><td>Inventory</td><td>Physical location where stock is stored</td></tr>
+        <tr><td><strong>Reordering Rule</strong></td><td>Règle de réapprovisionnement</td><td>Inventory</td><td>Define min/max stock levels → Auto-trigger purchase or production</td></tr>
+        <tr><td><strong>Buy to Stock</strong></td><td>Achat sur stock</td><td>Inventory</td><td>Purchase goods to stock → Store in warehouse → Sell from stock</td></tr>
+        <tr><td><strong>Buy to Order</strong></td><td>Achat sur commande</td><td>Inventory</td><td>Order placed → Purchase goods from supplier → Deliver to customer</td></tr>
+        <tr><td><strong>Dropshipping</strong></td><td>Livraison directe</td><td>Inventory</td><td>Customer order → Purchase from supplier → Supplier ships to customer</td></tr>
+        <tr><td><strong>Backorder</strong></td><td>Commande en attente</td><td>Inventory</td><td>Partially deliver an order → Create a backorder for missing items</td></tr>
+        <tr><td><strong>Scrap</strong></td><td>Mise au rebut</td><td>Inventory</td><td>Remove damaged or obsolete stock from inventory</td></tr>
+        <tr><td><strong>Barcode Scanning</strong></td><td>Lecture de codes-barres</td><td>Inventory</td><td>Use barcode scanner for quick stock moves and picking</td></tr>
+
+        <!-- Manufacturing / MRP -->
+        <tr><td><strong>Make to Stock</strong></td><td>Production sur stock</td><td>MRP</td><td>Produce goods → Store in warehouse → Sell from stock</td></tr>
+        <tr><td><strong>Make to Order</strong></td><td>Production sur commande</td><td>MRP</td><td>Customer order → Manufacture product → Deliver</td></tr>
+        <tr><td><strong>Manufacturing Order</strong></td><td>Ordre de fabrication</td><td>MRP</td><td>Create order → Consume raw materials → Produce finished goods</td></tr>
+        <tr><td><strong>Work Order</strong></td><td>Ordre de travail</td><td>MRP</td><td>Schedule operations → Execute tasks → Complete manufacturing process</td></tr>
+        <tr><td><strong>Raw Material</strong></td><td>Matière première</td><td>MRP / Inventory</td><td>Used to manufacture finished goods → linked to inventory</td></tr>
+
+        <!-- Cross-module / General -->
+        <tr><td><strong>Report</strong></td><td>Rapport</td><td>All modules</td><td>Generated from all data to view company performance</td></tr>
+        <tr><td><strong>Automation</strong></td><td>Automatisation</td><td>All modules</td><td>Execute actions automatically (notifications, document creation)</td></tr>
+        <tr><td><strong>Workflow: Pick & Pack & Ship</strong></td><td>Préparer & Emballer & Expédier</td><td>Inventory</td><td>Pick items from warehouse → Pack → Ship to customer</td></tr>
+        <tr><td><strong>Workflow: Backordering</strong></td><td>Commande en attente</td><td>Inventory</td><td>Auto-create backorder for missing stock when partially delivering</td></tr>
+        <tr><td><strong>Workflow: Scrap Management</strong></td><td>Gestion des mises au rebut</td><td>Inventory</td><td>Use 'Scrap' function to remove damaged/obsolete stock</td></tr>
+    </tbody>
+</table>
+
+<p class="tip"><strong>Access paths by module:</strong></p>
+<ul>
+    <li><strong>Sales / CRM:</strong> Ventes &gt; Prospects, Commandes, Devis, Programme de fidélité</li>
+    <li><strong>Accounting:</strong> Comptabilité &gt; Factures, Paiements, Rapprochement bancaire, Rapports</li>
+    <li><strong>Purchasing:</strong> Achats &gt; Commandes fournisseurs</li>
+    <li><strong>Inventory:</strong> Stocks &gt; Réceptions, Produits, Entrepôts, Mouvements de stock</li>
+    <li><strong>Manufacturing:</strong> Fabrication &gt; Ordres de fabrication</li>
+    <li><strong>HR:</strong> Ressources Humaines &gt; Paie, Congés</li>
+    <li><strong>Technical / Configuration:</strong> Comptabilité &gt; Configuration &gt; Plan comptable, Journaux, Taxes</li>
+</ul>
+
+<hr>
 </div>
+
 </body>
 </html>
