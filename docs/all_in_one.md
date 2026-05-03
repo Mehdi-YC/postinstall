@@ -3,7 +3,7 @@
 <details>
 <summary><strong>🚀 My Tech Stack</strong></summary>
 
-- **Backend**: Python (Django, FastAPI), Rust (actix-web, axum)
+- **Backend**: Python (Django, FastAPI,tooling:ruff,uv), Rust (actix-web, axum)
 - **Frontend**: Svelte / SvelteKit
 - **Tools**: Linux, Git, Docker
 - **Patterns & Principles**: SOLID, DRY, YAGNI, KISS, naming, architecture, extendibility
@@ -854,6 +854,7 @@ https://swagger.io/
 - fish / starship
 - ollama
 - certbot
+- espanso
 
 </details>
 
@@ -866,7 +867,7 @@ https://swagger.io/
 - n8n
 - aapanel
 - glpi
-- moodle / budibase / callcom
+- moodle / budibase / callcom / nocobase / nocodb
 
 </details>
 
@@ -877,12 +878,13 @@ https://swagger.io/
 - js (sveltekit / skeletonUi superform, drizzleORM, pwa, capacitor)
 - fun with go / rust
 - sentry
+- Qdrant
 
 </details>
 
 <details>
 <summary>Desktop</summary>
-
+- kde Plasma / gnome (i3/sway for tiling)
 - insomnia
 - vscodium
 - chromium
@@ -1034,9 +1036,3 @@ https://swagger.io/
 
 </details>
 </details>
-
-
-
-
-
-
