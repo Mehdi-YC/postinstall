@@ -460,10 +460,10 @@ Component diagrams model the components of a system and how they interact throug
 
 ```mermaid  
 graph TB  
-    Client[🧑‍💻 Client] -->|uses| API[🌐 API]  
-    API --> Controller[🧭 Controller]  
-    Controller --> Service[⚙️ Service]  
-    Service --> Database[(🗄️ Database)]  
+    Client["🧑‍💻 Client"] -->|uses| API["🌐 API"]  
+    API --> Controller["🧭 Controller"]  
+    Controller --> Service["⚙️ Service"]  
+    Service --> Database["(🗄️ Database)"]  
 ```
 </details>
 
@@ -475,13 +475,13 @@ Deployment diagrams show the physical layout of hardware and how software compon
 
 ```mermaid  
 graph TD  
-    subgraph 🧑‍💻 Client Node  
-        Browser[🌍 Browser]  
+    subgraph "🧑‍💻 Client Node" 
+        Browser["🌍 Browser"]  
     end  
 
-    subgraph 🖥️ Server Node  
-        WebApp[🧠 WebApp]  
-        DB[(🗃️ Database)]  
+    subgraph "🖥️ Server Node"  
+        WebApp["🧠 WebApp"]  
+        DB["(🗃️ Database)"]  
     end  
 
     Browser --> WebApp  
