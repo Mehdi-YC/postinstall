@@ -2,12 +2,9 @@
 title = "Django Development Reference"
 description = "Project structure, ORM, views, templates, forms, admin, and dev operations"
 [extra]
-date = 2024-01-15
+date = 2026-01-15
 +++
 
-# Django Development Reference
-
-*Project structure, ORM, views, templates, forms, admin, and dev operations.*
 
 ## File Structure
 

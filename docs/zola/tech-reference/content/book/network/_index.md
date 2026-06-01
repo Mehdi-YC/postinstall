@@ -5,11 +5,9 @@ description = "What actually happens on the wire — layers, protocols, tools, a
 date = 2024-01-15
 +++
 
-# Networking Reference for Developers
 
-*What actually happens on the wire — layers, protocols, tools, and infrastructure a developer needs to understand.*
 
-## The Model: What a Dev Needs to Know
+# The Model: What a Dev Needs to Know
 
 The OSI model has 7 layers. In practice, the internet collapses into roughly **4 functional layers** that matter to developers. You don't need the academic version — you need to know which layer a problem lives in so you can debug it.
 
@@ -22,7 +20,7 @@ The OSI model has 7 layers. In practice, the internet collapses into roughly **4
 
 > **The layer determines where to look.** "Connection refused" is transport (TCP). "No route to host" is network (IP). "HTTP 400" is application (HTTP). Knowing the difference saves hours of debugging.
 
-## Physical vs Logical: The Key Distinction
+# Physical vs Logical: The Key Distinction
 
 **Physical** = the actual cables, radio waves, electrical signals. A wire is a physical thing. A WiFi signal is a physical thing.
 
@@ -40,7 +38,7 @@ The OSI model has 7 layers. In practice, the internet collapses into roughly **4
 
 > **A switch operates at the data link layer.** It sees MAC addresses, not IP addresses. It delivers frames within a local network. A `switch port` is a physical jack. A `VLAN` is a logical partition of that switch — same physical cables, but logically isolated networks.
 
-## What Happens When You Type a URL (Simplified)
+# What Happens When You Type a URL (Simplified)
 
     1. Browser parses "https://example.com/page" → extracts host, path
     │
@@ -68,7 +66,7 @@ The OSI model has 7 layers. In practice, the internet collapses into roughly **4
 
 Steps 2-4 happen in milliseconds. Step 5-7 is what your code controls. If something fails at step 2, it's a DNS problem. Step 3, it's network/firewall. Step 5-7, it's your app or the server.
 
-## Frames, Packets, Segments, Messages
+# Frames, Packets, Segments, Messages
 
 These are all names for "data on the wire" at different layers:
 
@@ -81,7 +79,7 @@ These are all names for "data on the wire" at different layers:
 
 > **Nesting: Frame wraps Packet wraps Segment wraps Message.** When you send an HTTP request, it gets wrapped in a TCP segment, which gets wrapped in an IP packet, which gets wrapped in an Ethernet frame. Each layer adds its own header. This is called **encapsulation**.
 
-## MAC Address vs IP Address
+# MAC Address vs IP Address
 
 | | MAC Address | IP Address |
 |--|-------------|-------------|
@@ -95,7 +93,7 @@ These are all names for "data on the wire" at different layers:
 
 > **MAC addresses don't cross routers.** When a packet goes through a router, the router strips the source/dest MAC from the frame and adds new ones pointing to the next hop. MAC addresses are only meaningful on a local network segment. This is why you can't find someone's MAC address from across the internet.
 
-## TCP (Transmission Control Protocol)
+# TCP (Transmission Control Protocol)
 
 TCP is **reliable**. It guarantees that data arrives intact, in order, and without duplication. It does this through:
 
@@ -106,7 +104,7 @@ TCP is **reliable**. It guarantees that data arrives intact, in order, and witho
 - **Flow control:** Receiver tells sender to slow down if it's overwhelmed
 - **Connection teardown:** 4-way handshake to close gracefully
 
-### The TCP Handshake (3-Way)
+## The TCP Handshake (3-Way)
 
     Client → SYN (I want to talk, my sequence starts at X)
     │
@@ -128,7 +126,7 @@ TCP is **reliable**. It guarantees that data arrives intact, in order, and witho
 
 > **"Connection refused" = the server sent a RST instead of SYN-ACK.** Either nothing is listening on that port, or a firewall rejected it. "Connection timed out" = no response at all (firewall dropping packets, or host unreachable).
 
-### TCP State Machine (The Important Parts)
+## TCP State Machine (The Important Parts)
 
 | State | Meaning |
 |-------|---------|
@@ -143,7 +141,7 @@ TCP is **reliable**. It guarantees that data arrives intact, in order, and witho
 
 > **`TIME_WAIT` is normal, not an error.** After closing a connection, the side that initiated the close stays in TIME_WAIT for ~60 seconds. It prevents old packets from a previous connection from being confused with a new one. Thousands of TIME_WAIT connections can exhaust ports — this is why connection reuse and keep-alive matter.
 
-## UDP (User Datagram Protocol)
+# UDP (User Datagram Protocol)
 
 UDP is **unreliable**. No handshake, no acknowledgments, no ordering, no retransmission. It just sends data and hopes it arrives. So why use it?
 
@@ -163,7 +161,7 @@ UDP is **unreliable**. No handshake, no acknowledgments, no ordering, no retrans
 | Logging/metrics | UDP | Losing a log line is acceptable |
 | VPN (WireGuard) | UDP | Implements its own reliability on top of UDP |
 
-## Ports
+# Ports
 
 Ports are **transport-layer addresses**. They identify which application on a machine should receive the data. They range from 0 to 65535.
 
@@ -177,7 +175,7 @@ Ports are **transport-layer addresses**. They identify which application on a ma
 
 > **"Address already in use" means another process is already bound to that port.** Use `ss -tlnp | grep :8000` to find what's using it. `kill <PID>` to stop it. Or use a different port.
 
-### How Your OS Handles Connections
+## How Your OS Handles Connections
 
     # A TCP connection is defined by 4 things (a socket tuple):
     #   source IP + source port + dest IP + dest port
@@ -187,7 +185,7 @@ Ports are **transport-layer addresses**. They identify which application on a ma
     # Only ONE process can bind to a specific local IP+port at a time.
     # That's why you can't start two apps on port 8000.
 
-## What Your Code Actually Controls
+# What Your Code Actually Controls
 
     # When you write this in Python:
     socket.connect(("93.184.216.34", 443))
@@ -210,11 +208,11 @@ Ports are **transport-layer addresses**. They identify which application on a ma
     # 3. When ACK comes back, moves to ESTABLISHED
     # 4. Calls your accept() callback
 
-## HTTP Overview
+# HTTP Overview
 
 HTTP is a **text-based protocol** that runs on top of TCP. It's just formatted text sent over a TCP connection. That's it. No magic. Every HTTP message is either a request (client to server) or a response (server to client), and both follow the same basic structure.
 
-### HTTP Request Structure
+## HTTP Request Structure
 
 What actually gets sent on the wire:
 ```bash
@@ -238,7 +236,7 @@ What actually gets sent on the wire:
 ```
 > **The empty line between headers and body is mandatory.** Without it, the server can't tell where headers end and body begins. If you get "400 Bad Request" and can't figure out why, check for a missing blank line between headers and body.
 
-### HTTP Response Structure
+## HTTP Response Structure
 
 What the server sends back:
 ```bash
@@ -258,7 +256,7 @@ What the server sends back:
     # Body
     {"id": 1, "name": "Alice"}
 ```
-### HTTP Methods (Verbs)
+## HTTP Methods (Verbs)
 
 | Method | Has Body? | Idempotent? | Safe? | Purpose |
 |--------|-----------|-------------|-------|---------|
@@ -274,7 +272,7 @@ What the server sends back:
 
 > **GET with a body is technically allowed by the spec but practically never used.** Proxies and caches may strip it. Use `POST` if you need to send data, even if you're just retrieving.
 
-### Status Codes
+## Status Codes
 
 | Range | Meaning | Common Codes |
 |-------|---------|---------------|
@@ -284,7 +282,7 @@ What the server sends back:
 | **4xx** | Client error (your fault) | 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 405 Method Not Allowed, 413 Payload Too Large, 429 Too Many Requests, 422 Unprocessable Entity |
 | **5xx** | Server error (their fault) | 500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout |
 
-### The Ones That Confuse Developers
+## The Ones That Confuse Developers
 
 | Code | What It Actually Means |
 |------|------------------------|
@@ -303,7 +301,7 @@ What the server sends back:
 | `301 vs 302` | `301`: "Moved permanently, update your URL." `302`: "Moved temporarily, keep using the old URL." Browsers cache 301s by default. Use 302 for POST redirects (to prevent method change to GET). |
 | `304` | "Nothing changed since last time you asked." Your cached version is still valid. No body returned. |
 
-### Headers That Actually Matter
+## Headers That Actually Matter
 
 | Header | Direction | What It Does |
 |--------|-----------|---------------|
@@ -322,7 +320,7 @@ What the server sends back:
 | `Connection` | Both | `keep-alive` = reuse the TCP connection for multiple requests. `close` = close after one request. |
 | `Transfer-Encoding` | Response | `chunked` = send body in chunks (no need to know Content-Length upfront). Enables streaming. |
 
-### HTTP/1.1 vs HTTP/2 vs HTTP/3
+## HTTP/1.1 vs HTTP/2 vs HTTP/3
 
 | | HTTP/1.1 | HTTP/2 | HTTP/3 |
 |--|----------|--------|--------|
@@ -336,7 +334,7 @@ What the server sends back:
 
 > **HTTP/3 is not "HTTP over UDP" in the simple sense.** It uses QUIC, which adds its own reliability, ordering, and congestion control on top of UDP. Applications still see an HTTP-like interface. The complexity is pushed into the library, not your code.
 
-### Keep-Alive and Connection Reuse
+## Keep-Alive and Connection Reuse
 
     # HTTP/1.1 default: keep-alive is ON
     # Without keep-alive (Connection: close):
@@ -356,7 +354,7 @@ What the server sends back:
     #   Requests 1-3 (and hundreds more): 1 RTT each (all in parallel if server allows)
     #   Total: 2-4 RTTs for 3 requests
 
-### Form Data: Content-Type Matters
+## Form Data: Content-Type Matters
 
 application/x-www-form-urlencoded (default for HTML forms):
 
@@ -397,11 +395,11 @@ application/json (APIs):
 
 > **Wrong Content-Type = wrong parsing.** Sending JSON with `application/x-www-form-urlencoded` (or no Content-Type) will make the server try to parse JSON as form fields, which silently fails. Always set Content-Type when you have a body.
 
-## What DNS Does
+# What DNS Does
 
 DNS translates **domain names** (human-readable) into **IP addresses** (machine-readable). It's the phonebook of the internet. Without it, every URL would be `http://93.184.216.34/`.
 
-### The Resolution Process
+## The Resolution Process
 
     1. Browser cache → "Have I looked up example.com recently?" (check TTL)
     If not found ↓
@@ -427,7 +425,7 @@ DNS translates **domain names** (human-readable) into **IP addresses** (machine-
 
 > **DNS lookups typically take 20-120ms.** But they're cached aggressively. Once resolved, subsequent requests are instant. The TTL (Time To Live) in the DNS record controls cache duration. Low TTL = fresh data, more lookups. High TTL = stale data, fewer lookups.
 
-### Record Types
+## Record Types
 
 | Type | Points To | Example |
 |------|-----------|---------|
@@ -441,7 +439,7 @@ DNS translates **domain names** (human-readable) into **IP addresses** (machine-
 | `PTR` | Reverse DNS (IP → name) | `93.184.216.34 → example.com` |
 | `SOA` | Start of Authority (zone metadata) | Primary NS, admin email, serial, refresh, retry, expire, minimum TTL |
 
-### Common DNS Tools
+## Common DNS Tools
 ```bash
     # Query specific record type
     dig example.com A                    # IPv4 address
@@ -484,7 +482,7 @@ DNS translates **domain names** (human-readable) into **IP addresses** (machine-
 
     # Flush browser DNS: clear browsing data or use devtools > Network > Disable cache (temporarily)
 ```
-### DNS Propagation
+## DNS Propagation
 
 When you change a DNS record, it doesn't take effect everywhere instantly. Propagation happens gradually:
 
@@ -495,7 +493,7 @@ When you change a DNS record, it doesn't take effect everywhere instantly. Propa
 
 > **Set low TTLs (300s) before making changes.** If your TTL is 86400 (1 day), you'll wait up to a day for changes to propagate. Set it to 300 a day before, then make the change, then set it back to 86400 after confirming it works.
 
-### Common DNS Problems
+## Common DNS Problems
 
 | Symptom | Likely Cause |
 |---------|---------------|
@@ -509,13 +507,13 @@ When you change a DNS record, it doesn't take effect everywhere instantly. Propa
 | Works in browser, fails in curl | curl doesn't use the system DNS. Use `curl --resolve` or check `/etc/resolv.conf`. |
 | CNAME loop | Domain A → Domain B → Domain A. Cannot resolve. |
 
-## What TLS Does
+# What TLS Does
 
 TLS (Transport Layer Security) encrypts the data between your browser and the server so eavesdroppers on the network can't read it. That's it. It doesn't make your app secure — it protects data **in transit**.
 
 > **HTTPS = HTTP over TLS over TCP.** The data on the wire is encrypted, but the server and browser see plaintext. TLS is between transport endpoints, not end-to-end encryption.
 
-### The TLS Handshake (What Actually Happens)
+## The TLS Handshake (What Actually Happens)
 
     Client Hello → I want to talk HTTPS. Here are TLS version + cipher suites I support + random number (ClientHello)
     │
@@ -532,7 +530,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
 
     Application data is now encrypted before being sent
 
-### Certificates & Chain of Trust
+## Certificates & Chain of Trust
 
     # Certificate contains:
     # - Domain name (e.g., example.com)
@@ -550,7 +548,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     # Self-signed cert: you sign it yourself. Browsers don't trust it by default.
     # Fine for dev/testing. Never use in production.
 
-### Common TLS Issues
+## Common TLS Issues
 
 | Symptom | Likely Cause |
 |---------|---------------|
@@ -560,7 +558,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
 | "Mixed content" warning | HTTPS page loading HTTP resources (images, scripts). Browser blocks or warns. |
 | Cert works in browser, fails in curl/Python | curl/Python don't use the OS certificate store. Use `curl -k` (insecure, but confirms DNS/TCP works) or set `REQUESTS_CA_BUNDLE` in Python. |
 
-### Certificate Types (Let's Encrypt vs Commercial)
+## Certificate Types (Let's Encrypt vs Commercial)
 
 | | Let's Encrypt | Commercial (DigiCert, etc.) |
 |--|---------------|----------------------------|
@@ -571,7 +569,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
 | **EV (green bar in browser)** | Not offered | Available (requires business verification) |
 | **Support** | Community (forums, docs) | Dedicated support |
 
-### Renewal and Expiry
+## Renewal and Expiry
 ```bash
     # Check when a cert expires:
     echo | openssl s_client -connect example.com:443 2>/dev/null | openssl x509 -noout -enddate -startdate
@@ -582,7 +580,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     sudo certbot renew                 # actually renew
     # certbot installs a timer that auto-renews when cert is 30 days old
 ```
-### Mixed Content
+## Mixed Content
 
     # HTTPS page loading HTTP resource → browser blocks or warns
     # Common causes:
@@ -593,9 +591,9 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     # Fix: use https:// for ALL resources, or upgrade-insecure-requests in CSP
     # Or for dev: chrome://flags/#allow-insecure-localhost
 
-## Tools
+# Tools
 
-### curl
+## curl
 ```bash
     # Basic GET (same as opening in a browser)
     curl https://api.example.com/users
@@ -657,7 +655,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     curl -F "file=@localfile.jpg;type=image/jpeg" https://example.com/upload
     curl -F "file=@localfile.jpg;filename=photo.jpg" https://example.com/upload
 ```
-### netcat (nc)
+## netcat (nc)
 ```bash
     # Listen on a port and respond manually
     nc -l -p 8080
@@ -683,7 +681,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     # Test if a port is open locally
     nc -z localhost 8000
 ```
-### ss (Socket Statistics)
+## ss (Socket Statistics)
 ```bash
     # All listening TCP ports
     ss -tlnp
@@ -703,7 +701,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     # Show process info
     ss -tulnp -p
 ```
-### tcpdump (Packet Capture)
+## tcpdump (Packet Capture)
 ```bash
     # Capture all traffic on eth0
     sudo tcpdump -i eth0
@@ -738,7 +736,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     # -w file = write to file
     # -c count = stop after N packets
 ```
-### traceroute / tracepath
+## traceroute / tracepath
 ```bash
     # Trace the route packets take to reach a host
     traceroute example.com      # Linux/macOS (uses UDP by default)
@@ -747,7 +745,7 @@ TLS (Transport Layer Security) encrypts the data between your browser and the se
     # Output: each hop shows the router/intermediate node and the round-trip time to reach it
     # If you see * * * * at some hop, that hop blocks ICMP (common for cloud providers)
 ```
-### wireshark
+## wireshark
 
 Wireshark is a GUI packet analyzer. It does what tcpdump does but with a proper interface.
 
@@ -763,9 +761,9 @@ Key features:
 
 Export → "Export specified packets" → save as .pcap for later analysis or sharing
 
-## Infrastructure
+# Infrastructure
 
-### Switch
+## Switch
 
 A switch connects devices on a **local network (LAN)**. It operates at the data link layer (layer 2) and uses **MAC addresses** to decide where to send frames. It builds a table mapping MAC addresses to ports, and learns which device is on which port by watching source MAC addresses in incoming frames.
 
@@ -781,7 +779,7 @@ A switch connects devices on a **local network (LAN)**. It operates at the data 
 
 > **A switch connects devices on the same network.** Two switches can be connected to expand the network. Routers connect different networks.
 
-### Router
+## Router
 
 A router connects **different networks** (e.g., your LAN and the internet). It operates at the network layer (layer 3) and uses **IP addresses** to decide where to send packets.
 
@@ -796,7 +794,7 @@ A router connects **different networks** (e.g., your LAN and the internet). It o
 
 > **Your app usually sees the router's public IP, not your machine's local IP.** If you need the real client IP behind a proxy/CDN, use `X-Forwarded-For` header parsing. The first IP in the chain is usually the real client IP.
 
-### NAT (Network Address Translation)
+## NAT (Network Address Translation)
 
 NAT maps **private IP + port** to **public IP + port**. This solves two problems:
 
@@ -813,7 +811,7 @@ NAT maps **private IP + port** to **public IP + port**. This solves two problems
 
 > **Port forwarding is manual NAT for incoming connections.** Outgoing connections are NAT'd automatically. But if you run a web server on 192.168.1.10:8000, the internet can't reach it because no incoming NAT mapping exists yet. You must explicitly configure: "forward port 443 to 192.168.1.10:8000" on the router.
 
-### Firewall
+## Firewall
 
 A firewall controls **which packets are allowed through** based on rules: source/dest IP, port, protocol, connection state (new/established/related).
 
@@ -836,7 +834,7 @@ A firewall controls **which packets are allowed through** based on rules: source
 
 > **"Connection timed out" with nothing in logs = silently dropped by firewall.** Firewalls often drop packets without logging. Check both the cloud security group AND the server's host firewall. Try `curl -v` on the server itself to see if the port is actually listening. If yes, it's the firewall. If "Connection refused," it's not.
 
-### VPN (Virtual Private Network)
+## VPN (Virtual Private Network)
 
 A VPN creates an encrypted tunnel through the internet to a private network. What this actually means:
 
@@ -853,7 +851,7 @@ A VPN creates an encrypted tunnel through the internet to a private network. Wha
 
 > **A VPN does NOT encrypt your app's actual data.** It encrypts the transport. The app inside the VPN tunnel is still HTTP/JSON/<whatever> — it's just delivered through an encrypted tunnel. You still need HTTPS for application-level encryption.
 
-### Subnets
+## Subnets
 
     # A subnet divides one IP range into smaller networks
     # 192.168.1.0/24 means:
@@ -879,7 +877,7 @@ A VPN creates an encrypted tunnel through the internet to a private network. Wha
     # Subnet vs broadcast: don't use .0 (network) or .255 (broadcast) as host addresses
     # Those have special meaning in the protocol
 
-### Load Balancer
+## Load Balancer
 
 A load balancer distributes incoming requests across multiple backend servers. What it actually does:
 
@@ -901,7 +899,7 @@ A load balancer distributes incoming requests across multiple backend servers. W
     # GET /health → 500 → unhealthy
     # Run on every 5-10 seconds per backend
 
-### Proxy
+## Proxy
 
     # Forward proxy: client → proxy → server (client doesn't know about the real server)
     # Example: Nginx sitting in front of your app, forwarding to localhost:8000
@@ -922,7 +920,7 @@ A load balancer distributes incoming requests across multiple backend servers. W
 
 > **Nginx as reverse proxy is extremely common.** Almost every production deployment has one. It handles SSL, static files, compression, and routing. Your app only ever receives requests that need dynamic content.
 
-### CDN (Content Delivery Network)
+## CDN (Content Delivery Network)
 
     # What it does: cache your static files at edge locations worldwide
     # User in Tokyo requests image.jpg → CDN edge server in Tokyo serves it locally (20ms instead of 200ms from your server)

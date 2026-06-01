@@ -3,25 +3,9 @@
 {% block title %}Dev Library{% endblock %}
 
 {% block content %}
-{% set data = load_data(path="data/books.toml") %}
-{% set books = data.books %}
 
-<div class="hero">
-  <div class="hero-eyebrow">Dev Library · Reference Collection</div>
-  <h1>The Dev<span> Reference</span> Library</h1>
-  <span class="hero-desc">
-    A curated set of practical engineering references — from system internals
-    and networking
-    to web frameworks and language deep-dives. Built for daily use, not
-    memorisation.
-  </span>
-  <div class="hero-meta">
-    <span>{{ books | length }} volumes</span>
-    <span>Open in any browser, no server needed</span>
-    <span>Works offline</span>
-    <span>Print-friendly</span>
-  </div>
-</div>
+
+
 
 <div class="wrapper">
 

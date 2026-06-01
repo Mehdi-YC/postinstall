@@ -1,25 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Dev Library{% endblock %}</title>
     <link rel="stylesheet" href="{{ get_url(path="css/style.css") }}">
     {% block extra_head %}{% endblock %}
-</head>
-<body>
+  </head>
+  <body>
+    {% set data = load_data(path="data/books.toml") %}
+    {% set books = data.books %}
+    <div class="hero">
+      <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+      <a href="/" style="text-decoration: none;color:black"><h1>The Dev<span>
+            Reference</span> Library</h1></a>
+      <div class="topics">
+        {% for book in books %}
+        <a class="topic"
+          href="{{ get_url(path=book.path) }}">
+          {{ book.badge_text }}
+        </a>
+        {% endfor %}
+      </div>
+      <span class="hero-desc">
+        A curated set of practical engineering references — from system
+        internals
+        and networking
+        to web frameworks and language deep-dives. Built for daily use, not
+        memorisation.
+      </span>
+      <div class="hero-meta">
+        <span>Open in any browser, no server needed</span>
+        <span>Works offline</span>
+        <span>Print-friendly</span>
+      </div>
+
+    </div>
+
     <!-- 1. Wrapped everything in a flex container for side-by-side layout -->
     <div class="layout-container">
-        
-        <!-- 2. Added the sidebar block target here -->
-        {% block sidebar %}{% endblock %}
-        
-        <!-- 3. Wrapped content inside a semantic main element -->
-        <main class="main-content">
-            {% block content %}{% endblock %}
-        </main>
+
+      <!-- 2. Added the sidebar block target here -->
+      {% block sidebar %}{% endblock %}
+
+      <!-- 3. Wrapped content inside a semantic main element -->
+      <main class="main-content">
+        {% block content %}{% endblock %}
+      </main>
 
     </div>
     {% block extra_js %}{% endblock %}
-</body>
+  </body>
 </html>

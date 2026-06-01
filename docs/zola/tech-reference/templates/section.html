@@ -2,25 +2,39 @@
 
 {% block title %}{{ section.title }} - {{ config.title }}{% endblock %}
 
+{% block sidebar %}
+<aside class="sidebar">
+
+  <div class="sidebar-label">Contents</div>
+  {% if section.toc %}
+  {% for h in section.toc %}
+  <a class="toc-link" href="#{{ h.id }}">{{ h.title }}</a>
+  {% endfor %}
+  {% else %}
+  <p style="font-size:12px; color:var(--light)">No headings found.</p>
+  {% endif %}
+</aside>
+{% endblock %}
+
 {% block content %}
-<div class="wrapper">
-    <article class="reference-section">
-        <h1>{{ section.title }}</h1>
-        {% if section.description %}
-        <p class="subtitle">{{ section.description }}</p>
-        {% endif %}
+<article class="reference-page">
+  <span> Last update : {{ section.extra.date }}</span>
+  <h1>{{ section.title }}</h1>
+  {% if section.description %}
+  <p class="subtitle">{{ section.description }}</p>
 
-        {{ section.content | safe }}
+  {% endif %}
 
-        {% if section.pages %}
-        <hr>
-        <h2>Pages in this section</h2>
-        <ul>
-            {% for page in section.pages %}
-            <li><a href="{{ page.permalink }}">{{ page.title }}</a></li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </article>
-</div>
+  {{ section.content | safe }}
+
+  {% if section.pages %}
+  <hr>
+  <h2>Pages in this section</h2>
+  <ul>
+    {% for page in section.pages %}
+    <li><a href="{{ page.permalink }}">{{ page.title }}</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</article>
 {% endblock %}

@@ -9,7 +9,7 @@ date = 2024-01-15
 
 *Queries, joins, indexes, transactions, and the things that actually matter when building on Postgres.*
 
-## Data Definition: Tables
+# Data Definition: Tables
 
 ```sql,linenos
     -- Create a table
@@ -41,7 +41,7 @@ date = 2024-01-15
     DROP TABLE IF EXISTS users CASCADE; -- CASCADE drops dependent views/FKs
 ```
 
-## Foreign Keys
+# Foreign Keys
 
 ```sql,linenos
     CREATE TABLE posts (
@@ -68,7 +68,7 @@ date = 2024-01-15
 <p><strong>Postgres does not automatically create indexes on foreign key columns.</strong> Every FK column that you JOIN or filter on needs a manual <code>CREATE INDEX</code>. Missing FK indexes cause sequential scans and are one of the most common Postgres performance mistakes.</p>
 </blockquote>
 
-## INSERT, UPDATE, DELETE
+# INSERT, UPDATE, DELETE
 
 ```sql,linenos
     -- Insert a single row
@@ -103,7 +103,7 @@ date = 2024-01-15
     DELETE FROM users WHERE deleted_at < now() - INTERVAL '30 days' RETURNING id;
 ```
 
-## SELECT Fundamentals
+# SELECT Fundamentals
 
 ```sql,linenos
     -- Basic select
@@ -134,7 +134,7 @@ date = 2024-01-15
 <p><strong>OFFSET pagination is slow on large tables.</strong> <code>OFFSET 10000 LIMIT 20</code> requires scanning 10020 rows to return 20. Use keyset (cursor) pagination instead: <code>WHERE id > :last_id ORDER BY id LIMIT 20</code>. Much faster and consistent under inserts.</p>
 </blockquote>
 
-## Aggregates and GROUP BY
+# Aggregates and GROUP BY
 
 ```sql,linenos
     -- Aggregate functions
@@ -166,7 +166,7 @@ date = 2024-01-15
     FROM users;
 ```
 
-## Subqueries and CTEs
+# Subqueries and CTEs
 
 ```sql,linenos
     -- Subquery in WHERE
@@ -208,7 +208,7 @@ date = 2024-01-15
     SELECT * FROM org_tree ORDER BY depth, name;
 ```
 
-## JOIN Types
+# JOIN Types
 
 | Join Type | Returns | When to Use |
 |-----------|---------|-------------|
@@ -254,7 +254,7 @@ date = 2024-01-15
 <p><strong>JOIN order doesn't change results, but it hints to the planner.</strong> Put the smaller/more-filtered table first for readability. Postgres's query planner will reorder joins for efficiency regardless — but explicit <code>JOIN</code> instead of comma-separated <code>FROM</code> makes intent clear and avoids accidental cartesian products.</p>
 </blockquote>
 
-## UNION, INTERSECT, EXCEPT
+# UNION, INTERSECT, EXCEPT
 
 ```sql,linenos
     -- UNION: combine results, remove duplicates
@@ -278,7 +278,7 @@ date = 2024-01-15
     SELECT email FROM unsubscribed;
 ```
 
-## Index Basics
+# Index Basics
 
 Indexes speed up reads by creating a separate data structure the planner can use instead of scanning the whole table. They cost write overhead and storage. Add them where you filter, sort, or join — not everywhere.
 
@@ -312,7 +312,7 @@ Indexes speed up reads by creating a separate data structure the planner can use
     \d users  -- psql: shows table structure and indexes
 ```
 
-## Index Types
+# Index Types
 
 | Type | Best For | Notes |
 |------|----------|-------|
@@ -333,7 +333,7 @@ Indexes speed up reads by creating a separate data structure the planner can use
     CREATE INDEX ON logs USING brin(created_at);
 ```
 
-## EXPLAIN: Reading the Query Plan
+# EXPLAIN: Reading the Query Plan
 
 ```sql,linenos
     -- Show the query plan (no execution)
@@ -363,7 +363,7 @@ Indexes speed up reads by creating a separate data structure the planner can use
 <p><strong>Use explain.dalibo.com.</strong> Paste your <code>EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)</code> output into explain.dalibo.com for a visual tree with highlighted bottlenecks. Far easier to read than raw text output for complex plans.</p>
 </blockquote>
 
-## Transactions
+# Transactions
 
 A transaction groups statements into an all-or-nothing unit. Either all statements succeed and commit, or any failure rolls everything back. Postgres transactions are fully ACID compliant.
 
@@ -391,7 +391,7 @@ A transaction groups statements into an all-or-nothing unit. Either all statemen
     COMMIT;
 ```
 
-## Isolation Levels
+# Isolation Levels
 
 Isolation levels control what concurrent transactions can see of each other's changes. Higher isolation = fewer anomalies but more contention.
 
@@ -409,7 +409,7 @@ Isolation levels control what concurrent transactions can see of each other's ch
     COMMIT;
 ```
 
-## Locking
+# Locking
 
 ```sql,linenos
     -- SELECT FOR UPDATE: lock rows for update, block other writers
@@ -441,7 +441,7 @@ Isolation levels control what concurrent transactions can see of each other's ch
 <p><strong>Deadlocks happen when two transactions each hold a lock the other needs.</strong> Postgres detects them and kills one transaction. Prevent them by always acquiring locks in the same order across transactions, and keeping transactions short.</p>
 </blockquote>
 
-## VACUUM and Autovacuum
+# VACUUM and Autovacuum
 
 ```sql,linenos
     -- Why VACUUM exists:
@@ -460,7 +460,7 @@ Isolation levels control what concurrent transactions can see of each other's ch
     ORDER BY n_dead_tup DESC;
 ```
 
-## Data Types
+# Data Types
 
 | Type | Use For | Notes |
 |------|---------|-------|
@@ -483,7 +483,7 @@ Isolation levels control what concurrent transactions can see of each other's ch
 <p><strong>Always use TIMESTAMPTZ, never TIMESTAMP.</strong> <code>TIMESTAMP</code> (without time zone) stores no timezone info. When you insert a value, Postgres strips the offset. You lose the ability to reason about time correctly across timezones. <code>TIMESTAMPTZ</code> always stores UTC and converts on display.</p>
 </blockquote>
 
-## JSONB
+# JSONB
 
 ```sql,linenos
     -- Store and query semi-structured data
@@ -518,7 +518,7 @@ Isolation levels control what concurrent transactions can see of each other's ch
     CREATE INDEX ON events USING gin(data);
 ```
 
-## ENUMs and Custom Types
+# ENUMs and Custom Types
 
 ```sql,linenos
     -- Create an ENUM type
@@ -533,7 +533,7 @@ Isolation levels control what concurrent transactions can see of each other's ch
     ALTER TYPE order_status ADD VALUE 'refunded' AFTER 'delivered';
 ```
 
-## Window Functions
+# Window Functions
 
 Window functions perform a calculation across a set of rows related to the current row — without collapsing them into a single group like `GROUP BY` would.
 
@@ -575,7 +575,7 @@ Window functions perform a calculation across a set of rows related to the curre
     WHERE rn <= 3;
 ```
 
-## Full-Text Search
+# Full-Text Search
 
 ```sql,linenos
     -- tsvector: processed text for searching
@@ -605,7 +605,7 @@ Window functions perform a calculation across a set of rows related to the curre
     WHERE search_vector @@ websearch_to_tsquery('english', '"exact phrase" -exclude')
 ```
 
-## Generated Columns and Constraints
+# Generated Columns and Constraints
 
 ```sql,linenos
     -- Generated (computed) column: value is always derived from other columns
@@ -629,7 +629,7 @@ Window functions perform a calculation across a set of rows related to the curre
         EXCLUDE USING gist (room_id WITH =, daterange(start_date, end_date) WITH &&);
 ```
 
-## psql CLI
+# psql CLI
 
 ```bash,linenos
     # Connect
@@ -662,7 +662,7 @@ Window functions perform a calculation across a set of rows related to the curre
     psql -U postgres -d mydb -f schema.sql
 ```
 
-## Users, Roles, and Permissions
+# Users, Roles, and Permissions
 
 ```sql,linenos
     -- Create a role (roles can login, groups cannot — but the distinction is just flags)
@@ -690,7 +690,7 @@ Window functions perform a calculation across a set of rows related to the curre
     REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public FROM readonly;
 ```
 
-## Backup and Restore
+# Backup and Restore
 
 ```bash,linenos
     # pg_dump: logical backup (SQL or custom format)
@@ -721,7 +721,7 @@ Window functions perform a calculation across a set of rows related to the curre
     \copy users FROM 'users.csv' CSV HEADER
 ```
 
-## Useful Diagnostic Queries
+# Useful Diagnostic Queries
 
 ```sql,linenos
     -- Show running queries

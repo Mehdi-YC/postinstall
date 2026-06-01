@@ -14,10 +14,10 @@
 
 {% block content %}
 <article class="reference-page">
-    <h1>{{ page.title }}</h1>
+    <h1>{{ title }}</h1>
     {% if page.description %}
-    <p class="subtitle">{{ page.description }}</p>
+    <p class="subtitle">{{ description }}</p>
     {% endif %}
-    {{ page.content | safe }}
+    {{ content | safe }}
 </article>
 {% endblock %}
