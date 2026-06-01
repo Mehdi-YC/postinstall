@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}Dev Library{% endblock %}</title>
+    <link rel="stylesheet" href="{{ get_url(path="css/style.css") }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- 1. Wrapped everything in a flex container for side-by-side layout -->
+    <div class="layout-container">
+        
+        <!-- 2. Added the sidebar block target here -->
+        {% block sidebar %}{% endblock %}
+        
+        <!-- 3. Wrapped content inside a semantic main element -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

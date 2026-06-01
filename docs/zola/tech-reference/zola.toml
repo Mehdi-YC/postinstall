@@ -1,0 +1,34 @@
+# The URL the site will be built for
+base_url = "https://tutos.mehdi-yc.com"
+title = "Developer Reference Library"
+description = "Rust, Python, Odoo, Django, PostgreSQL, Networking, and DevOps reference guides"
+default_language = "en"
+# Whether to automatically compile all Sass files in the sass directory
+compile_sass = false
+
+# Whether to build a search index to be used later on by a JavaScript library
+build_search_index = true
+
+
+
+# Taxonomies (tags and categories)
+taxonomies = [{ name = "tags", paginate_by = 10 }, { name = "categories" }]
+
+# Content structure
+# generate_feed = true
+# feed_filename = "atom.xml"
+
+
+[markdown]
+insert_anchor_links = "left"
+render_emoji = false
+
+[markdown.highlighting]
+enabled = true
+theme = "github-dark"
+
+
+# Extra data for templates
+[extra]
+author = "Mehdi YAHIA CHERIF"
+repo_url = "https://github.com/mehdi-yc/postinstall"

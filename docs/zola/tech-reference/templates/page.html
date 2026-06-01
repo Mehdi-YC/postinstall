@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} - {{ config.title }}{% endblock %}
+
+{% block sidebar %}
+<aside class="sidebar">
+  <div class="sidebar-label">{{ page.title }}</div>
+  {% for h in page.toc %}
+    <!-- Use Zola's native permalink filter instead of building manual hashes -->
+    <a class="toc-link" href="{{ h.permalink | safe }}">{{ h.title }}</a>
+  {% endfor %}
+</aside>
+{% endblock %}
+
+{% block content %}
+<article class="reference-page">
+    <h1>{{ page.title }}</h1>
+    {% if page.description %}
+    <p class="subtitle">{{ page.description }}</p>
+    {% endif %}
+    {{ page.content | safe }}
+</article>
+{% endblock %}

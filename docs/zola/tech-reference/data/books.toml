@@ -1,0 +1,79 @@
+[[books]]
+vol = "01"
+title = "Python — The Full Picture"
+subtitle = "From basics and OOP to async, type hints, Rust extensions, and tooling"
+path = "book/python"
+spine = "blue"
+badge = "blue"
+badge_text = "Python"
+topics = ["basics", "OOP", "comprehensions", "lambdas", "decorators", "generators", "async/await", "type hints", "dataclasses", "pandas", "numpy", "PyO3 / Rust", "uv · ruff · mypy"]
+
+[[books]]
+vol = "02"
+title = "Django Development Reference"
+subtitle = "Project structure, ORM, views, templates, forms, and dev operations"
+path = "book/django"
+spine = "green"
+badge = "green"
+badge_text = "Django"
+topics = ["models & ORM", "migrations", "views (FBV/CBV)", "URL dispatcher", "templates", "forms & ModelForms", "admin", "signals", "middleware", "static/media", "best practices"]
+
+[[books]]
+vol = "03"
+title = "Odoo 19 Development Reference"
+subtitle = "Models, views, security, OWL frontend, and deployment workflows"
+path = "book/odoo"
+spine = "purple"
+badge = "purple"
+badge_text = "Odoo"
+topics = ["module structure", "models/fields/constraints", "views (form/list/search)", "security (ACL/record rules)", "OWL components", "QWeb directives", "manifest & assets", "wizards & reports", "devops (PG/backups)"]
+
+[[books]]
+vol = "04"
+title = "Linux, Docker, Nginx & PostgreSQL"
+subtitle = "Infrastructure essentials every backend developer needs daily"
+path = "book/docker_and_tools"
+spine = "orange"
+badge = "orange"
+badge_text = "Infra"
+topics = ["linux cli", "permissions", "processes", "docker", "docker-compose", "nginx", "postgres", "git", "systemd", "cron"]
+
+[[books]]
+vol = "05"
+title = "Networking for Developers"
+subtitle = "Everything from OSI layers and TCP/IP to HTTP, DNS, TLS, and debugging"
+path = "book/network"
+spine = "teal"
+badge = "teal"
+badge_text = "Networking"
+topics = ["OSI model", "IP & subnets", "TCP / UDP", "HTTP/HTTPS", "DNS", "TLS/SSL", "curl / traceroute", "firewalls", "proxies", "load balancing"]
+
+[[books]]
+vol = "06"
+title = "PostgreSQL Reference for Developers"
+subtitle = "Queries, joins, indexes, transactions — everything a backend developer needs"
+path = "book/postgres"
+spine = "red"
+badge = "red"
+badge_text = "PostgreSQL"
+topics = ["basics & CRUD", "JOINs (inner/outer/self)", "indexes (B-tree/GIN/GiST)", "transactions & isolation", "JSONB operations", "window functions", "full‑text search", "vaccum & autovacuum", "EXPLAIN analysis"]
+
+[[books]]
+vol = "07"
+title = "Rust Language Reference"
+subtitle = "Ownership, borrowing, lifetimes, traits, enums, concurrency, and Cargo"
+path = "book/rust"
+spine = "rust"
+badge = "rust"
+badge_text = "Rust"
+topics = ["ownership & borrowing", "lifetimes", "structs & enums", "pattern matching", "traits & generics", "Option & Result", "error handling (?)", "closures & iterators", "concurrency (threads/async)", "Cargo & crates", "testing"]
+
+[[books]]
+vol = "Bonus"
+title = "All what i find interesting in a single md file"
+subtitle = "Everything from dev, to tools, to cli, to desktop to the way of thinking..."
+path = "book/everything"
+spine = "teal"
+badge = "teal"
+badge_text = "All in one"
+topics = ["Patterns", "Tools", "Cli", "prefrences", "Thinking", "Fundamentals", "And more..."]

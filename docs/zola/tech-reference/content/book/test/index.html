@@ -1,0 +1,2 @@
+{% set data = load_data(path="data/books.toml", format="toml") %}
+<pre>{{ data | json_encode(pretty=true) }}</pre>
