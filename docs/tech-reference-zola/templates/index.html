@@ -2,96 +2,103 @@
 
 {% block title %}Dev Library{% endblock %}
 
+{% block layout_class %}index-layout{% endblock %}
+
 {% block content %}
+  <div class="hero">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+    <div class="topics">
+      {% for book in books %}
+      <a class="topic" href="{{ get_url(path=book.path) }}">{{ book.badge_text }}</a>
+      {% endfor %}
+    </div>
+    <p class="hero-desc">
+      A curated set of practical engineering references — from system internals
+      and networking to web frameworks and language deep-dives. Built for daily use, not memorisation.
+    </p>
+    <div class="hero-meta">
+      <span>Open in any browser, no server needed</span>
+      <span>Works offline</span>
+      <span>Print-friendly</span>
+    </div>
+  </div>
+<div class="section-label">The Collection</div>
 
+<input type="text" id="book-filter"
+  placeholder="Filter by title, badge, or topic..."
+  autocomplete="off">
 
-
-
-<div class="wrapper">
-
-  <div class="section-label">The Collection</div>
-
-  <input
-    type="text"
-    id="book-filter"
-    placeholder="Filter by title, badge, or topic…"
-    autocomplete="off">
-
-  <div class="books">
-    {% for book in books %}
-    <a class="book-card" href="{{ get_url(path=book.path) }}">
-      <div class="book-spine spine-{{ book.spine }}"></div>
-      <div class="book-body">
-        <div class="book-left">
-          <div class="book-num">Vol. {{ book.vol }}</div>
-          <div class="book-title">{{ book.title }}</div>
-          <div class="book-subtitle">{{ book.subtitle }}</div>
-          <div class="topics">
-            {% for topic in book.topics %}
-            <span class="topic">{{ topic }}</span>
-            {% endfor %}
-          </div>
-        </div>
-        <div class="book-right">
-          <span class="book-badge badge-{{ book.badge }}">{{ book.badge_text
-            }}</span>
-          <span class="book-arrow">→</span>
+<div class="books">
+  {% for book in books %}
+  <a class="book-card" href="{{ get_url(path=book.path) }}">
+    <div class="book-spine spine-{{ book.spine }}"></div>
+    <div class="book-body">
+      <div class="book-left">
+        <div class="book-num">Vol. {{ book.vol }}</div>
+        <div class="book-title">{{ book.title }}</div>
+        <div class="book-subtitle">{{ book.subtitle }}</div>
+        <div class="topics">
+          {% for topic in book.topics %}
+          <span class="topic">{{ topic }}</span>
+          {% endfor %}
         </div>
       </div>
-    </a>
-    <br>
-    {% endfor %}
+      <div class="book-right">
+        <span class="book-badge badge-{{ book.badge }}">{{ book.badge_text }}</span>
+        <span class="book-arrow">→</span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+<div class="section-label" style="margin-top:3rem">How to Use These References</div>
+
+<div class="how-grid">
+  <div class="how-card">
+    <h4>📖 For learning</h4>
+    <p>Read top to bottom. Each reference is written to build understanding,
+      not just list syntax. Follow the examples in a real project.</p>
+  </div>
+  <div class="how-card">
+    <h4>🔍 For daily lookup</h4>
+    <p>Use the sticky navigation bar at the top of each file to jump
+      directly to the section you need — ownership, lifetimes, traits, etc.</p>
+  </div>
+  <div class="how-card">
+    <h4>🖨 For printing</h4>
+    <p>Every file has print styles built in. Open the file, hit Cmd/Ctrl+P.
+      The nav bar hides automatically and font sizes adjust.</p>
+  </div>
+  <div class="how-card">
+    <h4>💾 Fully offline</h4>
+    <p>No CDN, no internet required. Keep the entire folder on your machine,
+      USB drive, or shared on a local network.</p>
   </div>
 </div>
-    <!-- How to use -->
-     <div class="wrapper">
-      <div class="section-label">How to Use These References</div>
-     </div>
-    
-    <div class="how-grid">
-      <div class="how-card">
-        <h4>📖 For learning</h4>
-        <p>Read top to bottom. Each reference is written to build understanding,
-          not just list syntax. Follow the examples in a real project.</p>
-      </div>
-      <div class="how-card">
-        <h4>🔍 For daily lookup</h4>
-        <p>Use the sticky navigation bar at the top of each file to jump
-          directly to the section you need — ownership, lifetimes, traits,
-          etc.</p>
-      </div>
-      <div class="how-card">
-        <h4>🖨 For printing</h4>
-        <p>Every file has print styles built in. Open the file, hit Cmd/Ctrl+P.
-          The nav bar hides automatically and font sizes adjust.</p>
-      </div>
-      <div class="how-card">
-        <h4>💾 Fully offline</h4>
-        <p>No CDN, no internet required. Keep the entire folder on your machine,
-          USB drive, or shared on a local network.</p>
-      </div>
-    </div>
 
-    <div class="quote">
-      <p>"The references you reach for most are the ones you built yourself. These exist so you stop googling the same things twice."</p>
-      <cite>— Dev Library</cite>
-    </div>
+<blockquote>
+  <p>"The references you reach for most are the ones you built yourself.
+    These exist so you stop googling the same things twice."</p>
+  <cite>— Dev Library</cite>
+</blockquote>
 
-  </div>
+<footer>
+  <p>Dev Library · {{ books | length }} volumes · All files self-contained HTML</p>
+  <p>Open locally · No server required</p>
+</footer>
+{% endblock %}
 
-  <footer>
-    <p>Dev Library · {{ books | length }} volumes · All files self-contained
-      HTML</p>
-    <p>Open locally · No server required</p>
-  </footer>
-
-  <script>
-document.getElementById('book-filter').addEventListener('input', function () {
-  const q = this.value.toLowerCase();
-  document.querySelectorAll('.book-card').forEach(card => {
-    const text = card.textContent.toLowerCase();
-    card.style.display = text.includes(q) ? 'flex' : 'none';
+{% block extra_js %}
+<script>
+  document.getElementById('book-filter').addEventListener('input', function () {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.book-card').forEach(card => {
+      card.style.display = card.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+    });
   });
-});
 </script>
-  {% endblock %}
+{% endblock %}

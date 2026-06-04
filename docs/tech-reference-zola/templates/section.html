@@ -2,9 +2,13 @@
 
 {% block title %}{{ section.title }} - {{ config.title }}{% endblock %}
 
+
+{% block toc_tags %}
+
+{% endblock %}
+
 {% block sidebar %}
 <aside class="sidebar">
-
   <div class="sidebar-label">Contents</div>
   {% if section.toc %}
   {% for h in section.toc %}
@@ -17,12 +21,26 @@
 {% endblock %}
 
 {% block content %}
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+{% if section.toc %}
+<nav class="topics" style="position:sticky">
+  {% for h in section.toc %}
+  <a class="topic" href="#{{ h.id }}">{{ h.title }}</a>
+  {% endfor %}
+</nav>
+{% endif %}
+    </div>
+<br><br>
 <article class="reference-page">
-  <span> Last update : {{ section.extra.date }}</span>
+  <span>Last update: {{ section.extra.date }}</span>
   <h1>{{ section.title }}</h1>
   {% if section.description %}
   <p class="subtitle">{{ section.description }}</p>
-
   {% endif %}
 
   {{ section.content | safe }}
