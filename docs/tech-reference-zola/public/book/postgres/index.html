@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PostgreSQL Reference for Developers - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#postgresql-reference-for-developers">PostgreSQL Reference for Developers</a>
+  
+  <a class="toc-link" href="#data-definition-tables">Data Definition: Tables</a>
+  
+  <a class="toc-link" href="#foreign-keys">Foreign Keys</a>
+  
+  <a class="toc-link" href="#insert-update-delete">INSERT, UPDATE, DELETE</a>
+  
+  <a class="toc-link" href="#select-fundamentals">SELECT Fundamentals</a>
+  
+  <a class="toc-link" href="#aggregates-and-group-by">Aggregates and GROUP BY</a>
+  
+  <a class="toc-link" href="#subqueries-and-ctes">Subqueries and CTEs</a>
+  
+  <a class="toc-link" href="#join-types">JOIN Types</a>
+  
+  <a class="toc-link" href="#union-intersect-except">UNION, INTERSECT, EXCEPT</a>
+  
+  <a class="toc-link" href="#index-basics">Index Basics</a>
+  
+  <a class="toc-link" href="#index-types">Index Types</a>
+  
+  <a class="toc-link" href="#explain-reading-the-query-plan">EXPLAIN: Reading the Query Plan</a>
+  
+  <a class="toc-link" href="#transactions">Transactions</a>
+  
+  <a class="toc-link" href="#isolation-levels">Isolation Levels</a>
+  
+  <a class="toc-link" href="#locking">Locking</a>
+  
+  <a class="toc-link" href="#vacuum-and-autovacuum">VACUUM and Autovacuum</a>
+  
+  <a class="toc-link" href="#data-types">Data Types</a>
+  
+  <a class="toc-link" href="#jsonb">JSONB</a>
+  
+  <a class="toc-link" href="#enums-and-custom-types">ENUMs and Custom Types</a>
+  
+  <a class="toc-link" href="#window-functions">Window Functions</a>
+  
+  <a class="toc-link" href="#full-text-search">Full-Text Search</a>
+  
+  <a class="toc-link" href="#generated-columns-and-constraints">Generated Columns and Constraints</a>
+  
+  <a class="toc-link" href="#psql-cli">psql CLI</a>
+  
+  <a class="toc-link" href="#users-roles-and-permissions">Users, Roles, and Permissions</a>
+  
+  <a class="toc-link" href="#backup-and-restore">Backup and Restore</a>
+  
+  <a class="toc-link" href="#useful-diagnostic-queries">Useful Diagnostic Queries</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#postgresql-reference-for-developers">PostgreSQL Reference for Developers</a>
+  
+  <a class="topic" href="#data-definition-tables">Data Definition: Tables</a>
+  
+  <a class="topic" href="#foreign-keys">Foreign Keys</a>
+  
+  <a class="topic" href="#insert-update-delete">INSERT, UPDATE, DELETE</a>
+  
+  <a class="topic" href="#select-fundamentals">SELECT Fundamentals</a>
+  
+  <a class="topic" href="#aggregates-and-group-by">Aggregates and GROUP BY</a>
+  
+  <a class="topic" href="#subqueries-and-ctes">Subqueries and CTEs</a>
+  
+  <a class="topic" href="#join-types">JOIN Types</a>
+  
+  <a class="topic" href="#union-intersect-except">UNION, INTERSECT, EXCEPT</a>
+  
+  <a class="topic" href="#index-basics">Index Basics</a>
+  
+  <a class="topic" href="#index-types">Index Types</a>
+  
+  <a class="topic" href="#explain-reading-the-query-plan">EXPLAIN: Reading the Query Plan</a>
+  
+  <a class="topic" href="#transactions">Transactions</a>
+  
+  <a class="topic" href="#isolation-levels">Isolation Levels</a>
+  
+  <a class="topic" href="#locking">Locking</a>
+  
+  <a class="topic" href="#vacuum-and-autovacuum">VACUUM and Autovacuum</a>
+  
+  <a class="topic" href="#data-types">Data Types</a>
+  
+  <a class="topic" href="#jsonb">JSONB</a>
+  
+  <a class="topic" href="#enums-and-custom-types">ENUMs and Custom Types</a>
+  
+  <a class="topic" href="#window-functions">Window Functions</a>
+  
+  <a class="topic" href="#full-text-search">Full-Text Search</a>
+  
+  <a class="topic" href="#generated-columns-and-constraints">Generated Columns and Constraints</a>
+  
+  <a class="topic" href="#psql-cli">psql CLI</a>
+  
+  <a class="topic" href="#users-roles-and-permissions">Users, Roles, and Permissions</a>
+  
+  <a class="topic" href="#backup-and-restore">Backup and Restore</a>
+  
+  <a class="topic" href="#useful-diagnostic-queries">Useful Diagnostic Queries</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2024-01-15</span>
+  <h1>PostgreSQL Reference for Developers</h1>
+  
+  <p class="subtitle">Queries, joins, indexes, transactions, and the things that actually matter when building on Postgres</p>
+  
+
+  <h1 id="postgresql-reference-for-developers"><a class="zola-anchor" href="#postgresql-reference-for-developers" aria-label="Anchor link for: postgresql-reference-for-developers">🔗</a>PostgreSQL Reference for Developers</h1>
+<p><em>Queries, joins, indexes, transactions, and the things that actually matter when building on Postgres.</em></p>
+<h1 id="data-definition-tables"><a class="zola-anchor" href="#data-definition-tables" aria-label="Anchor link for: data-definition-tables">🔗</a>Data Definition: Tables</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Create a table</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    CREATE TABLE</span><span style="color: #B392F0;"> users</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>        id          </span><span style="color: #F97583;">BIGSERIAL PRIMARY KEY</span><span>,        </span><span style="color: #6A737D;">-- auto-incrementing integer PK</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        email       </span><span style="color: #F97583;">TEXT      NOT NULL UNIQUE</span><span>,     </span><span style="color: #6A737D;">-- enforced at DB level</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">        name        TEXT      NOT NULL</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>        age         </span><span style="color: #F97583;">INTEGER   CHECK</span><span> (age </span><span style="color: #F97583;">&gt;=</span><span style="color: #79B8FF;"> 0</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">        role        TEXT      NOT NULL DEFAULT</span><span style="color: #9ECBFF;"> &#39;user&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>        created_at  </span><span style="color: #F97583;">TIMESTAMPTZ NOT NULL DEFAULT now</span><span>(),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        deleted_at  </span><span style="color: #F97583;">TIMESTAMPTZ</span><span style="color: #6A737D;">                   -- NULL = not deleted (soft delete)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    );</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    -- Prefer BIGSERIAL or BIGINT GENERATED ALWAYS AS IDENTITY over SERIAL</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    id  </span><span style="color: #F97583;">BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    -- Or use UUID as primary key (requires pgcrypto or gen_random_uuid())</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    id  UUID </span><span style="color: #F97583;">PRIMARY KEY DEFAULT</span><span> gen_random_uuid()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    -- Alter an existing table</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    ALTER TABLE</span><span> users </span><span style="color: #F97583;">ADD</span><span> COLUMN bio </span><span style="color: #F97583;">TEXT</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    ALTER TABLE</span><span> users </span><span style="color: #F97583;">ALTER</span><span> COLUMN </span><span style="color: #F97583;">name SET NOT NULL</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    ALTER TABLE</span><span> users </span><span style="color: #F97583;">DROP</span><span> COLUMN bio;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">    ALTER TABLE</span><span> users RENAME COLUMN </span><span style="color: #F97583;">name TO</span><span> full_name;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    ALTER TABLE</span><span> users RENAME </span><span style="color: #F97583;">TO</span><span> accounts;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">    -- Drop</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #F97583;">    DROP TABLE</span><span> users;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #F97583;">    DROP TABLE IF EXISTS</span><span> users CASCADE; </span><span style="color: #6A737D;">-- CASCADE drops dependent views/FKs</span></span></code></pre><h1 id="foreign-keys"><a class="zola-anchor" href="#foreign-keys" aria-label="Anchor link for: foreign-keys">🔗</a>Foreign Keys</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    CREATE TABLE</span><span style="color: #B392F0;"> posts</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>        id         </span><span style="color: #F97583;">BIGSERIAL PRIMARY KEY</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>        user_id    </span><span style="color: #F97583;">BIGINT NOT NULL REFERENCES</span><span> users(id) </span><span style="color: #F97583;">ON DELETE CASCADE</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        title      </span><span style="color: #F97583;">TEXT NOT NULL</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>        body       </span><span style="color: #F97583;">TEXT</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>        published  </span><span style="color: #F97583;">BOOLEAN NOT NULL DEFAULT</span><span> false,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>        created_at </span><span style="color: #F97583;">TIMESTAMPTZ NOT NULL DEFAULT now</span><span>()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    );</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    -- ON DELETE options:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    -- CASCADE     → delete child rows when parent is deleted</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    -- SET NULL    → set FK column to NULL when parent is deleted</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    -- SET DEFAULT → set FK column to its default value</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    -- RESTRICT    → prevent parent deletion if children exist (default)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    -- NO ACTION   → like RESTRICT but deferred until end of transaction</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">    -- Always index foreign key columns (Postgres does NOT do this automatically)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> posts(user_id);</span></span></code></pre><blockquote class="warn">
+<p><strong>Postgres does not automatically create indexes on foreign key columns.</strong> Every FK column that you JOIN or filter on needs a manual <code>CREATE INDEX</code>. Missing FK indexes cause sequential scans and are one of the most common Postgres performance mistakes.</p>
+</blockquote>
+<h1 id="insert-update-delete"><a class="zola-anchor" href="#insert-update-delete" aria-label="Anchor link for: insert-update-delete">🔗</a>INSERT, UPDATE, DELETE</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Insert a single row</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    INSERT INTO</span><span> users (email, </span><span style="color: #F97583;">name</span><span>) </span><span style="color: #F97583;">VALUES</span><span> (</span><span style="color: #9ECBFF;">&#39;alice@example.com&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;Alice&#39;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    -- Insert and return the generated id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    INSERT INTO</span><span> users (email, </span><span style="color: #F97583;">name</span><span>) </span><span style="color: #F97583;">VALUES</span><span> (</span><span style="color: #9ECBFF;">&#39;bob@example.com&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;Bob&#39;</span><span>) RETURNING id;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    -- Insert multiple rows</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    INSERT INTO</span><span> users (email, </span><span style="color: #F97583;">name</span><span>) </span><span style="color: #F97583;">VALUES</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        (</span><span style="color: #9ECBFF;">&#39;carol@example.com&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;Carol&#39;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>        (</span><span style="color: #9ECBFF;">&#39;dave@example.com&#39;</span><span>,  </span><span style="color: #9ECBFF;">&#39;Dave&#39;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    -- Upsert: insert or update on conflict</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    INSERT INTO</span><span> users (email, </span><span style="color: #F97583;">name</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    VALUES</span><span> (</span><span style="color: #9ECBFF;">&#39;alice@example.com&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;Alice Updated&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    ON</span><span> CONFLICT (email)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    DO </span><span style="color: #F97583;">UPDATE SET name =</span><span style="color: #79B8FF;"> EXCLUDED</span><span>.</span><span style="color: #79B8FF;">name</span><span>, updated_at </span><span style="color: #F97583;">= now</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    -- Ignore on conflict (do nothing)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    INSERT INTO</span><span> users (email, </span><span style="color: #F97583;">name</span><span>) </span><span style="color: #F97583;">VALUES</span><span> (</span><span style="color: #9ECBFF;">&#39;alice@example.com&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;Alice&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    ON</span><span> CONFLICT DO NOTHING;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    -- Update</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    UPDATE</span><span> users </span><span style="color: #F97583;">SET name =</span><span style="color: #9ECBFF;"> &#39;Alice Smith&#39;</span><span>, </span><span style="color: #F97583;">role =</span><span style="color: #9ECBFF;"> &#39;admin&#39;</span><span style="color: #F97583;"> WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">    -- Update and return modified rows</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #F97583;">    UPDATE</span><span> users </span><span style="color: #F97583;">SET role =</span><span style="color: #9ECBFF;"> &#39;admin&#39;</span><span style="color: #F97583;"> WHERE</span><span> email </span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;"> &#39;alice@example.com&#39;</span><span> RETURNING </span><span style="color: #F97583;">*</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #6A737D;">    -- Delete</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #F97583;">    DELETE FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #F97583;">    DELETE FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> deleted_at </span><span style="color: #F97583;">&lt; now</span><span>()</span><span style="color: #F97583;"> -</span><span> INTERVAL </span><span style="color: #9ECBFF;">&#39;30 days&#39;</span><span> RETURNING id;</span></span></code></pre><h1 id="select-fundamentals"><a class="zola-anchor" href="#select-fundamentals" aria-label="Anchor link for: select-fundamentals">🔗</a>SELECT Fundamentals</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Basic select</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    SELECT</span><span> id, </span><span style="color: #F97583;">name</span><span>, email </span><span style="color: #F97583;">FROM</span><span> users;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    SELECT * FROM</span><span> users;                     </span><span style="color: #6A737D;">-- avoid * in production queries</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    -- Filter</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE role =</span><span style="color: #9ECBFF;"> &#39;admin&#39;</span><span style="color: #F97583;"> AND</span><span> age </span><span style="color: #F97583;">&gt;</span><span style="color: #79B8FF;"> 18</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> id </span><span style="color: #F97583;">IN</span><span> (</span><span style="color: #79B8FF;">1</span><span>, </span><span style="color: #79B8FF;">2</span><span>, </span><span style="color: #79B8FF;">3</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> id </span><span style="color: #F97583;">NOT IN</span><span> (</span><span style="color: #F97583;">SELECT</span><span> user_id </span><span style="color: #F97583;">FROM</span><span> banned);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> deleted_at </span><span style="color: #F97583;">IS NULL</span><span>;       </span><span style="color: #6A737D;">-- NULL check</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> deleted_at </span><span style="color: #F97583;">IS NOT NULL</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    -- LIKE and ILIKE (case-insensitive)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE name LIKE</span><span style="color: #9ECBFF;"> &#39;A%&#39;</span><span>;       </span><span style="color: #6A737D;">-- starts with A</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> email ILIKE </span><span style="color: #9ECBFF;">&#39;%@gmail.com&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #6A737D;">    -- Sort</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">ORDER BY</span><span> created_at </span><span style="color: #F97583;">DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">ORDER BY role ASC</span><span>, </span><span style="color: #F97583;">name ASC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">ORDER BY name NULLS LAST</span><span>;    </span><span style="color: #6A737D;">-- push NULLs to the end</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">    -- Limit and offset (pagination)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">    SELECT * FROM</span><span> users </span><span style="color: #F97583;">ORDER BY</span><span> id </span><span style="color: #F97583;">LIMIT</span><span style="color: #79B8FF;"> 20</span><span> OFFSET </span><span style="color: #79B8FF;">40</span><span>; </span><span style="color: #6A737D;">-- page 3 of 20</span></span></code></pre><blockquote class="warn">
+<p><strong>OFFSET pagination is slow on large tables.</strong> <code>OFFSET 10000 LIMIT 20</code> requires scanning 10020 rows to return 20. Use keyset (cursor) pagination instead: <code>WHERE id > :last_id ORDER BY id LIMIT 20</code>. Much faster and consistent under inserts.</p>
+</blockquote>
+<h1 id="aggregates-and-group-by"><a class="zola-anchor" href="#aggregates-and-group-by" aria-label="Anchor link for: aggregates-and-group-by">🔗</a>Aggregates and GROUP BY</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Aggregate functions</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">FROM</span><span> users;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">FROM</span><span> users </span><span style="color: #F97583;">WHERE role =</span><span style="color: #9ECBFF;"> &#39;admin&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> AVG</span><span>(age), </span><span style="color: #79B8FF;">MIN</span><span>(age), </span><span style="color: #79B8FF;">MAX</span><span>(age), </span><span style="color: #79B8FF;">SUM</span><span>(age) </span><span style="color: #F97583;">FROM</span><span> users;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    -- GROUP BY</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    SELECT role</span><span>, </span><span style="color: #79B8FF;">COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">AS</span><span> total</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    FROM</span><span> users</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    GROUP BY role</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    ORDER BY</span><span> total </span><span style="color: #F97583;">DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    -- HAVING: filter on aggregated values (WHERE runs before aggregation, HAVING after)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    SELECT</span><span> user_id, </span><span style="color: #79B8FF;">COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">AS</span><span> post_count</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    FROM</span><span> posts</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    GROUP BY</span><span> user_id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    HAVING</span><span style="color: #79B8FF;"> COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">&gt;</span><span style="color: #79B8FF;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">    ORDER BY</span><span> post_count </span><span style="color: #F97583;">DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    -- Count distinct values</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> COUNT</span><span>(</span><span style="color: #F97583;">DISTINCT</span><span> user_id) </span><span style="color: #F97583;">FROM</span><span> posts;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    -- Conditional aggregation</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    SELECT</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #79B8FF;">        COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">AS</span><span> total,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #79B8FF;">        COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">FILTER</span><span> (</span><span style="color: #F97583;">WHERE role =</span><span style="color: #9ECBFF;"> &#39;admin&#39;</span><span>) </span><span style="color: #F97583;">AS</span><span> admins,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #79B8FF;">        COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">FILTER</span><span> (</span><span style="color: #F97583;">WHERE</span><span> deleted_at </span><span style="color: #F97583;">IS NOT NULL</span><span>) </span><span style="color: #F97583;">AS</span><span> deleted</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #F97583;">    FROM</span><span> users;</span></span></code></pre><h1 id="subqueries-and-ctes"><a class="zola-anchor" href="#subqueries-and-ctes" aria-label="Anchor link for: subqueries-and-ctes">🔗</a>Subqueries and CTEs</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Subquery in WHERE</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    SELECT * FROM</span><span> posts</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    WHERE</span><span> user_id </span><span style="color: #F97583;">IN</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">        SELECT</span><span> id </span><span style="color: #F97583;">FROM</span><span> users </span><span style="color: #F97583;">WHERE role =</span><span style="color: #9ECBFF;"> &#39;admin&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    );</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    -- EXISTS: often faster than IN for large subqueries</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    SELECT * FROM</span><span> users u</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    WHERE EXISTS</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">        SELECT</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> FROM</span><span> posts p </span><span style="color: #F97583;">WHERE</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">user_id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    );</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    -- CTE (Common Table Expression): named subquery, run once, referenced multiple times</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    WITH</span><span> active_users </span><span style="color: #F97583;">AS</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">        SELECT</span><span> id, </span><span style="color: #F97583;">name FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> deleted_at </span><span style="color: #F97583;">IS NULL</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    ),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    prolific </span><span style="color: #F97583;">AS</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">        SELECT</span><span> user_id, </span><span style="color: #79B8FF;">COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">AS</span><span> post_count</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">        FROM</span><span> posts</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">        GROUP BY</span><span> user_id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">        HAVING</span><span style="color: #79B8FF;"> COUNT</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">&gt;</span><span style="color: #79B8FF;"> 10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">name</span><span>, </span><span style="color: #79B8FF;">p</span><span>.</span><span style="color: #79B8FF;">post_count</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    FROM</span><span> active_users u</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #F97583;">    JOIN</span><span> prolific p </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">user_id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #F97583;">    ORDER BY</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">post_count</span><span style="color: #F97583;"> DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #6A737D;">    -- Recursive CTE: for trees and hierarchies</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #F97583;">    WITH RECURSIVE</span><span> org_tree </span><span style="color: #F97583;">AS</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #F97583;">        SELECT</span><span> id, </span><span style="color: #F97583;">name</span><span>, manager_id, </span><span style="color: #79B8FF;">0</span><span style="color: #F97583;"> AS</span><span> depth</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #F97583;">        FROM</span><span> employees </span><span style="color: #F97583;">WHERE</span><span> manager_id </span><span style="color: #F97583;">IS NULL</span><span style="color: #6A737D;">     -- base case: root</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #F97583;">        UNION ALL</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #F97583;">        SELECT</span><span style="color: #79B8FF;"> e</span><span>.</span><span style="color: #79B8FF;">id</span><span>, </span><span style="color: #79B8FF;">e</span><span>.</span><span style="color: #79B8FF;">name</span><span>, </span><span style="color: #79B8FF;">e</span><span>.</span><span style="color: #79B8FF;">manager_id</span><span>, </span><span style="color: #79B8FF;">t</span><span>.</span><span style="color: #79B8FF;">depth</span><span style="color: #F97583;"> +</span><span style="color: #79B8FF;"> 1</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #F97583;">        FROM</span><span> employees e</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span style="color: #F97583;">        JOIN</span><span> org_tree t </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> e</span><span>.</span><span style="color: #79B8FF;">manager_id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> t</span><span>.</span><span style="color: #79B8FF;">id</span><span style="color: #6A737D;">          -- recursive case</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span>    )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span style="color: #F97583;">    SELECT * FROM</span><span> org_tree </span><span style="color: #F97583;">ORDER BY</span><span> depth, </span><span style="color: #F97583;">name</span><span>;</span></span></code></pre><h1 id="join-types"><a class="zola-anchor" href="#join-types" aria-label="Anchor link for: join-types">🔗</a>JOIN Types</h1>
+<table><thead><tr><th>Join Type</th><th>Returns</th><th>When to Use</th></tr></thead><tbody>
+<tr><td><code>INNER JOIN</code></td><td>Rows where the condition matches in both tables</td><td>You only want rows that have a matching partner</td></tr>
+<tr><td><code>LEFT JOIN</code></td><td>All rows from left table; NULLs where no match in right</td><td>Optional relationship — keep left rows even if no match</td></tr>
+<tr><td><code>RIGHT JOIN</code></td><td>All rows from right table; NULLs where no match in left</td><td>Rarely used; just flip the tables and use LEFT JOIN</td></tr>
+<tr><td><code>FULL OUTER JOIN</code></td><td>All rows from both tables; NULLs where no match</td><td>Find rows that exist in one table but not the other</td></tr>
+<tr><td><code>CROSS JOIN</code></td><td>Cartesian product — every combination</td><td>Generating test data; matrix comparisons</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- INNER JOIN: only posts that have a matching user</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">title</span><span>, </span><span style="color: #79B8FF;">u</span><span>.</span><span style="color: #79B8FF;">name</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    FROM</span><span> posts p</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    JOIN</span><span> users u </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">user_id</span><span>;  </span><span style="color: #6A737D;">-- JOIN = INNER JOIN</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    -- LEFT JOIN: all users, even those with no posts</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">name</span><span>, </span><span style="color: #79B8FF;">COUNT</span><span>(</span><span style="color: #79B8FF;">p</span><span>.</span><span style="color: #79B8FF;">id</span><span>) </span><span style="color: #F97583;">AS</span><span> post_count</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    FROM</span><span> users u</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    LEFT JOIN</span><span> posts p </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">user_id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    GROUP BY</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">id</span><span>, </span><span style="color: #79B8FF;">u</span><span>.</span><span style="color: #79B8FF;">name</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    ORDER BY</span><span> post_count </span><span style="color: #F97583;">DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    -- LEFT JOIN to find rows with NO match (anti-join pattern)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    SELECT</span><span> u.</span><span style="color: #F97583;">* FROM</span><span> users u</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    LEFT JOIN</span><span> posts p </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">user_id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    WHERE</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">id</span><span style="color: #F97583;"> IS NULL</span><span>;  </span><span style="color: #6A737D;">-- users who have never posted</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    -- Multiple joins</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">title</span><span>, </span><span style="color: #79B8FF;">u</span><span>.</span><span style="color: #79B8FF;">name</span><span style="color: #F97583;"> AS</span><span> author, </span><span style="color: #79B8FF;">c</span><span>.</span><span style="color: #79B8FF;">body</span><span style="color: #F97583;"> AS</span><span> comment</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    FROM</span><span> posts p</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    JOIN</span><span> users u </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> u</span><span>.</span><span style="color: #79B8FF;">id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">user_id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">    LEFT JOIN</span><span> comments c </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> c</span><span>.</span><span style="color: #79B8FF;">post_id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    WHERE</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">published</span><span style="color: #F97583;"> =</span><span> true</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    ORDER BY</span><span style="color: #79B8FF;"> p</span><span>.</span><span style="color: #79B8FF;">created_at</span><span style="color: #F97583;"> DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #6A737D;">    -- Self-join: join a table to itself (e.g., employee → manager)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> e</span><span>.</span><span style="color: #79B8FF;">name</span><span style="color: #F97583;"> AS</span><span> employee, </span><span style="color: #79B8FF;">m</span><span>.</span><span style="color: #79B8FF;">name</span><span style="color: #F97583;"> AS</span><span> manager</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #F97583;">    FROM</span><span> employees e</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #F97583;">    LEFT JOIN</span><span> employees m </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> m</span><span>.</span><span style="color: #79B8FF;">id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> e</span><span>.</span><span style="color: #79B8FF;">manager_id</span><span>;</span></span></code></pre><blockquote class="tip">
+<p><strong>JOIN order doesn't change results, but it hints to the planner.</strong> Put the smaller/more-filtered table first for readability. Postgres's query planner will reorder joins for efficiency regardless — but explicit <code>JOIN</code> instead of comma-separated <code>FROM</code> makes intent clear and avoids accidental cartesian products.</p>
+</blockquote>
+<h1 id="union-intersect-except"><a class="zola-anchor" href="#union-intersect-except" aria-label="Anchor link for: union-intersect-except">🔗</a>UNION, INTERSECT, EXCEPT</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- UNION: combine results, remove duplicates</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    SELECT</span><span> email </span><span style="color: #F97583;">FROM</span><span> users</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    UNION</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    SELECT</span><span> email </span><span style="color: #F97583;">FROM</span><span> pending_users;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    -- UNION ALL: combine results, keep duplicates (faster — no dedup step)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    SELECT</span><span> id, </span><span style="color: #F97583;">name</span><span>, </span><span style="color: #9ECBFF;">&#39;user&#39;</span><span style="color: #F97583;"> AS</span><span> source </span><span style="color: #F97583;">FROM</span><span> users</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    UNION ALL</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    SELECT</span><span> id, </span><span style="color: #F97583;">name</span><span>, </span><span style="color: #9ECBFF;">&#39;admin&#39;</span><span style="color: #F97583;"> AS</span><span> source </span><span style="color: #F97583;">FROM</span><span> admins;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    -- INTERSECT: rows in both result sets</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    SELECT</span><span> email </span><span style="color: #F97583;">FROM</span><span> newsletter_subscribers</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    INTERSECT</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    SELECT</span><span> email </span><span style="color: #F97583;">FROM</span><span> paying_customers;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #6A737D;">    -- EXCEPT: rows in first set but not second</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">    SELECT</span><span> email </span><span style="color: #F97583;">FROM</span><span> users</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    EXCEPT</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    SELECT</span><span> email </span><span style="color: #F97583;">FROM</span><span> unsubscribed;</span></span></code></pre><h1 id="index-basics"><a class="zola-anchor" href="#index-basics" aria-label="Anchor link for: index-basics">🔗</a>Index Basics</h1>
+<p>Indexes speed up reads by creating a separate data structure the planner can use instead of scanning the whole table. They cost write overhead and storage. Add them where you filter, sort, or join — not everywhere.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Basic B-tree index (default, best for equality and range queries)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> idx_users_email</span><span style="color: #F97583;"> ON</span><span> users(email);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> posts(user_id);    </span><span style="color: #6A737D;">-- auto-named</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> posts(created_at </span><span style="color: #F97583;">DESC</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    -- Unique index (enforces uniqueness, equivalent to UNIQUE constraint)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    CREATE UNIQUE INDEX</span><span style="color: #B392F0;"> ON</span><span> users(email);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    -- Composite index: column order matters</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    -- Useful when you filter on (status, created_at) together</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    -- Also usable for queries on just `status` (leftmost prefix rule)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> posts(</span><span style="color: #F97583;">status</span><span>, created_at </span><span style="color: #F97583;">DESC</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    -- Partial index: only indexes rows matching a condition</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    -- Smaller, faster for queries that always include that condition</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> users(email) </span><span style="color: #F97583;">WHERE</span><span> deleted_at </span><span style="color: #F97583;">IS NULL</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> orders(created_at) </span><span style="color: #F97583;">WHERE status =</span><span style="color: #9ECBFF;"> &#39;pending&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    -- Concurrent index creation: doesn&#39;t lock the table (use in production)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> CONCURRENTLY</span><span> idx_posts_title </span><span style="color: #F97583;">ON</span><span> posts(title);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    -- Drop</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    DROP INDEX</span><span> idx_users_email;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    DROP INDEX</span><span> CONCURRENTLY idx_posts_title; </span><span style="color: #6A737D;">-- non-blocking drop</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #6A737D;">    -- List indexes on a table</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>    \d users  </span><span style="color: #6A737D;">-- psql: shows table structure and indexes</span></span></code></pre><h1 id="index-types"><a class="zola-anchor" href="#index-types" aria-label="Anchor link for: index-types">🔗</a>Index Types</h1>
+<table><thead><tr><th>Type</th><th>Best For</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>B-tree</code></td><td>Equality, range, sorting, LIKE 'prefix%'</td><td>Default. Use for almost everything.</td></tr>
+<tr><td><code>Hash</code></td><td>Equality only (<code>=</code>)</td><td>Slightly faster than B-tree for pure equality, but B-tree is usually fine.</td></tr>
+<tr><td><code>GIN</code></td><td>Arrays, JSONB, full-text search, <code>@&gt;</code>, <code>?</code></td><td>Required for indexing JSONB keys/values and array containment.</td></tr>
+<tr><td><code>GiST</code></td><td>Geometric types, full-text, ranges</td><td>Used by PostGIS. Also for <code>tsvector</code> full-text search.</td></tr>
+<tr><td><code>BRIN</code></td><td>Very large tables with naturally ordered data (time-series, logs)</td><td>Tiny. Fast to build. Poor selectivity. Good for append-only partitioned tables.</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- GIN index for JSONB (required for @&gt;, ?, ?|, ?&amp; operators)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> events </span><span style="color: #F97583;">USING</span><span> gin(</span><span style="color: #F97583;">data</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    -- GIN index for full-text search</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> articles </span><span style="color: #F97583;">USING</span><span> gin(to_tsvector(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, title </span><span style="color: #F97583;">||</span><span style="color: #9ECBFF;"> &#39; &#39;</span><span style="color: #F97583;"> ||</span><span> body));</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    -- BRIN index for a large log table (created_at is always increasing)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> logs </span><span style="color: #F97583;">USING</span><span> brin(created_at);</span></span></code></pre><h1 id="explain-reading-the-query-plan"><a class="zola-anchor" href="#explain-reading-the-query-plan" aria-label="Anchor link for: explain-reading-the-query-plan">🔗</a>EXPLAIN: Reading the Query Plan</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Show the query plan (no execution)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    EXPLAIN </span><span style="color: #F97583;">SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> email </span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;"> &#39;alice@example.com&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    -- Show plan WITH actual execution stats (run the query)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    EXPLAIN (ANALYZE, BUFFERS) </span><span style="color: #F97583;">SELECT * FROM</span><span> users </span><span style="color: #F97583;">WHERE</span><span> email </span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;"> &#39;alice@example.com&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    -- Key things to look for in EXPLAIN output:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    -- Seq Scan     → full table scan. BAD on large tables. Missing index?</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    -- Index Scan   → uses index to find rows, fetches from heap. GOOD.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    -- Index Only Scan → all data in index, no heap access. BEST.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    -- Bitmap Scan  → index scan for many rows, batch heap access. OK.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    -- Nested Loop  → for each row in outer, scan inner. Fast if inner is small.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    -- Hash Join    → build hash table from smaller side. Fast for large joins.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    -- Merge Join   → merge two sorted inputs. Fast when both sides are sorted.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    -- cost=X..Y    → estimated startup cost .. total cost (arbitrary planner units)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #6A737D;">    -- rows=N       → estimated row count (inaccurate = stale statistics → ANALYZE)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">    -- actual time=X..Y rows=N loops=N → real execution data (with ANALYZE)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    -- Update statistics if estimates are way off</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    ANALYZE users;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>    ANALYZE;  </span><span style="color: #6A737D;">-- analyze all tables</span></span></code></pre><blockquote class="tip">
+<p><strong>Use explain.dalibo.com.</strong> Paste your <code>EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)</code> output into explain.dalibo.com for a visual tree with highlighted bottlenecks. Far easier to read than raw text output for complex plans.</p>
+</blockquote>
+<h1 id="transactions"><a class="zola-anchor" href="#transactions" aria-label="Anchor link for: transactions">🔗</a>Transactions</h1>
+<p>A transaction groups statements into an all-or-nothing unit. Either all statements succeed and commit, or any failure rolls everything back. Postgres transactions are fully ACID compliant.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Basic transaction</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    BEGIN</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">        UPDATE</span><span> accounts </span><span style="color: #F97583;">SET</span><span> balance </span><span style="color: #F97583;">=</span><span> balance </span><span style="color: #F97583;">-</span><span style="color: #79B8FF;"> 100</span><span style="color: #F97583;"> WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">        UPDATE</span><span> accounts </span><span style="color: #F97583;">SET</span><span> balance </span><span style="color: #F97583;">=</span><span> balance </span><span style="color: #F97583;">+</span><span style="color: #79B8FF;"> 100</span><span style="color: #F97583;"> WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 2</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    COMMIT</span><span>;  </span><span style="color: #6A737D;">-- both updates committed atomically</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    -- Rollback on error</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    BEGIN</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">        UPDATE</span><span> accounts </span><span style="color: #F97583;">SET</span><span> balance </span><span style="color: #F97583;">=</span><span> balance </span><span style="color: #F97583;">-</span><span style="color: #79B8FF;"> 1000</span><span style="color: #F97583;"> WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">        -- something goes wrong in application code...</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    ROLLBACK</span><span>;  </span><span style="color: #6A737D;">-- undoes the UPDATE, balance unchanged</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    -- Savepoints: partial rollback within a transaction</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    BEGIN</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">        INSERT INTO</span><span> orders (...) </span><span style="color: #F97583;">VALUES</span><span> (...);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>        SAVEPOINT after_order;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">        INSERT INTO</span><span> order_items (...) </span><span style="color: #F97583;">VALUES</span><span> (...);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">        -- if items insert fails:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">        ROLLBACK TO</span><span> SAVEPOINT after_order;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">        -- order still exists, items rolled back</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    COMMIT</span><span>;</span></span></code></pre><h1 id="isolation-levels"><a class="zola-anchor" href="#isolation-levels" aria-label="Anchor link for: isolation-levels">🔗</a>Isolation Levels</h1>
+<p>Isolation levels control what concurrent transactions can see of each other's changes. Higher isolation = fewer anomalies but more contention.</p>
+<table><thead><tr><th>Level</th><th>Dirty Read</th><th>Non-repeatable Read</th><th>Phantom Read</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>READ COMMITTED</code></td><td>No</td><td>Yes</td><td>Yes</td><td>Default. Fine for most apps.</td></tr>
+<tr><td><code>REPEATABLE READ</code></td><td>No</td><td>No</td><td>No*</td><td>Reports, consistent snapshots.</td></tr>
+<tr><td><code>SERIALIZABLE</code></td><td>No</td><td>No</td><td>No</td><td>Financial ops, strict correctness.</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">1</span><span style="color: #6A737D;">    -- Set isolation level for a transaction</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">2</span><span style="color: #F97583;">    BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">3</span><span style="color: #F97583;">        SELECT</span><span style="color: #79B8FF;"> SUM</span><span>(balance) </span><span style="color: #F97583;">FROM</span><span> accounts;  </span><span style="color: #6A737D;">-- consistent snapshot for this tx</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">4</span><span style="color: #6A737D;">        -- other transactions can commit changes, but we don&#39;t see them</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">5</span><span style="color: #F97583;">    COMMIT</span><span>;</span></span></code></pre><h1 id="locking"><a class="zola-anchor" href="#locking" aria-label="Anchor link for: locking">🔗</a>Locking</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- SELECT FOR UPDATE: lock rows for update, block other writers</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    -- Use when you read a row and intend to update it (prevents lost updates)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    BEGIN</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    SELECT</span><span> balance </span><span style="color: #F97583;">FROM</span><span> accounts </span><span style="color: #F97583;">WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> FOR UPDATE</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    -- now we own a lock: other transactions block on this row</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    UPDATE</span><span> accounts </span><span style="color: #F97583;">SET</span><span> balance </span><span style="color: #F97583;">=</span><span> balance </span><span style="color: #F97583;">-</span><span style="color: #79B8FF;"> 50</span><span style="color: #F97583;"> WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    COMMIT</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    -- SELECT FOR UPDATE SKIP LOCKED: skip rows locked by others</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    -- Pattern: job queue — workers grab available jobs without blocking each other</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    BEGIN</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    SELECT * FROM</span><span> jobs</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    WHERE status =</span><span style="color: #9ECBFF;"> &#39;pending&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    ORDER BY</span><span> created_at</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    LIMIT</span><span style="color: #79B8FF;"> 1</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    FOR UPDATE SKIP</span><span> LOCKED;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">    -- process the job...</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    UPDATE</span><span> jobs </span><span style="color: #F97583;">SET status =</span><span style="color: #9ECBFF;"> &#39;done&#39;</span><span style="color: #F97583;"> WHERE</span><span> id </span><span style="color: #F97583;">=</span><span> :job_id;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    COMMIT</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">    -- Advisory locks: application-level locks (no table/row needed)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">    SELECT</span><span> pg_try_advisory_lock(</span><span style="color: #79B8FF;">12345</span><span>);  </span><span style="color: #6A737D;">-- returns true if acquired, false if not</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    SELECT</span><span> pg_advisory_unlock(</span><span style="color: #79B8FF;">12345</span><span>);</span></span></code></pre><blockquote class="warn">
+<p><strong>Deadlocks happen when two transactions each hold a lock the other needs.</strong> Postgres detects them and kills one transaction. Prevent them by always acquiring locks in the same order across transactions, and keeping transactions short.</p>
+</blockquote>
+<h1 id="vacuum-and-autovacuum"><a class="zola-anchor" href="#vacuum-and-autovacuum" aria-label="Anchor link for: vacuum-and-autovacuum">🔗</a>VACUUM and Autovacuum</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Why VACUUM exists:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    -- Postgres uses MVCC: UPDATE and DELETE don&#39;t remove old row versions.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    -- They mark them dead. Dead rows pile up (&quot;table bloat&quot;).</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    -- VACUUM reclaims dead row space and updates the visibility map.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    -- Manual vacuum (autovacuum usually handles this)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    VACUUM users;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    VACUUM ANALYZE users;   </span><span style="color: #6A737D;">-- vacuum + update statistics</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    VACUUM FULL users;       </span><span style="color: #6A737D;">-- rewrite table, reclaim OS space — locks table, use sparingly</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    -- Check autovacuum health</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    SELECT</span><span> relname, n_dead_tup, n_live_tup, last_autovacuum, last_autoanalyze</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    FROM</span><span> pg_stat_user_tables</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    ORDER BY</span><span> n_dead_tup </span><span style="color: #F97583;">DESC</span><span>;</span></span></code></pre><h1 id="data-types"><a class="zola-anchor" href="#data-types" aria-label="Anchor link for: data-types">🔗</a>Data Types</h1>
+<table><thead><tr><th>Type</th><th>Use For</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>TEXT</code></td><td>Variable-length strings</td><td>Preferred over VARCHAR(n) — no performance difference, less hassle.</td></tr>
+<tr><td><code>VARCHAR(n)</code></td><td>Strings with length limit</td><td>Only use if you need DB-level length enforcement.</td></tr>
+<tr><td><code>INTEGER / INT</code></td><td>32-bit integer</td><td>Max ~2.1 billion. Use BIGINT if IDs may exceed that.</td></tr>
+<tr><td><code>BIGINT</code></td><td>64-bit integer</td><td>Preferred for IDs on tables that will grow.</td></tr>
+<tr><td><code>NUMERIC(p,s)</code></td><td>Exact decimals (money)</td><td>No floating-point errors. Use for currency. Slower than float.</td></tr>
+<tr><td><code>FLOAT8 / DOUBLE PRECISION</code></td><td>Approximate decimals</td><td>Fast. Imprecise. Not for money.</td></tr>
+<tr><td><code>BOOLEAN</code></td><td>true/false</td><td>Accepts true/false, 't'/'f', 'yes'/'no', 1/0.</td></tr>
+<tr><td><code>TIMESTAMPTZ</code></td><td>Timestamps</td><td>Always use TIMESTAMPTZ (with time zone) — stores UTC internally.</td></tr>
+<tr><td><code>DATE</code></td><td>Calendar date only</td><td>No time component.</td></tr>
+<tr><td><code>INTERVAL</code></td><td>Duration</td><td><code>INTERVAL '3 days'</code>, <code>INTERVAL '1 hour 30 minutes'</code>.</td></tr>
+<tr><td><code>UUID</code></td><td>Universally unique IDs</td><td>Use <code>gen_random_uuid()</code> (built-in since Pg 13).</td></tr>
+<tr><td><code>JSONB</code></td><td>JSON data</td><td>Binary JSON — indexable, queryable. Prefer over <code>JSON</code>.</td></tr>
+<tr><td><code>ARRAY</code></td><td>Arrays of any type</td><td><code>TEXT[]</code>, <code>INTEGER[]</code>. Indexable with GIN.</td></tr>
+<tr><td><code>ENUM</code></td><td>Fixed set of string values</td><td>Enforced at DB level. Adding values requires ALTER TYPE.</td></tr>
+</tbody></table>
+<blockquote class="warn">
+<p><strong>Always use TIMESTAMPTZ, never TIMESTAMP.</strong> <code>TIMESTAMP</code> (without time zone) stores no timezone info. When you insert a value, Postgres strips the offset. You lose the ability to reason about time correctly across timezones. <code>TIMESTAMPTZ</code> always stores UTC and converts on display.</p>
+</blockquote>
+<h1 id="jsonb"><a class="zola-anchor" href="#jsonb" aria-label="Anchor link for: jsonb">🔗</a>JSONB</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Store and query semi-structured data</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    CREATE TABLE</span><span style="color: #B392F0;"> events</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>        id    </span><span style="color: #F97583;">BIGSERIAL PRIMARY KEY</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">        data</span><span>  JSONB </span><span style="color: #F97583;">NOT NULL</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    );</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    -- Insert JSON</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    INSERT INTO</span><span> events (</span><span style="color: #F97583;">data</span><span>) </span><span style="color: #F97583;">VALUES</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        (</span><span style="color: #9ECBFF;">&#39;{&quot;type&quot;: &quot;click&quot;, &quot;user_id&quot;: 42, &quot;tags&quot;: [&quot;mobile&quot;, &quot;nav&quot;]}&#39;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    -- Access operators</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    data-&gt;</span><span style="color: #9ECBFF;">&#39;user_id&#39;</span><span style="color: #6A737D;">           -- returns JSON value: 42</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    data-&gt;&gt;</span><span style="color: #9ECBFF;">&#39;user_id&#39;</span><span style="color: #6A737D;">          -- returns TEXT value: &#39;42&#39;  (use for WHERE comparisons)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    data-&gt;</span><span style="color: #9ECBFF;">&#39;address&#39;</span><span style="color: #F97583;">-&gt;</span><span style="color: #9ECBFF;">&#39;city&#39;</span><span style="color: #6A737D;">  -- nested access</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    data</span><span>#</span><span style="color: #F97583;">&gt;</span><span style="color: #9ECBFF;">&#39;{address,city}&#39;</span><span style="color: #6A737D;">     -- path access (array of keys)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    data</span><span>#</span><span style="color: #F97583;">&gt;&gt;</span><span style="color: #9ECBFF;">&#39;{address,city}&#39;</span><span style="color: #6A737D;">  -- path access returning TEXT</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    -- Query</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    SELECT * FROM</span><span> events </span><span style="color: #F97583;">WHERE data-&gt;&gt;</span><span style="color: #9ECBFF;">&#39;type&#39;</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;click&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    SELECT * FROM</span><span> events </span><span style="color: #F97583;">WHERE</span><span> (</span><span style="color: #F97583;">data-&gt;&gt;</span><span style="color: #9ECBFF;">&#39;user_id&#39;</span><span>)::</span><span style="color: #F97583;">INT =</span><span style="color: #79B8FF;"> 42</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    SELECT * FROM</span><span> events </span><span style="color: #F97583;">WHERE data</span><span> @</span><span style="color: #F97583;">&gt;</span><span style="color: #9ECBFF;"> &#39;{&quot;type&quot;: &quot;click&quot;}&#39;</span><span>;  </span><span style="color: #6A737D;">-- containment (use GIN index)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">    SELECT * FROM</span><span> events </span><span style="color: #F97583;">WHERE data</span><span> ? </span><span style="color: #9ECBFF;">&#39;user_id&#39;</span><span>;             </span><span style="color: #6A737D;">-- key exists</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    SELECT * FROM</span><span> events </span><span style="color: #F97583;">WHERE data-&gt;</span><span style="color: #9ECBFF;">&#39;tags&#39;</span><span> @</span><span style="color: #F97583;">&gt;</span><span style="color: #9ECBFF;"> &#39;[&quot;mobile&quot;]&#39;</span><span>; </span><span style="color: #6A737D;">-- array contains value</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">    -- Update a key in JSONB</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #F97583;">    UPDATE</span><span> events </span><span style="color: #F97583;">SET data = data ||</span><span style="color: #9ECBFF;"> &#39;{&quot;processed&quot;: true}&#39;</span><span style="color: #F97583;"> WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #F97583;">    UPDATE</span><span> events </span><span style="color: #F97583;">SET data =</span><span> jsonb_set(</span><span style="color: #F97583;">data</span><span>, </span><span style="color: #9ECBFF;">&#39;{user_id}&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;99&#39;</span><span>) </span><span style="color: #F97583;">WHERE</span><span> id </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #6A737D;">    -- Index for fast JSONB queries</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> events </span><span style="color: #F97583;">USING</span><span> gin(</span><span style="color: #F97583;">data</span><span>);</span></span></code></pre><h1 id="enums-and-custom-types"><a class="zola-anchor" href="#enums-and-custom-types" aria-label="Anchor link for: enums-and-custom-types">🔗</a>ENUMs and Custom Types</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Create an ENUM type</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    CREATE TYPE</span><span style="color: #B392F0;"> order_status</span><span style="color: #F97583;"> AS</span><span> ENUM (</span><span style="color: #9ECBFF;">&#39;pending&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;processing&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;shipped&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;delivered&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;cancelled&#39;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    CREATE TABLE</span><span style="color: #B392F0;"> orders</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>        id     </span><span style="color: #F97583;">BIGSERIAL PRIMARY KEY</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">        status</span><span> order_status </span><span style="color: #F97583;">NOT NULL DEFAULT</span><span style="color: #9ECBFF;"> &#39;pending&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    );</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    -- Add a value to an existing ENUM (can only add, not remove)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    ALTER TYPE</span><span> order_status </span><span style="color: #F97583;">ADD VALUE</span><span style="color: #9ECBFF;"> &#39;refunded&#39;</span><span style="color: #F97583;"> AFTER</span><span style="color: #9ECBFF;"> &#39;delivered&#39;</span><span>;</span></span></code></pre><h1 id="window-functions"><a class="zola-anchor" href="#window-functions" aria-label="Anchor link for: window-functions">🔗</a>Window Functions</h1>
+<p>Window functions perform a calculation across a set of rows related to the current row — without collapsing them into a single group like <code>GROUP BY</code> would.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- ROW_NUMBER: rank each row within a partition</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    SELECT</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">        name</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        department,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>        salary,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #79B8FF;">        ROW_NUMBER</span><span>() </span><span style="color: #F97583;">OVER</span><span> (</span><span style="color: #F97583;">PARTITION BY</span><span> department </span><span style="color: #F97583;">ORDER BY</span><span> salary </span><span style="color: #F97583;">DESC</span><span>) </span><span style="color: #F97583;">AS</span><span> rank</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    FROM</span><span> employees;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    -- RANK and DENSE_RANK: same as ROW_NUMBER but ties get same rank</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    -- RANK skips numbers after a tie (1,1,3), DENSE_RANK doesn&#39;t (1,1,2)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #79B8FF;">    RANK</span><span>() </span><span style="color: #F97583;">OVER</span><span> (</span><span style="color: #F97583;">ORDER BY</span><span> score </span><span style="color: #F97583;">DESC</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #79B8FF;">    DENSE_RANK</span><span>() </span><span style="color: #F97583;">OVER</span><span> (</span><span style="color: #F97583;">ORDER BY</span><span> score </span><span style="color: #F97583;">DESC</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    -- LAG / LEAD: access previous / next row&#39;s value</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    SELECT</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">        date</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>        revenue,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #79B8FF;">        LAG</span><span>(revenue) </span><span style="color: #F97583;">OVER</span><span> (</span><span style="color: #F97583;">ORDER BY date</span><span>) </span><span style="color: #F97583;">AS</span><span> prev_revenue,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>        revenue </span><span style="color: #F97583;">-</span><span style="color: #79B8FF;"> LAG</span><span>(revenue) </span><span style="color: #F97583;">OVER</span><span> (</span><span style="color: #F97583;">ORDER BY date</span><span>) </span><span style="color: #F97583;">AS</span><span> change</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    FROM</span><span> daily_revenue;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    -- Running total with SUM OVER</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    SELECT</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">        date</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span>        amount,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #79B8FF;">        SUM</span><span>(amount) </span><span style="color: #F97583;">OVER</span><span> (</span><span style="color: #F97583;">ORDER BY date</span><span>) </span><span style="color: #F97583;">AS</span><span> running_total</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #F97583;">    FROM</span><span> transactions;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #6A737D;">    -- Top N per group (e.g., top 3 posts per user)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #F97583;">    SELECT * FROM</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #F97583;">        SELECT *</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #79B8FF;">            ROW_NUMBER</span><span>() </span><span style="color: #F97583;">OVER</span><span> (</span><span style="color: #F97583;">PARTITION BY</span><span> user_id </span><span style="color: #F97583;">ORDER BY</span><span> created_at </span><span style="color: #F97583;">DESC</span><span>) </span><span style="color: #F97583;">AS</span><span> rn</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #F97583;">        FROM</span><span> posts</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span>    ) sub</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span style="color: #F97583;">    WHERE</span><span> rn </span><span style="color: #F97583;">&lt;=</span><span style="color: #79B8FF;"> 3</span><span>;</span></span></code></pre><h1 id="full-text-search"><a class="zola-anchor" href="#full-text-search" aria-label="Anchor link for: full-text-search">🔗</a>Full-Text Search</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- tsvector: processed text for searching</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    -- tsquery: a search query</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    -- Basic full-text search</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    SELECT</span><span> title </span><span style="color: #F97583;">FROM</span><span> articles</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    WHERE</span><span> to_tsvector(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, title </span><span style="color: #F97583;">||</span><span style="color: #9ECBFF;"> &#39; &#39;</span><span style="color: #F97583;"> ||</span><span> body) @@ to_tsquery(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;postgres &amp; index&#39;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    -- Ranking results by relevance</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    SELECT</span><span> title,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>        ts_rank(to_tsvector(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, body), to_tsquery(</span><span style="color: #9ECBFF;">&#39;postgres&#39;</span><span>)) </span><span style="color: #F97583;">AS</span><span> rank</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    FROM</span><span> articles</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    WHERE</span><span> to_tsvector(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, body) @@ to_tsquery(</span><span style="color: #9ECBFF;">&#39;postgres&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    ORDER BY</span><span> rank </span><span style="color: #F97583;">DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    -- Store tsvector in a column for performance (update with trigger or generated column)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    ALTER TABLE</span><span> articles </span><span style="color: #F97583;">ADD</span><span> COLUMN search_vector TSVECTOR</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">        GENERATED ALWAYS AS</span><span> (to_tsvector(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, </span><span style="color: #79B8FF;">coalesce</span><span>(title, </span><span style="color: #9ECBFF;">&#39;&#39;</span><span>) </span><span style="color: #F97583;">||</span><span style="color: #9ECBFF;"> &#39; &#39;</span><span style="color: #F97583;"> ||</span><span style="color: #79B8FF;"> coalesce</span><span>(body, </span><span style="color: #9ECBFF;">&#39;&#39;</span><span>))) STORED;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    CREATE INDEX</span><span style="color: #B392F0;"> ON</span><span> articles </span><span style="color: #F97583;">USING</span><span> gin(search_vector);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">    -- plainto_tsquery: user input (no operators, just words)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">    WHERE</span><span> search_vector @@ plainto_tsquery(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, user_input)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #6A737D;">    -- websearch_to_tsquery: supports &quot;phrases&quot;, -exclusions (Pg 11+)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #F97583;">    WHERE</span><span> search_vector @@ websearch_to_tsquery(</span><span style="color: #9ECBFF;">&#39;english&#39;</span><span>, </span><span style="color: #9ECBFF;">&#39;&quot;exact phrase&quot; -exclude&#39;</span><span>)</span></span></code></pre><h1 id="generated-columns-and-constraints"><a class="zola-anchor" href="#generated-columns-and-constraints" aria-label="Anchor link for: generated-columns-and-constraints">🔗</a>Generated Columns and Constraints</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Generated (computed) column: value is always derived from other columns</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    ALTER TABLE</span><span> products</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">        ADD</span><span> COLUMN price_with_tax </span><span style="color: #F97583;">NUMERIC</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">        GENERATED ALWAYS AS</span><span> (price </span><span style="color: #F97583;">*</span><span style="color: #79B8FF;"> 1</span><span>.</span><span style="color: #79B8FF;">20</span><span>) STORED;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    -- Table-level constraints</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    CREATE TABLE</span><span style="color: #B392F0;"> bookings</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>        id         </span><span style="color: #F97583;">BIGSERIAL PRIMARY KEY</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">        start_date DATE NOT NULL</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>        end_date   </span><span style="color: #F97583;">DATE NOT NULL</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">        CONSTRAINT</span><span> valid_dates </span><span style="color: #F97583;">CHECK</span><span> (end_date </span><span style="color: #F97583;">&gt; start_date</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">        CONSTRAINT</span><span> unique_booking </span><span style="color: #F97583;">UNIQUE</span><span> (user_id, </span><span style="color: #F97583;">start_date</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    );</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    -- Exclusion constraint: no overlapping date ranges (requires btree_gist extension)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    CREATE</span><span> EXTENSION </span><span style="color: #F97583;">IF NOT EXISTS</span><span> btree_gist;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">    ALTER TABLE</span><span> bookings</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">        ADD CONSTRAINT</span><span> no_overlap</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>        EXCLUDE </span><span style="color: #F97583;">USING</span><span> gist (room_id </span><span style="color: #F97583;">WITH =</span><span>, daterange(</span><span style="color: #F97583;">start_date</span><span>, end_date) </span><span style="color: #F97583;">WITH</span><span> &amp;&amp;);</span></span></code></pre><h1 id="psql-cli"><a class="zola-anchor" href="#psql-cli" aria-label="Anchor link for: psql-cli">🔗</a>psql CLI</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Connect</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> username</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> dbname</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> username</span><span style="color: #79B8FF;"> -h</span><span style="color: #9ECBFF;"> hostname</span><span style="color: #79B8FF;"> -p 5432 -d</span><span style="color: #9ECBFF;"> dbname</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #B392F0;">    psql</span><span style="color: #9ECBFF;"> &quot;postgresql://user:password@host:5432/dbname&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    # Meta-commands (no semicolon needed)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">    \l</span><span style="color: #79B8FF;">          --</span><span style="color: #9ECBFF;"> list databases</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #B392F0;">    \c</span><span style="color: #9ECBFF;"> dbname</span><span style="color: #79B8FF;">   --</span><span style="color: #9ECBFF;"> connect to database</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #B392F0;">    \dt</span><span style="color: #79B8FF;">         --</span><span style="color: #9ECBFF;"> list tables in current schema</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">    \dt</span><span style="color: #79B8FF;"> *</span><span style="color: #9ECBFF;">.</span><span style="color: #79B8FF;">*     --</span><span style="color: #9ECBFF;"> list tables in all schemas</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #B392F0;">    \d</span><span style="color: #9ECBFF;"> tablename</span><span style="color: #79B8FF;"> --</span><span style="color: #9ECBFF;"> describe table</span><span> (columns,</span><span style="color: #9ECBFF;"> indexes, constraints</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #B392F0;">    \di</span><span style="color: #79B8FF;">         --</span><span style="color: #9ECBFF;"> list indexes</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">    \df</span><span style="color: #79B8FF;">         --</span><span style="color: #9ECBFF;"> list functions</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #B392F0;">    \dv</span><span style="color: #79B8FF;">         --</span><span style="color: #9ECBFF;"> list views</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #B392F0;">    \dn</span><span style="color: #79B8FF;">         --</span><span style="color: #9ECBFF;"> list schemas</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">    \du</span><span style="color: #79B8FF;">         --</span><span style="color: #9ECBFF;"> list users/roles</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #B392F0;">    \timing</span><span style="color: #79B8FF;">     --</span><span style="color: #9ECBFF;"> toggle query timing</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #B392F0;">    \x</span><span style="color: #79B8FF;">          --</span><span style="color: #9ECBFF;"> toggle expanded output</span><span> (useful</span><span style="color: #9ECBFF;"> for wide tables</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #B392F0;">    \e</span><span style="color: #79B8FF;">          --</span><span style="color: #9ECBFF;"> open query in</span><span> $EDITOR</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #B392F0;">    \i</span><span style="color: #9ECBFF;"> file.sql</span><span style="color: #79B8FF;"> --</span><span style="color: #9ECBFF;"> run SQL file</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">    \copy</span><span style="color: #79B8FF;">       --</span><span style="color: #9ECBFF;"> client-side COPY</span><span> (works</span><span style="color: #9ECBFF;"> over remote connections</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #B392F0;">    \q</span><span style="color: #79B8FF;">          --</span><span style="color: #9ECBFF;"> quit</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #6A737D;">    # Run a query from the shell</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -c</span><span style="color: #9ECBFF;"> &quot;SELECT COUNT(*) FROM users;&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #6A737D;">    # Run a SQL file</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> schema.sql</span></span></code></pre><h1 id="users-roles-and-permissions"><a class="zola-anchor" href="#users-roles-and-permissions" aria-label="Anchor link for: users-roles-and-permissions">🔗</a>Users, Roles, and Permissions</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Create a role (roles can login, groups cannot — but the distinction is just flags)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    CREATE ROLE</span><span> app_user </span><span style="color: #F97583;">LOGIN PASSWORD</span><span style="color: #9ECBFF;"> &#39;securepassword&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    CREATE ROLE readonly</span><span> NOLOGIN;  </span><span style="color: #6A737D;">-- group role</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    -- Grant connect and usage</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    GRANT CONNECT ON DATABASE</span><span> mydb </span><span style="color: #F97583;">TO</span><span> app_user;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    GRANT</span><span> USAGE </span><span style="color: #F97583;">ON SCHEMA</span><span> public </span><span style="color: #F97583;">TO</span><span> app_user;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    -- Grant table permissions</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    GRANT SELECT</span><span>, </span><span style="color: #F97583;">INSERT</span><span>, </span><span style="color: #F97583;">UPDATE</span><span>, </span><span style="color: #F97583;">DELETE ON</span><span> ALL TABLES </span><span style="color: #F97583;">IN SCHEMA</span><span> public </span><span style="color: #F97583;">TO</span><span> app_user;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    GRANT</span><span> USAGE, </span><span style="color: #F97583;">SELECT ON</span><span> ALL SEQUENCES </span><span style="color: #F97583;">IN SCHEMA</span><span> public </span><span style="color: #F97583;">TO</span><span> app_user;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    -- Grant on future tables automatically</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    ALTER DEFAULT</span><span> PRIVILEGES </span><span style="color: #F97583;">IN SCHEMA</span><span> public</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">        GRANT SELECT</span><span>, </span><span style="color: #F97583;">INSERT</span><span>, </span><span style="color: #F97583;">UPDATE</span><span>, </span><span style="color: #F97583;">DELETE ON</span><span> TABLES </span><span style="color: #F97583;">TO</span><span> app_user;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">    -- Read-only role pattern</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    GRANT</span><span> USAGE </span><span style="color: #F97583;">ON SCHEMA</span><span> public </span><span style="color: #F97583;">TO readonly</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    GRANT SELECT ON</span><span> ALL TABLES </span><span style="color: #F97583;">IN SCHEMA</span><span> public </span><span style="color: #F97583;">TO readonly</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    GRANT readonly TO</span><span> reporting_user;  </span><span style="color: #6A737D;">-- assign group role to a user</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    -- Revoke</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    REVOKE INSERT</span><span>, </span><span style="color: #F97583;">UPDATE</span><span>, </span><span style="color: #F97583;">DELETE ON</span><span> ALL TABLES </span><span style="color: #F97583;">IN SCHEMA</span><span> public </span><span style="color: #F97583;">FROM readonly</span><span>;</span></span></code></pre><h1 id="backup-and-restore"><a class="zola-anchor" href="#backup-and-restore" aria-label="Anchor link for: backup-and-restore">🔗</a>Backup and Restore</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # pg_dump: logical backup (SQL or custom format)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres mydb</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> mydb.sql</span><span style="color: #6A737D;">                         # plain SQL</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -Fc</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> mydb.dump</span><span style="color: #6A737D;">                   # custom format (preferred)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -Fc -t</span><span style="color: #9ECBFF;"> users mydb</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> users.dump</span><span style="color: #6A737D;">         # single table</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -Fc --schema-only</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> schema.dump</span><span style="color: #6A737D;">   # schema only</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -Fc --data-only</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> data.dump</span><span style="color: #6A737D;">       # data only</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    # Restore custom format</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #B392F0;">    pg_restore</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb mydb.dump</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">    pg_restore</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> --clean</span><span style="color: #9ECBFF;"> mydb.dump</span><span style="color: #6A737D;">           # drop objects first</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #B392F0;">    pg_restore</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -j 4</span><span style="color: #9ECBFF;"> mydb.dump</span><span style="color: #6A737D;">              # parallel restore (4 workers)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    # Restore plain SQL</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #F97583;"> &lt;</span><span style="color: #9ECBFF;"> mydb.sql</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #6A737D;">    # pg_dumpall: dump all databases + roles + tablespaces</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #B392F0;">    pg_dumpall</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> postgres</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> all.sql</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    # COPY: fast bulk import/export</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">    # Server-side (must be superuser, reads/writes server filesystem)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">    COPY</span><span style="color: #9ECBFF;"> users TO &#39;/tmp/users.csv&#39; CSV HEADER</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #B392F0;">    COPY</span><span style="color: #9ECBFF;"> users FROM &#39;/tmp/users.csv&#39; CSV HEADER</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #6A737D;">    # Client-side (works over remote connections)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #B392F0;">    \copy</span><span style="color: #9ECBFF;"> users TO &#39;users.csv&#39; CSV HEADER</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #B392F0;">    \copy</span><span style="color: #9ECBFF;"> users FROM &#39;users.csv&#39; CSV HEADER</span></span></code></pre><h1 id="useful-diagnostic-queries"><a class="zola-anchor" href="#useful-diagnostic-queries" aria-label="Anchor link for: useful-diagnostic-queries">🔗</a>Useful Diagnostic Queries</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    -- Show running queries</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    SELECT</span><span> pid, </span><span style="color: #F97583;">now</span><span>()</span><span style="color: #F97583;"> -</span><span style="color: #79B8FF;"> pg_stat_activity</span><span>.</span><span style="color: #79B8FF;">query_start</span><span style="color: #F97583;"> AS</span><span> duration,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>           query, </span><span style="color: #F97583;">state</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    FROM</span><span> pg_stat_activity</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    WHERE state !=</span><span style="color: #9ECBFF;"> &#39;idle&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    ORDER BY</span><span> duration </span><span style="color: #F97583;">DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    -- Kill a query</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    SELECT</span><span> pg_cancel_backend(pid);   </span><span style="color: #6A737D;">-- graceful cancel</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    SELECT</span><span> pg_terminate_backend(pid); </span><span style="color: #6A737D;">-- force kill</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    -- Show locks and what&#39;s blocking what</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> blocked</span><span>.</span><span style="color: #79B8FF;">pid</span><span>, </span><span style="color: #79B8FF;">blocked</span><span>.</span><span style="color: #79B8FF;">query</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #79B8FF;">           blocking</span><span>.</span><span style="color: #79B8FF;">pid</span><span style="color: #F97583;"> AS</span><span> blocking_pid, </span><span style="color: #79B8FF;">blocking</span><span>.</span><span style="color: #79B8FF;">query</span><span style="color: #F97583;"> AS</span><span> blocking_query</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    FROM</span><span> pg_stat_activity blocked</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    JOIN</span><span> pg_stat_activity blocking</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">        ON</span><span style="color: #79B8FF;"> blocking</span><span>.</span><span style="color: #79B8FF;">pid</span><span style="color: #F97583;"> =</span><span> ANY(pg_blocking_pids(</span><span style="color: #79B8FF;">blocked</span><span>.</span><span style="color: #79B8FF;">pid</span><span>));</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    -- Slowest queries (requires pg_stat_statements extension)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    CREATE</span><span> EXTENSION </span><span style="color: #F97583;">IF NOT EXISTS</span><span> pg_stat_statements;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    SELECT</span><span> query, </span><span style="color: #79B8FF;">round</span><span>(mean_exec_time::</span><span style="color: #F97583;">numeric</span><span>, </span><span style="color: #79B8FF;">2</span><span>) </span><span style="color: #F97583;">AS</span><span> avg_ms,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>           calls, </span><span style="color: #79B8FF;">round</span><span>(total_exec_time::</span><span style="color: #F97583;">numeric</span><span>, </span><span style="color: #79B8FF;">2</span><span>) </span><span style="color: #F97583;">AS</span><span> total_ms</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    FROM</span><span> pg_stat_statements</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    ORDER BY</span><span> mean_exec_time </span><span style="color: #F97583;">DESC</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #F97583;">    LIMIT</span><span style="color: #79B8FF;"> 20</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #6A737D;">    -- Table sizes</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #F97583;">    SELECT</span><span> relname </span><span style="color: #F97583;">AS table</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span>        pg_size_pretty(pg_total_relation_size(relid)) </span><span style="color: #F97583;">AS</span><span> total_size,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span>        pg_size_pretty(pg_relation_size(relid)) </span><span style="color: #F97583;">AS</span><span> table_size,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span>        pg_size_pretty(pg_total_relation_size(relid) </span><span style="color: #F97583;">-</span><span> pg_relation_size(relid)) </span><span style="color: #F97583;">AS</span><span> index_size</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #F97583;">    FROM</span><span> pg_stat_user_tables</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #F97583;">    ORDER BY</span><span> pg_total_relation_size(relid) </span><span style="color: #F97583;">DESC</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span style="color: #6A737D;">    -- Unused indexes (wasting write overhead)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span style="color: #F97583;">    SELECT</span><span> indexrelname, idx_scan, pg_size_pretty(pg_relation_size(indexrelid)) </span><span style="color: #F97583;">AS size</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span><span style="color: #F97583;">    FROM</span><span> pg_stat_user_indexes</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span><span style="color: #F97583;">    WHERE</span><span> idx_scan </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 0</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">40</span><span style="color: #F97583;">    ORDER BY</span><span> pg_relation_size(indexrelid) </span><span style="color: #F97583;">DESC</span><span>;</span></span></code></pre><blockquote class="success">
+<p><strong>pg_stat_statements is essential.</strong> Enable it in <code>postgresql.conf</code> with <code>shared_preload_libraries = 'pg_stat_statements'</code> and restart. It tracks query statistics across all executions — the single most useful tool for finding slow queries in production.</p>
+</blockquote>
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>

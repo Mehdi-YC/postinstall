@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Django Development Reference - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#file-structure">File Structure</a>
+  
+  <a class="toc-link" href="#settings-py">settings.py</a>
+  
+  <a class="toc-link" href="#models-models-py">Models (models.py)</a>
+  
+  <a class="toc-link" href="#migrations">Migrations</a>
+  
+  <a class="toc-link" href="#views">Views</a>
+  
+  <a class="toc-link" href="#urls">URLs</a>
+  
+  <a class="toc-link" href="#templates">Templates</a>
+  
+  <a class="toc-link" href="#forms">Forms</a>
+  
+  <a class="toc-link" href="#admin-admin-py">Admin (admin.py)</a>
+  
+  <a class="toc-link" href="#signals">Signals</a>
+  
+  <a class="toc-link" href="#middleware">Middleware</a>
+  
+  <a class="toc-link" href="#static-files">Static Files</a>
+  
+  <a class="toc-link" href="#commonly-missed-things">Commonly Missed Things</a>
+  
+  <a class="toc-link" href="#best-practices">Best Practices</a>
+  
+  <a class="toc-link" href="#devops-cli-postgresql-backups">DevOps: CLI, PostgreSQL, Backups</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#file-structure">File Structure</a>
+  
+  <a class="topic" href="#settings-py">settings.py</a>
+  
+  <a class="topic" href="#models-models-py">Models (models.py)</a>
+  
+  <a class="topic" href="#migrations">Migrations</a>
+  
+  <a class="topic" href="#views">Views</a>
+  
+  <a class="topic" href="#urls">URLs</a>
+  
+  <a class="topic" href="#templates">Templates</a>
+  
+  <a class="topic" href="#forms">Forms</a>
+  
+  <a class="topic" href="#admin-admin-py">Admin (admin.py)</a>
+  
+  <a class="topic" href="#signals">Signals</a>
+  
+  <a class="topic" href="#middleware">Middleware</a>
+  
+  <a class="topic" href="#static-files">Static Files</a>
+  
+  <a class="topic" href="#commonly-missed-things">Commonly Missed Things</a>
+  
+  <a class="topic" href="#best-practices">Best Practices</a>
+  
+  <a class="topic" href="#devops-cli-postgresql-backups">DevOps: CLI, PostgreSQL, Backups</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2026-01-15</span>
+  <h1>Django Development Reference</h1>
+  
+  <p class="subtitle">Project structure, ORM, views, templates, forms, admin, and dev operations</p>
+  
+
+  <h2 id="file-structure"><a class="zola-anchor" href="#file-structure" aria-label="Anchor link for: file-structure">🔗</a>File Structure</h2>
+<p>A Django <strong>project</strong> contains one or more <strong>apps</strong>. The project is the configuration container; apps are the reusable units of functionality.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>myproject/</span></span>
+<span class="giallo-l"><span>├── manage.py                  # CLI entry point. Don&#39;t edit this file.</span></span>
+<span class="giallo-l"><span>├── myproject/                # Project configuration package (same name as project)</span></span>
+<span class="giallo-l"><span>│   ├── __init__.py          # Empty. Makes this a Python package.</span></span>
+<span class="giallo-l"><span>│   ├── settings.py          # All project settings (DB, apps, middleware, etc.)</span></span>
+<span class="giallo-l"><span>│   ├── urls.py              # Root URL configuration. Delegates to app URL configs.</span></span>
+<span class="giallo-l"><span>│   ├── wsgi.py              # WSGI entry point for production servers.</span></span>
+<span class="giallo-l"><span>│   └── asgi.py              # ASGI entry point for async servers (Channels).</span></span>
+<span class="giallo-l"><span>├── myapp/                     # Your app (created with python manage.py startapp myapp)</span></span>
+<span class="giallo-l"><span>│   ├── __init__.py</span></span>
+<span class="giallo-l"><span>│   ├── apps.py              # App configuration (name, verbose_name, default_auto_field)</span></span>
+<span class="giallo-l"><span>│   ├── models.py            # ORM model definitions</span></span>
+<span class="giallo-l"><span>│   ├── views.py             # View functions or classes</span></span>
+<span class="giallo-l"><span>│   ├── urls.py              # App-specific URL patterns</span></span>
+<span class="giallo-l"><span>│   ├── admin.py             # Admin site registration and customization</span></span>
+<span class="giallo-l"><span>│   ├── forms.py             # Form and ModelForm definitions</span></span>
+<span class="giallo-l"><span>│   ├── serializers.py       # DRF serializers (if using Django REST Framework)</span></span>
+<span class="giallo-l"><span>│   ├── signals.py           # Signal handlers (optional, but good to separate)</span></span>
+<span class="giallo-l"><span>│   ├── tests.py             # Tests (or a tests/ package for more structure)</span></span>
+<span class="giallo-l"><span>│   ├── migrations/          # Auto-generated migration files. NEVER edit manually.</span></span>
+<span class="giallo-l"><span>│   │   ├── __init__.py</span></span>
+<span class="giallo-l"><span>│   │   └── 0001_initial.py       # First migration (auto-generated)</span></span>
+<span class="giallo-l"><span>│   ├── templates/           # App-specific templates (if using app-level template dirs)</span></span>
+<span class="giallo-l"><span>│   │   └── myapp/</span></span>
+<span class="giallo-l"><span>│   │       └── model_list.html</span></span>
+<span class="giallo-l"><span>│   └── static/              # App-specific static files (CSS, JS, images)</span></span>
+<span class="giallo-l"><span>│       ├── css/</span></span>
+<span class="giallo-l"><span>│       ├── js/</span></span>
+<span class="giallo-l"><span>│       └── img/</span></span>
+<span class="giallo-l"><span>├── templates/                 # Project-level templates (shared across apps)</span></span>
+<span class="giallo-l"><span>│   └── base.html            # Base template with shared layout</span></span>
+<span class="giallo-l"><span>├── static/                     # Project-level static files</span></span>
+<span class="giallo-l"><span>├── requirements.txt           # Python dependencies</span></span>
+<span class="giallo-l"><span>├── .env                        # Environment variables (NEVER commit this)</span></span>
+<span class="giallo-l"><span>└── .gitignore                  # Git ignore rules</span></span></code></pre>
+<blockquote>
+<p><strong>One project, many apps.</strong> The project folder holds configuration. Each app is a self-contained unit with its own models, views, templates. Apps should be reusable across projects in theory.</p>
+</blockquote>
+<blockquote>
+<p><strong>Split large apps.</strong> If <code>models.py</code> exceeds ~300 lines, split into a <code>models/</code> package with one file per model group. Same for views. Django supports this natively.</p>
+</blockquote>
+<h2 id="settings-py"><a class="zola-anchor" href="#settings-py" aria-label="Anchor link for: settings-py">🔗</a>settings.py</h2>
+<p>The central configuration file. Key settings every developer needs to know:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myproject/settings.py</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Base directory of the project (for building paths)</span></span>
+<span class="giallo-l"><span>import os</span></span>
+<span class="giallo-l"><span>from pathlib import Path</span></span>
+<span class="giallo-l"><span>BASE_DIR = Path(__file__).resolve().parent.parent</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># SECURITY: NEVER hardcode in production. Use environment variables.</span></span>
+<span class="giallo-l"><span># python-decouple or django-environ are the standard approaches.</span></span>
+<span class="giallo-l"><span>from decouple import config</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>SECRET_KEY = config(&#39;SECRET_KEY&#39;)</span></span>
+<span class="giallo-l"><span>DEBUG = config(&#39;DEBUG&#39;, default=False, cast=bool)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>ALLOWED_HOSTS = config(&#39;ALLOWED_HOSTS&#39;, default=&#39;&#39;, cast=lambda v: [s.strip() for s in v.split(&#39;,&#39;)])</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Installed apps: order matters. Your apps come after Django apps.</span></span>
+<span class="giallo-l"><span>INSTALLED_APPS = [</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.admin&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.auth&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.contenttypes&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.sessions&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.messages&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.staticfiles&#39;,</span></span>
+<span class="giallo-l"><span>    # Third-party apps</span></span>
+<span class="giallo-l"><span>    &#39;rest_framework&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;crispy_forms&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;crispy_tailwind&#39;,</span></span>
+<span class="giallo-l"><span>    # Your apps</span></span>
+<span class="giallo-l"><span>    &#39;myapp&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;myapp2&#39;,</span></span>
+<span class="giallo-l"><span>]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Middleware: processed top-to-bottom for request, bottom-to-top for response.</span></span>
+<span class="giallo-l"><span>MIDDLEWARE = [</span></span>
+<span class="giallo-l"><span>    &#39;django.middleware.security.SecurityMiddleware&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.sessions.middleware.SessionMiddleware&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.middleware.common.CommonMiddleware&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.middleware.csrf.CsrfViewMiddleware&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;django.contrib.messages.middleware.MessageMiddleware&#39;,</span></span>
+<span class="giallo-l"><span>]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Database</span></span>
+<span class="giallo-l"><span>DATABASES = {</span></span>
+<span class="giallo-l"><span>    &#39;default&#39;: {</span></span>
+<span class="giallo-l"><span>        &#39;ENGINE&#39;: &#39;django.db.backends.postgresql&#39;,</span></span>
+<span class="giallo-l"><span>        &#39;NAME&#39;: config(&#39;DB_NAME&#39;),</span></span>
+<span class="giallo-l"><span>        &#39;USER&#39;: config(&#39;DB_USER&#39;),</span></span>
+<span class="giallo-l"><span>        &#39;PASSWORD&#39;: config(&#39;DB_PASSWORD&#39;),</span></span>
+<span class="giallo-l"><span>        &#39;HOST&#39;: config(&#39;DB_HOST&#39;, default=&#39;localhost&#39;),</span></span>
+<span class="giallo-l"><span>        &#39;PORT&#39;: config(&#39;DB_PORT&#39;, default=&#39;5432&#39;),</span></span>
+<span class="giallo-l"><span>        &#39;CONN_MAX_AGE&#39;: 60,  # Persistent connections (seconds). 60 is a good default.</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># URL configuration</span></span>
+<span class="giallo-l"><span>ROOT_URLCONF = &#39;myproject.urls&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Templates: DIRS looks for project-level templates.</span></span>
+<span class="giallo-l"><span># App-level templates are found automatically in each app&#39;s templates/ dir.</span></span>
+<span class="giallo-l"><span>TEMPLATES = [{</span></span>
+<span class="giallo-l"><span>    &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,</span></span>
+<span class="giallo-l"><span>    &#39;DIRS&#39;: [BASE_DIR / &#39;templates&#39;],</span></span>
+<span class="giallo-l"><span>    &#39;APP_DIRS&#39;: True,  # Auto-discover templates in each app&#39;s templates/ dir</span></span>
+<span class="giallo-l"><span>    &#39;OPTIONS&#39;: {</span></span>
+<span class="giallo-l"><span>        &#39;context_processors&#39;: [</span></span>
+<span class="giallo-l"><span>            &#39;django.template.context_processors.debug&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;django.template.context_processors.request&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;django.contrib.auth.context_processors.auth&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;django.contrib.messages.context_processors.messages&#39;,</span></span>
+<span class="giallo-l"><span>        ],</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>}]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Static files (CSS, JS, images)</span></span>
+<span class="giallo-l"><span>STATIC_URL = &#39;/static/&#39;</span></span>
+<span class="giallo-l"><span>STATICFILES_DIRS = [BASE_DIR / &#39;static&#39;]  # Additional static dirs (project-level)</span></span>
+<span class="giallo-l"><span>STATIC_ROOT = BASE_DIR / &#39;staticfiles&#39;     # Where collectstatic puts files (for production)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Media files (user uploads)</span></span>
+<span class="giallo-l"><span>MEDIA_URL = &#39;/media/&#39;</span></span>
+<span class="giallo-l"><span>MEDIA_ROOT = BASE_DIR / &#39;media&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Auth</span></span>
+<span class="giallo-l"><span>AUTH_USER_MODEL = &#39;myapp.CustomUser&#39;  # If you have a custom user model</span></span>
+<span class="giallo-l"><span>LOGIN_URL = &#39;login&#39;</span></span>
+<span class="giallo-l"><span>LOGIN_REDIRECT_URL = &#39;home&#39;</span></span>
+<span class="giallo-l"><span>LOGOUT_REDIRECT_URL = &#39;home&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Default primary key field type (Django 3.2+)</span></span>
+<span class="giallo-l"><span>DEFAULT_AUTO_FIELD = &#39;django.db.models.BigAutoField&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Internationalization</span></span>
+<span class="giallo-l"><span>LANGUAGE_CODE = &#39;en-us&#39;</span></span>
+<span class="giallo-l"><span>TIME_ZONE = &#39;UTC&#39;  # Always UTC in the database. Convert in templates.</span></span>
+<span class="giallo-l"><span>USE_TZ = True  # Keep True. Stores all datetimes as UTC in DB.</span></span></code></pre>
+<blockquote>
+<p><strong><code>SECRET_KEY</code> in version control = compromised.</strong> Use <code>python-decouple</code> or <code>django-environ</code> to load from <code>.env</code>. Add <code>.env</code> to <code>.gitignore</code>.</p>
+</blockquote>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># .env (never commit this)</span></span>
+<span class="giallo-l"><span>SECRET_KEY=django-insecure-xxx-change-this-in-production</span></span>
+<span class="giallo-l"><span>DEBUG=True</span></span>
+<span class="giallo-l"><span>ALLOWED_HOSTS=localhost,127.0.0.1</span></span>
+<span class="giallo-l"><span>DB_NAME=mydb</span></span>
+<span class="giallo-l"><span>DB_USER=myuser</span></span>
+<span class="giallo-l"><span>DB_PASSWORD=mypassword</span></span>
+<span class="giallo-l"><span>DB_HOST=localhost</span></span>
+<span class="giallo-l"><span>DB_PORT=5432</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># .env.example (commit this)</span></span>
+<span class="giallo-l"><span>SECRET_KEY=</span></span>
+<span class="giallo-l"><span>DEBUG=False</span></span>
+<span class="giallo-l"><span>ALLOWED_HOSTS=</span></span>
+<span class="giallo-l"><span>DB_NAME=</span></span>
+<span class="giallo-l"><span>DB_USER=</span></span>
+<span class="giallo-l"><span>DB_PASSWORD=</span></span>
+<span class="giallo-l"><span>DB_HOST=localhost</span></span>
+<span class="giallo-l"><span>DB_PORT=5432</span></span></code></pre>
+<blockquote>
+<p><strong><code>USE_TZ = True</code> is the standard.</strong> All datetimes are stored as UTC in PostgreSQL. Use <code>{{ mydate|localtime }}</code> in templates to convert to the user's timezone, or set <code>TIME_ZONE</code> in settings for a fixed display timezone.</p>
+</blockquote>
+<h2 id="models-models-py"><a class="zola-anchor" href="#models-models-py" aria-label="Anchor link for: models-models-py">🔗</a>Models (models.py)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/models.py</span></span>
+<span class="giallo-l"><span>from django.db import models</span></span>
+<span class="giallo-l"><span>from django.core.validators import MinValueValidator, MaxLengthValidator</span></span>
+<span class="giallo-l"><span>from django.urls import reverse</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class Category(models.Model):</span></span>
+<span class="giallo-l"><span>    # ---- Field Types ----</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # CharField: short text. ALWAYS specify max_length.</span></span>
+<span class="giallo-l"><span>    name = models.CharField(max_length=100, unique=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # SlugField: for URL-friendly strings.</span></span>
+<span class="giallo-l"><span>    # auto_created or prepopulated via admin prepopulated_fields.</span></span>
+<span class="giallo-l"><span>    slug = models.SlugField(max_length=120, unique=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # BooleanField: use null=True only if you need None (three-state).</span></span>
+<span class="giallo-l"><span>    # For true/false, default is fine. In forms, use forms.NullBooleanSelect.</span></span>
+<span class="giallo-l"><span>    is_active = models.BooleanField(default=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # IntegerField: whole numbers.</span></span>
+<span class="giallo-l"><span>    sort_order = models.IntegerField(default=0)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # DateTimeField: auto_now_add on create, auto_now on every save.</span></span>
+<span class="giallo-l"><span>    # IMPORTANT: These cannot be edited manually. Use null=True if you want</span></span>
+<span class="giallo-l"><span>    # to set them explicitly in some cases.</span></span>
+<span class="giallo-l"><span>    created_at = models.DateTimeField(auto_now_add=True)</span></span>
+<span class="giallo-l"><span>    updated_at = models.DateTimeField(auto_now=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # DateField: date only (no time).</span></span>
+<span class="giallo-l"><span>    start_date = models.DateField(null=True, blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # DecimalField: for money. ALWAYS specify max_digits and decimal_places.</span></span>
+<span class="giallo-l"><span>    # max_digits includes the decimal places.</span></span>
+<span class="giallo-l"><span>    price = models.DecimalField(</span></span>
+<span class="giallo-l"><span>        max_digits=10, decimal_places=2,</span></span>
+<span class="giallo-l"><span>        validators=[MinValueValidator(0)],</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # FloatField: for non-critical decimals (not money!).</span></span>
+<span class="giallo-l"><span>    weight = models.FloatField(null=True, blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # TextField: long text, no max_length.</span></span>
+<span class="giallo-l"><span>    description = models.TextField(blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # EmailField: validates email format.</span></span>
+<span class="giallo-l"><span>    email = models.EmailField(blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # URLField: validates URL format.</span></span>
+<span class="giallo-l"><span>    website = models.URLField(blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # FileField: stores file path in DB, file on disk.</span></span>
+<span class="giallo-l"><span>    # upload_to: subdirectory within MEDIA_ROOT.</span></span>
+<span class="giallo-l"><span>    # Can be a callable: upload_to=&#39;uploads/%Y/%m/&#39;</span></span>
+<span class="giallo-l"><span>    document = models.FileField(upload_to=&#39;documents/&#39;, blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ImageField: FileField with image validation. Requires Pillow.</span></span>
+<span class="giallo-l"><span>    image = models.ImageField(upload_to=&#39;images/&#39;, blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # UUIDField: for public identifiers (instead of auto-increment PK).</span></span>
+<span class="giallo-l"><span>    # primary_key=True replaces the default id field.</span></span>
+<span class="giallo-l"><span>    # uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # JSONField: stores JSON. Queryable in PostgreSQL.</span></span>
+<span class="giallo-l"><span>    # null=True allows NULL in DB (different from empty dict {}).</span></span>
+<span class="giallo-l"><span>    metadata = models.JSONField(default=dict, blank=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- null vs blank ----</span></span>
+<span class="giallo-l"><span>    # null=True: allows NULL in the DATABASE. For DateField, IntegerField, etc.</span></span>
+<span class="giallo-l"><span>    # blank=True: allows empty in FORMS. For CharField, TextField, etc.</span></span>
+<span class="giallo-l"><span>    # CharField/TextField: use blank=True, NOT null=True (empty string vs NULL).</span></span>
+<span class="giallo-l"><span>    # DateField/IntegerField: use null=True, blank=True (can&#39;t store empty string).</span></span>
+<span class="giallo-l"><span>    # BooleanField: NEVER use null=True unless you need three-state logic.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- Choices ----</span></span>
+<span class="giallo-l"><span>    # Use Enumeration (Python 3.4+). Cleaner than raw tuples.</span></span>
+<span class="giallo-l"><span>    class Status(models.TextChoices):</span></span>
+<span class="giallo-l"><span>        DRAFT = &#39;draft&#39;, &#39;Draft&#39;</span></span>
+<span class="giallo-l"><span>        PUBLISHED = &#39;published&#39;, &#39;Published&#39;</span></span>
+<span class="giallo-l"><span>        ARCHIVED = &#39;archived&#39;, &#39;Archived&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    status = models.CharField(</span></span>
+<span class="giallo-l"><span>        max_length=20,</span></span>
+<span class="giallo-l"><span>        choices=Status.choices,</span></span>
+<span class="giallo-l"><span>        default=Status.DRAFT,</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- Meta ----</span></span>
+<span class="giallo-l"><span>    class Meta:</span></span>
+<span class="giallo-l"><span>        # Default sort. Use &#39;-&#39; prefix for descending.</span></span>
+<span class="giallo-l"><span>        ordering = [&#39;-created_at&#39;, &#39;name&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Plural name in admin.</span></span>
+<span class="giallo-l"><span>        verbose_name_plural = &#39;Categories&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Prevent duplicate combinations.</span></span>
+<span class="giallo-l"><span>        # unique_together is older but still works.</span></span>
+<span class="giallo-l"><span>        # constraints = [models.UniqueConstraint(fields=[&#39;name&#39;, &#39;status&#39;], name=&#39;unique_name_status&#39;)]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Database-level permissions (beyond Django&#39;s default).</span></span>
+<span class="giallo-l"><span>        # permissions = [(&#39;can_publish&#39;, &#39;Can publish items&#39;)]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Default manager name (rarely needed).</span></span>
+<span class="giallo-l"><span>        # default_manager_name = &#39;objects&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- String representations ----</span></span>
+<span class="giallo-l"><span>    def __str__(self):</span></span>
+<span class="giallo-l"><span>        return self.name</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- Absolute URL (for get_absolute_url in templates) ----</span></span>
+<span class="giallo-l"><span>    def get_absolute_url(self):</span></span>
+<span class="giallo-l"><span>        return reverse(&#39;myapp:category-detail&#39;, kwargs={&#39;slug&#39;: self.slug})</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- Methods ----</span></span>
+<span class="giallo-l"><span>    def is_published(self):</span></span>
+<span class="giallo-l"><span>        return self.status == self.Status.PUBLISHED</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Relationships ----</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class Product(models.Model):</span></span>
+<span class="giallo-l"><span>    category = models.ForeignKey(</span></span>
+<span class="giallo-l"><span>        &#39;Category&#39;,              # &#39;app.Model&#39; or the model class itself</span></span>
+<span class="giallo-l"><span>        on_delete=models.CASCADE,    # What happens when category is deleted</span></span>
+<span class="giallo-l"><span>        related_name=&#39;products&#39;,  # Access: category.products.all()</span></span>
+<span class="giallo-l"><span>        related_query_name=&#39;product&#39;, # For queryset filtering: Category.objects.filter(product__name=...)</span></span>
+<span class="giallo-l"><span>        null=True,</span></span>
+<span class="giallo-l"><span>        blank=True,</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"><span>    # on_delete options:</span></span>
+<span class="giallo-l"><span>    #   CASCADE: delete this too (default for ForeignKey)</span></span>
+<span class="giallo-l"><span>    #   PROTECT: block deletion with ProtectedError</span></span>
+<span class="giallo-l"><span>    #   SET_NULL: set to NULL (requires null=True)</span></span>
+<span class="giallo-l"><span>    #   SET_DEFAULT: set to default value (requires default=)</span></span>
+<span class="giallo-l"><span>    #   SET(): set to a specific value or callable</span></span>
+<span class="giallo-l"><span>    #   DO_NOTHING: do nothing (you must handle it yourself)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    name = models.CharField(max_length=200)</span></span>
+<span class="giallo-l"><span>    price = models.DecimalField(max_digits=10, decimal_places=2)</span></span>
+<span class="giallo-l"><span>    sku = models.CharField(max_length=50, unique=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ManyToMany: no on_delete needed.</span></span>
+<span class="giallo-l"><span>    # through: explicit intermediate model (for extra fields on the relation).</span></span>
+<span class="giallo-l"><span>    tags = models.ManyToManyField(&#39;Tag&#39;, blank=True, related_name=&#39;products&#39;)</span></span>
+<span class="giallo-l"><span>    # through=&#39;ProductTag&#39;  # if you need extra fields like &quot;added_at&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # OneToOne: like ForeignKey with unique=True.</span></span>
+<span class="giallo-l"><span>    # Use related_name, not the default &lt;model&gt;_set.</span></span>
+<span class="giallo-l"><span>    detail = models.OneToOneField(</span></span>
+<span class="giallo-l"><span>        &#39;ProductDetail&#39;,</span></span>
+<span class="giallo-l"><span>        on_delete=models.CASCADE,</span></span>
+<span class="giallo-l"><span>        related_name=&#39;product&#39;,</span></span>
+<span class="giallo-l"><span>        null=True,</span></span>
+<span class="giallo-l"><span>        blank=True,</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    class Meta:</span></span>
+<span class="giallo-l"><span>        ordering = [&#39;name&#39;]</span></span>
+<span class="giallo-l"><span>        # Composite unique constraint (preferred over unique_together)</span></span>
+<span class="giallo-l"><span>        constraints = [</span></span>
+<span class="giallo-l"><span>            models.UniqueConstraint(</span></span>
+<span class="giallo-l"><span>                fields=[&#39;name&#39;, &#39;category&#39;],</span></span>
+<span class="giallo-l"><span>                name=&#39;unique_product_name_per_category&#39;,</span></span>
+<span class="giallo-l"><span>            ),</span></span>
+<span class="giallo-l"><span>        ]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def __str__(self):</span></span>
+<span class="giallo-l"><span>        return self.name</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- Overriding save() ----</span></span>
+<span class="giallo-l"><span>    def save(self, *args, **kwargs):</span></span>
+<span class="giallo-l"><span>        # Pre-save logic (e.g., auto-generate slug)</span></span>
+<span class="giallo-l"><span>        if not self.sku:</span></span>
+<span class="giallo-l"><span>            self.sku = self.generate_sku()</span></span>
+<span class="giallo-l"><span>        super().save(*args, **kwargs)</span></span>
+<span class="giallo-l"><span>        # Post-save logic (e.g., clear cache)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- Overriding delete() ----</span></span>
+<span class="giallo-l"><span>    def delete(self, *args, **kwargs):</span></span>
+<span class="giallo-l"><span>        # Pre-delete logic (e.g., delete associated files)</span></span>
+<span class="giallo-l"><span>        if self.image:</span></span>
+<span class="giallo-l"><span>            self.image.delete(save=False)</span></span>
+<span class="giallo-l"><span>        super().delete(*args, **kwargs)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # ---- Properties (not stored in DB, computed on access) ----</span></span>
+<span class="giallo-l"><span>    @property</span></span>
+<span class="giallo-l"><span>    def is_expensive(self):</span></span>
+<span class="giallo-l"><span>        return self.price &gt; 1000</span></span>
+<span class="giallo-l"><span>        # NOTE: cannot be used in queryset filters. Use annotated fields instead.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Custom Managers ----</span></span>
+<span class="giallo-l"><span># For reusable query logic. Attach to model via objects = MyManager().</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class ProductManager(models.Manager):</span></span>
+<span class="giallo-l"><span>    def published(self):</span></span>
+<span class="giallo-l"><span>        return self.filter(status=&#39;published&#39;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def cheap(self, threshold=100):</span></span>
+<span class="giallo-l"><span>        return self.filter(price__lte=threshold)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Abstract Base Model ----</span></span>
+<span class="giallo-l"><span># For shared fields across models (created_at, updated_at, etc.)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class TimeStampedModel(models.Model):</span></span>
+<span class="giallo-l"><span>    created_at = models.DateTimeField(auto_now_add=True)</span></span>
+<span class="giallo-l"><span>    updated_at = models.DateTimeField(auto_now=True)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    class Meta:</span></span>
+<span class="giallo-l"><span>        abstract = True  # No table created. Fields copied into child models.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># class Product(TimeStampedModel):  # now has created_at, updated_at</span></span>
+<span class="giallo-l"><span>#     name = models.CharField(...)</span></span></code></pre><h3 id="queryset-api-cheat-sheet"><a class="zola-anchor" href="#queryset-api-cheat-sheet" aria-label="Anchor link for: queryset-api-cheat-sheet">🔗</a>QuerySet API Cheat Sheet</h3>
+<table><thead><tr><th>Operation</th><th>Code</th><th>Returns</th></tr></thead><tbody>
+<tr><td>Get all</td><td><code>Product.objects.all()</code></td><td>QuerySet</td></tr>
+<tr><td>Filter</td><td><code>Product.objects.filter(price__gt=100)</code></td><td>QuerySet</td></tr>
+<tr><td>Exclude</td><td><code>Product.objects.exclude(status='draft')</code></td><td>QuerySet</td></tr>
+<tr><td>Get single</td><td><code>Product.objects.get(pk=1)</code></td><td>Object or DoesNotExist</td></tr>
+<tr><td>Get or create</td><td><code>Product.objects.get_or_create(sku='ABC', defaults={...})</code></td><td>(object, created)</td></tr>
+<tr><td>Update or create</td><td><code>Product.objects.update_or_create(sku='ABC', defaults={...})</code></td><td>(object, created)</td></tr>
+<tr><td>Count</td><td><code>Product.objects.count()</code></td><td>int</td></tr>
+<tr><td>Exists</td><td><code>Product.objects.filter(...).exists()</code></td><td>bool (faster than count)</td></tr>
+<tr><td>First / Last</td><td><code>Product.objects.first()</code></td><td>Object or None</td></tr>
+<tr><td>Bulk create</td><td><code>Product.objects.bulk_create([...])</code></td><td>List (no signals fired)</td></tr>
+<tr><td>Bulk update</td><td><code>Product.objects.filter(...).update(price=99)</code></td><td>int (no signals fired)</td></tr>
+<tr><td>Delete</td><td><code>Product.objects.filter(...).delete()</code></td><td>(count, details)</td></tr>
+<tr><td>Values</td><td><code>Product.objects.values('name', 'price')</code></td><td>QuerySet of dicts</td></tr>
+<tr><td>Values list</td><td><code>Product.objects.values_list('name', flat=True)</code></td><td>QuerySet of tuples/values</td></tr>
+<tr><td>Select related</td><td><code>Product.objects.select_related('category')</code></td><td>Optimized QuerySet (FK)</td></tr>
+<tr><td>Prefetch related</td><td><code>Product.objects.prefetch_related('tags')</code></td><td>Optimized QuerySet (M2M)</td></tr>
+<tr><td>Annotate</td><td><code>Product.objects.annotate(total=Sum('line__price'))</code></td><td>QuerySet with extra fields</td></tr>
+<tr><td>Order</td><td><code>Product.objects.order_by('-price', 'name')</code></td><td>QuerySet</td></tr>
+<tr><td>Slice</td><td><code>Product.objects.all()[:10]</code></td><td>QuerySet (LIMIT 10)</td></tr>
+</tbody></table>
+<h3 id="lookup-reference"><a class="zola-anchor" href="#lookup-reference" aria-label="Anchor link for: lookup-reference">🔗</a>Lookup Reference</h3>
+<table><thead><tr><th>Lookup</th><th>Meaning</th><th>Lookup</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>__exact</code></td><td>Exact match (default)</td><td><code>__iexact</code></td><td>Case-insensitive exact</td></tr>
+<tr><td><code>__contains</code></td><td>Contains substring</td><td><code>__icontains</code></td><td>Case-insensitive contains</td></tr>
+<tr><td><code>__gt</code></td><td>Greater than</td><td><code>__gte</code></td><td>Greater than or equal</td></tr>
+<tr><td><code>__lt</code></td><td>Less than</td><td><code>__lte</code></td><td>Less than or equal</td></tr>
+<tr><td><code>__in</code></td><td>In a list</td><td><code>__range</code></td><td>Between two values</td></tr>
+<tr><td><code>__startswith</code></td><td>Starts with</td><td><code>__istartswith</code></td><td>Case-insensitive starts with</td></tr>
+<tr><td><code>__endswith</code></td><td>Ends with</td><td><code>__iendswith</code></td><td>Case-insensitive ends with</td></tr>
+<tr><td><code>__isnull</code></td><td>Is NULL / is not NULL</td><td></td><td></td></tr>
+<tr><td><code>__year</code></td><td>Date year</td><td><code>__month</code></td><td>Date month</td></tr>
+<tr><td><code>__day</code></td><td>Date day</td><td><code>__hour</code></td><td>Datetime hour</td></tr>
+<tr><td><code>__regex</code></td><td>Regex match</td><td><code>__iregex</code></td><td>Case-insensitive regex</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong><code>get()</code> raises <code>DoesNotExist</code> if no match.</strong> Use <code>get_object_or_404()</code> in views to return a 404 page instead of a 500 error.</p>
+</blockquote>
+<h2 id="migrations"><a class="zola-anchor" href="#migrations" aria-label="Anchor link for: migrations">🔗</a>Migrations</h2>
+<p>Migrations are Django's version control for the database schema. They are <strong>auto-generated</strong> from model changes and applied in order.</p>
+<h3 id="common-commands"><a class="zola-anchor" href="#common-commands" aria-label="Anchor link for: common-commands">🔗</a>Common Commands</h3>
+<table><thead><tr><th>Command</th><th>What It Does</th></tr></thead><tbody>
+<tr><td><code>python manage.py makemigrations</code></td><td>Detect model changes and create migration files</td></tr>
+<tr><td><code>python manage.py makemigrations myapp</code></td><td>Only for a specific app</td></tr>
+<tr><td><code>python manage.py migrate</code></td><td>Apply all pending migrations</td></tr>
+<tr><td><code>python manage.py migrate myapp 0003</code></td><td>Migrate to specific migration (rollback)</td></tr>
+<tr><td><code>python manage.py showmigrations</code></td><td>Show migration status (X = applied)</td></tr>
+<tr><td><code>python manage.py sqlmigrate myapp 0002</code></td><td>Show SQL for a migration (without applying)</td></tr>
+<tr><td><code>python manage.py migrate --fake</code></td><td>Mark as applied without running (use carefully)</td></tr>
+<tr><td><code>python manage.py migrate --fake-initial</code></td><td>Skip CreateModel if table already exists</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Never edit migration files by hand</strong> unless you're writing a data migration. Auto-generated operations depend on the exact structure.</p>
+</blockquote>
+<h3 id="data-migrations"><a class="zola-anchor" href="#data-migrations" aria-label="Anchor link for: data-migrations">🔗</a>Data Migrations</h3>
+<p>For data changes (inserting, updating, deleting rows) that need to happen alongside schema changes:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Generated with: python manage.py makemigrations --empty myapp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>from django.db import migrations</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>def set_default_status(apps, schema_editor):</span></span>
+<span class="giallo-l"><span>    # apps: historical model registry (use this, NOT direct model import)</span></span>
+<span class="giallo-l"><span>    # schema_editor: for raw SQL if needed</span></span>
+<span class="giallo-l"><span>    Product = apps.get_model(&#39;myapp&#39;, &#39;Product&#39;)</span></span>
+<span class="giallo-l"><span>    Product.objects.filter(status__isnull=True).update(status=&#39;draft&#39;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>def reverse_set_default_status(apps, schema_editor):</span></span>
+<span class="giallo-l"><span>    Product = apps.get_model(&#39;myapp&#39;, &#39;Product&#39;)</span></span>
+<span class="giallo-l"><span>    Product.objects.filter(status=&#39;draft&#39;).update(status=None)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class Migration(migrations.Migration):</span></span>
+<span class="giallo-l"><span>    dependencies = [</span></span>
+<span class="giallo-l"><span>        (&#39;myapp&#39;, &#39;0002_auto_20240101_1234&#39;),  # MUST list dependencies</span></span>
+<span class="giallo-l"><span>    ]</span></span>
+<span class="giallo-l"><span>    operations = [</span></span>
+<span class="giallo-l"><span>        migrations.RunPython(set_default_status, reverse_set_default_status),</span></span>
+<span class="giallo-l"><span>        # RunPython(forward_func, reverse_func) -- reverse is optional but recommended</span></span>
+<span class="giallo-l"><span>        # RunSQL(&quot;UPDATE ...&quot;, &quot;UPDATE ... reverse ...&quot;) -- for raw SQL</span></span>
+<span class="giallo-l"><span>    ]</span></span></code></pre>
+<blockquote>
+<p><strong>Use <code>apps.get_model()</code> in migrations, not direct imports.</strong> The model you import reflects the current code state, not the state at the migration's point in history. This causes subtle bugs.</p>
+</blockquote>
+<h2 id="views"><a class="zola-anchor" href="#views" aria-label="Anchor link for: views">🔗</a>Views</h2>
+<h3 id="function-based-views-fbv"><a class="zola-anchor" href="#function-based-views-fbv" aria-label="Anchor link for: function-based-views-fbv">🔗</a>Function-Based Views (FBV)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/views.py</span></span>
+<span class="giallo-l"><span>from django.shortcuts import render, redirect, get_object_or_404</span></span>
+<span class="giallo-l"><span>from django.http import HttpResponse, JsonResponse, Http404</span></span>
+<span class="giallo-l"><span>from django.contrib.auth.decorators import login_required, permission_required</span></span>
+<span class="giallo-l"><span>from .models import Product</span></span>
+<span class="giallo-l"><span>from .forms import ProductForm</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Basic view</span></span>
+<span class="giallo-l"><span>def product_list(request):</span></span>
+<span class="giallo-l"><span>    products = Product.objects.select_related(&#39;category&#39;).order_by(&#39;-created_at&#39;)</span></span>
+<span class="giallo-l"><span>    return render(request, &#39;myapp/product_list.html&#39;, {</span></span>
+<span class="giallo-l"><span>        &#39;products&#39;: products,</span></span>
+<span class="giallo-l"><span>    })</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Detail view with 404</span></span>
+<span class="giallo-l"><span>def product_detail(request, pk):</span></span>
+<span class="giallo-l"><span>    product = get_object_or_404(Product.objects.select_related(&#39;category&#39;), pk=pk)</span></span>
+<span class="giallo-l"><span>    return render(request, &#39;myapp/product_detail.html&#39;, {</span></span>
+<span class="giallo-l"><span>        &#39;product&#39;: product,</span></span>
+<span class="giallo-l"><span>    })</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Form handling (create)</span></span>
+<span class="giallo-l"><span>def product_create(request):</span></span>
+<span class="giallo-l"><span>    if request.method == &#39;POST&#39;:</span></span>
+<span class="giallo-l"><span>        form = ProductForm(request.POST, request.FILES)  # FILES for FileField/ImageField</span></span>
+<span class="giallo-l"><span>        if form.is_valid():</span></span>
+<span class="giallo-l"><span>            product = form.save()</span></span>
+<span class="giallo-l"><span>            return redirect(product.get_absolute_url())</span></span>
+<span class="giallo-l"><span>    else:</span></span>
+<span class="giallo-l"><span>        form = ProductForm()</span></span>
+<span class="giallo-l"><span>    return render(request, &#39;myapp/product_form.html&#39;, {&#39;form&#39;: form})</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Form handling (update)</span></span>
+<span class="giallo-l"><span>def product_update(request, pk):</span></span>
+<span class="giallo-l"><span>    product = get_object_or_404(Product, pk=pk)</span></span>
+<span class="giallo-l"><span>    if request.method == &#39;POST&#39;:</span></span>
+<span class="giallo-l"><span>        form = ProductForm(request.POST, request.FILES, instance=product)</span></span>
+<span class="giallo-l"><span>        if form.is_valid():</span></span>
+<span class="giallo-l"><span>            form.save()</span></span>
+<span class="giallo-l"><span>            return redirect(product.get_absolute_url())</span></span>
+<span class="giallo-l"><span>    else:</span></span>
+<span class="giallo-l"><span>        form = ProductForm(instance=product)</span></span>
+<span class="giallo-l"><span>    return render(request, &#39;myapp/product_form.html&#39;, {&#39;form&#39;: form})</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># JSON API endpoint</span></span>
+<span class="giallo-l"><span>def product_api(request, pk):</span></span>
+<span class="giallo-l"><span>    product = get_object_or_404(Product, pk=pk)</span></span>
+<span class="giallo-l"><span>    data = {&#39;name&#39;: product.name, &#39;price&#39;: str(product.price)}</span></span>
+<span class="giallo-l"><span>    return JsonResponse(data)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Login required</span></span>
+<span class="giallo-l"><span>@login_required</span></span>
+<span class="giallo-l"><span>def my_protected_view(request):</span></span>
+<span class="giallo-l"><span>    # request.user is available</span></span>
+<span class="giallo-l"><span>    return render(request, &#39;myapp/protected.html&#39;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Permission required</span></span>
+<span class="giallo-l"><span>@permission_required(&#39;myapp.change_product&#39;, raise_exception=True)</span></span>
+<span class="giallo-l"><span>def product_edit(request, pk):</span></span>
+<span class="giallo-l"><span>    ...</span></span></code></pre><h3 id="class-based-views-cbv"><a class="zola-anchor" href="#class-based-views-cbv" aria-label="Anchor link for: class-based-views-cbv">🔗</a>Class-Based Views (CBV)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView</span></span>
+<span class="giallo-l"><span>from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin</span></span>
+<span class="giallo-l"><span>from django.urls import reverse_lazy</span></span>
+<span class="giallo-l"><span>from .models import Product</span></span>
+<span class="giallo-l"><span>from .forms import ProductForm</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class ProductListView(ListView):</span></span>
+<span class="giallo-l"><span>    model = Product</span></span>
+<span class="giallo-l"><span>    template_name = &#39;myapp/product_list.html&#39;</span></span>
+<span class="giallo-l"><span>    context_object_name = &#39;products&#39;  # Default: object_list</span></span>
+<span class="giallo-l"><span>    paginate_by = 20</span></span>
+<span class="giallo-l"><span>    ordering = [&#39;-created_at&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Optimize queries</span></span>
+<span class="giallo-l"><span>    def get_queryset(self):</span></span>
+<span class="giallo-l"><span>        return Product.objects.select_related(&#39;category&#39;).prefetch_related(&#39;tags&#39;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Add extra context</span></span>
+<span class="giallo-l"><span>    def get_context_data(self, **kwargs):</span></span>
+<span class="giallo-l"><span>        ctx = super().get_context_data(**kwargs)</span></span>
+<span class="giallo-l"><span>        ctx[&#39;total_count&#39;] = Product.objects.count()</span></span>
+<span class="giallo-l"><span>        return ctx</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class ProductDetailView(DetailView):</span></span>
+<span class="giallo-l"><span>    model = Product</span></span>
+<span class="giallo-l"><span>    template_name = &#39;myapp/product_detail.html&#39;</span></span>
+<span class="giallo-l"><span>    # URL kwarg default: pk. Change with pk_url_kwarg or slug_url_kwarg.</span></span>
+<span class="giallo-l"><span>    # slug_field = &#39;slug&#39;</span></span>
+<span class="giallo-l"><span>    # slug_url_kwarg = &#39;slug&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class ProductCreateView(LoginRequiredMixin, CreateView):</span></span>
+<span class="giallo-l"><span>    model = Product</span></span>
+<span class="giallo-l"><span>    form_class = ProductForm</span></span>
+<span class="giallo-l"><span>    template_name = &#39;myapp/product_form.html&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Set the user automatically on save</span></span>
+<span class="giallo-l"><span>    def form_valid(self, form):</span></span>
+<span class="giallo-l"><span>        form.instance.created_by = self.request.user</span></span>
+<span class="giallo-l"><span>        return super().form_valid(form)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):</span></span>
+<span class="giallo-l"><span>    model = Product</span></span>
+<span class="giallo-l"><span>    form_class = ProductForm</span></span>
+<span class="giallo-l"><span>    template_name = &#39;myapp/product_form.html&#39;</span></span>
+<span class="giallo-l"><span>    permission_required = &#39;myapp.change_product&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Override get_success_url instead of success_url if URL is dynamic</span></span>
+<span class="giallo-l"><span>    def get_success_url(self):</span></span>
+<span class="giallo-l"><span>        return reverse(&#39;myapp:product-detail&#39;, kwargs={&#39;pk&#39;: self.object.pk})</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class ProductDeleteView(LoginRequiredMixin, DeleteView):</span></span>
+<span class="giallo-l"><span>    model = Product</span></span>
+<span class="giallo-l"><span>    template_name = &#39;myapp/product_confirm_delete.html&#39;</span></span>
+<span class="giallo-l"><span>    success_url = reverse_lazy(&#39;myapp:product-list&#39;)  # reverse_lazy for class-level URLs</span></span></code></pre><h3 id="common-cbv-mixins"><a class="zola-anchor" href="#common-cbv-mixins" aria-label="Anchor link for: common-cbv-mixins">🔗</a>Common CBV Mixins</h3>
+<table><thead><tr><th>Mixin</th><th>What It Does</th></tr></thead><tbody>
+<tr><td><code>LoginRequiredMixin</code></td><td>Redirects to LOGIN_URL if not authenticated</td></tr>
+<tr><td><code>PermissionRequiredMixin</code></td><td>Requires specific permission. Set <code>permission_required</code>.</td></tr>
+<tr><td><code>UserPassesTestMixin</code></td><td>Custom test function: <code>test_func()</code></td></tr>
+<tr><td><code>AccessMixin</code></td><td>Base for login/permission. Controls <code>login_url</code>, <code>redirect_field_name</code>.</td></tr>
+<tr><td><code>FormMixin</code></td><td>Form processing for non-model forms</td></tr>
+<tr><td><code>PaginatorMixin</code></td><td>Adds pagination (built into ListView)</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Mixin order matters.</strong> In Python MRO, the leftmost mixin wins conflicts. Put <code>LoginRequiredMixin</code> before the view class.</p>
+</blockquote>
+<h2 id="urls"><a class="zola-anchor" href="#urls" aria-label="Anchor link for: urls">🔗</a>URLs</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myproject/urls.py (root)</span></span>
+<span class="giallo-l"><span>from django.contrib import admin</span></span>
+<span class="giallo-l"><span>from django.urls import path, include</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>urlpatterns = [</span></span>
+<span class="giallo-l"><span>    path(&#39;admin/&#39;, admin.site.urls),</span></span>
+<span class="giallo-l"><span>    path(&#39;accounts/&#39;, include(&#39;django.contrib.auth.urls&#39;)),  # Login/logout/password reset</span></span>
+<span class="giallo-l"><span>    path(&#39;myapp/&#39;, include(&#39;myapp.urls&#39;, namespace=&#39;myapp&#39;)),</span></span>
+<span class="giallo-l"><span>    path(&#39;&#39;, include(&#39;myapp2.urls&#39;, namespace=&#39;myapp2&#39;)),</span></span>
+<span class="giallo-l"><span>]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># myapp/urls.py (app-level)</span></span>
+<span class="giallo-l"><span>from django.urls import path</span></span>
+<span class="giallo-l"><span>from . import views</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>app_name = &#39;myapp&#39;  # Required if using include() with namespace</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>urlpatterns = [</span></span>
+<span class="giallo-l"><span>    # FBV</span></span>
+<span class="giallo-l"><span>    path(&#39;&#39;, views.product_list, name=&#39;product-list&#39;),</span></span>
+<span class="giallo-l"><span>    path(&#39;&lt;int:pk&gt;/&#39;, views.product_detail, name=&#39;product-detail&#39;),</span></span>
+<span class="giallo-l"><span>    path(&#39;create/&#39;, views.product_create, name=&#39;product-create&#39;),</span></span>
+<span class="giallo-l"><span>    path(&#39;&lt;int:pk&gt;/edit/&#39;, views.product_update, name=&#39;product-update&#39;),</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # CBV</span></span>
+<span class="giallo-l"><span>    path(&#39;cbv/&#39;, views.ProductListView.as_view(), name=&#39;product-list-cbv&#39;),</span></span>
+<span class="giallo-l"><span>    path(&#39;cbv/&lt;int:pk&gt;/&#39;, views.ProductDetailView.as_view(), name=&#39;product-detail-cbv&#39;),</span></span>
+<span class="giallo-l"><span>    path(&#39;cbv/create/&#39;, views.ProductCreateView.as_view(), name=&#39;product-create-cbv&#39;),</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Slug-based URL</span></span>
+<span class="giallo-l"><span>    path(&#39;category/&lt;slug:slug&gt;/&#39;, views.category_detail, name=&#39;category-detail&#39;),</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Custom path converters: int, str, slug, uuid, path</span></span>
+<span class="giallo-l"><span>    # path(&#39;file/&lt;path:filepath&gt;/&#39;, views.file_view),  # matches including /</span></span>
+<span class="giallo-l"><span>]</span></span></code></pre><h3 id="path-converters"><a class="zola-anchor" href="#path-converters" aria-label="Anchor link for: path-converters">🔗</a>Path Converters</h3>
+<table><thead><tr><th>Converter</th><th>Matches</th><th>Example URL</th></tr></thead><tbody>
+<tr><td><code>int</code></td><td>Non-negative integers</td><td><code>&lt;int:pk&gt;</code> → <code>42</code></td></tr>
+<tr><td><code>str</code></td><td>Non-empty strings (no /)</td><td><code>&lt;str:name&gt;</code> → <code>hello</code></td></tr>
+<tr><td><code>slug</code></td><td>Slug strings (letters, numbers, hyphens, underscores)</td><td><code>&lt;slug:slug&gt;</code> → <code>my-product</code></td></tr>
+<tr><td><code>uuid</code></td><td>UUID format</td><td><code>&lt;uuid:id&gt;</code> → <code>a1b2c3d4-...</code></td></tr>
+<tr><td><code>path</code></td><td>Any string including slashes</td><td><code>&lt;path:filepath&gt;</code> → <code>docs/file.pdf</code></td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Use <code>reverse()</code> and <code>{% url %}</code> instead of hardcoding URLs.</strong> In Python: <code>reverse('myapp:product-detail', kwargs={'pk': 42})</code>. In templates: <code>{% url 'myapp:product-detail' pk=42 %}</code>. This means URL changes only need to happen in <code>urls.py</code>.</p>
+</blockquote>
+<h2 id="templates"><a class="zola-anchor" href="#templates" aria-label="Anchor link for: templates">🔗</a>Templates</h2>
+<h3 id="template-inheritance"><a class="zola-anchor" href="#template-inheritance" aria-label="Anchor link for: template-inheritance">🔗</a>Template Inheritance</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># templates/base.html</span></span>
+<span class="giallo-l"><span>&lt;!DOCTYPE html&gt;</span></span>
+<span class="giallo-l"><span>&lt;html lang=&quot;en&quot;&gt;</span></span>
+<span class="giallo-l"><span>&lt;head&gt;</span></span>
+<span class="giallo-l"><span>    &lt;meta charset=&quot;UTF-8&quot;&gt;</span></span>
+<span class="giallo-l"><span>    &lt;title&gt;{% block title %}My Site{% endblock %}&lt;/title&gt;</span></span>
+<span class="giallo-l"><span>    {% block extra_css %}{% endblock %}</span></span>
+<span class="giallo-l"><span>&lt;/head&gt;</span></span>
+<span class="giallo-l"><span>&lt;body&gt;</span></span>
+<span class="giallo-l"><span>    &lt;nav&gt;...&lt;/nav&gt;</span></span>
+<span class="giallo-l"><span>    &lt;main&gt;</span></span>
+<span class="giallo-l"><span>        {% block content %}{% endblock %}</span></span>
+<span class="giallo-l"><span>    &lt;/main&gt;</span></span>
+<span class="giallo-l"><span>    {% block extra_js %}{% endblock %}</span></span>
+<span class="giallo-l"><span>&lt;/body&gt;</span></span>
+<span class="giallo-l"><span>&lt;/html&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># myapp/templates/myapp/product_list.html</span></span>
+<span class="giallo-l"><span>{% extends &quot;base.html&quot; %}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>{% block title %}Products{% endblock %}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>{% block content %}</span></span>
+<span class="giallo-l"><span>&lt;h1&gt;Products&lt;/h1&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>{% if products %}</span></span>
+<span class="giallo-l"><span>&lt;ul&gt;</span></span>
+<span class="giallo-l"><span>    {% for product in products %}</span></span>
+<span class="giallo-l"><span>    &lt;li&gt;</span></span>
+<span class="giallo-l"><span>        &lt;a href=&quot;{{ product.get_absolute_url }}&quot;&gt;{{ product.name }}&lt;/a&gt;</span></span>
+<span class="giallo-l"><span>        &lt;span&gt;${{ product.price }}&lt;/span&gt;</span></span>
+<span class="giallo-l"><span>    &lt;/li&gt;</span></span>
+<span class="giallo-l"><span>    {% empty %}</span></span>
+<span class="giallo-l"><span>    &lt;li&gt;No products yet.&lt;/li&gt;</span></span>
+<span class="giallo-l"><span>    {% endfor %}</span></span>
+<span class="giallo-l"><span>&lt;/ul&gt;</span></span>
+<span class="giallo-l"><span>{% else %}</span></span>
+<span class="giallo-l"><span>&lt;p&gt;No products found.&lt;/p&gt;</span></span>
+<span class="giallo-l"><span>{% endif %}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>{% if page_obj.has_previous %}</span></span>
+<span class="giallo-l"><span>&lt;a href=&quot;?page={{ page_obj.previous_page_number }}&quot;&gt;Previous&lt;/a&gt;</span></span>
+<span class="giallo-l"><span>{% endif %}</span></span>
+<span class="giallo-l"><span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></span>
+<span class="giallo-l"><span>{% if page_obj.has_next %}</span></span>
+<span class="giallo-l"><span>&lt;a href=&quot;?page={{ page_obj.next_page_number }}&quot;&gt;Next&lt;/a&gt;</span></span>
+<span class="giallo-l"><span>{% endif %}</span></span>
+<span class="giallo-l"><span>{% endblock %}</span></span></code></pre><h3 id="essential-template-tags"><a class="zola-anchor" href="#essential-template-tags" aria-label="Anchor link for: essential-template-tags">🔗</a>Essential Template Tags</h3>
+<table><thead><tr><th>Tag</th><th>Purpose</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>{% extends %}</code></td><td>Inherit from parent template</td><td><code>{% extends "base.html" %}</code></td></tr>
+<tr><td><code>{% block %}</code></td><td>Overridable section</td><td><code>{% block content %}...{% endblock %}</code></td></tr>
+<tr><td><code>{{ var }}</code></td><td>Output variable (auto-escaped)</td><td><code>{{ product.name }}</code></td></tr>
+<tr><td><code>{% autoescape off %}</code></td><td>Disable auto-escaping (XSS risk)</td><td>Use `</td></tr>
+<tr><td><code>{% if %}</code> / <code>{% elif %}</code> / <code>{% else %}</code></td><td>Conditionals</td><td><code>{% if user.is_authenticated %}</code></td></tr>
+<tr><td><code>{% for %}</code> / <code>{% empty %}</code></td><td>Loop (empty shown if no items)</td><td><code>{% for item in items %}</code></td></tr>
+<tr><td><code>{% url %}</code></td><td>Reverse URL resolution</td><td><code>{% url 'myapp:detail' pk=obj.pk %}</code></td></tr>
+<tr><td><code>{% load static %}</code></td><td>Load static files tag</td><td><code>{% static 'css/style.css' %}</code></td></tr>
+<tr><td><code>{% csrf_token %}</code></td><td>CSRF token for POST forms</td><td>Inside every <code>&lt;form&gt;</code></td></tr>
+<tr><td><code>{% include %}</code></td><td>Include another template</td><td><code>{% include "snippets/card.html" %}</code></td></tr>
+<tr><td><code>{% with %}</code></td><td>Assign variable in scope</td><td><code>{% with total=cart.total %}{{ total }}{% endwith %}</code></td></tr>
+<tr><td><code>{% comment %}</code></td><td>Template comments</td><td><code>{% comment %}...{% endcomment %}</code></td></tr>
+</tbody></table>
+<h3 id="essential-template-filters"><a class="zola-anchor" href="#essential-template-filters" aria-label="Anchor link for: essential-template-filters">🔗</a>Essential Template Filters</h3>
+<table><thead><tr><th>Filter</th><th>Purpose</th><th>Example</th></tr></thead><tbody>
+<tr><td>`</td><td>safe`</td><td>Mark as safe HTML (no escaping)</td></tr>
+<tr><td>`</td><td>escape`</td><td>Force HTML escaping</td></tr>
+<tr><td>`</td><td>date`</td><td>Format a date</td></tr>
+<tr><td>`</td><td>time`</td><td>Format a time</td></tr>
+<tr><td>`</td><td>localtime`</td><td>Convert to current timezone</td></tr>
+<tr><td>`</td><td>truncatechars:N`</td><td>Truncate to N chars</td></tr>
+<tr><td>`</td><td>truncatewords:N`</td><td>Truncate to N words</td></tr>
+<tr><td>`</td><td>lower<code>/</code></td><td>upper`</td></tr>
+<tr><td>`</td><td>slugify`</td><td>Convert to URL slug</td></tr>
+<tr><td>`</td><td>linebreaks`</td><td>Newlines to <p> and <br></td></tr>
+<tr><td>`</td><td>join:`</td><td>Join list items</td></tr>
+<tr><td>`</td><td>length`</td><td>Length of list/string</td></tr>
+<tr><td>`</td><td>default:`</td><td>Default if value is falsy</td></tr>
+<tr><td>`</td><td>floatformat:N`</td><td>Round to N decimal places</td></tr>
+<tr><td>`</td><td>add:`</td><td>Add (concatenate or math)</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong><code>|safe</code> is an XSS vector if the content comes from users.</strong> Only use it on content you fully control (e.g., admin-entered HTML).</p>
+</blockquote>
+<h2 id="forms"><a class="zola-anchor" href="#forms" aria-label="Anchor link for: forms">🔗</a>Forms</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/forms.py</span></span>
+<span class="giallo-l"><span>from django import forms</span></span>
+<span class="giallo-l"><span>from .models import Product</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- ModelForm: auto-generates fields from a model ----</span></span>
+<span class="giallo-l"><span>class ProductForm(forms.ModelForm):</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    class Meta:</span></span>
+<span class="giallo-l"><span>        model = Product</span></span>
+<span class="giallo-l"><span>        fields = [&#39;name&#39;, &#39;category&#39;, &#39;price&#39;, &#39;description&#39;, &#39;tags&#39;, &#39;image&#39;]</span></span>
+<span class="giallo-l"><span>        # exclude = [&#39;created_at&#39;]  # alternative: list what to exclude</span></span>
+<span class="giallo-l"><span>        widgets = {</span></span>
+<span class="giallo-l"><span>            &#39;description&#39;: forms.Textarea(attrs={&#39;rows&#39;: 4}),</span></span>
+<span class="giallo-l"><span>            &#39;tags&#39;: forms.CheckboxSelectMultiple,  # instead of default multi-select</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"><span>        labels = {</span></span>
+<span class="giallo-l"><span>            &#39;name&#39;: &#39;Product Name&#39;,</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"><span>        help_texts = {</span></span>
+<span class="giallo-l"><span>            &#39;price&#39;: &#39;Price in USD&#39;,</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"><span>        error_messages = {</span></span>
+<span class="giallo-l"><span>            &#39;name&#39;: {</span></span>
+<span class="giallo-l"><span>                &#39;required&#39;: &#39;Product name is required.&#39;,</span></span>
+<span class="giallo-l"><span>            },</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Custom validation: clean_&lt;fieldname&gt;()</span></span>
+<span class="giallo-l"><span>    def clean_price(self):</span></span>
+<span class="giallo-l"><span>        price = self.cleaned_data.get(&#39;price&#39;)</span></span>
+<span class="giallo-l"><span>        if price is not None and price &lt; 0:</span></span>
+<span class="giallo-l"><span>            raise forms.ValidationError(&#39;Price must be positive.&#39;)</span></span>
+<span class="giallo-l"><span>        return price</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Cross-field validation: clean()</span></span>
+<span class="giallo-l"><span>    def clean(self):</span></span>
+<span class="giallo-l"><span>        cleaned = super().clean()</span></span>
+<span class="giallo-l"><span>        category = cleaned.get(&#39;category&#39;)</span></span>
+<span class="giallo-l"><span>        price = cleaned.get(&#39;price&#39;)</span></span>
+<span class="giallo-l"><span>        if category and category.name == &#39;Premium&#39; and price and price &lt; 50:</span></span>
+<span class="giallo-l"><span>            raise forms.ValidationError(&#39;Premium products must cost at least $50.&#39;)</span></span>
+<span class="giallo-l"><span>        return cleaned</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Plain Form (not tied to a model) ----</span></span>
+<span class="giallo-l"><span>class ContactForm(forms.Form):</span></span>
+<span class="giallo-l"><span>    name = forms.CharField(max_length=100)</span></span>
+<span class="giallo-l"><span>    email = forms.EmailField()</span></span>
+<span class="giallo-l"><span>    message = forms.CharField(widget=forms.Textarea)</span></span>
+<span class="giallo-l"><span>    # Add a honeypot field for spam prevention:</span></span>
+<span class="giallo-l"><span>    # website = forms.CharField(required=False, widget=forms.HiddenInput)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def clean_email(self):</span></span>
+<span class="giallo-l"><span>        email = self.cleaned_data[&#39;email&#39;]</span></span>
+<span class="giallo-l"><span>        if User.objects.filter(email=email).exists():</span></span>
+<span class="giallo-l"><span>            raise forms.ValidationError(&#39;This email is already registered.&#39;)</span></span>
+<span class="giallo-l"><span>        return email</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Form template ----</span></span>
+<span class="giallo-l"><span># &lt;form method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;  enctype for FileField/ImageField</span></span>
+<span class="giallo-l"><span># {% csrf_token %}</span></span>
+<span class="giallo-l"><span># {{ form.as_p }}  or render fields individually:</span></span>
+<span class="giallo-l"><span># {% for field in form %}</span></span>
+<span class="giallo-l"><span>#     &lt;div&gt;</span></span>
+<span class="giallo-l"><span>#         {{ field.label_tag }}</span></span>
+<span class="giallo-l"><span>#         {{ field.errors }}  &lt;!-- shows validation errors --&gt;</span></span>
+<span class="giallo-l"><span>#         {{ field }}  &lt;!-- or {{ field.as_widget }} for no label --&gt;</span></span>
+<span class="giallo-l"><span>#         {% if field.help_text %}&lt;small&gt;{{ field.help_text }}&lt;/small&gt;{% endif %}</span></span>
+<span class="giallo-l"><span>#     &lt;/div&gt;</span></span>
+<span class="giallo-l"><span># {% endfor %}</span></span>
+<span class="giallo-l"><span># &lt;button type=&quot;submit&quot;&gt;Save&lt;/button&gt;</span></span>
+<span class="giallo-l"><span># &lt;/form&gt;</span></span></code></pre><h2 id="admin-admin-py"><a class="zola-anchor" href="#admin-admin-py" aria-label="Anchor link for: admin-admin-py">🔗</a>Admin (admin.py)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/admin.py</span></span>
+<span class="giallo-l"><span>from django.contrib import admin</span></span>
+<span class="giallo-l"><span>from .models import Product, Category</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Basic registration ----</span></span>
+<span class="giallo-l"><span># admin.site.register(Product)  # Minimal, no customization</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- ModelAdmin customization ----</span></span>
+<span class="giallo-l"><span>@admin.register(Product)</span></span>
+<span class="giallo-l"><span>class ProductAdmin(admin.ModelAdmin):</span></span>
+<span class="giallo-l"><span>    list_display = [&#39;name&#39;, &#39;category&#39;, &#39;price&#39;, &#39;status&#39;, &#39;created_at&#39;]</span></span>
+<span class="giallo-l"><span>    list_display_links = [&#39;name&#39;]  # Clickable to edit (default: first item)</span></span>
+<span class="giallo-l"><span>    list_filter = [&#39;status&#39;, &#39;category&#39;, &#39;created_at&#39;]</span></span>
+<span class="giallo-l"><span>    search_fields = [&#39;name&#39;, &#39;sku&#39;]  # Searches these fields</span></span>
+<span class="giallo-l"><span>    ordering = [&#39;-created_at&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Filter on related field (uses double underscore)</span></span>
+<span class="giallo-l"><span>    list_filter = [&#39;status&#39;, &#39;category__name&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Editable fields directly in list view</span></span>
+<span class="giallo-l"><span>    list_editable = [&#39;price&#39;, &#39;status&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Actions dropdown</span></span>
+<span class="giallo-l"><span>    actions = [&#39;mark_as_published&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def mark_as_published(self, request, queryset):</span></span>
+<span class="giallo-l"><span>        updated = queryset.update(status=&#39;published&#39;)</span></span>
+<span class="giallo-l"><span>        self.message_user(request, f&quot;{updated} products published.&quot;)</span></span>
+<span class="giallo-l"><span>    mark_as_published.short_description = &quot;Mark selected as published&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Custom column with HTML</span></span>
+<span class="giallo-l"><span>    def price_with_currency(self, obj):</span></span>
+<span class="giallo-l"><span>        return f&quot;${obj.price}&quot;</span></span>
+<span class="giallo-l"><span>    price_with_currency.short_description = &quot;Price&quot;</span></span>
+<span class="giallo-l"><span>    price_with_currency.admin_order_field = &#39;price&#39;  # Make column sortable</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Read-only fields in edit form</span></span>
+<span class="giallo-l"><span>    readonly_fields = [&#39;created_at&#39;, &#39;updated_at&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Fieldsets: organize edit form into sections</span></span>
+<span class="giallo-l"><span>    fieldsets = [</span></span>
+<span class="giallo-l"><span>        (&#39;Basic Info&#39;, {</span></span>
+<span class="giallo-l"><span>            &#39;fields&#39;: [&#39;name&#39;, &#39;sku&#39;, &#39;category&#39;, &#39;price&#39;],</span></span>
+<span class="giallo-l"><span>        }),</span></span>
+<span class="giallo-l"><span>        (&#39;Details&#39;, {</span></span>
+<span class="giallo-l"><span>            &#39;fields&#39;: [&#39;description&#39;, &#39;tags&#39;, &#39;image&#39;],</span></span>
+<span class="giallo-l"><span>            &#39;classes&#39;: [&#39;collapse&#39;],  # Collapsible section</span></span>
+<span class="giallo-l"><span>        }),</span></span>
+<span class="giallo-l"><span>        (&#39;Status&#39;, {</span></span>
+<span class="giallo-l"><span>            &#39;fields&#39;: [&#39;status&#39;, &#39;created_at&#39;, &#39;updated_at&#39;],</span></span>
+<span class="giallo-l"><span>            &#39;classes&#39;: [&#39;collapse&#39;],</span></span>
+<span class="giallo-l"><span>        }),</span></span>
+<span class="giallo-l"><span>    ]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Auto-populate slug from name</span></span>
+<span class="giallo-l"><span>    prepopulated_fields = {&#39;slug&#39;: (&#39;name&#39;,)}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Date hierarchy navigation</span></span>
+<span class="giallo-l"><span>    date_hierarchy = &#39;created_at&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Pagination</span></span>
+<span class="giallo-l"><span>    list_per_page = 50</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # FK shown as a search widget instead of dropdown (for large tables)</span></span>
+<span class="giallo-l"><span>    autocomplete_fields = [&#39;category&#39;]</span></span>
+<span class="giallo-l"><span>    # Requires search_fields defined on the related model&#39;s admin too.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    # Inline admin for related models</span></span>
+<span class="giallo-l"><span>    inlines = [ProductImageInline]  # See below</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Inline admin ----</span></span>
+<span class="giallo-l"><span>@admin.register(ProductImage)</span></span>
+<span class="giallo-l"><span>class ProductImageInline(admin.TabularInline):  # or admin.StackedInline</span></span>
+<span class="giallo-l"><span>    model = ProductImage</span></span>
+<span class="giallo-l"><span>    extra = 1  # Number of empty forms to show</span></span>
+<span class="giallo-l"><span>    readonly_fields = [&#39;image_preview&#39;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def image_preview(self, obj):</span></span>
+<span class="giallo-l"><span>        if obj.image:</span></span>
+<span class="giallo-l"><span>            return f&#39;&lt;img src=&quot;{obj.image.url}&quot; width=&quot;100&quot;&gt;&#39;</span></span>
+<span class="giallo-l"><span>        return &quot;&quot;</span></span>
+<span class="giallo-l"><span>    image_preview.allow_tags = True  # Django 4.x: use format_html instead</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- Custom User Model (if using AUTH_USER_MODEL) ----</span></span>
+<span class="giallo-l"><span># from django.contrib.auth.admin import UserAdmin</span></span>
+<span class="giallo-l"><span># @admin.register(CustomUser)</span></span>
+<span class="giallo-l"><span># class CustomUserAdmin(UserAdmin):</span></span>
+<span class="giallo-l"><span>#     list_display = [&#39;email&#39;, &#39;first_name&#39;, &#39;is_staff&#39;]</span></span>
+<span class="giallo-l"><span>#     fieldsets = UserAdmin.fieldsets + (</span></span>
+<span class="giallo-l"><span>#         (&#39;Extra&#39;, {&#39;fields&#39;: [&#39;phone&#39;, &#39;department&#39;]}),</span></span>
+<span class="giallo-l"><span>#     )</span></span></code></pre><h2 id="signals"><a class="zola-anchor" href="#signals" aria-label="Anchor link for: signals">🔗</a>Signals</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/signals.py</span></span>
+<span class="giallo-l"><span>from django.db.models.signals import post_save, pre_delete, m2m_changed</span></span>
+<span class="giallo-l"><span>from django.dispatch import receiver</span></span>
+<span class="giallo-l"><span>from django.core.mail import send_mail</span></span>
+<span class="giallo-l"><span>from .models import Product, Order</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- post_save: after a model is saved ----</span></span>
+<span class="giallo-l"><span>@receiver(post_save, sender=Product)</span></span>
+<span class="giallo-l"><span>def product_created(sender, instance, created, **kwargs):</span></span>
+<span class="giallo-l"><span>    if created:</span></span>
+<span class="giallo-l"><span>        # Only runs on creation, not updates</span></span>
+<span class="giallo-l"><span>        send_mail(</span></span>
+<span class="giallo-l"><span>            &#39;New Product Created&#39;,</span></span>
+<span class="giallo-l"><span>            f&#39;Product {instance.name} was created.&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;noreply@example.com&#39;,</span></span>
+<span class="giallo-l"><span>            [&#39;admin@example.com&#39;],</span></span>
+<span class="giallo-l"><span>        )</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- pre_delete: before a model is deleted ----</span></span>
+<span class="giallo-l"><span>@receiver(pre_delete, sender=Order)</span></span>
+<span class="giallo-l"><span>def order_about_to_delete(sender, instance, **kwargs):</span></span>
+<span class="giallo-l"><span>    # Log or take action before deletion</span></span>
+<span class="giallo-l"><span>    instance.log(f&quot;Order {instance.id} deleted&quot;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># ---- m2m_changed: when a ManyToMany relation changes ----</span></span>
+<span class="giallo-l"><span>@receiver(m2m_changed, sender=Product.tags.through)</span></span>
+<span class="giallo-l"><span>def product_tags_changed(sender, instance, action, pk_set, **kwargs):</span></span>
+<span class="giallo-l"><span>    if action == &quot;post_add&quot;:</span></span>
+<span class="giallo-l"><span>        # Tags were added</span></span>
+<span class="giallo-l"><span>        pass</span></span>
+<span class="giallo-l"><span>    elif action == &quot;post_remove&quot;:</span></span>
+<span class="giallo-l"><span>        # Tags were removed</span></span>
+<span class="giallo-l"><span>        pass</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># myapp/apps.py (register signals)</span></span>
+<span class="giallo-l"><span>from django.apps import AppConfig</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class MyappConfig(AppConfig):</span></span>
+<span class="giallo-l"><span>    default_auto_field = &#39;django.db.models.BigAutoField&#39;</span></span>
+<span class="giallo-l"><span>    name = &#39;myapp&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def ready(self):</span></span>
+<span class="giallo-l"><span>        # Import signals here so they get registered.</span></span>
+<span class="giallo-l"><span>        # This avoids circular imports and ensures AppConfig is ready.</span></span>
+<span class="giallo-l"><span>        import myapp.signals</span></span></code></pre>
+<blockquote>
+<p><strong>Always connect signals in <code>AppConfig.ready()</code>.</strong> Connecting at module level in <code>models.py</code> can cause issues with AppConfig not being ready, and the import may happen multiple times in testing.</p>
+</blockquote>
+<h2 id="middleware"><a class="zola-anchor" href="#middleware" aria-label="Anchor link for: middleware">🔗</a>Middleware</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/middleware.py</span></span>
+<span class="giallo-l"><span>import time</span></span>
+<span class="giallo-l"><span>import logging</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>logger = logging.getLogger(__name__)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class TimingMiddleware:</span></span>
+<span class="giallo-l"><span>    # Middleware can be either a function or a class.</span></span>
+<span class="giallo-l"><span>    # Class-based: __init__ gets called once at server start.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def __init__(self, get_response):</span></span>
+<span class="giallo-l"><span>        self.get_response = get_response</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    def __call__(self, request):</span></span>
+<span class="giallo-l"><span>        # Before view runs</span></span>
+<span class="giallo-l"><span>        start = time.time()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Call the view (or next middleware)</span></span>
+<span class="giallo-l"><span>        response = self.get_response(request)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # After view runs</span></span>
+<span class="giallo-l"><span>        duration = time.time() - start</span></span>
+<span class="giallo-l"><span>        logger.info(f&quot;{request.method} {request.path} - {duration:.3f}s&quot;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Add header to response</span></span>
+<span class="giallo-l"><span>        response[&#39;X-Response-Time&#39;] = f&quot;{duration:.3f}&quot;</span></span>
+<span class="giallo-l"><span>        return response</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># In settings.py</span></span>
+<span class="giallo-l"><span>MIDDLEWARE = [</span></span>
+<span class="giallo-l"><span>    # ... existing middleware ...</span></span>
+<span class="giallo-l"><span>    &#39;myapp.middleware.TimingMiddleware&#39;,</span></span>
+<span class="giallo-l"><span>    # Order matters: first in list = first to process request,</span></span>
+<span class="giallo-l"><span>    # last to process response.</span></span>
+<span class="giallo-l"><span>]</span></span></code></pre>
+<blockquote>
+<p><strong>Middleware order is critical.</strong> Request flows top-to-bottom. Response flows bottom-to-top. Authentication middleware must come before anything that checks <code>request.user</code>.</p>
+</blockquote>
+<h2 id="static-files"><a class="zola-anchor" href="#static-files" aria-label="Anchor link for: static-files">🔗</a>Static Files</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Static file locations (checked in this order):</span></span>
+<span class="giallo-l"><span># 1. Each app&#39;s static/ directory (if APP_DIRS or StaticFilesFinder is active)</span></span>
+<span class="giallo-l"><span># 2. Directories listed in STATICFILES_DIRS (project-level static files)</span></span>
+<span class="giallo-l"><span># 3. STATIC_ROOT (only used by collectstatic, not for development)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># In templates:</span></span>
+<span class="giallo-l"><span># {% load static %}</span></span>
+<span class="giallo-l"><span># &lt;link rel=&quot;stylesheet&quot; href=&quot;{% static &#39;css/style.css&#39; %}&quot;&gt;</span></span>
+<span class="giallo-l"><span># &lt;img src=&quot;{% static &#39;img/logo.png&#39; %}&quot;&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># In development: Django&#39;s runserver serves static files automatically.</span></span>
+<span class="giallo-l"><span># In production: run collectstatic, then serve STATIC_ROOT with nginx/whitenoise.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Whitenoise (simplest approach for small/medium projects):</span></span>
+<span class="giallo-l"><span># pip install whitenoise</span></span>
+<span class="giallo-l"><span># In settings.py MIDDLEWARE (after SecurityMiddleware, before CommonMiddleware):</span></span>
+<span class="giallo-l"><span># &#39;whitenoise.middleware.WhiteNoiseMiddleware&#39;,</span></span>
+<span class="giallo-l"><span># In settings.py:</span></span>
+<span class="giallo-l"><span># STATICFILES_STORAGE = &#39;whitenoise.storage.CompressedManifestStaticFilesStorage&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Collectstatic command:</span></span>
+<span class="giallo-l"><span># python manage.py collectstatic  # copies all static files to STATIC_ROOT</span></span></code></pre><h2 id="commonly-missed-things"><a class="zola-anchor" href="#commonly-missed-things" aria-label="Anchor link for: commonly-missed-things">🔗</a>Commonly Missed Things</h2>
+<ol>
+<li>
+<p><strong>Forgetting <code>request.FILES</code> in form view.</strong> <code>ModelForm(request.POST)</code> won't capture file uploads. Must be <code>ModelForm(request.POST, request.FILES)</code>. Also need <code>enctype="multipart/form-data"</code> on the HTML form.</p>
+</li>
+<li>
+<p><strong>Forgetting <code>{% csrf_token %}</code> in POST forms.</strong> Django blocks the request with a 403 Forbidden. Always include it inside every <code>&lt;form&gt;</code> tag with <code>method="post"</code>.</p>
+</li>
+<li>
+<p><strong>Not using <code>select_related()</code> for ForeignKey lookups.</strong> Every <code>product.category.name</code> in a loop causes a separate query (N+1 problem). Use <code>select_related('category')</code>.</p>
+</li>
+<li>
+<p><strong>Not using <code>prefetch_related()</code> for ManyToMany/reverse FK.</strong> Same N+1 problem. Use <code>prefetch_related('tags')</code> for M2M fields.</p>
+</li>
+<li>
+<p><strong>Using <code>null=True</code> on CharField/TextField.</strong> Use <code>blank=True</code> instead. Empty string <code>""</code> is the Django convention for "no data" on text fields. NULL means "unknown" and creates bugs in filters (<code>name=""</code> vs <code>name__isnull=True</code>).</p>
+</li>
+<li>
+<p><strong>Not setting <code>on_delete</code> on ForeignKey.</strong> Django defaults to <code>CASCADE</code> in most cases, but being explicit prevents surprises. Always state it.</p>
+</li>
+<li>
+<p><strong>Forgetting <code>related_name</code> on ForeignKey/ManyToMany.</strong> Without it, Django uses <code>modelname_set</code>, which is ugly and ambiguous if multiple FKs point to the same model.</p>
+</li>
+<li>
+<p><strong>Querying in a loop.</strong> <code>for item in items: item.category.name</code> is N+1. Always prefetch or select related first.</p>
+</li>
+<li>
+<p><strong>Not migrating after model changes.</strong> Changed a field, added a field, renamed a field? Run <code>makemigrations</code> then <code>migrate</code>. Skipping this causes runtime errors.</p>
+</li>
+<li>
+<p><strong>Using <code>DateTimeField</code> without <code>USE_TZ=True</code>.</strong> Timezone-naive datetimes cause subtle bugs. Always use timezone-aware datetimes in Django.</p>
+</li>
+<li>
+<p><strong>Serving media files in production.</strong> <code>runserver</code> serves media files, but production servers (gunicorn/uwsgi) don't. Configure nginx or use a storage backend.</p>
+</li>
+<li>
+<p><strong>Not using <code>get_object_or_404()</code>.</strong> <code>Model.objects.get()</code> raises <code>DoesNotExist</code> which becomes a 500 error. <code>get_object_or_404()</code> returns a clean 404.</p>
+</li>
+<li>
+<p><strong>Putting business logic in views instead of models.</strong> Views should handle HTTP concerns (request/response). Business logic belongs in model methods or a service layer.</p>
+</li>
+<li>
+<p><strong>Not handling <code>bulk_create</code>/<code>bulk_update</code> signal limitation.</strong> These don't fire <code>save()</code> signals or call <code>save()</code> methods. If you need signals, use a loop or <code>post_save</code> manually after.</p>
+</li>
+<li>
+<p><strong>Setting <code>DEBUG=True</code> in production.</strong> Exposes stack traces, settings, and SQL queries to the world. Always use environment variables.</p>
+</li>
+<li>
+<p><strong>Not using <code>reverse_lazy()</code> in class-level attributes.</strong> <code>reverse()</code> fails at module load time because URL conf isn't ready yet. <code>reverse_lazy()</code> defers the lookup.</p>
+</li>
+</ol>
+<h2 id="best-practices"><a class="zola-anchor" href="#best-practices" aria-label="Anchor link for: best-practices">🔗</a>Best Practices</h2>
+<ul>
+<li>
+<p><strong>Custom User Model:</strong> Create one at the start of every project. Adding one later requires complex migrations. Use <code>AbstractUser</code> (keep standard auth fields) or <code>AbstractBaseUser</code> (full control).</p>
+</li>
+<li>
+<p><strong>One app per concern:</strong> Keep apps focused. <code>orders</code>, <code>products</code>, <code>users</code> — not <code>everything</code>.</p>
+</li>
+<li>
+<p><strong>Use <code>select_related</code> and <code>prefetch_related</code> everywhere.</strong> Profile with <code>django.db.connection.queries</code> or Django Debug Toolbar to find N+1 queries.</p>
+</li>
+<li>
+<p><strong>Use <code>values()</code> or <code>values_list()</code> when you only need specific fields.</strong> No need to instantiate full model objects for a dropdown.</p>
+</li>
+<li>
+<p><strong>Never hardcode URLs.</strong> Always use <code>reverse()</code> in Python and <code>{% url %}</code> in templates.</p>
+</li>
+<li>
+<p><strong>Use <code>F()</code> expressions for atomic updates.</strong> <code>Product.objects.filter(pk=1).update(price=F('price') + 10)</code> avoids race conditions.</p>
+</li>
+<li>
+<p><strong>Use <code>bulk_create</code> for inserting many objects.</strong> 10-100x faster than individual <code>save()</code> calls.</p>
+</li>
+<li>
+<p><strong>Use <code>transaction.atomic()</code> for multi-step operations.</strong> If anything fails, the whole transaction rolls back.</p>
+</li>
+<li>
+<p><strong>Use <code>django-axes</code> or <code>django-ratelimit</code> for brute-force protection.</strong> Don't roll your own.</p>
+</li>
+<li>
+<p><strong>Use <code>django-filter</code> with DRF for complex query filtering.</strong> Don't build filter logic from scratch.</p>
+</li>
+<li>
+<p><strong>Validate at the form/model level, not just the template.</strong> Client-side validation is UX only. Server-side validation is security.</p>
+</li>
+<li>
+<p><strong>Use environment variables for all sensitive config.</strong> Database password, secret key, API keys, email credentials.</p>
+</li>
+<li>
+<p><strong>Keep migrations in version control.</strong> They are part of your code history. Never delete applied migrations.</p>
+</li>
+<li>
+<p><strong>Use <code>django-extensions</code> <code>shell_plus</code></strong> for a better shell that auto-imports your models.</p>
+</li>
+<li>
+<p><strong>Use <code>logger</code> instead of <code>print()</code>.</strong> <code>logging.getLogger(__name__)</code> gives you level control and output routing.</p>
+</li>
+</ul>
+<h2 id="devops-cli-postgresql-backups"><a class="zola-anchor" href="#devops-cli-postgresql-backups" aria-label="Anchor link for: devops-cli-postgresql-backups">🔗</a>DevOps: CLI, PostgreSQL, Backups</h2>
+<h3 id="starting-a-project"><a class="zola-anchor" href="#starting-a-project" aria-label="Anchor link for: starting-a-project">🔗</a>Starting a Project</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>django-admin startproject myproject</span></span>
+<span class="giallo-l"><span>cd myproject</span></span>
+<span class="giallo-l"><span>python manage.py startapp myapp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Or with a custom template:</span></span>
+<span class="giallo-l"><span>django-admin startproject --template https://github.com/... myproject</span></span></code></pre><h3 id="common-cli-commands"><a class="zola-anchor" href="#common-cli-commands" aria-label="Anchor link for: common-cli-commands">🔗</a>Common CLI Commands</h3>
+<table><thead><tr><th>Command</th><th>What It Does</th></tr></thead><tbody>
+<tr><td><code>manage.py runserver</code></td><td>Development server (auto-reloads on file changes)</td></tr>
+<tr><td><code>manage.py runserver 0.0.0.0:8000</code></td><td>Listen on all interfaces (for LAN testing)</td></tr>
+<tr><td><code>manage.py shell</code></td><td>Interactive Python shell</td></tr>
+<tr><td><code>manage.py shell_plus</code></td><td>Enhanced shell (requires django-extensions)</td></tr>
+<tr><td><code>manage.py dbshell</code></td><td>Direct psql shell connected to the DB</td></tr>
+<tr><td><code>manage.py createsuperuser</code></td><td>Create admin user interactively</td></tr>
+<tr><td><code>manage.py changepassword &lt;user&gt;</code></td><td>Change a user's password</td></tr>
+<tr><td><code>manage.py makemigrations</code></td><td>Create migration files from model changes</td></tr>
+<tr><td><code>manage.py migrate</code></td><td>Apply pending migrations</td></tr>
+<tr><td><code>manage.py showmigrations</code></td><td>Show migration status</td></tr>
+<tr><td><code>manage.py collectstatic</code></td><td>Copy static files to STATIC_ROOT</td></tr>
+<tr><td><code>manage.py test</code></td><td>Run all tests</td></tr>
+<tr><td><code>manage.py test myapp</code></td><td>Run tests for one app</td></tr>
+<tr><td><code>manage.py test myapp.tests.TestClass</code></td><td>Run one test class</td></tr>
+<tr><td><code>manage.py test --keepdb</code></td><td>Don't destroy/recreate test DB (faster)</td></tr>
+<tr><td><code>manage.py check</code></td><td>Run system checks (no DB access needed)</td></tr>
+<tr><td><code>manage.py check --deploy</code></td><td>Production deployment checks</td></tr>
+<tr><td><code>manage.py show_urls</code></td><td>List all URLs (requires django-extensions)</td></tr>
+<tr><td><code>manage.py dumpdata myapp</code></td><td>Serialize app data to JSON</td></tr>
+<tr><td><code>manage.py loaddata backup.json</code></td><td>Load data from a fixture</td></tr>
+<tr><td><code>manage.py flush</code></td><td>Reset the DB (drops all data, keeps tables)</td></tr>
+<tr><td><code>manage.py reset_db</code></td><td>Drops and recreates the entire DB (requires django-extensions)</td></tr>
+</tbody></table>
+<h3 id="django-shell"><a class="zola-anchor" href="#django-shell" aria-label="Anchor link for: django-shell">🔗</a>Django Shell</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>python manage.py shell</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Or with shell_plus (auto-imports models):</span></span>
+<span class="giallo-l"><span>python manage.py shell_plus</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Inside the shell:</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; from myapp.models import Product</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; Product.objects.count()</span></span>
+<span class="giallo-l"><span>42</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; p = Product.objects.first()</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; p.name, p.price</span></span>
+<span class="giallo-l"><span>(&#39;Widget&#39;, Decimal(&#39;29.99&#39;))</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; Product.objects.filter(price__gt=50).count()</span></span>
+<span class="giallo-l"><span>10</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; Product.objects.create(name=&#39;New Product&#39;, price=19.99)</span></span>
+<span class="giallo-l"><span>&lt;Product: New Product&gt;</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; from django.db import connection</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; connection.queries[-1][&#39;sql&#39;]</span></span>
+<span class="giallo-l"><span># Shows the last SQL query executed</span></span></code></pre><h3 id="working-with-postgresql"><a class="zola-anchor" href="#working-with-postgresql" aria-label="Anchor link for: working-with-postgresql">🔗</a>Working with PostgreSQL</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>psql -U myuser -d mydb -h localhost</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># List all tables</span></span>
+<span class="giallo-l"><span>\dt</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Describe a table</span></span>
+<span class="giallo-l"><span>\d myapp_product</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Count records</span></span>
+<span class="giallo-l"><span>SELECT count(*) FROM myapp_product;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Find large tables</span></span>
+<span class="giallo-l"><span>SELECT relname AS table_name, pg_size_pretty(pg_total_relation_size(relid)) AS size</span></span>
+<span class="giallo-l"><span>FROM pg_stat_user_tables ORDER BY pg_total_relation_size(relid) DESC LIMIT 20;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Index usage stats (find unused indexes)</span></span>
+<span class="giallo-l"><span>SELECT schemaname, relname, indexname, idx_scan</span></span>
+<span class="giallo-l"><span>FROM pg_stat_user_indexes WHERE idx_scan = 0 ORDER BY pg_relation_size(indexrelid) DESC;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Kill connections before dropping DB</span></span>
+<span class="giallo-l"><span>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = &#39;mydb&#39;;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Reset a sequence (if auto-increment gets out of sync)</span></span>
+<span class="giallo-l"><span>SELECT setval(&#39;myapp_product_id_seq&#39;, (SELECT max(id) FROM myapp_product));</span></span></code></pre>
+<blockquote>
+<p><strong>Don't modify Django tables via raw SQL</strong> unless you know exactly what you're doing. The ORM manages constraints, triggers, and caches that raw SQL bypasses.</p>
+</blockquote>
+<h3 id="database-backup-and-restore"><a class="zola-anchor" href="#database-backup-and-restore" aria-label="Anchor link for: database-backup-and-restore">🔗</a>Database Backup and Restore</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Backup</span></span>
+<span class="giallo-l"><span>pg_dump -U myuser -d mydb -F c -f mydb_backup.dump</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Restore (create fresh DB first)</span></span>
+<span class="giallo-l"><span>createdb -U myuser mydb_restored</span></span>
+<span class="giallo-l"><span>pg_restore -U myuser -d mydb_restored -j 4 --no-owner mydb_backup.dump</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Quick SQL backup (smaller file, slower restore)</span></span>
+<span class="giallo-l"><span>pg_dump -U myuser -d mydb -f mydb_backup.sql</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Also back up media files (user uploads):</span></span>
+<span class="giallo-l"><span>tar -czf media_backup.tar.gz /path/to/media/</span></span></code></pre>
+<blockquote>
+<p><strong>Media files are NOT in the database.</strong> They live in <code>MEDIA_ROOT</code> on the filesystem. Back them up separately. Consider using <code>django-storages</code> with S3/Blob storage to avoid filesystem management entirely.</p>
+</blockquote>
+<h3 id="debug-mode"><a class="zola-anchor" href="#debug-mode" aria-label="Anchor link for: debug-mode">🔗</a>Debug Mode</h3>
+<table><thead><tr><th>Feature</th><th>How</th></tr></thead><tbody>
+<tr><td>Error pages with stack traces</td><td><code>DEBUG=True</code> (auto)</td></tr>
+<tr><td>All SQL queries logged</td><td><code>DEBUG=True</code> + check <code>django.db.connection.queries</code></td></tr>
+<tr><td>Django Debug Toolbar</td><td><code>pip install django-debug-toolbar</code>, add to INSTALLED_APPS and MIDDLEWARE</td></tr>
+<tr><td>Silk (performance profiling)</td><td><code>pip install django-silk</code>, profiles every request</td></tr>
+<tr><td>Production error pages</td><td>Configure <code>DEBUG=False</code> + <code>ALLOWED_HOSTS</code> + logging</td></tr>
+<tr><td>500 email on error</td><td>Set <code>ADMINS = [('Name', 'email')]</code> in settings</td></tr>
+</tbody></table>
+<h3 id="logging"><a class="zola-anchor" href="#logging" aria-label="Anchor link for: logging">🔗</a>Logging</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># In settings.py</span></span>
+<span class="giallo-l"><span>LOGGING = {</span></span>
+<span class="giallo-l"><span>    &#39;version&#39;: 1,</span></span>
+<span class="giallo-l"><span>    &#39;disable_existing_loggers&#39;: False,</span></span>
+<span class="giallo-l"><span>    &#39;formatters&#39;: {</span></span>
+<span class="giallo-l"><span>        &#39;verbose&#39;: {</span></span>
+<span class="giallo-l"><span>            &#39;format&#39;: &#39;[{levelname}] {asctime} {module} {process:d} {thread:d} {message}&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;style&#39;: &#39;{&#39;,</span></span>
+<span class="giallo-l"><span>        },</span></span>
+<span class="giallo-l"><span>        &#39;simple&#39;: {</span></span>
+<span class="giallo-l"><span>            &#39;format&#39;: &#39;{levelname} {message}&#39;,</span></span>
+<span class="giallo-l"><span>        },</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>    &#39;handlers&#39;: {</span></span>
+<span class="giallo-l"><span>        &#39;console&#39;: {</span></span>
+<span class="giallo-l"><span>            &#39;class&#39;: &#39;logging.StreamHandler&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;formatter&#39;: &#39;simple&#39;,</span></span>
+<span class="giallo-l"><span>        },</span></span>
+<span class="giallo-l"><span>        &#39;file&#39;: {</span></span>
+<span class="giallo-l"><span>            &#39;class&#39;: &#39;logging.handlers.RotatingFileHandler&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;filename&#39;: BASE_DIR / &#39;logs&#39; / &#39;django.log&#39;,</span></span>
+<span class="giallo-l"><span>            &#39;maxBytes&#39;: 10 * 1024 * 1024,  # 10 MB</span></span>
+<span class="giallo-l"><span>            &#39;backupCount&#39;: 5,</span></span>
+<span class="giallo-l"><span>            &#39;formatter&#39;: &#39;verbose&#39;,</span></span>
+<span class="giallo-l"><span>        },</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>    &#39;loggers&#39;: {</span></span>
+<span class="giallo-l"><span>        &#39;django&#39;: {</span></span>
+<span class="giallo-l"><span>            &#39;handlers&#39;: [&#39;console&#39;],</span></span>
+<span class="giallo-l"><span>            &#39;level&#39;: &#39;INFO&#39;,</span></span>
+<span class="giallo-l"><span>        },</span></span>
+<span class="giallo-l"><span>        &#39;myapp&#39;: {</span></span>
+<span class="giallo-l"><span>            &#39;handlers&#39;: [&#39;console&#39;, &#39;file&#39;],</span></span>
+<span class="giallo-l"><span>            &#39;level&#39;: &#39;DEBUG&#39;,  # Debug your app, info for Django</span></span>
+<span class="giallo-l"><span>            &#39;propagate&#39;: False,  # Don&#39;t bubble up to django logger</span></span>
+<span class="giallo-l"><span>        },</span></span>
+<span class="giallo-l"><span>        &#39;django.requests&#39;: {</span></span>
+<span class="giallo-l"><span>            &#39;handlers&#39;: [&#39;file&#39;],</span></span>
+<span class="giallo-l"><span>            &#39;level&#39;: &#39;WARNING&#39;,  # Log 4xx/5xx to file</span></span>
+<span class="giallo-l"><span>            &#39;propagate&#39;: False,</span></span>
+<span class="giallo-l"><span>        },</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># In Python code</span></span>
+<span class="giallo-l"><span>import logging</span></span>
+<span class="giallo-l"><span>logger = logging.getLogger(__name__)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>logger.debug(&quot;Variable value: %s&quot;, value)</span></span>
+<span class="giallo-l"><span>logger.info(&quot;Operation completed&quot;)</span></span>
+<span class="giallo-l"><span>logger.warning(&quot;Something unexpected&quot;)</span></span>
+<span class="giallo-l"><span>logger.error(&quot;Failed: %s&quot;, error)</span></span>
+<span class="giallo-l"><span>logger.critical(&quot;System failure&quot;)</span></span></code></pre><h3 id="development-workflow-tips"><a class="zola-anchor" href="#development-workflow-tips" aria-label="Anchor link for: development-workflow-tips">🔗</a>Development Workflow Tips</h3>
+<ul>
+<li>
+<p><strong>Create a custom User model at project start.</strong> Adding one later is painful. Use <code>AbstractUser</code> to extend the standard user with custom fields.</p>
+</li>
+<li>
+<p><strong>Use <code>django-extensions</code>.</strong> Adds <code>shell_plus</code>, <code>show_urls</code>, <code>reset_db</code>, <code>runserver_plus</code> (with Werkzeug debugger), and more.</p>
+</li>
+<li>
+<p><strong>Use <code>Django Debug Toolbar</code> during development.</strong> Shows all queries, timing, templates used, signals fired, and more for every request.</p>
+</li>
+<li>
+<p><strong>Use <code>--keepdb</code> for tests.</strong> Avoids recreating the test database on every run. Much faster for iterative testing.</p>
+</li>
+<li>
+<p><strong>Use <code>manage.py check --deploy</code> before deploying.</strong> Catches common production misconfigurations (missing ALLOWED_HOSTS, DEBUG=True, etc.).</p>
+</li>
+<li>
+<p><strong>Use <code>pip freeze &gt; requirements.txt</code> sparingly.</strong> Better: use <code>pip-tools</code> with separate <code>requirements.in</code> (specifiers) and <code>requirements.txt</code> (pinned).</p>
+</li>
+<li>
+<p><strong>Use <code>.env</code> files for local config.</strong> Never commit secrets. Commit <code>.env.example</code> with empty values.</p>
+</li>
+<li>
+<p><strong>Don't commit <code>staticfiles/</code> or <code>media/</code>.</strong> Add them to <code>.gitignore</code>. These are generated / user-uploaded content.</p>
+</li>
+<li>
+<p><strong>Use <code>django-storages</code> with S3 for media files in production.</strong> Simplifies deployment and scaling. No need to manage filesystem storage on servers.</p>
+</li>
+<li>
+<p><strong>Use <code>gunicorn</code> for production.</strong> <code>runserver</code> is single-threaded and not suitable for production. Gunicorn handles concurrent requests.</p>
+</li>
+</ul>
+
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>

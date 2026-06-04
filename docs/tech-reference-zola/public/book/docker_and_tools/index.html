@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Dev Reference - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#git">Git</a>
+  
+  <a class="toc-link" href="#docker">Docker</a>
+  
+  <a class="toc-link" href="#docker-compose">Docker Compose</a>
+  
+  <a class="toc-link" href="#nginx">Nginx</a>
+  
+  <a class="toc-link" href="#linux">Linux</a>
+  
+  <a class="toc-link" href="#other-essential-tools">Other Essential Tools</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#git">Git</a>
+  
+  <a class="topic" href="#docker">Docker</a>
+  
+  <a class="topic" href="#docker-compose">Docker Compose</a>
+  
+  <a class="topic" href="#nginx">Nginx</a>
+  
+  <a class="topic" href="#linux">Linux</a>
+  
+  <a class="topic" href="#other-essential-tools">Other Essential Tools</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2024-01-15</span>
+  <h1>General Dev Reference</h1>
+  
+  <p class="subtitle">Git, Docker, Nginx, Linux, and essential developer tools — commands, patterns, and gotchas</p>
+  
+
+  <h2 id="git"><a class="zola-anchor" href="#git" aria-label="Anchor link for: git">🔗</a>Git</h2>
+<h3 id="setup-config"><a class="zola-anchor" href="#setup-config" aria-label="Anchor link for: setup-config">🔗</a>Setup &amp; Config</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> config</span><span style="color: #79B8FF;"> --global</span><span style="color: #9ECBFF;"> user.name &quot;Your Name&quot;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> config</span><span style="color: #79B8FF;"> --global</span><span style="color: #9ECBFF;"> user.email &quot;you@example.com&quot;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> config</span><span style="color: #79B8FF;"> --global</span><span style="color: #9ECBFF;"> init.defaultBranch main</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> config</span><span style="color: #79B8FF;"> --global</span><span style="color: #9ECBFF;"> core.autocrlf input</span><span style="color: #6A737D;">   # Windows: fix line endings</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> config</span><span style="color: #79B8FF;"> --global</span><span style="color: #9ECBFF;"> pull.rebase</span><span style="color: #79B8FF;"> false</span><span style="color: #6A737D;">      # merge on pull (default)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> config</span><span style="color: #79B8FF;"> --global --list</span><span style="color: #6A737D;">                  # show all config</span></span></code></pre><h3 id="basic-workflow"><a class="zola-anchor" href="#basic-workflow" aria-label="Anchor link for: basic-workflow">🔗</a>Basic Workflow</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> init</span><span style="color: #6A737D;">                                    # init repo in current dir</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> clone https://github.com/user/repo.git</span><span style="color: #6A737D;">   # clone remote</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> clone</span><span style="color: #79B8FF;"> --depth 1</span><span style="color: #9ECBFF;"> https://...</span><span style="color: #6A737D;">             # shallow clone (no history)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> status</span><span style="color: #6A737D;">                                  # see changes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> add .</span><span style="color: #6A737D;">                                    # stage everything</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> add file.py</span><span style="color: #6A737D;">                              # stage one file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> add</span><span style="color: #79B8FF;"> -p</span><span style="color: #6A737D;">                                   # stage interactively (per hunk)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> commit</span><span style="color: #79B8FF;"> -m</span><span style="color: #9ECBFF;"> &quot;add user authentication&quot;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> push origin main</span><span style="color: #6A737D;">                         # push to remote</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> pull origin main</span><span style="color: #6A737D;">                         # pull + merge</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> fetch origin</span><span style="color: #6A737D;">                             # download without merging</span></span></code></pre><h3 id="branching"><a class="zola-anchor" href="#branching" aria-label="Anchor link for: branching">🔗</a>Branching</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> branch</span><span style="color: #6A737D;">                                  # list local branches</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> branch</span><span style="color: #79B8FF;"> -a</span><span style="color: #6A737D;">                               # list all (including remote)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> checkout</span><span style="color: #79B8FF;"> -b</span><span style="color: #9ECBFF;"> feature/login</span><span style="color: #6A737D;">               # create + switch</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> switch</span><span style="color: #79B8FF;"> -c</span><span style="color: #9ECBFF;"> feature/login</span><span style="color: #6A737D;">                  # same (newer syntax)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> switch main</span><span style="color: #6A737D;">                             # switch back</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> merge feature/login</span><span style="color: #6A737D;">                      # merge into current branch</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> branch</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> feature/login</span><span style="color: #6A737D;">                 # delete merged branch</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> branch</span><span style="color: #79B8FF;"> -D</span><span style="color: #9ECBFF;"> feature/login</span><span style="color: #6A737D;">                 # delete even if not merged</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> push origin</span><span style="color: #79B8FF;"> --delete</span><span style="color: #9ECBFF;"> feature/login</span><span style="color: #6A737D;">       # delete remote branch</span></span></code></pre><h3 id="undoing-things"><a class="zola-anchor" href="#undoing-things" aria-label="Anchor link for: undoing-things">🔗</a>Undoing Things</h3>
+<table><thead><tr><th>Scenario</th><th>Command</th></tr></thead><tbody>
+<tr><td>Unstage a file</td><td><code>git restore --staged file.py</code></td></tr>
+<tr><td>Discard working dir changes</td><td><code>git restore file.py</code></td></tr>
+<tr><td>Amend last commit (no push yet)</td><td><code>git commit --amend -m "new msg"</code></td></tr>
+<tr><td>Undo last commit, keep changes</td><td><code>git reset --soft HEAD~1</code></td></tr>
+<tr><td>Undo last commit, discard changes</td><td><code>git reset --hard HEAD~1</code></td></tr>
+<tr><td>Undo last commit (safe, if pushed)</td><td><code>git revert HEAD</code> (creates new commit)</td></tr>
+<tr><td>Unstage everything</td><td><code>git restore --staged .</code></td></tr>
+<tr><td>See what changed in a commit</td><td><code>git show HEAD</code> or <code>git show abc123</code></td></tr>
+</tbody></table>
+<blockquote>
+<p><strong><code>reset --hard</code> is destructive.</strong> It discards working changes. Use <code>--soft</code> if you want to keep changes staged, or <code>revert</code> if the commit was already pushed.</p>
+</blockquote>
+<h3 id="rebase-vs-merge"><a class="zola-anchor" href="#rebase-vs-merge" aria-label="Anchor link for: rebase-vs-merge">🔗</a>Rebase vs Merge</h3>
+<table><thead><tr><th></th><th>Merge</th><th>Rebase</th></tr></thead><tbody>
+<tr><td>History</td><td>Preserves all branches (messy)</td><td>Linear history (clean)</td></tr>
+<tr><td>Safety</td><td>Safe, doesn't rewrite history</td><td>Rewrites commit hashes</td></tr>
+<tr><td>When to use</td><td>Shared branches, merges to main</td><td>Local feature branches before merging</td></tr>
+<tr><td>Rule</td><td>Default for shared work</td><td>Never rebase commits that others have pulled</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Interactive rebase: edit/squash/reorder last 3 commits</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> rebase</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> HEAD~3</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Rebase feature branch onto latest main (before merging)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> checkout feature/login</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> rebase main</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Abort a rebase if it goes wrong</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> rebase</span><span style="color: #79B8FF;"> --abort</span></span></code></pre><h3 id="stash"><a class="zola-anchor" href="#stash" aria-label="Anchor link for: stash">🔗</a>Stash</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> stash</span><span style="color: #6A737D;">                                   # save current changes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> stash save &quot;work in progress&quot;</span><span style="color: #6A737D;">        # with message</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> stash list</span><span style="color: #6A737D;">                              # list stashes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> stash pop</span><span style="color: #6A737D;">                               # restore + remove from list</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> stash apply</span><span style="color: #6A737D;">                              # restore + keep in list</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> stash drop</span><span style="color: #6A737D;">                              # remove specific stash</span></span></code></pre><h3 id="log-diff"><a class="zola-anchor" href="#log-diff" aria-label="Anchor link for: log-diff">🔗</a>Log &amp; Diff</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> log</span><span style="color: #79B8FF;"> --oneline --graph --all</span><span style="color: #6A737D;">             # visual branch history</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> log</span><span style="color: #79B8FF;"> --oneline -10</span><span style="color: #6A737D;">                        # last 10 commits</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> log</span><span style="color: #79B8FF;"> --author=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span style="color: #6A737D;">                     # filter by author</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> log</span><span style="color: #79B8FF;"> --since=</span><span style="color: #9ECBFF;">&quot;2 weeks ago&quot;</span><span style="color: #6A737D;">               # filter by date</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> log</span><span style="color: #79B8FF;"> -p</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">                          # log + diffs for one file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> diff</span><span style="color: #6A737D;">                                    # unstaged changes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> diff</span><span style="color: #79B8FF;"> --staged</span><span style="color: #6A737D;">                           # staged changes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> diff main..feature</span><span style="color: #6A737D;">                      # diff between branches</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> blame file.py</span><span style="color: #6A737D;">                           # who changed each line</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> shortlog</span><span style="color: #79B8FF;"> -sn</span><span style="color: #6A737D;">                            # commit count per author</span></span></code></pre><h3 id="gitignore-essentials"><a class="zola-anchor" href="#gitignore-essentials" aria-label="Anchor link for: gitignore-essentials">🔗</a>.gitignore Essentials</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Files</span></span>
+<span class="giallo-l"><span>.env</span></span>
+<span class="giallo-l"><span>*.log</span></span>
+<span class="giallo-l"><span>*.pyc</span></span>
+<span class="giallo-l"><span>__pycache__/</span></span>
+<span class="giallo-l"><span>node_modules/</span></span>
+<span class="giallo-l"><span>.DS_Store</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Directories</span></span>
+<span class="giallo-l"><span>db.sqlite3</span></span>
+<span class="giallo-l"><span>media/</span></span>
+<span class="giallo-l"><span>staticfiles/</span></span>
+<span class="giallo-l"><span>*.egg-info/</span></span>
+<span class="giallo-l"><span>dist/</span></span>
+<span class="giallo-l"><span>build/</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Patterns</span></span>
+<span class="giallo-l"><span>*.swp</span></span>
+<span class="giallo-l"><span>*.swo</span></span>
+<span class="giallo-l"><span>*~</span></span>
+<span class="giallo-l"><span>.idea/</span></span>
+<span class="giallo-l"><span>.vscode/</span></span></code></pre><h3 id="fixing-mistakes"><a class="zola-anchor" href="#fixing-mistakes" aria-label="Anchor link for: fixing-mistakes">🔗</a>Fixing Mistakes</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Remove a file from git tracking (keep on disk)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> rm</span><span style="color: #79B8FF;"> --cached</span><span style="color: #9ECBFF;"> file.py</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Remove a file from git AND disk</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> rm file.py</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Undo a pushed commit (creates a new commit that undoes it)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> revert abc123</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Change last commit message (before push)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> commit</span><span style="color: #79B8FF;"> --amend -m</span><span style="color: #9ECBFF;"> &quot;corrected message&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Recover a deleted branch (find hash in reflog first)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> reflog</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> checkout</span><span style="color: #79B8FF;"> -b</span><span style="color: #9ECBFF;"> recovered-branch abc123</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Clean untracked files and directories (dry run first)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> clean</span><span style="color: #79B8FF;"> -n -d</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    git</span><span style="color: #9ECBFF;"> clean</span><span style="color: #79B8FF;"> -f -d</span></span></code></pre><h2 id="docker"><a class="zola-anchor" href="#docker" aria-label="Anchor link for: docker">🔗</a>Docker</h2>
+<h3 id="basic-commands"><a class="zola-anchor" href="#basic-commands" aria-label="Anchor link for: basic-commands">🔗</a>Basic Commands</h3>
+<table><thead><tr><th>Command</th><th>What It Does</th></tr></thead><tbody>
+<tr><td><code>docker run nginx</code></td><td>Pull + run an image</td></tr>
+<tr><td><code>docker run -d nginx</code></td><td>Run in background (detached)</td></tr>
+<tr><td><code>docker run -it ubuntu bash</code></td><td>Interactive shell inside container</td></tr>
+<tr><td><code>docker run -p 8080:80 nginx</code></td><td>Map host 8080 to container 80</td></tr>
+<tr><td><code>docker run --rm nginx</code></td><td>Auto-remove container when it stops</td></tr>
+<tr><td><code>docker run --name mynginx nginx</code></td><td>Name the container</td></tr>
+<tr><td><code>docker run -e VAR=val nginx</code></td><td>Set environment variable</td></tr>
+<tr><td><code>docker run -v /host:/container nginx</code></td><td>Bind mount a volume</td></tr>
+<tr><td><code>docker run -v myvol:/data nginx</code></td><td>Mount a named volume</td></tr>
+<tr><td><code>docker run --network mynet nginx</code></td><td>Connect to a network</td></tr>
+<tr><td><code>docker build -t myapp .</code></td><td>Build image from Dockerfile</td></tr>
+<tr><td><code>docker ps</code></td><td>List running containers</td></tr>
+<tr><td><code>docker ps -a</code></td><td>List all containers (including stopped)</td></tr>
+<tr><td><code>docker stop &lt;id&gt;</code></td><td>Graceful stop</td></tr>
+<tr><td><code>docker kill &lt;id&gt;</code></td><td>Force kill</td></tr>
+<tr><td><code>docker start &lt;id&gt;</code></td><td>Start a stopped container</td></tr>
+<tr><td><code>docker restart &lt;id&gt;</code></td><td>Restart</td></tr>
+<tr><td><code>docker rm &lt;id&gt;</code></td><td>Remove stopped container</td></tr>
+<tr><td><code>docker rm -f &lt;id&gt;</code></td><td>Force remove (even if running)</td></tr>
+<tr><td><code>docker logs &lt;id&gt;</code></td><td>View container logs</td></tr>
+<tr><td><code>docker logs -f &lt;id&gt;</code></td><td>Follow logs (like tail -f)</td></tr>
+<tr><td><code>docker exec -it &lt;id&gt; bash</code></td><td>Shell into running container</td></tr>
+<tr><td><code>docker cp &lt;id&gt;:/file ./local</code></td><td>Copy file from container</td></tr>
+<tr><td><code>docker images</code></td><td>List local images</td></tr>
+<tr><td><code>docker rmi &lt;image&gt;</code></td><td>Remove an image</td></tr>
+<tr><td><code>docker system prune</code></td><td>Remove all unused containers, images, networks</td></tr>
+<tr><td><code>docker system prune -a --volumes</code></td><td>Nuclear: remove everything unused</td></tr>
+</tbody></table>
+<h3 id="dockerfile-example-python-app"><a class="zola-anchor" href="#dockerfile-example-python-app" aria-label="Anchor link for: dockerfile-example-python-app">🔗</a>Dockerfile Example (Python app)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="docker"><span class="giallo-l"><span style="color: #6A737D;">    # ---- Build stage ----</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    FROM</span><span> python:3.12-slim </span><span style="color: #F97583;">AS</span><span> builder</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    WORKDIR</span><span> /build</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Install build dependencies only (not in final image)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    RUN</span><span> apt-get update &amp;&amp; apt-get install -y --no-install-recommends \</span></span>
+<span class="giallo-l"><span>        gcc libpq-dev &amp;&amp; \</span></span>
+<span class="giallo-l"><span>        rm -rf /var/lib/apt/lists/*</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> requirements.txt .</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    RUN</span><span> pip install --no-cache-dir --user -r requirements.txt</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # ---- Runtime stage ----</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    FROM</span><span> python:3.12-slim</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    WORKDIR</span><span> /app</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Copy only installed packages from builder (no build tools)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> --from=builder /root/.local /root/.local</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    ENV</span><span> PATH=/root/.local/bin:$PATH</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Install only runtime dependencies</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    RUN</span><span> apt-get update &amp;&amp; apt-get install -y --no-install-recommends \</span></span>
+<span class="giallo-l"><span>        libpq5 curl &amp;&amp; \</span></span>
+<span class="giallo-l"><span>        rm -rf /var/lib/apt/lists/*</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> . .</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Non-root user for security</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    RUN</span><span> useradd --create-home appuser</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    USER</span><span> appuser</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    EXPOSE</span><span> 8000</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    CMD</span><span> [</span><span style="color: #9ECBFF;">&quot;gunicorn&quot;</span><span>, </span><span style="color: #9ECBFF;">&quot;myproject.wsgi:application&quot;</span><span>, </span><span style="color: #9ECBFF;">&quot;--bind&quot;</span><span>, </span><span style="color: #9ECBFF;">&quot;0.0.0.0:8000&quot;</span><span>]</span></span></code></pre><h3 id="dockerfile-example-node-js-app"><a class="zola-anchor" href="#dockerfile-example-node-js-app" aria-label="Anchor link for: dockerfile-example-node-js-app">🔗</a>Dockerfile Example (Node.js app)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="docker"><span class="giallo-l"><span style="color: #F97583;">    FROM</span><span> node:20-alpine </span><span style="color: #F97583;">AS</span><span> builder</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    WORKDIR</span><span> /app</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> package*.json ./</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    RUN</span><span> npm ci</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> . .</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    RUN</span><span> npm run build</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    FROM</span><span> node:20-alpine</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    WORKDIR</span><span> /app</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> --from=builder /app/dist ./dist</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> --from=builder /app/node_modules ./node_modules</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    COPY</span><span> --from=builder /app/package.json ./</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    EXPOSE</span><span> 3000</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    CMD</span><span> [</span><span style="color: #9ECBFF;">&quot;node&quot;</span><span>, </span><span style="color: #9ECBFF;">&quot;server.js&quot;</span><span>]</span></span></code></pre>
+<blockquote>
+<p><strong>Multi-stage builds reduce image size dramatically.</strong> The builder stage has compilers and build tools; the runtime stage only has what's needed to run. A Python build stage might be 800MB; the runtime stage can be 150MB.</p>
+</blockquote>
+<h3 id="useful-flags"><a class="zola-anchor" href="#useful-flags" aria-label="Anchor link for: useful-flags">🔗</a>Useful Flags</h3>
+<table><thead><tr><th>Flag</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>-d</code></td><td>Detached mode (background)</td></tr>
+<tr><td><code>-it</code></td><td>Interactive + TTY (for shell access)</td></tr>
+<tr><td><code>--rm</code></td><td>Remove container after it exits</td></tr>
+<tr><td><code>-p 8080:80</code></td><td>Port mapping (host:container)</td></tr>
+<tr><td><code>-P</code></td><td>Map all exposed ports to random host ports</td></tr>
+<tr><td><code>-v /host:/container</code></td><td>Bind mount (two-way, not copied)</td></tr>
+<tr><td><code>-e KEY=VAL</code></td><td>Environment variable</td></tr>
+<tr><td><code>--env-file .env</code></td><td>Load env vars from file</td></tr>
+<tr><td><code>--name</code></td><td>Name the container</td></tr>
+<tr><td><code>--network</code></td><td>Connect to a specific network</td></tr>
+<tr><td><code>--restart unless-stopped</code></td><td>Auto-restart (except after manual stop)</td></tr>
+<tr><td><code>--read-only</code></td><td>Read-only filesystem (security)</td></tr>
+<tr><td><code>--memory 512m</code></td><td>Limit memory</td></tr>
+<tr><td><code>--cpus 1.5</code></td><td>Limit CPU</td></tr>
+<tr><td><code>-w /app</code></td><td>Set working directory</td></tr>
+<tr><td><code>--no-cache</code></td><td>Build without cache (docker build)</td></tr>
+</tbody></table>
+<h3 id="volumes"><a class="zola-anchor" href="#volumes" aria-label="Anchor link for: volumes">🔗</a>Volumes</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Named volume (managed by Docker, stored in /var/lib/docker/volumes/)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> volume create mydata</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> run</span><span style="color: #79B8FF;"> -v</span><span style="color: #9ECBFF;"> mydata:/var/lib/postgresql/data postgres</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Bind mount (maps a host path directly)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> run</span><span style="color: #79B8FF;"> -v</span><span> $(</span><span style="color: #79B8FF;">pwd</span><span>)</span><span style="color: #9ECBFF;">/src:/app/src myapp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Anonymous volume (removed with container)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> run</span><span style="color: #79B8FF;"> -v</span><span style="color: #9ECBFF;"> /app/data myapp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # List volumes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> volume ls</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Remove unused volumes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> volume prune</span></span></code></pre>
+<blockquote>
+<p><strong>Named volumes for persistent data, bind mounts for development.</strong> Named volumes are portable across hosts. Bind mounts are faster for dev because edits on the host are immediately visible in the container.</p>
+</blockquote>
+<h3 id="networks"><a class="zola-anchor" href="#networks" aria-label="Anchor link for: networks">🔗</a>Networks</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> network create mynet</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> run</span><span style="color: #79B8FF;"> --network</span><span style="color: #9ECBFF;"> mynet</span><span style="color: #79B8FF;"> --name</span><span style="color: #9ECBFF;"> app myapp</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> run</span><span style="color: #79B8FF;"> --network</span><span style="color: #9ECBFF;"> mynet</span><span style="color: #79B8FF;"> --name</span><span style="color: #9ECBFF;"> db postgres</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # app can now reach db at hostname &quot;db&quot; (the container name)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Default bridge: containers can reach each other by IP, NOT by name.</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Custom bridge (like mynet): DNS resolution by container name works.</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # host network: container shares host&#39;s network stack (no port mapping needed).</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # none: no network access.</span></span></code></pre><h2 id="docker-compose"><a class="zola-anchor" href="#docker-compose" aria-label="Anchor link for: docker-compose">🔗</a>Docker Compose</h2>
+<h3 id="commands"><a class="zola-anchor" href="#commands" aria-label="Anchor link for: commands">🔗</a>Commands</h3>
+<table><thead><tr><th>Command</th><th>What It Does</th></tr></thead><tbody>
+<tr><td><code>docker compose up -d</code></td><td>Build + start all services (detached)</td></tr>
+<tr><td><code>docker compose up --build</code></td><td>Rebuild images before starting</td></tr>
+<tr><td><code>docker compose down</code></td><td>Stop + remove containers + networks</td></tr>
+<tr><td><code>docker compose down -v</code></td><td>Also remove volumes (destroys data)</td></tr>
+<tr><td><code>docker compose logs -f app</code></td><td>Follow logs for one service</td></tr>
+<tr><td><code>docker compose ps</code></td><td>Status of all services</td></tr>
+<tr><td><code>docker compose exec app bash</code></td><td>Shell into a service container</td></tr>
+<tr><td><code>docker compose run --rm app python manage.py migrate</code></td><td>Run one-off command in a service</td></tr>
+<tr><td><code>docker compose build</code></td><td>Build all images</td></tr>
+<tr><td><code>docker compose build app</code></td><td>Build one service</td></tr>
+<tr><td><code>docker compose pull</code></td><td>Pull latest images</td></tr>
+<tr><td><code>docker compose restart app</code></td><td>Restart one service</td></tr>
+<tr><td><code>docker compose stop</code></td><td>Stop without removing</td></tr>
+<tr><td><code>docker compose start</code></td><td>Start stopped services</td></tr>
+<tr><td><code>docker compose config</code></td><td>Validate + view merged config</td></tr>
+<tr><td><code>docker compose top</code></td><td>Show running processes in services</td></tr>
+</tbody></table>
+<h3 id="docker-compose-yml-django-postgresql"><a class="zola-anchor" href="#docker-compose-yml-django-postgresql" aria-label="Anchor link for: docker-compose-yml-django-postgresql">🔗</a>docker-compose.yml (Django + PostgreSQL)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #85E89D;">    services</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">      db</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        image</span><span>:</span><span style="color: #9ECBFF;"> postgres:16-alpine</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        restart</span><span>:</span><span style="color: #9ECBFF;"> unless-stopped</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        volumes</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> postgres_data:/var/lib/postgresql/data</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        environment</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          POSTGRES_DB</span><span>:</span><span style="color: #9ECBFF;"> mydb</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          POSTGRES_USER</span><span>:</span><span style="color: #9ECBFF;"> myuser</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          POSTGRES_PASSWORD</span><span>:</span><span style="color: #9ECBFF;"> mypassword</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        ports</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> &quot;5432:5432&quot;</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        healthcheck</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          test</span><span>: [</span><span style="color: #9ECBFF;">&quot;CMD-SHELL&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;pg_isready -U myuser -d mydb&quot;</span><span>]</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          interval</span><span>:</span><span style="color: #9ECBFF;"> 5s</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          timeout</span><span>:</span><span style="color: #9ECBFF;"> 5s</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          retries</span><span>:</span><span style="color: #79B8FF;"> 5</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #85E89D;">      web</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        build</span><span>:</span><span style="color: #79B8FF;"> .</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        restart</span><span>:</span><span style="color: #9ECBFF;"> unless-stopped</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        volumes</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> .:/app</span><span style="color: #6A737D;">                          # bind mount source code</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> static_files:/app/staticfiles</span><span style="color: #6A737D;">   # named volume for collectstatic</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> media_files:/app/media</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        ports</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> &quot;8000:8000&quot;</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        environment</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> DEBUG=False</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> SECRET_KEY=changeme-in-production</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> DB_HOST=db</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> DB_NAME=mydb</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> DB_USER=myuser</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> DB_PASSWORD=mypassword</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        depends_on</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          db</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">            condition</span><span>:</span><span style="color: #9ECBFF;"> service_healthy</span><span style="color: #6A737D;">    # wait until db is ready</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #85E89D;">      nginx</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        image</span><span>:</span><span style="color: #9ECBFF;"> nginx:alpine</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        restart</span><span>:</span><span style="color: #9ECBFF;"> unless-stopped</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        ports</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> &quot;80:80&quot;</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> &quot;443:443&quot;</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        volumes</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> ./nginx.conf:/etc/nginx/conf.d/default.conf:ro</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> static_files:/usr/share/nginx/static:ro</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> media_files:/usr/share/nginx/media:ro</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> ./certs:/etc/nginx/certs:ro</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        depends_on</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> web</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #85E89D;">    volumes</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">      postgres_data</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">      static_files</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">      media_files</span><span>:</span></span></code></pre>
+<blockquote>
+<p><strong><code>depends_on</code> with <code>condition: service_healthy</code></strong> is the right pattern. Without it, web might start before the database is ready to accept connections. Always add healthchecks to databases.</p>
+</blockquote>
+<h3 id="override-files-dev-only"><a class="zola-anchor" href="#override-files-dev-only" aria-label="Anchor link for: override-files-dev-only">🔗</a>Override Files (dev only)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #6A737D;">    # docker-compose.override.yml - This file is automatically loaded by docker compose.</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Add it to .gitignore so dev overrides don&#39;t reach production.</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">    services</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">      web</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        command</span><span>:</span><span style="color: #9ECBFF;"> python manage.py runserver 0.0.0.0:8000</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        environment</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> DEBUG=True</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        volumes</span><span>:</span></span>
+<span class="giallo-l"><span>          -</span><span style="color: #9ECBFF;"> .:/app</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">        # No restart policy, no port restriction in dev</span></span></code></pre>
+<blockquote>
+<p><strong><code>docker-compose.override.yml</code> is auto-loaded.</strong> Use it for dev-only settings (debug mode, different command, extra volumes). Keep <code>docker-compose.yml</code> production-ready. Add <code>docker-compose.override.yml</code> to <code>.gitignore</code>.</p>
+</blockquote>
+<h3 id="common-patterns"><a class="zola-anchor" href="#common-patterns" aria-label="Anchor link for: common-patterns">🔗</a>Common Patterns</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Run a one-off command (migrate, createsuperuser, etc.)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> compose run</span><span style="color: #79B8FF;"> --rm</span><span style="color: #9ECBFF;"> web python manage.py migrate</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> compose run</span><span style="color: #79B8FF;"> --rm</span><span style="color: #9ECBFF;"> web python manage.py createsuperuser</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Run tests</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> compose run</span><span style="color: #79B8FF;"> --rm</span><span style="color: #9ECBFF;"> web python manage.py test</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Rebuild only one service</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> compose build web</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> compose up</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> web</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # View resource usage</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> stats</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Use multiple compose files</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    docker</span><span style="color: #9ECBFF;"> compose</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> docker-compose.yml</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> docker-compose.prod.yml up</span><span style="color: #79B8FF;"> -d</span></span></code></pre><h2 id="nginx"><a class="zola-anchor" href="#nginx" aria-label="Anchor link for: nginx">🔗</a>Nginx</h2>
+<h3 id="config-file-location"><a class="zola-anchor" href="#config-file-location" aria-label="Anchor link for: config-file-location">🔗</a>Config File Location</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Main config:</span></span>
+<span class="giallo-l"><span>/etc/nginx/nginx.conf</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Server blocks (virtual hosts):</span></span>
+<span class="giallo-l"><span>/etc/nginx/conf.d/default.conf      # Debian/Ubuntu</span></span>
+<span class="giallo-l"><span>/etc/nginx/sites-available/        # Debian (with sites-enabled symlink pattern)</span></span>
+<span class="giallo-l"><span>/etc/nginx/conf.d/*.conf           # All .conf files here are auto-loaded</span></span></code></pre><h3 id="reverse-proxy-python-django"><a class="zola-anchor" href="#reverse-proxy-python-django" aria-label="Anchor link for: reverse-proxy-python-django">🔗</a>Reverse Proxy (Python/Django)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>    # /etc/nginx/conf.d/myapp.conf</span></span>
+<span class="giallo-l"><span>    upstream django_app {</span></span>
+<span class="giallo-l"><span>        server 127.0.0.1:8000;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    server {</span></span>
+<span class="giallo-l"><span>        listen 80;</span></span>
+<span class="giallo-l"><span>        server_name example.com www.example.com;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Redirect HTTP to HTTPS</span></span>
+<span class="giallo-l"><span>        return 301 https://$host$request_uri;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Or serve directly on HTTP (no SSL):</span></span>
+<span class="giallo-l"><span>        # location / {</span></span>
+<span class="giallo-l"><span>        #     proxy_pass http://django_app;</span></span>
+<span class="giallo-l"><span>        # }</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    server {</span></span>
+<span class="giallo-l"><span>        listen 443 ssl http2;</span></span>
+<span class="giallo-l"><span>        server_name example.com www.example.com;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        ssl_certificate     /etc/letsencrypt/live/example.com/fullchain.pem;</span></span>
+<span class="giallo-l"><span>        ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;</span></span>
+<span class="giallo-l"><span>        ssl_protocols       TLSv1.2 TLSv1.3;</span></span>
+<span class="giallo-l"><span>        ssl_ciphers         HIGH:!aNULL:!MD5;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Security headers</span></span>
+<span class="giallo-l"><span>        add_header X-Frame-Options DENY;</span></span>
+<span class="giallo-l"><span>        add_header X-Content-Type-Options nosniff;</span></span>
+<span class="giallo-l"><span>        add_header X-XSS-Protection &quot;1; mode=block&quot;;</span></span>
+<span class="giallo-l"><span>        add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains&quot; always;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Max upload size (default: 1MB, often too small)</span></span>
+<span class="giallo-l"><span>        client_max_body_size 50M;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Static files (served directly by nginx, no app needed)</span></span>
+<span class="giallo-l"><span>        location /static/ {</span></span>
+<span class="giallo-l"><span>            alias /usr/share/nginx/static/;</span></span>
+<span class="giallo-l"><span>            expires 30d;</span></span>
+<span class="giallo-l"><span>            add_header Cache-Control &quot;public, immutable&quot;;</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Media files (user uploads)</span></span>
+<span class="giallo-l"><span>        location /media/ {</span></span>
+<span class="giallo-l"><span>            alias /usr/share/nginx/media/;</span></span>
+<span class="giallo-l"><span>            expires 7d;</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Proxy to app</span></span>
+<span class="giallo-l"><span>        location / {</span></span>
+<span class="giallo-l"><span>            proxy_pass http://django_app;</span></span>
+<span class="giallo-l"><span>            proxy_set_header Host $host;</span></span>
+<span class="giallo-l"><span>            proxy_set_header X-Real-IP $remote_addr;</span></span>
+<span class="giallo-l"><span>            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span></span>
+<span class="giallo-l"><span>            proxy_set_header X-Forwarded-Proto $scheme;</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        # Block common attack paths</span></span>
+<span class="giallo-l"><span>        location ~ /\.(git|env|htpasswd|htaccess) {</span></span>
+<span class="giallo-l"><span>            deny all;</span></span>
+<span class="giallo-l"><span>            return 404;</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"><span>    }</span></span></code></pre><h3 id="reverse-proxy-node-js"><a class="zola-anchor" href="#reverse-proxy-node-js" aria-label="Anchor link for: reverse-proxy-node-js">🔗</a>Reverse Proxy (Node.js)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>    # /etc/nginx/conf.d/nodeapp.conf</span></span>
+<span class="giallo-l"><span>    upstream node_app {</span></span>
+<span class="giallo-l"><span>        server 127.0.0.1:3000;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    server {</span></span>
+<span class="giallo-l"><span>        listen 80;</span></span>
+<span class="giallo-l"><span>        server_name app.example.com;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        location / {</span></span>
+<span class="giallo-l"><span>            proxy_pass http://node_app;</span></span>
+<span class="giallo-l"><span>            proxy_set_header Host $host;</span></span>
+<span class="giallo-l"><span>            proxy_set_header X-Real-IP $remote_addr;</span></span>
+<span class="giallo-l"><span>            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span></span>
+<span class="giallo-l"><span>            proxy_set_header X-Forwarded-Proto $scheme;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>            # WebSocket support (for hot reload / Socket.io)</span></span>
+<span class="giallo-l"><span>            proxy_http_version 1.1;</span></span>
+<span class="giallo-l"><span>            proxy_set_header Upgrade $http_upgrade;</span></span>
+<span class="giallo-l"><span>            proxy_set_header Connection &quot;upgrade&quot;;</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"><span>    }</span></span></code></pre><h3 id="useful-directives"><a class="zola-anchor" href="#useful-directives" aria-label="Anchor link for: useful-directives">🔗</a>Useful Directives</h3>
+<table><thead><tr><th>Directive</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>listen 80;</code></td><td>Port to listen on</td></tr>
+<tr><td><code>listen 443 ssl http2;</code></td><td>HTTPS + HTTP/2</td></tr>
+<tr><td><code>server_name</code></td><td>Domain names this block matches</td></tr>
+<tr><td><code>root</code></td><td>Document root directory</td></tr>
+<tr><td><code>index</code></td><td>Default files to serve (index.html)</td></tr>
+<tr><td><code>location /path/</code></td><td>URL matching (prefix, regex, exact)</td></tr>
+<tr><td><code>location = /exact</code></td><td>Exact match (no sub-paths)</td></tr>
+<tr><td><code>location ~ \.php$</code></td><td>Case-sensitive regex match</td></tr>
+<tr><td>`location ~* .(jpg</td><td>png)$`</td></tr>
+<tr><td><code>proxy_pass</code></td><td>Forward requests to upstream</td></tr>
+<tr><td><code>rewrite</code></td><td>URL rewriting</td></tr>
+<tr><td><code>return</code></td><td>Return status code + redirect</td></tr>
+<tr><td><code>try_files</code></td><td>Fallback chain: try file, try dir, return</td></tr>
+<tr><td><code>client_max_body_size</code></td><td>Max upload size (default 1MB)</td></tr>
+<tr><td><code>expires</code></td><td>Cache expiration for responses</td></tr>
+<tr><td><code>add_header</code></td><td>Add response header</td></tr>
+<tr><td><code>gzip on;</code></td><td>Enable gzip compression</td></tr>
+<tr><td><code>access_log</code> / <code>error_log</code></td><td>Log file paths</td></tr>
+<tr><td><code>deny / allow</code></td><td>IP-based access control</td></tr>
+</tbody></table>
+<h3 id="common-operations"><a class="zola-anchor" href="#common-operations" aria-label="Anchor link for: common-operations">🔗</a>Common Operations</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    nginx</span><span style="color: #79B8FF;"> -t</span><span style="color: #6A737D;">                # test config syntax (always run before reload)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nginx</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> reload</span><span style="color: #6A737D;">        # reload config without dropping connections</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nginx</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> stop</span><span style="color: #6A737D;">           # stop</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nginx</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> reopen</span><span style="color: #6A737D;">        # reopen log files (for log rotation)</span></span></code></pre>
+<blockquote>
+<p><strong>Always run <code>nginx -t</code> before <code>nginx -s reload</code>.</strong> A syntax error in any conf file will prevent the reload and leave nginx in its last working state, but it's still good practice.</p>
+</blockquote>
+<h3 id="spa-fallback-vue-react-angular"><a class="zola-anchor" href="#spa-fallback-vue-react-angular" aria-label="Anchor link for: spa-fallback-vue-react-angular">🔗</a>SPA Fallback (Vue/React/Angular)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>location / {</span></span>
+<span class="giallo-l"><span>    root /usr/share/nginx/html;</span></span>
+<span class="giallo-l"><span>    try_files $uri $uri/ /index.html;   # serve index.html for all routes</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h3 id="gzip-compression"><a class="zola-anchor" href="#gzip-compression" aria-label="Anchor link for: gzip-compression">🔗</a>Gzip Compression</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>gzip on;</span></span>
+<span class="giallo-l"><span>gzip_types text/plain text/css application/json application/javascript</span></span>
+<span class="giallo-l"><span>           text/xml application/xml application/xml+rss text/javascript</span></span>
+<span class="giallo-l"><span>           image/svg+xml;</span></span>
+<span class="giallo-l"><span>gzip_min_length 256;</span></span>
+<span class="giallo-l"><span>gzip_vary on;</span></span></code></pre><h2 id="linux"><a class="zola-anchor" href="#linux" aria-label="Anchor link for: linux">🔗</a>Linux</h2>
+<h3 id="navigation-files"><a class="zola-anchor" href="#navigation-files" aria-label="Anchor link for: navigation-files">🔗</a>Navigation &amp; Files</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>pwd                    # print working directory</span></span>
+<span class="giallo-l"><span>cd /path/to/dir        # change directory</span></span>
+<span class="giallo-l"><span>cd ..                   # parent directory</span></span>
+<span class="giallo-l"><span>cd -                    # previous directory</span></span>
+<span class="giallo-l"><span>ls -la                  # list all (including hidden) with details</span></span>
+<span class="giallo-l"><span>ls -lh                  # human-readable file sizes</span></span>
+<span class="giallo-l"><span>tree -L 2               # directory tree (2 levels)</span></span>
+<span class="giallo-l"><span>find . -name &quot;*.py&quot;      # find files by name</span></span>
+<span class="giallo-l"><span>find . -type f -mtime -7  # files modified in last 7 days</span></span>
+<span class="giallo-l"><span>find . -size +100M       # files larger than 100MB</span></span>
+<span class="giallo-l"><span>find . -name &quot;__pycache__&quot; -type d -exec rm -rf {} +  # find + delete</span></span></code></pre><h3 id="file-operations"><a class="zola-anchor" href="#file-operations" aria-label="Anchor link for: file-operations">🔗</a>File Operations</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    cp</span><span style="color: #9ECBFF;"> file.py backup.py</span><span style="color: #6A737D;">   # copy</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    cp</span><span style="color: #79B8FF;"> -r</span><span style="color: #9ECBFF;"> dir/ dir_copy/</span><span style="color: #6A737D;">   # copy directory recursively</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    mv</span><span style="color: #9ECBFF;"> old.py new.py</span><span style="color: #6A737D;">       # move / rename</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    rm</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">             # delete</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    rm</span><span style="color: #79B8FF;"> -r</span><span style="color: #9ECBFF;"> dir/</span><span style="color: #6A737D;">              # delete directory recursively</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    rm</span><span style="color: #79B8FF;"> -rf</span><span style="color: #9ECBFF;"> dir/</span><span style="color: #6A737D;">             # force delete (no prompts)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    mkdir</span><span style="color: #79B8FF;"> -p</span><span style="color: #9ECBFF;"> a/b/c</span><span style="color: #6A737D;">          # create nested directories</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ln</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> target link</span><span style="color: #6A737D;">       # create symbolic link</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    touch</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">           # create empty file / update timestamp</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    du</span><span style="color: #79B8FF;"> -sh</span><span style="color: #9ECBFF;"> dir/</span><span style="color: #6A737D;">             # directory size (human-readable, summary)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    du</span><span style="color: #79B8FF;"> -sh *</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> sort</span><span style="color: #79B8FF;"> -rh</span><span style="color: #6A737D;">     # largest items in current dir</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    df</span><span style="color: #79B8FF;"> -h</span><span style="color: #6A737D;">                   # disk space usage per filesystem</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    df</span><span style="color: #79B8FF;"> -h</span><span style="color: #9ECBFF;"> /</span><span style="color: #6A737D;">                  # disk space for root filesystem</span></span></code></pre><h3 id="viewing-files"><a class="zola-anchor" href="#viewing-files" aria-label="Anchor link for: viewing-files">🔗</a>Viewing Files</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    cat</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">             # print entire file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    less</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">            # pager (q to quit, / to search)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    head</span><span style="color: #79B8FF;"> -20</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">        # first 20 lines</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tail</span><span style="color: #79B8FF;"> -20</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">        # last 20 lines</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tail</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> log.txt</span><span style="color: #6A737D;">        # follow file (like tail -f)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    wc</span><span style="color: #79B8FF;"> -l</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">          # line count</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    file</span><span style="color: #9ECBFF;"> file.py</span><span style="color: #6A737D;">            # file type detection</span></span></code></pre><h3 id="search-text-processing"><a class="zola-anchor" href="#search-text-processing" aria-label="Anchor link for: search-text-processing">🔗</a>Search &amp; Text Processing</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    grep</span><span style="color: #9ECBFF;"> &quot;pattern&quot; file.py</span><span style="color: #6A737D;">              # search in file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    grep</span><span style="color: #79B8FF;"> -r</span><span style="color: #9ECBFF;"> &quot;pattern&quot; .</span><span style="color: #6A737D;">                # recursive search</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    grep</span><span style="color: #79B8FF;"> -ri</span><span style="color: #9ECBFF;"> &quot;pattern&quot;</span><span style="color: #79B8FF;"> --include=</span><span style="color: #9ECBFF;">&quot;*.py&quot; .</span><span style="color: #6A737D;">  # recursive, case-insensitive, specific files</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    grep</span><span style="color: #79B8FF;"> -n</span><span style="color: #9ECBFF;"> &quot;pattern&quot; file.py</span><span style="color: #6A737D;">          # show line numbers</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    grep</span><span style="color: #79B8FF;"> -C 3</span><span style="color: #9ECBFF;"> &quot;pattern&quot; file.py</span><span style="color: #6A737D;">        # 3 lines of context around match</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    grep</span><span style="color: #79B8FF;"> -v</span><span style="color: #9ECBFF;"> &quot;pattern&quot; file.py</span><span style="color: #6A737D;">          # lines NOT matching</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    grep</span><span style="color: #79B8FF;"> -c</span><span style="color: #9ECBFF;"> &quot;pattern&quot; file.py</span><span style="color: #6A737D;">          # count matching lines</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sed</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> &#39;s/old/new/g&#39; file.py</span><span style="color: #6A737D;">       # find and replace in file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sed</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> &#39;s/old/new/g&#39;</span><span style="color: #79B8FF;"> *</span><span style="color: #9ECBFF;">.py</span><span style="color: #6A737D;">          # find and replace in multiple files</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sort</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">                     # sort lines</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sort</span><span style="color: #79B8FF;"> -u</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">                  # sort + remove duplicates</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sort</span><span style="color: #79B8FF;"> -n</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">                  # numeric sort</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sort</span><span style="color: #79B8FF;"> -k2 -n</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">             # sort by 2nd field numerically</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    uniq</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">                     # remove adjacent duplicates (pipe after sort)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sort</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> uniq</span><span style="color: #79B8FF;"> -c</span><span style="color: #6A737D;">            # count duplicates</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    awk</span><span style="color: #9ECBFF;"> &#39;{print $1}&#39; file.txt</span><span style="color: #6A737D;">          # print first column</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    awk</span><span style="color: #9ECBFF;"> &#39;{sum+=$1} END {print sum}&#39;</span><span style="color: #6A737D;">   # sum first column</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    cut</span><span style="color: #79B8FF;"> -d: -f1</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">             # extract first field (delimiter :)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    cut</span><span style="color: #79B8FF;"> -d, -f1,3</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">           # extract fields 1 and 3 (delimiter ,)</span></span></code></pre><h3 id="permissions"><a class="zola-anchor" href="#permissions" aria-label="Anchor link for: permissions">🔗</a>Permissions</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # r=4, w=2, x=1. Owner | Group | Others</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    chmod</span><span style="color: #79B8FF;"> 755</span><span style="color: #9ECBFF;"> script.sh</span><span style="color: #6A737D;">       # rwxr-xr-x (owner: full, others: read+exec)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    chmod</span><span style="color: #79B8FF;"> 644</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">        # rw-r--r-- (standard file)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    chmod</span><span style="color: #9ECBFF;"> +x script.sh</span><span style="color: #6A737D;">        # make executable</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    chmod</span><span style="color: #79B8FF;"> -R 755</span><span style="color: #9ECBFF;"> dir/</span><span style="color: #6A737D;">         # recursive</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    chown</span><span style="color: #9ECBFF;"> user:group file</span><span style="color: #6A737D;">    # change owner and group</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    chown</span><span style="color: #79B8FF;"> -R</span><span style="color: #9ECBFF;"> user:group dir/</span><span style="color: #6A737D;"> # recursive</span></span></code></pre><h3 id="processes"><a class="zola-anchor" href="#processes" aria-label="Anchor link for: processes">🔗</a>Processes</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    ps</span><span style="color: #9ECBFF;"> aux</span><span style="color: #6A737D;">                          # all processes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ps</span><span style="color: #9ECBFF;"> aux</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> grep</span><span style="color: #9ECBFF;"> python</span><span style="color: #6A737D;">            # find python processes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ps</span><span style="color: #79B8FF;"> -p 1234 -o</span><span style="color: #9ECBFF;"> pid,cmd</span><span style="color: #6A737D;">          # info about specific PID</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    top</span><span style="color: #6A737D;">                             # interactive process viewer</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    htop</span><span style="color: #6A737D;">                            # better top (install separately)</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    kill 1234</span><span style="color: #6A737D;">                       # send SIGTERM (graceful stop)</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    kill -9 1234</span><span style="color: #6A737D;">                    # send SIGKILL (force kill)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    killall</span><span style="color: #9ECBFF;"> python</span><span style="color: #6A737D;">                  # kill all processes by name</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    lsof</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> :8000</span><span style="color: #6A737D;">                   # what&#39;s using port 8000</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ss</span><span style="color: #79B8FF;"> -tlnp</span><span style="color: #6A737D;">                        # listening ports (modern, faster than netstat)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nohup</span><span style="color: #9ECBFF;"> python app.py</span><span> &amp;</span><span style="color: #6A737D;">            # run in background, survives logout</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    disown</span><span style="color: #6A737D;">                          # detach from current shell</span></span></code></pre><h3 id="systemd-service-management"><a class="zola-anchor" href="#systemd-service-management" aria-label="Anchor link for: systemd-service-management">🔗</a>Systemd (Service Management)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemctl start myapp.service</span><span style="color: #6A737D;">      # start</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemctl stop myapp.service</span><span style="color: #6A737D;">       # stop</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemctl restart myapp.service</span><span style="color: #6A737D;">    # restart</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemctl enable myapp.service</span><span style="color: #6A737D;">     # start on boot</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemctl disable myapp.service</span><span style="color: #6A737D;">    # don&#39;t start on boot</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemctl status myapp.service</span><span style="color: #6A737D;">     # check status</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemctl reload nginx.service</span><span style="color: #6A737D;">     # reload config (no downtime)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    journalctl</span><span style="color: #79B8FF;"> -u</span><span style="color: #9ECBFF;"> myapp</span><span style="color: #79B8FF;"> -f</span><span style="color: #6A737D;">                 # follow logs for a service</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    journalctl</span><span style="color: #79B8FF;"> -u</span><span style="color: #9ECBFF;"> myapp</span><span style="color: #79B8FF;"> --since</span><span style="color: #9ECBFF;"> &quot;1 hour ago&quot;</span><span style="color: #6A737D;">  # logs since time</span></span></code></pre><h3 id="archives"><a class="zola-anchor" href="#archives" aria-label="Anchor link for: archives">🔗</a>Archives</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    tar</span><span style="color: #79B8FF;"> -czf</span><span style="color: #9ECBFF;"> archive.tar.gz dir/</span><span style="color: #6A737D;">       # create compressed archive</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tar</span><span style="color: #79B8FF;"> -xzf</span><span style="color: #9ECBFF;"> archive.tar.gz</span><span style="color: #6A737D;">           # extract</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tar</span><span style="color: #79B8FF;"> -xzf</span><span style="color: #9ECBFF;"> archive.tar.gz</span><span style="color: #79B8FF;"> -C</span><span style="color: #9ECBFF;"> /dest</span><span style="color: #6A737D;">  # extract to specific directory</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tar</span><span style="color: #79B8FF;"> -tzf</span><span style="color: #9ECBFF;"> archive.tar.gz</span><span style="color: #6A737D;">           # list contents</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    zip</span><span style="color: #79B8FF;"> -r</span><span style="color: #9ECBFF;"> archive.zip dir/</span><span style="color: #6A737D;">            # create zip</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    unzip</span><span style="color: #9ECBFF;"> archive.zip</span><span style="color: #6A737D;">                   # extract zip</span></span></code></pre><h3 id="networking"><a class="zola-anchor" href="#networking" aria-label="Anchor link for: networking">🔗</a>Networking</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -I</span><span style="color: #9ECBFF;"> https://example.com</span><span style="color: #6A737D;">           # fetch headers only</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> https://api.example.com/data</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> .</span><span style="color: #6A737D;">  # fetch + parse JSON</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -X</span><span style="color: #9ECBFF;"> POST</span><span style="color: #79B8FF;"> -H</span><span style="color: #9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> &#39;{&quot;key&quot;:&quot;val&quot;}&#39; url</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -o</span><span style="color: #9ECBFF;"> file.zip https://example.com/file.zip</span><span style="color: #6A737D;">  # download file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    wget</span><span style="color: #9ECBFF;"> https://example.com/file.zip</span><span style="color: #6A737D;">   # download (simpler than curl for files)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ping</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #6A737D;">                    # check if host is reachable</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #6A737D;">                     # DNS lookup</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nslookup</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #6A737D;">                # DNS lookup (simpler)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ssh</span><span style="color: #9ECBFF;"> user@server.com</span><span style="color: #6A737D;">                # SSH into server</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    scp</span><span style="color: #9ECBFF;"> file.py user@server:~/</span><span style="color: #6A737D;">         # copy file to server</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    scp</span><span style="color: #9ECBFF;"> user@server:~/file.py .</span><span style="color: #6A737D;">       # copy file from server</span></span></code></pre><h3 id="pipes-redirection"><a class="zola-anchor" href="#pipes-redirection" aria-label="Anchor link for: pipes-redirection">🔗</a>Pipes &amp; Redirection</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #79B8FF;">    command</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">           # redirect stdout to file (overwrite)</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    command</span><span style="color: #F97583;"> &gt;&gt;</span><span style="color: #9ECBFF;"> file.txt</span><span style="color: #6A737D;">          # redirect stdout to file (append)</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    command</span><span style="color: #F97583;"> 2&gt;</span><span style="color: #9ECBFF;"> error.log</span><span style="color: #6A737D;">         # redirect stderr to file</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    command</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> /dev/null</span><span style="color: #F97583;"> 2&gt;&amp;1</span><span style="color: #6A737D;">     # discard all output</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    command1</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> command2</span><span style="color: #6A737D;">        # pipe stdout of cmd1 to stdin of cmd2</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    command</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> tee</span><span style="color: #9ECBFF;"> output.txt</span><span style="color: #6A737D;">    # output to stdout AND file</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    command</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> xargs</span><span style="color: #79B8FF;"> -I</span><span style="color: #9ECBFF;"> {} cmd</span><span style="color: #6A737D;">  # use output as arguments (replaces {})</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    cat</span><span style="color: #9ECBFF;"> files.txt</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> xargs</span><span style="color: #9ECBFF;"> rm</span><span style="color: #6A737D;">   # delete files listed in a file</span></span></code></pre><h3 id="disk-memory"><a class="zola-anchor" href="#disk-memory" aria-label="Anchor link for: disk-memory">🔗</a>Disk &amp; Memory</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    free</span><span style="color: #79B8FF;"> -h</span><span style="color: #6A737D;">                   # memory usage</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    df</span><span style="color: #79B8FF;"> -h</span><span style="color: #6A737D;">                     # disk usage per filesystem</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    du</span><span style="color: #79B8FF;"> -sh</span><span style="color: #9ECBFF;"> /path/to/dir</span><span style="color: #6A737D;">       # directory size</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    du</span><span style="color: #79B8FF;"> -sh *</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> sort</span><span style="color: #79B8FF;"> -rh</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> head</span><span style="color: #6A737D;">  # top 10 largest in current dir</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ncdu</span><span style="color: #9ECBFF;"> /path</span><span style="color: #6A737D;">               # interactive disk usage explorer (install separately)</span></span></code></pre><h3 id="cron-scheduled-tasks"><a class="zola-anchor" href="#cron-scheduled-tasks" aria-label="Anchor link for: cron-scheduled-tasks">🔗</a>Cron (Scheduled Tasks)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    crontab</span><span style="color: #79B8FF;"> -e</span><span style="color: #6A737D;">                  # edit your crontab</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    crontab</span><span style="color: #79B8FF;"> -l</span><span style="color: #6A737D;">                  # list your crontab</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Format: minute hour day-of-month month day-of-week command</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # */5 * * * * = every 5 minutes</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # 0 2 * * *   = every day at 2 AM</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # 0 */6 * * * = every 6 hours</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # 0 0 * * 1   = every Monday at midnight</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # 30 4 * * 1-5 = Monday-Friday at 4:30 AM</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Examples:</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    */5</span><span style="color: #79B8FF;"> * * * *</span><span style="color: #9ECBFF;"> /usr/bin/python3 /app/manage.py runcrons</span><span style="color: #F97583;"> &gt;&gt;</span><span style="color: #9ECBFF;"> /var/log/cron.log</span><span style="color: #F97583;"> 2&gt;&amp;1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    0</span><span style="color: #79B8FF;"> 3 * * *</span><span style="color: #9ECBFF;"> /usr/bin/docker system prune</span><span style="color: #79B8FF;"> -f</span><span style="color: #F97583;"> &gt;&gt;</span><span style="color: #9ECBFF;"> /var/log/docker-prune.log</span><span style="color: #F97583;"> 2&gt;&amp;1</span></span></code></pre><h3 id="ssh-config"><a class="zola-anchor" href="#ssh-config" aria-label="Anchor link for: ssh-config">🔗</a>SSH Config</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>    # ~/.ssh/config</span></span>
+<span class="giallo-l"><span>    Host myserver</span></span>
+<span class="giallo-l"><span>        HostName 192.168.1.100</span></span>
+<span class="giallo-l"><span>        User deploy</span></span>
+<span class="giallo-l"><span>        Port 22</span></span>
+<span class="giallo-l"><span>        IdentityFile ~/.ssh/mykey</span></span>
+<span class="giallo-l"><span>        ForwardAgent yes</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    Host github</span></span>
+<span class="giallo-l"><span>        HostName github.com</span></span>
+<span class="giallo-l"><span>        User git</span></span>
+<span class="giallo-l"><span>        IdentityFile ~/.ssh/github_key</span></span></code></pre><h2 id="other-essential-tools"><a class="zola-anchor" href="#other-essential-tools" aria-label="Anchor link for: other-essential-tools">🔗</a>Other Essential Tools</h2>
+<h3 id="tmux-terminal-multiplexer"><a class="zola-anchor" href="#tmux-terminal-multiplexer" aria-label="Anchor link for: tmux-terminal-multiplexer">🔗</a>tmux (Terminal Multiplexer)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    tmux</span><span style="color: #6A737D;">                        # start new session</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tmux</span><span style="color: #9ECBFF;"> new</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> mysession</span><span style="color: #6A737D;">     # named session</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tmux</span><span style="color: #9ECBFF;"> ls</span><span style="color: #6A737D;">                      # list sessions</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tmux</span><span style="color: #9ECBFF;"> attach</span><span style="color: #79B8FF;"> -t</span><span style="color: #9ECBFF;"> mysession</span><span style="color: #6A737D;">  # reattach (survives disconnect)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tmux</span><span style="color: #9ECBFF;"> kill-session</span><span style="color: #79B8FF;"> -t</span><span style="color: #9ECBFF;"> s</span><span style="color: #6A737D;">     # kill session</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>    # Inside tmux (prefix = Ctrl+b by default):</span></span>
+<span class="giallo-l"><span>    Ctrl+b c                       # new window</span></span>
+<span class="giallo-l"><span>    Ctrl+b %                       # split pane horizontally</span></span>
+<span class="giallo-l"><span>    Ctrl+b &quot;                       # split pane vertically</span></span>
+<span class="giallo-l"><span>    Ctrl+b n / Ctrl+b p            # next / previous pane</span></span>
+<span class="giallo-l"><span>    Ctrl+b arrow-keys             # navigate between panes</span></span>
+<span class="giallo-l"><span>    Ctrl+b d                       # detach (session keeps running)</span></span>
+<span class="giallo-l"><span>    Ctrl+b [                       # scroll mode (q to quit, arrows to scroll)</span></span>
+<span class="giallo-l"><span>    Ctrl+b ,                       # rename window</span></span></code></pre>
+<blockquote>
+<p><strong>tmux is essential for remote servers.</strong> Start a long-running task, detach, close your laptop, reconnect later. The process keeps running. No more lost SSH sessions.</p>
+</blockquote>
+<h3 id="jq-json-processor"><a class="zola-anchor" href="#jq-json-processor" aria-label="Anchor link for: jq-json-processor">🔗</a>jq (JSON Processor)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #9ECBFF;"> &#39;{&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30}&#39;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> .</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #9ECBFF;"> &#39;{&quot;name&quot;: &quot;Alice&quot;}&#39;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> .name</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #9ECBFF;"> &#39;[1,2,3]&#39;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> &#39;.[]&#39;</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #9ECBFF;"> &#39;{&quot;items&quot;: [{&quot;id&quot;:1},{&quot;id&quot;:2}]}&#39;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> &#39;.items[].id&#39;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> https://api.example.com/data</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> &#39;.results | length&#39;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> https://api.example.com/data</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> &#39;select(.active)&#39;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    cat</span><span style="color: #9ECBFF;"> file.json</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> jq</span><span style="color: #9ECBFF;"> &#39;sort_by(.created_at) | reverse | .[0:10]&#39;</span></span></code></pre><h3 id="curl-http-client"><a class="zola-anchor" href="#curl-http-client" aria-label="Anchor link for: curl-http-client">🔗</a>curl (HTTP Client)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #9ECBFF;"> url</span><span style="color: #6A737D;">                       # GET request</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -I</span><span style="color: #9ECBFF;"> url</span><span style="color: #6A737D;">                     # headers only</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> url</span><span style="color: #6A737D;">                     # silent (no progress bar)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -o</span><span style="color: #9ECBFF;"> file url</span><span style="color: #6A737D;">               # download to file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -X</span><span style="color: #9ECBFF;"> POST url</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> &quot;key=val&quot;</span><span style="color: #6A737D;">  # POST form data</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -X</span><span style="color: #9ECBFF;"> POST url</span><span style="color: #79B8FF;"> -H</span><span style="color: #9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> &#39;{&quot;key&quot;:&quot;val&quot;}&#39;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -H</span><span style="color: #9ECBFF;"> &quot;Authorization: Bearer TOKEN&quot; url</span><span style="color: #6A737D;">  # with auth header</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -v</span><span style="color: #9ECBFF;"> url</span><span style="color: #6A737D;">                     # verbose (see full request/response)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -w</span><span style="color: #9ECBFF;"> &quot;\n%{http_code}\n&quot; url</span><span style="color: #6A737D;">  # print only status code</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -w</span><span style="color: #9ECBFF;"> &quot;\n%{time_total}\n&quot; url</span><span style="color: #6A737D;">  # measure response time</span></span></code></pre><h3 id="xargs-argument-builder"><a class="zola-anchor" href="#xargs-argument-builder" aria-label="Anchor link for: xargs-argument-builder">🔗</a>xargs (Argument Builder)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Run a command on every line of input</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo -e</span><span style="color: #9ECBFF;"> &quot;file1\nfile2\nfile3&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> xargs</span><span style="color: #9ECBFF;"> rm</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Run with placeholder</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    find</span><span style="color: #9ECBFF;"> .</span><span style="color: #79B8FF;"> -name</span><span style="color: #9ECBFF;"> &quot;*.log&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> xargs</span><span style="color: #79B8FF;"> -I</span><span style="color: #9ECBFF;"> {} mv {} /logs/</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Parallel execution</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    find</span><span style="color: #9ECBFF;"> .</span><span style="color: #79B8FF;"> -name</span><span style="color: #9ECBFF;"> &quot;*.py&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> xargs</span><span style="color: #79B8FF;"> -P 4</span><span style="color: #9ECBFF;"> python</span><span style="color: #79B8FF;"> -m</span><span style="color: #9ECBFF;"> py_compile</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Limit arguments per command</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    find</span><span style="color: #9ECBFF;"> .</span><span style="color: #79B8FF;"> -name</span><span style="color: #9ECBFF;"> &quot;*.py&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> xargs</span><span style="color: #79B8FF;"> -n 1</span><span style="color: #9ECBFF;"> rm</span></span></code></pre><h3 id="watch-run-command-repeatedly"><a class="zola-anchor" href="#watch-run-command-repeatedly" aria-label="Anchor link for: watch-run-command-repeatedly">🔗</a>watch (Run Command Repeatedly)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    watch</span><span style="color: #79B8FF;"> -n 2</span><span style="color: #9ECBFF;"> &quot;docker ps&quot;</span><span style="color: #6A737D;">              # run every 2 seconds</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    watch</span><span style="color: #79B8FF;"> -n 1</span><span style="color: #9ECBFF;"> &quot;ls -la /app&quot;</span><span style="color: #6A737D;">          # run every second</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    watch</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> &quot;ls -la&quot;</span><span style="color: #6A737D;">                  # highlight differences between runs</span></span></code></pre><h3 id="envsubst-environment-variable-substitution"><a class="zola-anchor" href="#envsubst-environment-variable-substitution" aria-label="Anchor link for: envsubst-environment-variable-substitution">🔗</a>envsubst (Environment Variable Substitution)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Replace $VAR placeholders in a file with env vars</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    export</span><span> DB_HOST</span><span style="color: #F97583;">=</span><span>localhost DB_PASS</span><span style="color: #F97583;">=</span><span>secret</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    envsubst</span><span style="color: #F97583;"> &lt;</span><span style="color: #9ECBFF;"> cat config.template</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> config.yml</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # With a specific env file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    envsubst</span><span> $(</span><span style="color: #B392F0;">grep</span><span style="color: #79B8FF;"> -v</span><span style="color: #9ECBFF;"> &#39;^#&#39; .env</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> sed</span><span style="color: #9ECBFF;"> &#39;s/=.*//&#39;</span><span>)</span><span style="color: #F97583;"> &lt;</span><span style="color: #9ECBFF;"> cat template.conf</span><span style="color: #F97583;"> &gt;</span><span style="color: #9ECBFF;"> app.conf</span></span></code></pre><h3 id="rsync-file-sync"><a class="zola-anchor" href="#rsync-file-sync" aria-label="Anchor link for: rsync-file-sync">🔗</a>rsync (File Sync)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    rsync</span><span style="color: #79B8FF;"> -avz</span><span style="color: #9ECBFF;"> source/ user@server:/dest/</span><span style="color: #6A737D;">    # sync to remote (archive, verbose, compress)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    rsync</span><span style="color: #79B8FF;"> -avz --delete</span><span style="color: #9ECBFF;"> source/ dest/</span><span style="color: #6A737D;">          # sync + delete extras in dest</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    rsync</span><span style="color: #79B8FF;"> -avz --dry-run</span><span style="color: #9ECBFF;"> source/ dest/</span><span style="color: #6A737D;">       # preview without making changes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    rsync</span><span style="color: #79B8FF;"> -avz --exclude=</span><span style="color: #9ECBFF;">&#39;node_modules&#39; source/ dest/</span><span style="color: #6A737D;">  # exclude patterns</span></span></code></pre><h3 id="quick-reference-card"><a class="zola-anchor" href="#quick-reference-card" aria-label="Anchor link for: quick-reference-card">🔗</a>Quick Reference Card</h3>
+<table><thead><tr><th>Task</th><th>Command</th></tr></thead><tbody>
+<tr><td>What's my IP</td><td><code>curl ifconfig.me</code></td></tr>
+<tr><td>Public IP of a server</td><td><code>curl -s ifconfig.me</code></td></tr>
+<tr><td>What OS am I on</td><td><code>cat /etc/os-release</code></td></tr>
+<tr><td>Disk free</td><td><code>df -h</code></td></tr>
+<tr><td>Memory free</td><td><code>free -h</code></td></tr>
+<tr><td>CPU info</td><td><code>lscpu</code></td></tr>
+<tr><td>Last login</td><td><code>last</code></td></tr>
+<tr><td>Uptime</td><td><code>uptime</code></td></tr>
+<tr><td>Path to a command</td><td><code>which python</code> or <code>type python</code></td></tr>
+<tr><td>Environment vars</td><td><code>env</code> or <code>printenv</code></td></tr>
+<tr><td>Base64 encode</td><td>`echo -n "text"</td></tr>
+<tr><td>Base64 decode</td><td>`echo "dGV4dA=="</td></tr>
+<tr><td>UUID generate</td><td><code>uuidgen</code></td></tr>
+<tr><td>Random string</td><td><code>openssl rand -hex 16</code></td></tr>
+<tr><td>Download a file</td><td><code>wget url</code> or <code>curl -O url</code></td></tr>
+<tr><td>Port scan (simple)</td><td><code>nc -zv host port</code></td></tr>
+<tr><td>Disk I/O stats</td><td><code>iostat</code></td></tr>
+<tr><td>Network connections</td><td><code>ss -tunlp</code></td></tr>
+<tr><td>Python version</td><td><code>python3 --version</code></td></tr>
+<tr><td>Pip packages</td><td><code>pip list</code></td></tr>
+<tr><td>Node version</td><td><code>node --version</code></td></tr>
+<tr><td>Docker version</td><td><code>docker --version</code></td></tr>
+</tbody></table>
+
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>

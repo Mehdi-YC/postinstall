@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rust Language Reference for Developers - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#the-ownership-model">The Ownership Model</a>
+  
+  <a class="toc-link" href="#borrowing-shared-and-mutable-references">Borrowing: Shared and Mutable References</a>
+  
+  <a class="toc-link" href="#ownership-in-functions">Ownership in Functions</a>
+  
+  <a class="toc-link" href="#the-stack-vs-the-heap">The Stack vs the Heap</a>
+  
+  <a class="toc-link" href="#scalar-types">Scalar Types</a>
+  
+  <a class="toc-link" href="#compound-types">Compound Types</a>
+  
+  <a class="toc-link" href="#structs">Structs</a>
+  
+  <a class="toc-link" href="#impl-blocks-methods-on-structs">impl Blocks: Methods on Structs</a>
+  
+  <a class="toc-link" href="#traits">Traits</a>
+  
+  <a class="toc-link" href="#common-standard-traits">Common Standard Traits</a>
+  
+  <a class="toc-link" href="#enums">Enums</a>
+  
+  <a class="toc-link" href="#option">Option</a>
+  
+  <a class="toc-link" href="#pattern-matching">Pattern Matching</a>
+  
+  <a class="toc-link" href="#result-t-e">Result&lt;T, E&gt;</a>
+  
+  <a class="toc-link" href="#the-operator">The ? Operator</a>
+  
+  <a class="toc-link" href="#custom-error-types">Custom Error Types</a>
+  
+  <a class="toc-link" href="#lifetimes">Lifetimes</a>
+  
+  <a class="toc-link" href="#lifetime-elision-rules">Lifetime Elision Rules</a>
+  
+  <a class="toc-link" href="#the-static-lifetime">The &#x27;static Lifetime</a>
+  
+  <a class="toc-link" href="#threads">Threads</a>
+  
+  <a class="toc-link" href="#sharing-state-arc-and-mutex">Sharing State: Arc and Mutex</a>
+  
+  <a class="toc-link" href="#channels-message-passing">Channels: Message Passing</a>
+  
+  <a class="toc-link" href="#async-await">Async &#x2F; Await</a>
+  
+  <a class="toc-link" href="#cargo-the-build-tool-and-package-manager">Cargo: The Build Tool and Package Manager</a>
+  
+  <a class="toc-link" href="#cargo-toml">Cargo.toml</a>
+  
+  <a class="toc-link" href="#essential-crates">Essential Crates</a>
+  
+  <a class="toc-link" href="#testing">Testing</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#the-ownership-model">The Ownership Model</a>
+  
+  <a class="topic" href="#borrowing-shared-and-mutable-references">Borrowing: Shared and Mutable References</a>
+  
+  <a class="topic" href="#ownership-in-functions">Ownership in Functions</a>
+  
+  <a class="topic" href="#the-stack-vs-the-heap">The Stack vs the Heap</a>
+  
+  <a class="topic" href="#scalar-types">Scalar Types</a>
+  
+  <a class="topic" href="#compound-types">Compound Types</a>
+  
+  <a class="topic" href="#structs">Structs</a>
+  
+  <a class="topic" href="#impl-blocks-methods-on-structs">impl Blocks: Methods on Structs</a>
+  
+  <a class="topic" href="#traits">Traits</a>
+  
+  <a class="topic" href="#common-standard-traits">Common Standard Traits</a>
+  
+  <a class="topic" href="#enums">Enums</a>
+  
+  <a class="topic" href="#option">Option</a>
+  
+  <a class="topic" href="#pattern-matching">Pattern Matching</a>
+  
+  <a class="topic" href="#result-t-e">Result&lt;T, E&gt;</a>
+  
+  <a class="topic" href="#the-operator">The ? Operator</a>
+  
+  <a class="topic" href="#custom-error-types">Custom Error Types</a>
+  
+  <a class="topic" href="#lifetimes">Lifetimes</a>
+  
+  <a class="topic" href="#lifetime-elision-rules">Lifetime Elision Rules</a>
+  
+  <a class="topic" href="#the-static-lifetime">The &#x27;static Lifetime</a>
+  
+  <a class="topic" href="#threads">Threads</a>
+  
+  <a class="topic" href="#sharing-state-arc-and-mutex">Sharing State: Arc and Mutex</a>
+  
+  <a class="topic" href="#channels-message-passing">Channels: Message Passing</a>
+  
+  <a class="topic" href="#async-await">Async &#x2F; Await</a>
+  
+  <a class="topic" href="#cargo-the-build-tool-and-package-manager">Cargo: The Build Tool and Package Manager</a>
+  
+  <a class="topic" href="#cargo-toml">Cargo.toml</a>
+  
+  <a class="topic" href="#essential-crates">Essential Crates</a>
+  
+  <a class="topic" href="#testing">Testing</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2024-01-15</span>
+  <h1>Rust Language Reference for Developers</h1>
+  
+  <p class="subtitle">Ownership, borrowing, lifetimes, traits, and the compiler model</p>
+  
+
+  <h2 id="the-ownership-model"><a class="zola-anchor" href="#the-ownership-model" aria-label="Anchor link for: the-ownership-model">🔗</a>The Ownership Model</h2>
+<p>Rust enforces memory safety at compile time through three rules: <strong>every value has one owner</strong>, <strong>ownership can be moved or borrowed</strong>, and <strong>values are dropped when their owner goes out of scope</strong>. No garbage collector, no runtime overhead.</p>
+<table><thead><tr><th>Concept</th><th>What It Means</th><th>Compile Error If You Violate It</th></tr></thead><tbody>
+<tr><td><strong>Ownership</strong></td><td>One variable owns the data at any time</td><td>Use after move</td></tr>
+<tr><td><strong>Move</strong></td><td>Ownership transfers; old variable is gone</td><td>Value used after move</td></tr>
+<tr><td><strong>Clone</strong></td><td>Deep copy; both variables own separate data</td><td>(No error — explicit)</td></tr>
+<tr><td><strong>Copy</strong></td><td>Stack-only types (i32, bool, f64) are copied implicitly</td><td>(No error — cheap bitwise copy)</td></tr>
+<tr><td><strong>Borrow</strong></td><td>Reference to data without taking ownership</td><td>Outlives owner, or mutated while borrowed</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Move: ownership transfers to `b`, `a` is no longer valid</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    let</span><span> a</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;hello&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    let</span><span> b</span><span style="color: #F97583;"> =</span><span> a;</span><span style="color: #6A737D;">              // a is MOVED into b</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    // println!(&quot;{}&quot;, a);  // COMPILE ERROR: value borrowed after move</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    // Clone: explicit deep copy, both live independently</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    let</span><span> a</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;hello&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    let</span><span> b</span><span style="color: #F97583;"> =</span><span> a</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>();</span><span style="color: #6A737D;">      // b is a new independent String</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{} {}&quot;</span><span>, a, b);</span><span style="color: #6A737D;"> // both valid</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    // Copy types: i32, bool, char, f64, tuples of Copy types</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    let</span><span> x</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> i32</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 5</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    let</span><span> y</span><span style="color: #F97583;"> =</span><span> x;</span><span style="color: #6A737D;">              // x is COPIED (not moved), both valid</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{} {}&quot;</span><span>, x, y);</span></span></code></pre><h2 id="borrowing-shared-and-mutable-references"><a class="zola-anchor" href="#borrowing-shared-and-mutable-references" aria-label="Anchor link for: borrowing-shared-and-mutable-references">🔗</a>Borrowing: Shared and Mutable References</h2>
+<p>References let you use a value without taking ownership. The borrow checker enforces the rule at compile time: <strong>you can have many shared references OR one mutable reference — never both at the same time.</strong></p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Shared reference (&amp;T): read-only, many allowed simultaneously</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    let</span><span> s</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;hello&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    let</span><span> r1</span><span style="color: #F97583;"> = &amp;</span><span>s;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    let</span><span> r2</span><span style="color: #F97583;"> = &amp;</span><span>s;</span><span style="color: #6A737D;">            // fine — multiple shared refs are OK</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{} {}&quot;</span><span>, r1, r2);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    // Mutable reference (&amp;mut T): exclusive, only one at a time</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    let mut</span><span> s</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;hello&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    let</span><span> r</span><span style="color: #F97583;"> = &amp;mut</span><span> s;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">push_str</span><span>(</span><span style="color: #9ECBFF;">&quot;, world&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    // let r2 = &amp;mut s;    // COMPILE ERROR: cannot borrow `s` as mutable more than once</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    // Cannot mix shared and mutable refs to same data simultaneously</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    let</span><span> r1</span><span style="color: #F97583;"> = &amp;</span><span>s;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    // let r2 = &amp;mut s;    // COMPILE ERROR: cannot borrow `s` as mutable because it is also borrowed as immutable</span></span></code></pre>
+<blockquote>
+<p><strong>The borrow checker works at the scope level, not the line level.</strong> In newer Rust (NLL — Non-Lexical Lifetimes), a borrow ends at its last use, not at the end of its scope. This means you can sometimes take a mutable ref after a shared ref as long as the shared ref is no longer used.</p>
+</blockquote>
+<h2 id="ownership-in-functions"><a class="zola-anchor" href="#ownership-in-functions" aria-label="Anchor link for: ownership-in-functions">🔗</a>Ownership in Functions</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Passing by value: ownership moves into the function</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> take</span><span>(s</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> String</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, s);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    }</span><span style="color: #6A737D;"> // s is dropped here</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    let</span><span> s</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;hi&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">    take</span><span>(s);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    // println!(&quot;{}&quot;, s); // COMPILE ERROR: s was moved</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    // Passing by reference: borrow, caller retains ownership</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> borrow</span><span>(s</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">String</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, s);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    }</span><span style="color: #6A737D;"> // borrow ends here, s is not dropped</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    let</span><span> s</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;hi&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">    borrow</span><span>(</span><span style="color: #F97583;">&amp;</span><span>s);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, s);</span><span style="color: #6A737D;"> // still valid — we only borrowed</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    // Returning ownership: function gives back what it owns</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> make</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> String</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">        String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;new string&quot;</span><span>)</span><span style="color: #6A737D;"> // returned, not dropped</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    let</span><span> s</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> make</span><span>();</span><span style="color: #6A737D;"> // s owns the string</span></span></code></pre><h2 id="the-stack-vs-the-heap"><a class="zola-anchor" href="#the-stack-vs-the-heap" aria-label="Anchor link for: the-stack-vs-the-heap">🔗</a>The Stack vs the Heap</h2>
+<table><thead><tr><th></th><th>Stack</th><th>Heap</th></tr></thead><tbody>
+<tr><td><strong>Allocation</strong></td><td>Automatic (function call frame)</td><td>Explicit (<code>Box::new</code>, <code>String::from</code>, <code>Vec::new</code>)</td></tr>
+<tr><td><strong>Size</strong></td><td>Must be known at compile time</td><td>Can grow/shrink at runtime</td></tr>
+<tr><td><strong>Speed</strong></td><td>Fast (pointer increment)</td><td>Slower (allocator call)</td></tr>
+<tr><td><strong>Examples</strong></td><td><code>i32</code>, <code>bool</code>, <code>[u8; 4]</code>, references</td><td><code>String</code>, <code>Vec&lt;T&gt;</code>, <code>Box&lt;T&gt;</code>, <code>HashMap</code></td></tr>
+<tr><td><strong>Drop</strong></td><td>Automatic when frame exits</td><td>When owning variable is dropped</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>String vs &amp;str.</strong> <code>String</code> is heap-allocated, owned, growable. <code>&amp;str</code> is a borrowed reference to string data (often a string literal in the binary, or a slice of a <code>String</code>). Functions that only read strings should generally take <code>&amp;str</code> — it's more flexible and avoids forcing the caller to allocate.</p>
+</blockquote>
+<h2 id="scalar-types"><a class="zola-anchor" href="#scalar-types" aria-label="Anchor link for: scalar-types">🔗</a>Scalar Types</h2>
+<table><thead><tr><th>Type</th><th>Size</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>i8 / i16 / i32 / i64 / i128</code></td><td>1–16 bytes</td><td>Signed integers. <code>i32</code> is default.</td></tr>
+<tr><td><code>u8 / u16 / u32 / u64 / u128</code></td><td>1–16 bytes</td><td>Unsigned integers. <code>u8</code> is a byte.</td></tr>
+<tr><td><code>isize / usize</code></td><td>Platform width</td><td>Pointer-sized. Used for indexing.</td></tr>
+<tr><td><code>f32 / f64</code></td><td>4 / 8 bytes</td><td>Floating point. <code>f64</code> is default.</td></tr>
+<tr><td><code>bool</code></td><td>1 byte</td><td><code>true</code> or <code>false</code>.</td></tr>
+<tr><td><code>char</code></td><td>4 bytes</td><td>Unicode scalar value (not a byte).</td></tr>
+</tbody></table>
+<h2 id="compound-types"><a class="zola-anchor" href="#compound-types" aria-label="Anchor link for: compound-types">🔗</a>Compound Types</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Tuple: fixed-length, can mix types</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    let</span><span> t</span><span style="color: #F97583;">:</span><span> (</span><span style="color: #B392F0;">i32</span><span>,</span><span style="color: #B392F0;"> f64</span><span>,</span><span style="color: #B392F0;"> bool</span><span>)</span><span style="color: #F97583;"> =</span><span> (</span><span style="color: #79B8FF;">1</span><span>,</span><span style="color: #79B8FF;"> 2.0</span><span>,</span><span style="color: #79B8FF;"> true</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, t</span><span style="color: #F97583;">.</span><span style="color: #79B8FF;">0</span><span>);</span><span style="color: #6A737D;"> // access by index</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    let</span><span> (x, y, z)</span><span style="color: #F97583;"> =</span><span> t;</span><span style="color: #6A737D;"> // destructure</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    // Array: fixed-length, same type, stack-allocated</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    let</span><span> arr</span><span style="color: #F97583;">:</span><span> [</span><span style="color: #B392F0;">i32</span><span>;</span><span style="color: #79B8FF;"> 5</span><span>]</span><span style="color: #F97583;"> =</span><span> [</span><span style="color: #79B8FF;">1</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>,</span><span style="color: #79B8FF;"> 3</span><span>,</span><span style="color: #79B8FF;"> 4</span><span>,</span><span style="color: #79B8FF;"> 5</span><span>];</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    let</span><span> zeros</span><span style="color: #F97583;"> =</span><span> [</span><span style="color: #79B8FF;">0</span><span>;</span><span style="color: #79B8FF;"> 10</span><span>];</span><span style="color: #6A737D;"> // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    // arr[5];           // RUNTIME PANIC: index out of bounds (checked)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    // Vec: heap-allocated, growable array</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    let mut</span><span> v</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Vec</span><span>&lt;</span><span style="color: #B392F0;">i32</span><span>&gt;</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Vec</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">new</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    v</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">push</span><span>(</span><span style="color: #79B8FF;">1</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>    v</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">push</span><span>(</span><span style="color: #79B8FF;">2</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    let</span><span> v2</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> vec!</span><span>[</span><span style="color: #79B8FF;">1</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>,</span><span style="color: #79B8FF;"> 3</span><span>];</span><span style="color: #6A737D;"> // macro shorthand</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">    // Slice: view into an array or Vec (doesn&#39;t own data)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    let</span><span> slice</span><span style="color: #F97583;">: &amp;</span><span>[</span><span style="color: #B392F0;">i32</span><span>]</span><span style="color: #F97583;"> = &amp;</span><span>v[</span><span style="color: #79B8FF;">0</span><span style="color: #F97583;">..</span><span style="color: #79B8FF;">2</span><span>];</span><span style="color: #6A737D;"> // first two elements</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">    // HashMap</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">collections</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">HashMap</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">    let mut</span><span> map</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> HashMap</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">new</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>    map</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">insert</span><span>(</span><span style="color: #9ECBFF;">&quot;key&quot;</span><span>,</span><span style="color: #79B8FF;"> 42</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    let</span><span> val</span><span style="color: #F97583;"> =</span><span> map</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">get</span><span>(</span><span style="color: #9ECBFF;">&quot;key&quot;</span><span>);</span><span style="color: #6A737D;"> // returns Option&lt;&amp;i32&gt;</span></span></code></pre><h2 id="structs"><a class="zola-anchor" href="#structs" aria-label="Anchor link for: structs">🔗</a>Structs</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Named-field struct</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    struct</span><span style="color: #B392F0;"> User</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>        name</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> String</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        age</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> u32</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>        active</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> bool</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    let</span><span> user</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> User</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        name</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;Alice&quot;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>        age</span><span style="color: #F97583;">:</span><span style="color: #79B8FF;"> 30</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>        active</span><span style="color: #F97583;">:</span><span style="color: #79B8FF;"> true</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    };</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, user</span><span style="color: #F97583;">.</span><span>name);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    // Struct update syntax</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    let</span><span> user2</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> User</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>        name</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;Bob&quot;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">        ..</span><span>user</span><span style="color: #6A737D;">  // fill remaining fields from `user`</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">                // NOTE: moves `user` if non-Copy fields are used</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    };</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    // Tuple struct</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    struct</span><span style="color: #B392F0;"> Point</span><span>(</span><span style="color: #B392F0;">f64</span><span>,</span><span style="color: #B392F0;"> f64</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    let</span><span> p</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Point</span><span>(</span><span style="color: #79B8FF;">1.0</span><span>,</span><span style="color: #79B8FF;"> 2.0</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, p</span><span style="color: #F97583;">.</span><span style="color: #79B8FF;">0</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #6A737D;">    // Unit struct (no fields, used as marker type)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #F97583;">    struct</span><span style="color: #B392F0;"> Marker</span><span>;</span></span></code></pre><h2 id="impl-blocks-methods-on-structs"><a class="zola-anchor" href="#impl-blocks-methods-on-structs" aria-label="Anchor link for: impl-blocks-methods-on-structs">🔗</a>impl Blocks: Methods on Structs</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    struct</span><span style="color: #B392F0;"> Rectangle</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>        width</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> f64</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>        height</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> f64</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    impl</span><span style="color: #B392F0;"> Rectangle</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">        // Associated function (no `self`): called as Rectangle::new()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> new</span><span>(width</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> f64</span><span>, height</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> f64</span><span>)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #79B8FF;"> Self</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #79B8FF;">            Self</span><span> { width, height }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">        // Method: takes `&amp;self` (shared borrow of the instance)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> area</span><span>(</span><span style="color: #F97583;">&amp;</span><span style="color: #79B8FF;">self</span><span>)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> f64</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #79B8FF;">            self</span><span style="color: #F97583;">.</span><span>width </span><span style="color: #F97583;">*</span><span style="color: #79B8FF;"> self</span><span style="color: #F97583;">.</span><span>height</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">        // Mutable method: takes `&amp;mut self`</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> scale</span><span>(</span><span style="color: #F97583;">&amp;mut</span><span style="color: #79B8FF;"> self</span><span>, factor</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> f64</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #79B8FF;">            self</span><span style="color: #F97583;">.</span><span>width </span><span style="color: #F97583;">*=</span><span> factor;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #79B8FF;">            self</span><span style="color: #F97583;">.</span><span>height </span><span style="color: #F97583;">*=</span><span> factor;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    let mut</span><span> r</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Rectangle</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">new</span><span>(</span><span style="color: #79B8FF;">4.0</span><span>,</span><span style="color: #79B8FF;"> 5.0</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">area</span><span>());</span><span style="color: #6A737D;">  // 20.0</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">scale</span><span>(</span><span style="color: #79B8FF;">2.0</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">area</span><span>());</span><span style="color: #6A737D;">  // 80.0</span></span></code></pre>
+<blockquote>
+<p><strong><code>self</code>, <code>&amp;self</code>, <code>&amp;mut self</code>.</strong> <code>self</code> consumes the value (rare). <code>&amp;self</code> borrows immutably (most common — for reads). <code>&amp;mut self</code> borrows mutably (for mutations). Pick the least powerful you need.</p>
+</blockquote>
+<h2 id="traits"><a class="zola-anchor" href="#traits" aria-label="Anchor link for: traits">🔗</a>Traits</h2>
+<p>Traits define shared behaviour across types. They're similar to interfaces in other languages, but more powerful — they can have default method implementations, and you can implement them on types you didn't define.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Define a trait</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    trait</span><span style="color: #B392F0;"> Summary</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> summarize</span><span>(</span><span style="color: #F97583;">&amp;</span><span style="color: #79B8FF;">self</span><span>)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> String</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">        // Default implementation — types can override or use as-is</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> preview</span><span>(</span><span style="color: #F97583;">&amp;</span><span style="color: #79B8FF;">self</span><span>)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> String</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">            format!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}...&quot;</span><span>,</span><span style="color: #F97583;"> &amp;</span><span style="color: #79B8FF;">self</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">summarize</span><span>()[</span><span style="color: #F97583;">..</span><span style="color: #79B8FF;">50</span><span>])</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    // Implement for a struct</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    struct</span><span style="color: #B392F0;"> Article</span><span> { title</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> String</span><span>, content</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> String</span><span> }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    impl</span><span style="color: #B392F0;"> Summary</span><span style="color: #F97583;"> for</span><span style="color: #B392F0;"> Article</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> summarize</span><span>(</span><span style="color: #F97583;">&amp;</span><span style="color: #79B8FF;">self</span><span>)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> String</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">            format!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}: {}&quot;</span><span>,</span><span style="color: #79B8FF;"> self</span><span style="color: #F97583;">.</span><span>title,</span><span style="color: #79B8FF;"> self</span><span style="color: #F97583;">.</span><span>content)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">    // Use trait bound in a function (monomorphized at compile time)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> print_summary</span><span>&lt;</span><span style="color: #B392F0;">T</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Summary</span><span>&gt;(item</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">T</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, item</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">summarize</span><span>());</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">    // Equivalent using `impl Trait` syntax (simpler for single params)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> print_summary</span><span>(item</span><span style="color: #F97583;">: &amp;impl</span><span style="color: #B392F0;"> Summary</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, item</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">summarize</span><span>());</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #6A737D;">    // Dynamic dispatch with `dyn Trait` (runtime cost, allows mixed types)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> print_any</span><span>(item</span><span style="color: #F97583;">: &amp;dyn</span><span style="color: #B392F0;"> Summary</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, item</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">summarize</span><span>());</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span>    }</span></span></code></pre><h2 id="common-standard-traits"><a class="zola-anchor" href="#common-standard-traits" aria-label="Anchor link for: common-standard-traits">🔗</a>Common Standard Traits</h2>
+<table><thead><tr><th>Trait</th><th>What It Provides</th><th>How to Derive</th></tr></thead><tbody>
+<tr><td><code>Debug</code></td><td><code>{:?}</code> formatting for debugging</td><td><code>#[derive(Debug)]</code></td></tr>
+<tr><td><code>Display</code></td><td><code>{}</code> formatting for user output</td><td>Must implement manually</td></tr>
+<tr><td><code>Clone</code></td><td><code>.clone()</code> deep copy</td><td><code>#[derive(Clone)]</code></td></tr>
+<tr><td><code>Copy</code></td><td>Implicit bitwise copy (stack only)</td><td><code>#[derive(Copy, Clone)]</code></td></tr>
+<tr><td><code>PartialEq / Eq</code></td><td><code>==</code> and <code>!=</code></td><td><code>#[derive(PartialEq, Eq)]</code></td></tr>
+<tr><td><code>PartialOrd / Ord</code></td><td><code>&lt;</code>, <code>&gt;</code>, sorting</td><td><code>#[derive(PartialOrd, Ord)]</code></td></tr>
+<tr><td><code>Hash</code></td><td>Use as HashMap key</td><td><code>#[derive(Hash)]</code></td></tr>
+<tr><td><code>Default</code></td><td><code>Type::default()</code> zero value</td><td><code>#[derive(Default)]</code></td></tr>
+<tr><td><code>Iterator</code></td><td>Custom iteration with <code>.next()</code></td><td>Must implement manually</td></tr>
+<tr><td><code>From / Into</code></td><td>Type conversions</td><td>Implement <code>From</code>, get <code>Into</code> free</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>// Deriving multiple traits</span></span>
+<span class="giallo-l"><span>#[derive(Debug, Clone, PartialEq)]</span></span>
+<span class="giallo-l"><span>struct Point { x: f64, y: f64 }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>let p1 = Point { x: 1.0, y: 2.0 };</span></span>
+<span class="giallo-l"><span>let p2 = p1.clone();</span></span>
+<span class="giallo-l"><span>println!(&quot;{:?}&quot;, p1); // Point { x: 1.0, y: 2.0 }</span></span>
+<span class="giallo-l"><span>println!(&quot;{}&quot;, p1 == p2); // true</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>// Implementing Display manually</span></span>
+<span class="giallo-l"><span>use std::fmt;</span></span>
+<span class="giallo-l"><span>impl fmt::Display for Point {</span></span>
+<span class="giallo-l"><span>    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {</span></span>
+<span class="giallo-l"><span>        write!(f, &quot;({}, {})&quot;, self.x, self.y)</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>println!(&quot;{}&quot;, p1); // (1.0, 2.0)</span></span></code></pre>
+<blockquote>
+<p><strong>Orphan rule:</strong> You can only implement a trait for a type if <em>either</em> the trait or the type is defined in your crate. You cannot implement <code>Display</code> for <code>Vec&lt;T&gt;</code> — neither is yours. This prevents conflicting implementations across crates.</p>
+</blockquote>
+<h2 id="enums"><a class="zola-anchor" href="#enums" aria-label="Anchor link for: enums">🔗</a>Enums</h2>
+<p>Rust enums are algebraic data types — each variant can hold different data. Combined with pattern matching, they're the primary tool for modelling states and outcomes.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Simple enum</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    enum</span><span style="color: #B392F0;"> Direction</span><span> {</span><span style="color: #B392F0;"> North</span><span>,</span><span style="color: #B392F0;"> South</span><span>,</span><span style="color: #B392F0;"> East</span><span>,</span><span style="color: #B392F0;"> West</span><span> }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    // Enum with data in variants</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    enum</span><span style="color: #B392F0;"> Shape</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">        Circle</span><span>(</span><span style="color: #B392F0;">f64</span><span>),</span><span style="color: #6A737D;">              // radius</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">        Rectangle</span><span>(</span><span style="color: #B392F0;">f64</span><span>,</span><span style="color: #B392F0;"> f64</span><span>),</span><span style="color: #6A737D;">     // width, height</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #B392F0;">        Point</span><span> { x</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> f64</span><span>, y</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> f64</span><span> },</span><span style="color: #6A737D;"> // named fields</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    let</span><span> s</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Shape</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Circle</span><span>(</span><span style="color: #79B8FF;">3.14</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    // Pattern match to extract data</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    let</span><span> area</span><span style="color: #F97583;"> = match</span><span> s {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #B392F0;">        Shape</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Circle</span><span>(r)</span><span style="color: #F97583;">        =&gt;</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">f64</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">consts</span><span style="color: #F97583;">::</span><span style="color: #79B8FF;">PI</span><span style="color: #F97583;"> *</span><span> r</span><span style="color: #F97583;"> *</span><span> r,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">        Shape</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Rectangle</span><span>(w, h)</span><span style="color: #F97583;">  =&gt;</span><span> w</span><span style="color: #F97583;"> *</span><span> h,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #B392F0;">        Shape</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Point</span><span> {</span><span style="color: #F97583;"> ..</span><span> }</span><span style="color: #F97583;">     =&gt;</span><span style="color: #79B8FF;"> 0.0</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>    };</span></span></code></pre><h2 id="option"><a class="zola-anchor" href="#option" aria-label="Anchor link for: option">🔗</a>Option<T></h2>
+<p>Rust has no <code>null</code>. Instead, optional values use <code>Option&lt;T&gt;</code>. The compiler forces you to handle the <code>None</code> case. No null pointer exceptions.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    enum</span><span style="color: #B392F0;"> Option</span><span>&lt;</span><span style="color: #B392F0;">T</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">        Some</span><span>(</span><span style="color: #B392F0;">T</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">        None</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    let</span><span> maybe</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Option</span><span>&lt;</span><span style="color: #B392F0;">i32</span><span>&gt;</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Some</span><span>(</span><span style="color: #79B8FF;">42</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    let</span><span> nothing</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Option</span><span>&lt;</span><span style="color: #B392F0;">i32</span><span>&gt;</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> None</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    // Pattern match</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    match</span><span> maybe {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #B392F0;">        Some</span><span>(n)</span><span style="color: #F97583;"> =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;got {}&quot;</span><span>, n),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #B392F0;">        None</span><span style="color: #F97583;">    =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;nothing&quot;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    // Convenient methods</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    maybe</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>();</span><span style="color: #6A737D;">              // panics if None — use only when certain</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    maybe</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap_or</span><span>(</span><span style="color: #79B8FF;">0</span><span>);</span><span style="color: #6A737D;">          // default value if None</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>    maybe</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap_or_else</span><span>(</span><span style="color: #F97583;">||</span><span style="color: #B392F0;"> compute</span><span>());</span><span style="color: #6A737D;"> // lazily computed default</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>    maybe</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">map</span><span>(</span><span style="color: #F97583;">|</span><span>n</span><span style="color: #F97583;">|</span><span> n</span><span style="color: #F97583;"> *</span><span style="color: #79B8FF;"> 2</span><span>);</span><span style="color: #6A737D;">        // transform if Some, pass through None</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    maybe</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">and_then</span><span>(</span><span style="color: #F97583;">|</span><span>n</span><span style="color: #F97583;">|</span><span style="color: #B392F0;"> lookup</span><span>(n));</span><span style="color: #6A737D;"> // chain operations that may fail</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>    maybe</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">is_some</span><span>();</span><span style="color: #6A737D;">              // bool check</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    maybe</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">is_none</span><span>();</span><span style="color: #6A737D;">              // bool check</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #6A737D;">    // if let: concise pattern match for one case</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #F97583;">    if let</span><span style="color: #B392F0;"> Some</span><span>(n)</span><span style="color: #F97583;"> =</span><span> maybe {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;got {}&quot;</span><span>, n);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>    }</span></span></code></pre><h2 id="pattern-matching"><a class="zola-anchor" href="#pattern-matching" aria-label="Anchor link for: pattern-matching">🔗</a>Pattern Matching</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // match must be exhaustive — compiler enforces all cases are covered</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    let</span><span> n</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 7</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    match</span><span> n {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #79B8FF;">        1</span><span style="color: #F97583;">         =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;one&quot;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #79B8FF;">        2</span><span style="color: #F97583;"> |</span><span style="color: #79B8FF;"> 3</span><span style="color: #F97583;">     =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;two or three&quot;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #79B8FF;">        4</span><span style="color: #F97583;">..=</span><span style="color: #79B8FF;">6</span><span style="color: #F97583;">     =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;four to six&quot;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>        x</span><span style="color: #F97583;"> if</span><span> x</span><span style="color: #F97583;"> &lt;</span><span style="color: #79B8FF;"> 0</span><span style="color: #F97583;"> =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;negative: {}&quot;</span><span>, x),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>        _</span><span style="color: #F97583;">          =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;something else&quot;</span><span>),</span><span style="color: #6A737D;"> // catch-all</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    // Destructure structs in match</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">    let</span><span> p</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Point</span><span> { x</span><span style="color: #F97583;">:</span><span style="color: #79B8FF;"> 3.0</span><span>, y</span><span style="color: #F97583;">:</span><span style="color: #79B8FF;"> 4.0</span><span> };</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    match</span><span> p {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #B392F0;">        Point</span><span> { x</span><span style="color: #F97583;">:</span><span style="color: #79B8FF;"> 0.0</span><span>, y }</span><span style="color: #F97583;"> =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;on y-axis at {}&quot;</span><span>, y),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #B392F0;">        Point</span><span> { x, y }</span><span style="color: #F97583;">      =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;({}, {})&quot;</span><span>, x, y),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    // while let: loop while pattern matches</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">    let mut</span><span> stack</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> vec!</span><span>[</span><span style="color: #79B8FF;">1</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>,</span><span style="color: #79B8FF;"> 3</span><span>];</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    while let</span><span style="color: #B392F0;"> Some</span><span>(top)</span><span style="color: #F97583;"> =</span><span> stack</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">pop</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, top);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    }</span></span></code></pre><h2 id="result-t-e"><a class="zola-anchor" href="#result-t-e" aria-label="Anchor link for: result-t-e">🔗</a>Result&lt;T, E&gt;</h2>
+<p>Operations that can fail return <code>Result&lt;T, E&gt;</code>. The compiler forces you to handle failures — you cannot accidentally ignore an error.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    enum</span><span style="color: #B392F0;"> Result</span><span>&lt;</span><span style="color: #B392F0;">T</span><span>,</span><span style="color: #B392F0;"> E</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">        Ok</span><span>(</span><span style="color: #B392F0;">T</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">        Err</span><span>(</span><span style="color: #B392F0;">E</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    // Parsing a string: can succeed (Ok) or fail (Err)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    let</span><span> r</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Result</span><span>&lt;</span><span style="color: #B392F0;">i32</span><span>, _&gt;</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;42&quot;</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">parse</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    match</span><span> r {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #B392F0;">        Ok</span><span>(n)</span><span style="color: #F97583;">  =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;parsed: {}&quot;</span><span>, n),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">        Err</span><span>(e)</span><span style="color: #F97583;"> =&gt;</span><span style="color: #B392F0;"> println!</span><span>(</span><span style="color: #9ECBFF;">&quot;failed: {}&quot;</span><span>, e),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    // Convenient Result methods (mirror Option)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>();</span><span style="color: #6A737D;">              // panic on Err — use in tests or when certain</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap_or</span><span>(</span><span style="color: #79B8FF;">0</span><span>);</span><span style="color: #6A737D;">          // default on Err</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">expect</span><span>(</span><span style="color: #9ECBFF;">&quot;parse failed&quot;</span><span>);</span><span style="color: #6A737D;"> // panic with message on Err (better than unwrap)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">map</span><span>(</span><span style="color: #F97583;">|</span><span>n</span><span style="color: #F97583;">|</span><span> n</span><span style="color: #F97583;"> *</span><span style="color: #79B8FF;"> 2</span><span>);</span><span style="color: #6A737D;">        // transform Ok value</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">map_err</span><span>(</span><span style="color: #F97583;">|</span><span>e</span><span style="color: #F97583;">|</span><span style="color: #B392F0;"> MyErr</span><span>(e));</span><span style="color: #6A737D;"> // transform Err value</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">and_then</span><span>(</span><span style="color: #F97583;">|</span><span>n</span><span style="color: #F97583;">|</span><span style="color: #B392F0;"> next</span><span>(n));</span><span style="color: #6A737D;"> // chain fallible operations</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">is_ok</span><span>(); r</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">is_err</span><span>();</span><span style="color: #6A737D;">   // bool checks</span></span></code></pre><h2 id="the-operator"><a class="zola-anchor" href="#the-operator" aria-label="Anchor link for: the-operator">🔗</a>The ? Operator</h2>
+<p>The <code>?</code> operator is shorthand for: if <code>Ok</code>, unwrap and continue; if <code>Err</code>, return the error immediately from the current function. It eliminates boilerplate match chains for error propagation.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span>fs;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span>io;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    // Without ?: manual propagation</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> read_file_verbose</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Result</span><span>&lt;</span><span style="color: #B392F0;">String</span><span>, io</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Error</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">        let</span><span> content</span><span style="color: #F97583;"> = match</span><span style="color: #B392F0;"> fs</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">read_to_string</span><span>(</span><span style="color: #9ECBFF;">&quot;file.txt&quot;</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">            Ok</span><span>(s)</span><span style="color: #F97583;">  =&gt;</span><span> s,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #B392F0;">            Err</span><span>(e)</span><span style="color: #F97583;"> =&gt; return</span><span style="color: #B392F0;"> Err</span><span>(e),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        };</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">        Ok</span><span>(content)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    // With ?: concise propagation</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> read_file</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Result</span><span>&lt;</span><span style="color: #B392F0;">String</span><span>, io</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Error</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">        let</span><span> content</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> fs</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">read_to_string</span><span>(</span><span style="color: #9ECBFF;">&quot;file.txt&quot;</span><span>)</span><span style="color: #F97583;">?</span><span>;</span><span style="color: #6A737D;"> // returns Err if it fails</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">        Ok</span><span>(content)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    // Chaining with ?</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> parse_config</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Result</span><span>&lt;</span><span style="color: #B392F0;">Config</span><span>,</span><span style="color: #B392F0;"> MyError</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">        let</span><span> raw</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> fs</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">read_to_string</span><span>(</span><span style="color: #9ECBFF;">&quot;config.toml&quot;</span><span>)</span><span style="color: #F97583;">?</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #F97583;">        let</span><span> config</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Config</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> toml</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from_str</span><span>(</span><span style="color: #F97583;">&amp;</span><span>raw)</span><span style="color: #F97583;">?</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #B392F0;">        Ok</span><span>(config)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>    }</span></span></code></pre>
+<blockquote>
+<p><strong>? works on both Result and Option.</strong> In a function returning <code>Option&lt;T&gt;</code>, <code>?</code> returns <code>None</code> early if applied to a <code>None</code> value. In a function returning <code>Result</code>, it returns the <code>Err</code>. The function's return type determines behavior.</p>
+</blockquote>
+<h2 id="custom-error-types"><a class="zola-anchor" href="#custom-error-types" aria-label="Anchor link for: custom-error-types">🔗</a>Custom Error Types</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Simple custom error with thiserror crate (recommended)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> thiserror</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Error</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    #[derive(</span><span style="color: #B392F0;">Error</span><span>,</span><span style="color: #B392F0;"> Debug</span><span>)]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    enum</span><span style="color: #B392F0;"> AppError</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>        #[error(</span><span style="color: #9ECBFF;">&quot;IO error: {0}&quot;</span><span>)]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">        Io</span><span>(#[from]</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">io</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Error</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        #[error(</span><span style="color: #9ECBFF;">&quot;parse failed: {msg}&quot;</span><span>)]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">        Parse</span><span> { msg</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> String</span><span> },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>        #[error(</span><span style="color: #9ECBFF;">&quot;not found: {0}&quot;</span><span>)]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">        NotFound</span><span>(</span><span style="color: #B392F0;">String</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #6A737D;">    // anyhow crate: for applications where you don&#39;t need typed errors</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> anyhow</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Result</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> run</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Result</span><span>&lt;()&gt; {</span><span style="color: #6A737D;">   // Result&lt;(), anyhow::Error&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">        let</span><span> s</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> fs</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">read_to_string</span><span>(</span><span style="color: #9ECBFF;">&quot;file&quot;</span><span>)</span><span style="color: #F97583;">?</span><span>;</span><span style="color: #6A737D;"> // any error works</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #B392F0;">        Ok</span><span>(())</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>    }</span></span></code></pre>
+<blockquote>
+<p><strong>thiserror for libraries, anyhow for applications.</strong> <code>thiserror</code> gives you typed errors callers can match on. <code>anyhow</code> is ergonomic for binaries where you just want to propagate and display errors. Use <code>Box&lt;dyn Error&gt;</code> if you want no deps but accept the ergonomic cost.</p>
+</blockquote>
+<h2 id="lifetimes"><a class="zola-anchor" href="#lifetimes" aria-label="Anchor link for: lifetimes">🔗</a>Lifetimes</h2>
+<p>Lifetimes are the compiler's way of tracking how long references are valid. Most of the time the compiler infers them (lifetime elision). You only write them explicitly when the compiler can't figure it out — usually when a function returns a reference and the compiler can't determine which input it came from.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // The problem: which input does the returned reference point to?</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    // The compiler needs to know to ensure the output doesn&#39;t outlive the input.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> longest</span><span>&lt;&#39;</span><span style="color: #B392F0;">a</span><span>&gt;(x</span><span style="color: #F97583;">: &amp;</span><span>&#39;</span><span style="color: #B392F0;">a str</span><span>, y</span><span style="color: #F97583;">: &amp;</span><span>&#39;</span><span style="color: #B392F0;">a str</span><span>)</span><span style="color: #F97583;"> -&gt; &amp;</span><span>&#39;</span><span style="color: #B392F0;">a str</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">        if</span><span> x</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">len</span><span>() &gt; y</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">len</span><span>() { x }</span><span style="color: #F97583;"> else</span><span> { y }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    // &#39;a means: &quot;the returned reference lives as long as the shorter of x and y&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    // Lifetime in a struct: struct holds a reference, must not outlive what it points to</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    struct</span><span style="color: #B392F0;"> Excerpt</span><span>&lt;&#39;</span><span style="color: #B392F0;">a</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>        text</span><span style="color: #F97583;">: &amp;</span><span>&#39;</span><span style="color: #B392F0;">a str</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    let</span><span> novel</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;Call me Ishmael...&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    let</span><span> first</span><span style="color: #F97583;"> =</span><span> novel</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">split</span><span>(</span><span style="color: #9ECBFF;">&#39;.&#39;</span><span>)</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">next</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    let</span><span> excerpt</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Excerpt</span><span> { text</span><span style="color: #F97583;">:</span><span> first };</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #6A737D;">    // `excerpt` cannot outlive `novel` — compiler enforces this</span></span></code></pre><h2 id="lifetime-elision-rules"><a class="zola-anchor" href="#lifetime-elision-rules" aria-label="Anchor link for: lifetime-elision-rules">🔗</a>Lifetime Elision Rules</h2>
+<p>You don't write lifetimes in most function signatures because the compiler applies three elision rules automatically:</p>
+<table><thead><tr><th>Rule</th><th>What It Says</th></tr></thead><tbody>
+<tr><td>Rule 1</td><td>Each reference parameter gets its own lifetime: <code>fn f(x: &amp;T, y: &amp;U)</code> → <code>fn f&lt;'a,'b&gt;(x: &amp;'a T, y: &amp;'b U)</code></td></tr>
+<tr><td>Rule 2</td><td>If there's exactly one input lifetime, all outputs get that lifetime.</td></tr>
+<tr><td>Rule 3</td><td>If one of the inputs is <code>&amp;self</code> or <code>&amp;mut self</code>, all output lifetimes get <code>self</code>'s lifetime.</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // These three signatures are equivalent after elision:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> first_word</span><span>(s</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">str</span><span>)</span><span style="color: #F97583;"> -&gt; &amp;</span><span style="color: #B392F0;">str</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    // is the same as:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    fn</span><span> first_word&lt;&#39;</span><span style="color: #B392F0;">a</span><span>&gt;(s</span><span style="color: #F97583;">: &amp;</span><span>&#39;</span><span style="color: #B392F0;">a str</span><span>)</span><span style="color: #F97583;"> -&gt; &amp;</span><span>&#39;</span><span style="color: #B392F0;">a str</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    // Method on a struct: rule 3 applies</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    impl</span><span style="color: #B392F0;"> Excerpt</span><span>&lt;&#39;</span><span style="color: #B392F0;">_</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> announce</span><span>(</span><span style="color: #F97583;">&amp;</span><span style="color: #79B8FF;">self</span><span>, msg</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">str</span><span>)</span><span style="color: #F97583;"> -&gt; &amp;</span><span style="color: #B392F0;">str</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #B392F0;">            println!</span><span>(</span><span style="color: #9ECBFF;">&quot;Attention: {}&quot;</span><span>, msg);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #79B8FF;">            self</span><span style="color: #F97583;">.</span><span>text  </span><span style="color: #6A737D;">// lifetime of return = lifetime of &amp;self (rule 3)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    }</span></span></code></pre><h2 id="the-static-lifetime"><a class="zola-anchor" href="#the-static-lifetime" aria-label="Anchor link for: the-static-lifetime">🔗</a>The 'static Lifetime</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // &#39;static: lives for the entire program duration</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    let</span><span> s</span><span style="color: #F97583;">: &amp;</span><span>&#39;</span><span style="color: #B392F0;">static str</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;I live forever&quot;</span><span>;</span><span style="color: #6A737D;"> // string literals are &#39;static</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    // Common in trait objects and thread-spawning</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> spawn_worker</span><span>(f</span><span style="color: #F97583;">: impl</span><span style="color: #B392F0;"> Fn</span><span>()</span><span style="color: #F97583;"> +</span><span style="color: #B392F0;"> Send</span><span style="color: #F97583;"> +</span><span> &#39;</span><span style="color: #B392F0;">static</span><span>) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">        std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">thread</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">spawn</span><span>(f);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    // `&#39;static` here means the closure must not borrow from the current stack frame</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    // (the thread might outlive the current function call)</span></span></code></pre>
+<blockquote>
+<p><strong>Don't reach for lifetimes first.</strong> If you find yourself writing complex lifetime annotations, consider whether you could own the data (use <code>String</code> instead of <code>&amp;str</code>, <code>Vec&lt;T&gt;</code> instead of <code>&amp;[T]</code>) or restructure the code. Explicit lifetimes are sometimes unavoidable but often a design smell.</p>
+</blockquote>
+<h2 id="threads"><a class="zola-anchor" href="#threads" aria-label="Anchor link for: threads">🔗</a>Threads</h2>
+<p>Rust's ownership system makes data races <strong>impossible to compile</strong>. The <code>Send</code> and <code>Sync</code> traits mark what's safe to share across thread boundaries — the compiler enforces them automatically.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span>thread;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    // Spawn a thread, move data into it</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    let</span><span> data</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;hello&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    let</span><span> handle</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> thread</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">spawn</span><span>(</span><span style="color: #F97583;">move ||</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;in thread: {}&quot;</span><span>, data);</span><span style="color: #6A737D;"> // `move` transfers ownership</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    });</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    handle</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">join</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>();</span><span style="color: #6A737D;"> // wait for thread to finish</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    // Spawn many threads and collect results</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    let</span><span> handles</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Vec</span><span>&lt;_&gt;</span><span style="color: #F97583;"> =</span><span> (</span><span style="color: #79B8FF;">0</span><span style="color: #F97583;">..</span><span style="color: #79B8FF;">10</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">        .</span><span style="color: #B392F0;">map</span><span>(</span><span style="color: #F97583;">|</span><span>i</span><span style="color: #F97583;">|</span><span style="color: #B392F0;"> thread</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">spawn</span><span>(</span><span style="color: #F97583;">move ||</span><span> i</span><span style="color: #F97583;"> *</span><span> i))</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">        .</span><span style="color: #B392F0;">collect</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    let</span><span> results</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Vec</span><span>&lt;_&gt;</span><span style="color: #F97583;"> =</span><span> handles</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">into_iter</span><span>()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">        .</span><span style="color: #B392F0;">map</span><span>(</span><span style="color: #F97583;">|</span><span>h</span><span style="color: #F97583;">|</span><span> h</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">join</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>())</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">        .</span><span style="color: #B392F0;">collect</span><span>();</span></span></code></pre><h2 id="sharing-state-arc-and-mutex"><a class="zola-anchor" href="#sharing-state-arc-and-mutex" aria-label="Anchor link for: sharing-state-arc-and-mutex">🔗</a>Sharing State: Arc and Mutex</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">sync</span><span style="color: #F97583;">::</span><span>{</span><span style="color: #B392F0;">Arc</span><span>,</span><span style="color: #B392F0;"> Mutex</span><span>};</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span>thread;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    // Arc = Atomically Reference Counted: shared ownership across threads</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    // Mutex = Mutual Exclusion: only one thread can access data at a time</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    let</span><span> counter</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Arc</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">new</span><span>(</span><span style="color: #B392F0;">Mutex</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">new</span><span>(</span><span style="color: #79B8FF;">0</span><span>));</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    let</span><span> handles</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Vec</span><span>&lt;_&gt;</span><span style="color: #F97583;"> =</span><span> (</span><span style="color: #79B8FF;">0</span><span style="color: #F97583;">..</span><span style="color: #79B8FF;">10</span><span>)</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">map</span><span>(</span><span style="color: #F97583;">|</span><span>_</span><span style="color: #F97583;">|</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">        let</span><span> c</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Arc</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">clone</span><span>(</span><span style="color: #F97583;">&amp;</span><span>counter);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">        thread</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">spawn</span><span>(</span><span style="color: #F97583;">move ||</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">            let mut</span><span> num</span><span style="color: #F97583;"> =</span><span> c</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">lock</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>();</span><span style="color: #6A737D;"> // lock — blocks until available</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">            *</span><span>num</span><span style="color: #F97583;"> +=</span><span style="color: #79B8FF;"> 1</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>        })</span><span style="color: #6A737D;"> // lock released automatically when `num` goes out of scope</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>    })</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">collect</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    handles</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">into_iter</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">for_each</span><span>(</span><span style="color: #F97583;">|</span><span>h</span><span style="color: #F97583;">|</span><span> h</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">join</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>());</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #B392F0;">    println!</span><span>(</span><span style="color: #9ECBFF;">&quot;count: {}&quot;</span><span>,</span><span style="color: #F97583;"> *</span><span>counter</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">lock</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>());</span><span style="color: #6A737D;"> // 10</span></span></code></pre><h2 id="channels-message-passing"><a class="zola-anchor" href="#channels-message-passing" aria-label="Anchor link for: channels-message-passing">🔗</a>Channels: Message Passing</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">sync</span><span style="color: #F97583;">::</span><span>mpsc;</span><span style="color: #6A737D;"> // multi-producer, single-consumer</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span>thread;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    let</span><span> (tx, rx)</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> mpsc</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">channel</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    // Sender can be cloned for multiple producers</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    let</span><span> tx2</span><span style="color: #F97583;"> =</span><span> tx</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #B392F0;">    thread</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">spawn</span><span>(</span><span style="color: #F97583;">move ||</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>        tx</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">send</span><span>(</span><span style="color: #B392F0;">String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;from thread 1&quot;</span><span>))</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    });</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">    thread</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">spawn</span><span>(</span><span style="color: #F97583;">move ||</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>        tx2</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">send</span><span>(</span><span style="color: #B392F0;">String</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">from</span><span>(</span><span style="color: #9ECBFF;">&quot;from thread 2&quot;</span><span>))</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">unwrap</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>    });</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">    // Receive (blocks until a message arrives)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">    for</span><span> msg</span><span style="color: #F97583;"> in</span><span> rx {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{}&quot;</span><span>, msg);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    }</span></span></code></pre><h2 id="async-await"><a class="zola-anchor" href="#async-await" aria-label="Anchor link for: async-await">🔗</a>Async / Await</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Async functions return a Future — they don&#39;t run until polled</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    // Requires a runtime like tokio or async-std</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    // Cargo.toml: tokio = { version = &quot;1&quot;, features = [&quot;full&quot;] }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    use</span><span> tokio;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    #[tokio</span><span style="color: #F97583;">::</span><span>main]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    async fn</span><span style="color: #B392F0;"> main</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">        let</span><span> result</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> fetch_data</span><span>()</span><span style="color: #F97583;">.await</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #B392F0;">        println!</span><span>(</span><span style="color: #9ECBFF;">&quot;{:?}&quot;</span><span>, result);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    async fn</span><span style="color: #B392F0;"> fetch_data</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Result</span><span>&lt;</span><span style="color: #B392F0;">String</span><span>, reqwest</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Error</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">        let</span><span> body</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> reqwest</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">get</span><span>(</span><span style="color: #9ECBFF;">&quot;https://httpbin.org/get&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">            .await?</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">            .</span><span style="color: #B392F0;">text</span><span>()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">            .await?</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #B392F0;">        Ok</span><span>(body)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    // Spawn concurrent async tasks</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    let</span><span> (a, b)</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> tokio</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">join!</span><span>(</span><span style="color: #B392F0;">task_a</span><span>(),</span><span style="color: #B392F0;"> task_b</span><span>());</span><span style="color: #6A737D;"> // run concurrently, wait for both</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">    let</span><span> handle</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> tokio</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">task</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">spawn</span><span>(</span><span style="color: #B392F0;">task_c</span><span>());</span><span style="color: #6A737D;">        // fire and forget (or .await later)</span></span></code></pre>
+<blockquote>
+<p><strong>Async ≠ multithreaded by default.</strong> <code>async/await</code> is cooperative concurrency on one (or a pool of) thread(s). <code>tokio::task::spawn</code> can run on a thread pool, but a <code>Future</code> alone doesn't create threads. Use threads for CPU-bound work; use async for I/O-bound work.</p>
+</blockquote>
+<h2 id="cargo-the-build-tool-and-package-manager"><a class="zola-anchor" href="#cargo-the-build-tool-and-package-manager" aria-label="Anchor link for: cargo-the-build-tool-and-package-manager">🔗</a>Cargo: The Build Tool and Package Manager</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Create a new project</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> new my_project</span><span style="color: #6A737D;">         # binary (has src/main.rs)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> new my_lib</span><span style="color: #79B8FF;"> --lib</span><span style="color: #6A737D;">       # library (has src/lib.rs)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    # Build and run</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> build</span><span style="color: #6A737D;">                  # compile (debug mode, fast compile, slow binary)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> build</span><span style="color: #79B8FF;"> --release</span><span style="color: #6A737D;">        # optimized (slow compile, fast binary)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> run</span><span style="color: #6A737D;">                    # build + run</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> run</span><span style="color: #79B8FF;"> --release</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> run</span><span style="color: #79B8FF;"> --</span><span style="color: #9ECBFF;"> arg1 arg2</span><span style="color: #6A737D;">       # pass args to the binary</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    # Check and test</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> check</span><span style="color: #6A737D;">                  # type-check only, no codegen — very fast</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> test</span><span style="color: #6A737D;">                   # run all tests</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> test test_name</span><span style="color: #6A737D;">         # run tests matching a name</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> test</span><span style="color: #79B8FF;"> -- --nocapture</span><span style="color: #6A737D;">    # show println! output in tests</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    # Dependency management</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> add serde</span><span style="color: #6A737D;">              # add crate (requires cargo-edit or Rust 1.62+)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> add serde</span><span style="color: #79B8FF;"> --features</span><span style="color: #9ECBFF;"> derive</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> update</span><span style="color: #6A737D;">                 # update Cargo.lock to latest compatible versions</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> outdated</span><span style="color: #6A737D;">               # show outdated deps (requires cargo-outdated)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #6A737D;">    # Other</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> fmt</span><span style="color: #6A737D;">                    # format all code with rustfmt</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> clippy</span><span style="color: #6A737D;">                 # lint: catch common mistakes and style issues</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> doc</span><span style="color: #79B8FF;"> --open</span><span style="color: #6A737D;">             # build and open documentation in browser</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #B392F0;">    cargo</span><span style="color: #9ECBFF;"> publish</span><span style="color: #6A737D;">                # publish crate to crates.io</span></span></code></pre><h2 id="cargo-toml"><a class="zola-anchor" href="#cargo-toml" aria-label="Anchor link for: cargo-toml">🔗</a>Cargo.toml</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="toml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    [</span><span style="color: #B392F0;">package</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    name =</span><span style="color: #9ECBFF;"> &quot;my_project&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    version =</span><span style="color: #9ECBFF;"> &quot;0.1.0&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    edition =</span><span style="color: #9ECBFF;"> &quot;2021&quot;</span><span style="color: #6A737D;">         # always use 2021</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>    [</span><span style="color: #B392F0;">dependencies</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    serde = { version =</span><span style="color: #9ECBFF;"> &quot;1&quot;</span><span>, features = [</span><span style="color: #9ECBFF;">&quot;derive&quot;</span><span>] }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    serde_json =</span><span style="color: #9ECBFF;"> &quot;1&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    tokio = { version =</span><span style="color: #9ECBFF;"> &quot;1&quot;</span><span>, features = [</span><span style="color: #9ECBFF;">&quot;full&quot;</span><span>] }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    reqwest = { version =</span><span style="color: #9ECBFF;"> &quot;0.12&quot;</span><span>, features = [</span><span style="color: #9ECBFF;">&quot;json&quot;</span><span>] }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    thiserror =</span><span style="color: #9ECBFF;"> &quot;1&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    anyhow =</span><span style="color: #9ECBFF;"> &quot;1&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>    [</span><span style="color: #B392F0;">dev-dependencies</span><span>]</span><span style="color: #6A737D;">           # only for tests and benchmarks</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>    mockall =</span><span style="color: #9ECBFF;"> &quot;0.12&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    [</span><span style="color: #B392F0;">features</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>    default = []</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>    my-feature = [</span><span style="color: #9ECBFF;">&quot;some-optional-dep&quot;</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>    [[</span><span style="color: #B392F0;">bin</span><span>]]</span><span style="color: #6A737D;">                      # multiple binaries in one project</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    name =</span><span style="color: #9ECBFF;"> &quot;server&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>    path =</span><span style="color: #9ECBFF;"> &quot;src/bin/server.rs&quot;</span></span></code></pre><h2 id="essential-crates"><a class="zola-anchor" href="#essential-crates" aria-label="Anchor link for: essential-crates">🔗</a>Essential Crates</h2>
+<table><thead><tr><th>Crate</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>serde</code> + <code>serde_json</code></td><td>Serialize/deserialize JSON (and many other formats)</td></tr>
+<tr><td><code>tokio</code></td><td>Async runtime — the standard for async Rust</td></tr>
+<tr><td><code>reqwest</code></td><td>HTTP client (async, built on tokio)</td></tr>
+<tr><td><code>axum</code></td><td>Web framework (async, built on tokio)</td></tr>
+<tr><td><code>sqlx</code></td><td>Async SQL with compile-time query checking</td></tr>
+<tr><td><code>thiserror</code></td><td>Derive macros for custom error types (libraries)</td></tr>
+<tr><td><code>anyhow</code></td><td>Ergonomic error handling (applications)</td></tr>
+<tr><td><code>tracing</code></td><td>Structured logging and diagnostics</td></tr>
+<tr><td><code>clap</code></td><td>CLI argument parsing with derive macros</td></tr>
+<tr><td><code>rayon</code></td><td>Data parallelism — parallel iterators</td></tr>
+<tr><td><code>rand</code></td><td>Random number generation</td></tr>
+<tr><td><code>regex</code></td><td>Regular expressions</td></tr>
+<tr><td><code>chrono</code></td><td>Date and time handling</td></tr>
+<tr><td><code>uuid</code></td><td>UUID generation and parsing</td></tr>
+</tbody></table>
+<h2 id="testing"><a class="zola-anchor" href="#testing" aria-label="Anchor link for: testing">🔗</a>Testing</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    // Unit tests: in the same file, inside a `#[cfg(test)]` module</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    #[cfg(test)]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #F97583;">    mod</span><span style="color: #B392F0;"> tests</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">        use</span><span style="color: #79B8FF;"> super</span><span style="color: #F97583;">::*</span><span>;</span><span style="color: #6A737D;"> // bring parent module into scope</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>        #[test]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> test_add</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #B392F0;">            assert_eq!</span><span>(</span><span style="color: #B392F0;">add</span><span>(</span><span style="color: #79B8FF;">2</span><span>,</span><span style="color: #79B8FF;"> 3</span><span>),</span><span style="color: #79B8FF;"> 5</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>        #[test]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>        #[should_panic(expected </span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;"> &quot;divide by zero&quot;</span><span>)]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> test_panic</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #B392F0;">            divide</span><span>(</span><span style="color: #79B8FF;">1</span><span>,</span><span style="color: #79B8FF;"> 0</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>        #[test]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">        fn</span><span style="color: #B392F0;"> test_result</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Result</span><span>&lt;(),</span><span style="color: #B392F0;"> String</span><span>&gt; {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #F97583;">            let</span><span> n</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> i32</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;5&quot;</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">parse</span><span>()</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">map_err</span><span>(</span><span style="color: #F97583;">|</span><span>e</span><span style="color: #F97583;">:</span><span> _</span><span style="color: #F97583;">|</span><span> e</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">to_string</span><span>())</span><span style="color: #F97583;">?</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #B392F0;">            assert_eq!</span><span>(n,</span><span style="color: #79B8FF;"> 5</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">            Ok</span><span>(())</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">    // Integration tests: in tests/ directory (separate crate, public API only)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #6A737D;">    // tests/integration_test.rs</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #F97583;">    use</span><span> my_project;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span>    #[test]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #F97583;">    fn</span><span style="color: #B392F0;"> it_works</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #B392F0;">        assert!</span><span>(</span><span style="color: #B392F0;">my_project</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">public_fn</span><span>());</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span>    }</span></span></code></pre>
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>

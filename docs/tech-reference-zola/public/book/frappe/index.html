@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Django Development Reference - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#frappe-framework-reference">Frappe Framework Reference</a>
+  
+  <a class="toc-link" href="#project-structure">Project Structure</a>
+  
+  <a class="toc-link" href="#bench-cli">Bench CLI</a>
+  
+  <a class="toc-link" href="#doctype-schema">DocType Schema</a>
+  
+  <a class="toc-link" href="#field-types">Field Types</a>
+  
+  <a class="toc-link" href="#controller-python">Controller (Python)</a>
+  
+  <a class="toc-link" href="#the-orm-frappe-db">The ORM: frappe.db</a>
+  
+  <a class="toc-link" href="#hooks-py">hooks.py</a>
+  
+  <a class="toc-link" href="#rest-api">REST API</a>
+  
+  <a class="toc-link" href="#permissions">Permissions</a>
+  
+  <a class="toc-link" href="#background-jobs">Background Jobs</a>
+  
+  <a class="toc-link" href="#jinja-templates">Jinja Templates</a>
+  
+  <a class="toc-link" href="#migrations-and-patches">Migrations and Patches</a>
+  
+  <a class="toc-link" href="#useful-frappe-utilities">Useful frappe Utilities</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#frappe-framework-reference">Frappe Framework Reference</a>
+  
+  <a class="topic" href="#project-structure">Project Structure</a>
+  
+  <a class="topic" href="#bench-cli">Bench CLI</a>
+  
+  <a class="topic" href="#doctype-schema">DocType Schema</a>
+  
+  <a class="topic" href="#field-types">Field Types</a>
+  
+  <a class="topic" href="#controller-python">Controller (Python)</a>
+  
+  <a class="topic" href="#the-orm-frappe-db">The ORM: frappe.db</a>
+  
+  <a class="topic" href="#hooks-py">hooks.py</a>
+  
+  <a class="topic" href="#rest-api">REST API</a>
+  
+  <a class="topic" href="#permissions">Permissions</a>
+  
+  <a class="topic" href="#background-jobs">Background Jobs</a>
+  
+  <a class="topic" href="#jinja-templates">Jinja Templates</a>
+  
+  <a class="topic" href="#migrations-and-patches">Migrations and Patches</a>
+  
+  <a class="topic" href="#useful-frappe-utilities">Useful frappe Utilities</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2026-06-04</span>
+  <h1>Django Development Reference</h1>
+  
+  <p class="subtitle">Project structure, ORM, views, templates, forms, admin, and dev operations</p>
+  
+
+  <h1 id="frappe-framework-reference"><a class="zola-anchor" href="#frappe-framework-reference" aria-label="Anchor link for: frappe-framework-reference">🔗</a>Frappe Framework Reference</h1>
+<p><em>DocTypes, controllers, hooks, the ORM, REST API, background jobs, and bench —
+everything the official docs underexplain.</em></p>
+<h1 id="project-structure"><a class="zola-anchor" href="#project-structure" aria-label="Anchor link for: project-structure">🔗</a>Project Structure</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Create a new bench</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> init my-bench</span><span style="color: #79B8FF;"> --frappe-branch</span><span style="color: #9ECBFF;"> version-15</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #79B8FF;">    cd</span><span style="color: #9ECBFF;"> my-bench</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    # Install an app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> get-app https://github.com/your/app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> get-app</span><span style="color: #79B8FF;"> --branch</span><span style="color: #9ECBFF;"> version-15 erpnext</span><span style="color: #6A737D;">   # specific branch</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    # Create a new app from scratch</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> new-app my_app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    # Create a site</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> new-site mysite.localhost</span><span style="color: #79B8FF;"> --install-app</span><span style="color: #9ECBFF;"> my_app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    # A bench directory looks like this:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">    my-bench/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #B392F0;">    ├──</span><span style="color: #9ECBFF;"> apps/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">   ├── frappe/</span><span style="color: #6A737D;">          # core framework</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">   └── my_app/</span><span style="color: #6A737D;">          # your app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       ├── my_app/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │   ├── hooks.py</span><span style="color: #6A737D;">             # app-wide configuration</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │   ├── modules.txt</span><span style="color: #6A737D;">          # list of modules</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │   └── my_module/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │       ├── doctype/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │       │   └── my_doctype/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │       │       ├── my_doctype.json</span><span style="color: #6A737D;">      # schema</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │       │       ├── my_doctype.py</span><span style="color: #6A737D;">        # controller</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │       │       └── my_doctype_list.js</span><span style="color: #6A737D;">   # list view config</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       │       └── ...</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #B392F0;">    ├──</span><span style="color: #9ECBFF;"> sites/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">   └── mysite.localhost/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       ├── site_config.json</span><span style="color: #6A737D;">    # DB credentials, site settings</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       └── private/files/</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #B392F0;">    └──</span><span style="color: #9ECBFF;"> Procfile</span></span></code></pre><h1 id="bench-cli"><a class="zola-anchor" href="#bench-cli" aria-label="Anchor link for: bench-cli">🔗</a>Bench CLI</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Development</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> start</span><span style="color: #6A737D;">                        # start all processes (web, worker, scheduler)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite console</span><span style="color: #6A737D;">        # interactive Python REPL with frappe loaded</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite mariadb</span><span style="color: #6A737D;">        # open MariaDB shell for the site</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite migrate</span><span style="color: #6A737D;">        # run pending migrations (after schema changes)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite clear-cache</span><span style="color: #6A737D;">    # clear redis cache</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite clear-website-cache</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    # App &amp; site management</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite install-app my_app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite uninstall-app my_app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite backup</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite restore path/to/backup.sql.gz</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    # Building assets</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> build</span><span style="color: #6A737D;">                        # build JS/CSS bundles for all apps</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> build</span><span style="color: #79B8FF;"> --app</span><span style="color: #9ECBFF;"> my_app</span><span style="color: #6A737D;">           # build only your app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> watch</span><span style="color: #6A737D;">                        # watch and rebuild on change (dev)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">    # Running scripts</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite execute my_app.utils.some_function</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite run-script path/to/script.py</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #6A737D;">    # Production</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> setup production</span><span style="color: #F97583;"> &lt;</span><span style="color: #9ECBFF;">use</span><span>r</span><span style="color: #F97583;">&gt;</span><span style="color: #6A737D;">      # configure nginx + supervisor</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> restart</span><span style="color: #6A737D;">                      # restart web + workers</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> update</span><span style="color: #6A737D;">                       # pull all apps + migrate + build</span></span></code></pre><h1 id="doctype-schema"><a class="zola-anchor" href="#doctype-schema" aria-label="Anchor link for: doctype-schema">🔗</a>DocType Schema</h1>
+<p>A DocType is defined by its <code>.json</code> file. You rarely edit it by hand — use the
+Desk UI — but understanding the structure is essential.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="json"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #79B8FF;">      &quot;name&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Project&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #79B8FF;">      &quot;module&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;My Module&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #79B8FF;">      &quot;doctype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;DocType&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #79B8FF;">      &quot;is_submittable&quot;</span><span>:</span><span style="color: #79B8FF;"> 0</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #79B8FF;">      &quot;track_changes&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #79B8FF;">      &quot;fields&quot;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>        {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #79B8FF;">          &quot;fieldname&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;title&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #79B8FF;">          &quot;fieldtype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Data&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #79B8FF;">          &quot;label&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Title&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #79B8FF;">          &quot;reqd&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #79B8FF;">          &quot;in_list_view&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>        },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>        {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #79B8FF;">          &quot;fieldname&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;status&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #79B8FF;">          &quot;fieldtype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Select&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #79B8FF;">          &quot;label&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Status&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #79B8FF;">          &quot;options&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open</span><span style="color: #79B8FF;">\n</span><span style="color: #9ECBFF;">In Progress</span><span style="color: #79B8FF;">\n</span><span style="color: #9ECBFF;">Closed&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #79B8FF;">          &quot;default&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>        },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>        {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #79B8FF;">          &quot;fieldname&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;due_date&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #79B8FF;">          &quot;fieldtype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Date&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #79B8FF;">          &quot;label&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Due Date&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span>        },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>        {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #79B8FF;">          &quot;fieldname&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;tasks_section&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #79B8FF;">          &quot;fieldtype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Section Break&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #79B8FF;">          &quot;label&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Tasks&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span>        },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span>        {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #79B8FF;">          &quot;fieldname&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;tasks&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #79B8FF;">          &quot;fieldtype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Table&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span style="color: #79B8FF;">          &quot;label&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Tasks&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span style="color: #79B8FF;">          &quot;options&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Project Task&quot;</span><span>   </span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span><span>      ],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span><span style="color: #79B8FF;">      &quot;permissions&quot;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">40</span><span>        {</span><span style="color: #79B8FF;"> &quot;role&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;System Manager&quot;</span><span>,</span><span style="color: #79B8FF;"> &quot;read&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> &quot;write&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> &quot;create&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> &quot;delete&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span><span> }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">41</span><span>      ]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">42</span><span>    }</span></span></code></pre><h1 id="field-types"><a class="zola-anchor" href="#field-types" aria-label="Anchor link for: field-types">🔗</a>Field Types</h1>
+<table><thead><tr><th>Fieldtype</th><th>Stores</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>Data</code></td><td>Short string</td><td>Single line, max 140 chars by default</td></tr>
+<tr><td><code>Text</code></td><td>Long string</td><td>Multiline, no formatting</td></tr>
+<tr><td><code>Long Text</code></td><td>Very long string</td><td>For large content</td></tr>
+<tr><td><code>Small Text</code></td><td>Medium string</td><td>Textarea</td></tr>
+<tr><td><code>Text Editor</code></td><td>HTML</td><td>Rich text via Quill</td></tr>
+<tr><td><code>Markdown Editor</code></td><td>Markdown</td><td>Rendered as HTML</td></tr>
+<tr><td><code>Int</code></td><td>Integer</td><td></td></tr>
+<tr><td><code>Float</code></td><td>Float</td><td></td></tr>
+<tr><td><code>Currency</code></td><td>Decimal</td><td>Respects currency precision setting</td></tr>
+<tr><td><code>Percent</code></td><td>Float</td><td>Displayed as %</td></tr>
+<tr><td><code>Check</code></td><td>0 or 1</td><td>Renders as checkbox</td></tr>
+<tr><td><code>Date</code></td><td>Date</td><td></td></tr>
+<tr><td><code>Datetime</code></td><td>Datetime</td><td></td></tr>
+<tr><td><code>Time</code></td><td>Time</td><td></td></tr>
+<tr><td><code>Select</code></td><td>String</td><td>Options defined as newline-separated values</td></tr>
+<tr><td><code>Link</code></td><td>String (foreign key)</td><td>References another DocType</td></tr>
+<tr><td><code>Dynamic Link</code></td><td>String</td><td>FK to a DocType named in another field</td></tr>
+<tr><td><code>Table</code></td><td>Child rows</td><td>References a Child DocType</td></tr>
+<tr><td><code>Attach</code></td><td>File URL</td><td>Single file attachment</td></tr>
+<tr><td><code>Attach Image</code></td><td>Image URL</td><td>Image attachment with preview</td></tr>
+<tr><td><code>JSON</code></td><td>JSON string</td><td>Stored as text, parsed on access</td></tr>
+<tr><td><code>Section Break</code></td><td>—</td><td>Layout only, groups fields visually</td></tr>
+<tr><td><code>Column Break</code></td><td>—</td><td>Layout only, starts a new column</td></tr>
+<tr><td><code>Tab Break</code></td><td>—</td><td>Layout only, starts a new tab</td></tr>
+</tbody></table>
+<h1 id="controller-python"><a class="zola-anchor" href="#controller-python" aria-label="Anchor link for: controller-python">🔗</a>Controller (Python)</h1>
+<p>The controller is a Python class that inherits from <code>Document</code>. Frappe calls
+lifecycle hooks automatically — you never instantiate or call these yourself.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    from</span><span> frappe.model.document</span><span style="color: #F97583;"> import</span><span> Document</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> Project</span><span>(</span><span style="color: #B392F0;">Document</span><span>):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">        # ── Lifecycle hooks (called in this order on save) ──────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> before_insert</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">            # Runs before the document is inserted for the first time.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">            # Good for setting computed defaults.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">            if not</span><span style="color: #79B8FF;"> self</span><span>.code:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #79B8FF;">                self</span><span>.code</span><span style="color: #F97583;"> =</span><span> frappe.generate_hash(</span><span style="color: #FFAB70;">length</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">8</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> after_insert</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">            # Runs after the first INSERT is committed.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>            frappe.publish_realtime(</span><span style="color: #9ECBFF;">&quot;project_created&quot;</span><span>, {</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>:</span><span style="color: #79B8FF;"> self</span><span>.name})</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> validate</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">            # Runs before every save (insert + update).</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">            # Raise frappe.ValidationError to abort.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">            if</span><span style="color: #79B8FF;"> self</span><span>.due_date</span><span style="color: #F97583;"> and</span><span style="color: #79B8FF;"> self</span><span>.due_date</span><span style="color: #F97583;"> &lt;</span><span> frappe.utils.today():</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>                frappe.throw(</span><span style="color: #9ECBFF;">&quot;Due date cannot be in the past&quot;</span><span>, frappe.ValidationError)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> before_save</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">            # Runs after validate, before the DB write.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #79B8FF;">            self</span><span>.last_modified_by</span><span style="color: #F97583;"> =</span><span> frappe.session.user</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> on_update</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #6A737D;">            # Runs after every save is committed.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #6A737D;">            # Safe to trigger side-effects here.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #79B8FF;">            self</span><span>.notify_assignees()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> before_submit</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #6A737D;">            # Only called on submittable DocTypes when status → Submitted.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span style="color: #F97583;">            if not</span><span style="color: #79B8FF;"> self</span><span>.tasks:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span>                frappe.throw(</span><span style="color: #9ECBFF;">&quot;Cannot submit a project with no tasks&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> on_submit</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span><span style="color: #79B8FF;">            self</span><span>.db_set(</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;In Progress&quot;</span><span>)</span><span style="color: #6A737D;">  # direct DB update, no re-save</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">40</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">41</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> before_cancel</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">42</span><span style="color: #F97583;">            pass</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">43</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">44</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> on_cancel</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">45</span><span style="color: #79B8FF;">            self</span><span>.db_set(</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;Cancelled&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">46</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">47</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> on_trash</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">48</span><span style="color: #6A737D;">            # Runs before the document is deleted.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">49</span><span>            frappe.db.delete(</span><span style="color: #9ECBFF;">&quot;Comment&quot;</span><span>, {</span><span style="color: #9ECBFF;">&quot;reference_name&quot;</span><span>:</span><span style="color: #79B8FF;"> self</span><span>.name})</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">50</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">51</span><span style="color: #6A737D;">        # ── Helper methods ────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">52</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">53</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> notify_assignees</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">54</span><span style="color: #F97583;">            for</span><span> task</span><span style="color: #F97583;"> in</span><span style="color: #79B8FF;"> self</span><span>.tasks:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">55</span><span style="color: #F97583;">                if</span><span> task.assigned_to:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">56</span><span>                    frappe.sendmail(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">57</span><span style="color: #FFAB70;">                        recipients</span><span style="color: #F97583;">=</span><span>[task.assigned_to],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">58</span><span style="color: #FFAB70;">                        subject</span><span style="color: #F97583;">=f</span><span style="color: #9ECBFF;">&quot;Task updated in </span><span style="color: #79B8FF;">{self</span><span>.title</span><span style="color: #79B8FF;">}</span><span style="color: #9ECBFF;">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">59</span><span style="color: #FFAB70;">                        message</span><span style="color: #F97583;">=f</span><span style="color: #9ECBFF;">&quot;Task </span><span style="color: #79B8FF;">{</span><span>task.title</span><span style="color: #79B8FF;">}</span><span style="color: #9ECBFF;"> was updated.&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">60</span><span>                    )</span></span></code></pre><blockquote class="warn">
+<p><strong>Never call <code>self.save()</code> inside <code>validate()</code> or <code>on_update()</code>.</strong> It causes infinite recursion. Use <code>self.db_set("field", value)</code> for direct column updates that bypass the lifecycle, or set <code>self.field = value</code> before the current save completes.</p>
+</blockquote>
+<h1 id="the-orm-frappe-db"><a class="zola-anchor" href="#the-orm-frappe-db" aria-label="Anchor link for: the-orm-frappe-db">🔗</a>The ORM: frappe.db</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # ── Single value ──────────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    # get a field value from a document</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>    status</span><span style="color: #F97583;"> =</span><span> frappe.db.get_value(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;PROJ-0001&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;status&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">    # get multiple fields at once (returns a dict)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    data</span><span style="color: #F97583;"> =</span><span> frappe.db.get_value(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;PROJ-0001&quot;</span><span>, [</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;due_date&quot;</span><span>],</span><span style="color: #FFAB70;"> as_dict</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    # ── Lists ─────────────────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    # get all documents matching filters</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>    projects</span><span style="color: #F97583;"> =</span><span> frappe.db.get_all(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #9ECBFF;">        &quot;Project&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #FFAB70;">        filters</span><span style="color: #F97583;">=</span><span>{</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span><span>},</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #FFAB70;">        fields</span><span style="color: #F97583;">=</span><span>[</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;title&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;due_date&quot;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #FFAB70;">        order_by</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;due_date asc&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #FFAB70;">        limit</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">50</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">    # returns a list of dicts: [{&quot;name&quot;: &quot;PROJ-001&quot;, &quot;title&quot;: &quot;...&quot;, ...}, ...]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #6A737D;">    # get_list: same as get_all but respects user permissions</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>    projects</span><span style="color: #F97583;"> =</span><span> frappe.db.get_list(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #FFAB70;"> filters</span><span style="color: #F97583;">=</span><span>{</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span><span>},</span><span style="color: #FFAB70;"> fields</span><span style="color: #F97583;">=</span><span>[</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;title&quot;</span><span>])</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #6A737D;">    # get_all with OR filters</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>    projects</span><span style="color: #F97583;"> =</span><span> frappe.db.get_all(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #9ECBFF;">        &quot;Project&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #FFAB70;">        filters</span><span style="color: #F97583;">=</span><span>[[</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;in&quot;</span><span>, [</span><span style="color: #9ECBFF;">&quot;Open&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;In Progress&quot;</span><span>]]],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #FFAB70;">        fields</span><span style="color: #F97583;">=</span><span>[</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;title&quot;</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span>    )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #6A737D;">    # ── Load a full document ──────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span>    doc</span><span style="color: #F97583;"> =</span><span> frappe.get_doc(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;PROJ-0001&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span>    doc.title</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;Updated Title&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span>    doc.save()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span><span style="color: #6A737D;">    # create a new document</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">40</span><span>    doc</span><span style="color: #F97583;"> =</span><span> frappe.get_doc({</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">41</span><span style="color: #9ECBFF;">        &quot;doctype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Project&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">42</span><span style="color: #9ECBFF;">        &quot;title&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;New Project&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">43</span><span style="color: #9ECBFF;">        &quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">44</span><span>    })</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">45</span><span>    doc.insert()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">46</span><span>    frappe.db.commit()</span><span style="color: #6A737D;">   # always commit after insert/update outside a request context</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">47</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">48</span><span style="color: #6A737D;">    # ── Direct DB writes ──────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">49</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">50</span><span style="color: #6A737D;">    # update a single field without loading the full document</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">51</span><span>    frappe.db.set_value(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;PROJ-0001&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;status&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;Closed&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">52</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">53</span><span style="color: #6A737D;">    # update multiple fields</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">54</span><span>    frappe.db.set_value(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;PROJ-0001&quot;</span><span>, {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">55</span><span style="color: #9ECBFF;">        &quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Closed&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">56</span><span style="color: #9ECBFF;">        &quot;due_date&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;2025-12-31&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">57</span><span>    })</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">58</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">59</span><span style="color: #6A737D;">    # raw SQL (escape your inputs — never use .format() with user input)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">60</span><span>    results</span><span style="color: #F97583;"> =</span><span> frappe.db.sql(</span><span style="color: #9ECBFF;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">61</span><span style="color: #9ECBFF;">        SELECT name, title FROM `tabProject`</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">62</span><span style="color: #9ECBFF;">        WHERE status = </span><span style="color: #79B8FF;">%(status)s</span><span style="color: #9ECBFF;"> AND due_date &lt; </span><span style="color: #79B8FF;">%(today)s</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">63</span><span style="color: #9ECBFF;">    &quot;&quot;&quot;</span><span>, {</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;today&quot;</span><span>: frappe.utils.today()},</span><span style="color: #FFAB70;"> as_dict</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">64</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">65</span><span style="color: #6A737D;">    # ── Existence checks ──────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">66</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">67</span><span>    frappe.db.exists(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;PROJ-0001&quot;</span><span>)</span><span style="color: #6A737D;">          # returns name or None</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">68</span><span>    frappe.db.exists(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>, {</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span><span>})</span><span style="color: #6A737D;">   # with filters</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">69</span><span>    frappe.db.count(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>, {</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span><span>})</span><span style="color: #6A737D;">    # count matching rows</span></span></code></pre><blockquote class="tip">
+<p><strong>Table names in raw SQL are always <code>`tab{DocType}`</code>.</strong> A DocType named <code>Sales Order</code> lives in <code>`tabSales Order`</code>. Frappe adds the prefix automatically in ORM methods but not in raw <code>frappe.db.sql()</code> — you must write it yourself.</p>
+</blockquote>
+<h1 id="hooks-py"><a class="zola-anchor" href="#hooks-py" aria-label="Anchor link for: hooks-py">🔗</a>hooks.py</h1>
+<p><code>hooks.py</code> is the central wiring file for your app. It controls how your app
+integrates with Frappe's event system.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # my_app/hooks.py</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    app_name</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;my_app&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    app_title</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;My App&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    app_publisher</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;Your Name&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>    app_description</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;What this app does&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    app_version</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;0.0.1&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    app_email</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;you@example.com&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    app_license</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;MIT&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    # ── Document events ───────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #6A737D;">    # Hook into any DocType&#39;s lifecycle from outside its controller.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    # Useful for cross-app logic without modifying the original controller.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>    doc_events</span><span style="color: #F97583;"> =</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #9ECBFF;">        &quot;User&quot;</span><span>: {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #9ECBFF;">            &quot;after_insert&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;my_app.handlers.user.on_user_created&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #9ECBFF;">            &quot;on_update&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;my_app.handlers.user.on_user_updated&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>        },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #9ECBFF;">        &quot;*&quot;</span><span>: {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">            # runs on every DocType</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #9ECBFF;">            &quot;on_submit&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;my_app.handlers.audit.log_submission&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #6A737D;">    # ── Scheduled tasks ───────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span>    scheduler_events</span><span style="color: #F97583;"> =</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #9ECBFF;">        &quot;all&quot;</span><span>:            [</span><span style="color: #9ECBFF;">&quot;my_app.tasks.every_5_minutes&quot;</span><span>],</span><span style="color: #6A737D;">     # ~every 5 min</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #9ECBFF;">        &quot;hourly&quot;</span><span>:         [</span><span style="color: #9ECBFF;">&quot;my_app.tasks.hourly_sync&quot;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #9ECBFF;">        &quot;daily&quot;</span><span>:          [</span><span style="color: #9ECBFF;">&quot;my_app.tasks.daily_cleanup&quot;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #9ECBFF;">        &quot;weekly&quot;</span><span>:         [</span><span style="color: #9ECBFF;">&quot;my_app.tasks.weekly_report&quot;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #9ECBFF;">        &quot;monthly&quot;</span><span>:        [</span><span style="color: #9ECBFF;">&quot;my_app.tasks.monthly_invoice&quot;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #9ECBFF;">        &quot;cron&quot;</span><span>: {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span style="color: #9ECBFF;">            &quot;0 9 * * 1-5&quot;</span><span>: [</span><span style="color: #9ECBFF;">&quot;my_app.tasks.weekday_morning&quot;</span><span>],</span><span style="color: #6A737D;">    # Mon-Fri 9am</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span><span style="color: #6A737D;">    # ── Fixtures ──────────────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">40</span><span style="color: #6A737D;">    # Records exported with `bench export-fixtures` and imported on migrate.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">41</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">42</span><span>    fixtures</span><span style="color: #F97583;"> =</span><span> [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">43</span><span style="color: #9ECBFF;">        &quot;Custom Field&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">44</span><span style="color: #9ECBFF;">        &quot;Property Setter&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">45</span><span>        {</span><span style="color: #9ECBFF;">&quot;dt&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Role&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;filters&quot;</span><span>: [[</span><span style="color: #9ECBFF;">&quot;role_name&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;like&quot;</span><span>,</span><span style="color: #9ECBFF;"> &quot;My App%&quot;</span><span>]]},</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">46</span><span>    ]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">47</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">48</span><span style="color: #6A737D;">    # ── Other common hooks ────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">49</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">50</span><span style="color: #6A737D;">    # Extend an existing DocType with extra fields (no forking required)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">51</span><span style="color: #6A737D;">    # Define the fields in a Custom Field fixture instead.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">52</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">53</span><span style="color: #6A737D;">    # Override a controller method from another app</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">54</span><span>    override_doctype_class</span><span style="color: #F97583;"> =</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">55</span><span style="color: #9ECBFF;">        &quot;Sales Invoice&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;my_app.overrides.CustomSalesInvoice&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">56</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">57</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">58</span><span style="color: #6A737D;">    # Add JS/CSS to the desk globally</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">59</span><span>    app_include_js</span><span style="color: #F97583;"> =</span><span> [</span><span style="color: #9ECBFF;">&quot;assets/my_app/js/global.js&quot;</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">60</span><span>    app_include_css</span><span style="color: #F97583;"> =</span><span> [</span><span style="color: #9ECBFF;">&quot;assets/my_app/css/global.css&quot;</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">61</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">62</span><span style="color: #6A737D;">    # Add JS to a specific form</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">63</span><span>    doctype_js</span><span style="color: #F97583;"> =</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">64</span><span style="color: #9ECBFF;">        &quot;Project&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;public/js/project.js&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">65</span><span>    }</span></span></code></pre><h1 id="rest-api"><a class="zola-anchor" href="#rest-api" aria-label="Anchor link for: rest-api">🔗</a>REST API</h1>
+<p>Every DocType automatically gets a REST API. No extra code needed.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Authentication: get a token</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    POST</span><span style="color: #9ECBFF;"> /api/method/login</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    {</span><span style="color: #B392F0;"> &quot;usr&quot;</span><span style="color: #79B8FF;">:</span><span style="color: #9ECBFF;"> &quot;admin@example.com&quot;, &quot;pwd&quot;: &quot;password&quot; }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    # → sets a session cookie, or use token auth below</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    # Token auth (generate in User &gt; API Access)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #B392F0;">    Authorization:</span><span style="color: #9ECBFF;"> token api_key:api_secret</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    # ── CRUD ──────────────────────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    # List documents</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #B392F0;">    GET</span><span style="color: #9ECBFF;"> /api/resource/Project</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #B392F0;">    GET</span><span style="color: #9ECBFF;"> /api/resource/Project?filters=[[&quot;status&quot;,&quot;=&quot;,&quot;Open&quot;]]</span><span>&amp;fields</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">[&quot;name&quot;,&quot;title&quot;</span><span>]&amp;limit</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">20</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    # Get a single document</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #B392F0;">    GET</span><span style="color: #9ECBFF;"> /api/resource/Project/PROJ-0001</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    # Create</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #B392F0;">    POST</span><span style="color: #9ECBFF;"> /api/resource/Project</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    {</span><span style="color: #B392F0;"> &quot;title&quot;</span><span style="color: #79B8FF;">:</span><span style="color: #9ECBFF;"> &quot;New Project&quot;, &quot;status&quot;: &quot;Open&quot; }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    # Update (partial — only sends changed fields)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #B392F0;">    PUT</span><span style="color: #9ECBFF;"> /api/resource/Project/PROJ-0001</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>    {</span><span style="color: #B392F0;"> &quot;status&quot;</span><span style="color: #79B8FF;">:</span><span style="color: #9ECBFF;"> &quot;Closed&quot; }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #6A737D;">    # Delete</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    DELETE</span><span style="color: #9ECBFF;"> /api/resource/Project/PROJ-0001</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # ── Whitelisted methods ───────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    # Expose a Python function as an API endpoint.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #B392F0;">    @frappe.whitelist</span><span>()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    def</span><span style="color: #B392F0;"> get_project_summary</span><span>(project_name):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #6A737D;">        # frappe.session.user is available — you know who is calling</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        doc</span><span style="color: #F97583;"> =</span><span> frappe.get_doc(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>, project_name)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">        return</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #9ECBFF;">            &quot;title&quot;</span><span>: doc.title,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #9ECBFF;">            &quot;task_count&quot;</span><span>:</span><span style="color: #79B8FF;"> len</span><span>(doc.tasks),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #9ECBFF;">            &quot;open_tasks&quot;</span><span>:</span><span style="color: #79B8FF;"> sum</span><span>(</span><span style="color: #79B8FF;">1</span><span style="color: #F97583;"> for</span><span> t</span><span style="color: #F97583;"> in</span><span> doc.tasks</span><span style="color: #F97583;"> if</span><span> t.status</span><span style="color: #F97583;"> ==</span><span style="color: #9ECBFF;"> &quot;Open&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #6A737D;">    # Call it from JS or curl:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #6A737D;">    # POST /api/method/my_app.api.get_project_summary</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #6A737D;">    # { &quot;project_name&quot;: &quot;PROJ-0001&quot; }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #B392F0;">    @frappe.whitelist</span><span>(</span><span style="color: #FFAB70;">allow_guest</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #F97583;">    def</span><span style="color: #B392F0;"> public_endpoint</span><span>():</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">        # allow_guest=True → no login required</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">        return</span><span> {</span><span style="color: #9ECBFF;">&quot;status&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;ok&quot;</span><span>}</span></span></code></pre><blockquote class="warn">
+<p><strong><code>@frappe.whitelist()</code> does not check permissions.</strong> Anyone authenticated can call it. Add explicit <code>frappe.has_permission()</code> checks inside the function if the data is sensitive.</p>
+</blockquote>
+<h1 id="permissions"><a class="zola-anchor" href="#permissions" aria-label="Anchor link for: permissions">🔗</a>Permissions</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # Check if current user can access a document</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    frappe.has_permission(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #FFAB70;"> doc</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;PROJ-0001&quot;</span><span>,</span><span style="color: #FFAB70;"> throw</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    # throw=True raises PermissionError automatically; throw=False returns bool</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    # Check a specific permission type</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    frappe.has_permission(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #FFAB70;"> ptype</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;write&quot;</span><span>,</span><span style="color: #FFAB70;"> doc</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;PROJ-0001&quot;</span><span>,</span><span style="color: #FFAB70;"> throw</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    # ptype options: read, write, create, delete, submit, cancel, amend</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">    # Get current user</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    frappe.session.user</span><span style="color: #6A737D;">          # &quot;admin@example.com&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    frappe.session.user</span><span style="color: #F97583;"> ==</span><span style="color: #9ECBFF;"> &quot;Guest&quot;</span><span style="color: #6A737D;">  # True for unauthenticated requests</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    # Check role</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    frappe.get_roles(frappe.session.user)</span><span style="color: #6A737D;">           # [&quot;System Manager&quot;, &quot;My Role&quot;, ...]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #9ECBFF;">    &quot;System Manager&quot;</span><span style="color: #F97583;"> in</span><span> frappe.get_roles()</span><span style="color: #6A737D;">          # True/False</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    # Programmatic permission bypass (use with care — only in trusted server scripts)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>    frappe.set_user(</span><span style="color: #9ECBFF;">&quot;Administrator&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">    # ... do privileged work ...</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    frappe.set_user(original_user)</span></span></code></pre><h1 id="background-jobs"><a class="zola-anchor" href="#background-jobs" aria-label="Anchor link for: background-jobs">🔗</a>Background Jobs</h1>
+<p>Long-running tasks should never block a web request. Enqueue them.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # Enqueue a function to run in a background worker</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    frappe.enqueue(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #9ECBFF;">        &quot;my_app.tasks.send_bulk_email&quot;</span><span>,</span><span style="color: #6A737D;">     # dotted path to function</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #FFAB70;">        queue</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;long&quot;</span><span>,</span><span style="color: #6A737D;">                        # default, short, long</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #FFAB70;">        timeout</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">600</span><span>,</span><span style="color: #6A737D;">                         # seconds before job is killed</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #FFAB70;">        job_name</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;bulk_email_job&quot;</span><span>,</span><span style="color: #6A737D;">           # optional, for deduplication</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">        # kwargs passed to the function:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #FFAB70;">        project_name</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;PROJ-0001&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #FFAB70;">        notify_all</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    # The function itself (runs in a worker process)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    def</span><span style="color: #B392F0;"> send_bulk_email</span><span>(project_name, notify_all</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">False</span><span>):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>        doc</span><span style="color: #F97583;"> =</span><span> frappe.get_doc(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>, project_name)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>        recipients</span><span style="color: #F97583;"> =</span><span> get_recipients(doc,</span><span style="color: #FFAB70;"> all</span><span style="color: #F97583;">=</span><span>notify_all)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #F97583;">        for</span><span> r</span><span style="color: #F97583;"> in</span><span> recipients:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>            frappe.sendmail(</span><span style="color: #FFAB70;">recipients</span><span style="color: #F97583;">=</span><span>[r],</span><span style="color: #FFAB70;"> subject</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;...&quot;</span><span>,</span><span style="color: #FFAB70;"> message</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;...&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>        frappe.db.commit()</span><span style="color: #6A737D;">   # always commit in background jobs</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    # Enqueue with deduplication (won&#39;t enqueue if job_name already queued)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>    frappe.enqueue(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #9ECBFF;">        &quot;my_app.tasks.sync&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #FFAB70;">        job_name</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;sync_job&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #FFAB70;">        deduplicate</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>    )</span></span></code></pre><h1 id="jinja-templates"><a class="zola-anchor" href="#jinja-templates" aria-label="Anchor link for: jinja-templates">🔗</a>Jinja Templates</h1>
+<p>Frappe uses Jinja2 for print formats, email templates, and web pages.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Render a Jinja string from Python</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    html</span><span style="color: #F97583;"> =</span><span> frappe.render_template(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #9ECBFF;">        &quot;&lt;p&gt;Hello </span><span style="color: #79B8FF;">{{</span><span style="color: #9ECBFF;"> doc.title </span><span style="color: #79B8FF;">}}</span><span style="color: #9ECBFF;">&lt;/p&gt;&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        {</span><span style="color: #9ECBFF;">&quot;doc&quot;</span><span>: doc}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    # Render a template file (relative to app root)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    html</span><span style="color: #F97583;"> =</span><span> frappe.render_template(</span><span style="color: #9ECBFF;">&quot;my_app/templates/email/welcome.html&quot;</span><span>, context)</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="html"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    {# ── Frappe-specific Jinja globals available in all templates ── #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    {# Current user #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    {{ frappe.session.user }}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>    {# Translate a string #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    {{ _(&quot;Save&quot;) }}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    {# Format a date #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    {{ frappe.format_date(doc.due_date) }}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    {# Format a currency value #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    {{ frappe.format_value(doc.amount, {&quot;fieldtype&quot;: &quot;Currency&quot;}) }}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>    {# Link to a document #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    &lt;</span><span style="color: #85E89D;">a</span><span style="color: #B392F0;"> href</span><span>=</span><span style="color: #9ECBFF;">&quot;/app/project/{{ doc.name }}&quot;</span><span>&gt;{{ doc.title }}&lt;/</span><span style="color: #85E89D;">a</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>    {# Conditional #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>    {% if doc.status == &quot;Open&quot; %}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>      &lt;</span><span style="color: #85E89D;">span</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;badge&quot;</span><span>&gt;Open&lt;/</span><span style="color: #85E89D;">span</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>    {% endif %}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>    {# Loop over child table #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>    {% for task in doc.tasks %}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span>      &lt;</span><span style="color: #85E89D;">li</span><span>&gt;{{ task.title }} — {{ task.assigned_to }}&lt;/</span><span style="color: #85E89D;">li</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span>    {% endfor %}</span></span></code></pre><h1 id="migrations-and-patches"><a class="zola-anchor" href="#migrations-and-patches" aria-label="Anchor link for: migrations-and-patches">🔗</a>Migrations and Patches</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # patches.txt: list of patch modules to run on migrate (one per line, never remove old ones)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    # my_app/patches.txt</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    my_app.patches.v1_0.set_default_status</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    my_app.patches.v1_1.backfill_project_codes</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    # A patch file</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    # my_app/patches/v1_1/backfill_project_codes.py</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #F97583;">    def</span><span style="color: #B392F0;"> execute</span><span>():</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">        # Runs once per site on `bench migrate`</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>        projects</span><span style="color: #F97583;"> =</span><span> frappe.db.get_all(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #FFAB70;"> filters</span><span style="color: #F97583;">=</span><span>{</span><span style="color: #9ECBFF;">&quot;code&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;&quot;</span><span>},</span><span style="color: #FFAB70;"> fields</span><span style="color: #F97583;">=</span><span>[</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>])</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">        for</span><span> p</span><span style="color: #F97583;"> in</span><span> projects:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>            frappe.db.set_value(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>, p.name,</span><span style="color: #9ECBFF;"> &quot;code&quot;</span><span>, frappe.generate_hash(</span><span style="color: #FFAB70;">length</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">8</span><span>))</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>        frappe.db.commit()</span></span></code></pre><blockquote class="tip">
+<p><strong>Patches run exactly once per site.</strong> Frappe tracks executed patches in the <code>tabPatch Log</code> table. If a patch fails halfway, fix it and run <code>bench --site mysite migrate</code> again — it will retry only the failed patch.</p>
+</blockquote>
+<h1 id="useful-frappe-utilities"><a class="zola-anchor" href="#useful-frappe-utilities" aria-label="Anchor link for: useful-frappe-utilities">🔗</a>Useful frappe Utilities</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    from</span><span> frappe.utils</span><span style="color: #F97583;"> import</span><span> (</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>        today, now, nowdate, nowdatetime,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        add_days, add_months, date_diff,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>        flt, cint, cstr,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>        get_url, get_site_name</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #6A737D;">    # Dates</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    today()</span><span style="color: #6A737D;">                          # &quot;2025-06-04&quot;  (string)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    nowdatetime()</span><span style="color: #6A737D;">                    # &quot;2025-06-04 14:32:00&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    add_days(today(),</span><span style="color: #79B8FF;"> 7</span><span>)</span><span style="color: #6A737D;">             # one week from now</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    date_diff(</span><span style="color: #9ECBFF;">&quot;2025-12-31&quot;</span><span>, today())</span><span style="color: #6A737D;"> # days between two dates</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #6A737D;">    # Type coercion (safe — never raises)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>    flt(</span><span style="color: #9ECBFF;">&quot;3.14&quot;</span><span>)</span><span style="color: #6A737D;">    # 3.14  (float)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    cint(</span><span style="color: #9ECBFF;">&quot;42&quot;</span><span>)</span><span style="color: #6A737D;">     # 42    (int), cint(None) → 0</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>    cstr(</span><span style="color: #79B8FF;">None</span><span>)</span><span style="color: #6A737D;">     # &quot;&quot;    (str)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">    # Messaging (only works inside a web request)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span>    frappe.msgprint(</span><span style="color: #9ECBFF;">&quot;Something happened&quot;</span><span>)</span><span style="color: #6A737D;">           # toast on the desk</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    frappe.throw(</span><span style="color: #9ECBFF;">&quot;Validation failed&quot;</span><span>)</span><span style="color: #6A737D;">               # raises ValidationError + shows message</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>    frappe.log_error(</span><span style="color: #9ECBFF;">&quot;something broke&quot;</span><span>,</span><span style="color: #FFAB70;"> title</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;My App Error&quot;</span><span>)</span><span style="color: #6A737D;">  # writes to Error Log</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">    # Caching</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span>    frappe.cache.set_value(</span><span style="color: #9ECBFF;">&quot;my_key&quot;</span><span>, {</span><span style="color: #9ECBFF;">&quot;data&quot;</span><span>:</span><span style="color: #79B8FF;"> 1</span><span>},</span><span style="color: #FFAB70;"> expires_in_sec</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">300</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>    frappe.cache.get_value(</span><span style="color: #9ECBFF;">&quot;my_key&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #6A737D;">    # Generating names</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span>    frappe.generate_hash(</span><span style="color: #FFAB70;">length</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">10</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span>    frappe.get_id()</span><span style="color: #6A737D;">                   # UUID</span></span></code></pre>
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>

@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Everything - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#brain-mastermind-software-engineer-guide-personal-edition">🧠 Mastermind Software Engineer Guide (Personal Edition)</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#brain-mastermind-software-engineer-guide-personal-edition">🧠 Mastermind Software Engineer Guide (Personal Edition)</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2026-01-15</span>
+  <h1>Everything</h1>
+  
+  <p class="subtitle">What actually happens on the wire — layers, protocols, tools, and infrastructure a developer needs to understand</p>
+  
+
+  <h1 id="brain-mastermind-software-engineer-guide-personal-edition"><a class="zola-anchor" href="#brain-mastermind-software-engineer-guide-personal-edition" aria-label="Anchor link for: brain-mastermind-software-engineer-guide-personal-edition">🔗</a>🧠 Mastermind Software Engineer Guide (Personal Edition)</h1>
+<details>
+<summary><strong>🚀 My Tech Stack</strong></summary>
+<ul>
+<li><strong>Backend</strong>: Python (Django, FastAPI,tooling:ruff,uv), Rust (actix-web, axum)</li>
+<li><strong>Frontend</strong>: Svelte / SvelteKit</li>
+<li><strong>Tools</strong>: Linux, Git, Docker</li>
+<li><strong>Patterns &amp; Principles</strong>: SOLID, DRY, YAGNI, KISS, naming, architecture, extendibility</li>
+</ul>
+</details>
+<hr />
+<h2 id="green-circle-foundational-knowledge-must-always-keep-warm"><a class="zola-anchor" href="#green-circle-foundational-knowledge-must-always-keep-warm" aria-label="Anchor link for: green-circle-foundational-knowledge-must-always-keep-warm">🔗</a>🟢 Foundational Knowledge (Must Always Keep Warm)</h2>
+<details>
+<summary><strong>✅ Data Structures & Algorithms (DSA)</strong></summary>
+<ul>
+<li>Arrays, Linked Lists, Trees, Graphs</li>
+<li>Sorting, Searching</li>
+<li>Hash Maps, Sets</li>
+<li>Recursion, Dynamic Programming (DP)</li>
+<li>Time &amp; Space Complexity (Big O)</li>
+</ul>
+<p><strong>Tip</strong>: Revise once per year — but don’t overstress memorization. Deep pattern recognition is more important.</p>
+</details>
+<details>
+<summary><strong>✅ Core Principles</strong></summary>
+<ul>
+<li><strong>SOLID</strong> (OOP principles)</li>
+<li><strong>DRY</strong> (Don’t Repeat Yourself)</li>
+<li><strong>KISS</strong> (Keep It Simple, Stupid)</li>
+<li><strong>YAGNI</strong> (You Ain’t Gonna Need It)</li>
+</ul>
+</details>
+<hr />
+<p><br><br></p>
+<h2 id="orange-circle-leetcode-patterns-for-dsa"><a class="zola-anchor" href="#orange-circle-leetcode-patterns-for-dsa" aria-label="Anchor link for: orange-circle-leetcode-patterns-for-dsa">🔗</a>🟠 LeetCode Patterns for DSA</h2>
+<details>
+<summary>Mastering these patterns helps you solve most coding interview problems efficiently:
+</summary>
+<ul>
+<li>
+<p><strong>Sliding Window</strong><br />
+For subarrays/substrings with optimal time (e.g., max sum, longest substring).</p>
+<ul>
+<li>Example: Maximum Subarray, Longest Substring Without Repeating Characters</li>
+</ul>
+</li>
+<li>
+<p><strong>Two Pointers</strong><br />
+For problems on sorted arrays/linked lists (e.g., pair sum, reverse).</p>
+<ul>
+<li>Example: Two Sum II, Remove Duplicates from Sorted Array</li>
+</ul>
+</li>
+<li>
+<p><strong>Fast &amp; Slow Pointers (Cycle Detection)</strong><br />
+Detect cycles or find middle in linked lists.</p>
+<ul>
+<li>Example: Linked List Cycle, Find Middle of Linked List</li>
+</ul>
+</li>
+<li>
+<p><strong>Merge Intervals</strong><br />
+For interval overlap/merge problems.</p>
+<ul>
+<li>Example: Merge Intervals, Insert Interval</li>
+</ul>
+</li>
+<li>
+<p><strong>Binary Search</strong><br />
+For sorted arrays/search space reduction.</p>
+<ul>
+<li>Example: Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array</li>
+</ul>
+</li>
+<li>
+<p><strong>Backtracking</strong><br />
+For permutations, combinations, and subsets.</p>
+<ul>
+<li>Example: Subsets, Permutations, Combination Sum</li>
+</ul>
+</li>
+<li>
+<p><strong>Breadth-First Search (BFS)</strong><br />
+For shortest path in unweighted graphs/trees.</p>
+<ul>
+<li>Example: Binary Tree Level Order Traversal, Word Ladder</li>
+</ul>
+</li>
+<li>
+<p><strong>Depth-First Search (DFS)</strong><br />
+For traversals, connected components, and recursion.</p>
+<ul>
+<li>Example: Number of Islands, Clone Graph</li>
+</ul>
+</li>
+<li>
+<p><strong>Dynamic Programming (DP)</strong><br />
+For optimal substructure/overlapping subproblems.</p>
+<ul>
+<li>Example: Climbing Stairs, House Robber, Longest Increasing Subsequence</li>
+</ul>
+</li>
+<li>
+<p><strong>Greedy</strong><br />
+For local optimal → global optimal.</p>
+<ul>
+<li>Example: Jump Game, Gas Station</li>
+</ul>
+</li>
+<li>
+<p><strong>Heap/Priority Queue</strong><br />
+For top K elements, merging sorted lists.</p>
+<ul>
+<li>Example: Kth Largest Element, Merge K Sorted Lists</li>
+</ul>
+</li>
+<li>
+<p><strong>Trie</strong><br />
+For prefix-based search.</p>
+<ul>
+<li>Example: Implement Trie, Word Search II</li>
+</ul>
+</li>
+</ul>
+<p><strong>Tip:</strong><br />
+Focus on understanding the pattern, not just the solution.<br />
+<a rel="external" href="https://seanprashad.com/leetcode-patterns/">LeetCode Patterns Reference</a></p>
+</details>
+<hr />
+<p><br><br></p>
+<h2 id="triangular-ruler-software-design-architectural-patterns"><a class="zola-anchor" href="#triangular-ruler-software-design-architectural-patterns" aria-label="Anchor link for: triangular-ruler-software-design-architectural-patterns">🔗</a>📐 Software Design &amp; Architectural Patterns</h2>
+<p><strong>📄 Overview</strong></p>
+<p>Design and architectural patterns are tried-and-true solutions to common software development problems. They help write clean, maintainable, and scalable code.</p>
+<blockquote>
+</blockquote>
+<details>
+<summary><strong>🧱 1. Design Patterns</strong></summary>
+<details>
+<summary><strong>🔨 1.1 Creational Patterns</strong></summary>
+<ul>
+<li>
+<p><strong>Singleton</strong><br />
+Ensure a class has only one instance and provide a global point of access.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Singleton {</span></span>
+<span class="giallo-l"><span>  -instance: Singleton</span></span>
+<span class="giallo-l"><span>  +getInstance(): Singleton</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre></li>
+<li>
+<p><strong>Factory Method</strong><br />
+Define an interface for creating an object, but let subclasses decide which class to instantiate.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Product</span></span>
+<span class="giallo-l"><span>class ConcreteProduct</span></span>
+<span class="giallo-l"><span>class Creator {</span></span>
+<span class="giallo-l"><span>  +factoryMethod(): Product</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>class ConcreteCreator {</span></span>
+<span class="giallo-l"><span>  +factoryMethod(): Product</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>Creator &lt;|-- ConcreteCreator</span></span>
+<span class="giallo-l"><span>Product &lt;|-- ConcreteProduct</span></span></code></pre></li>
+<li>
+<p><strong>Builder</strong><br />
+Separate the construction of a complex object from its representation.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Director</span></span>
+<span class="giallo-l"><span>class Builder {</span></span>
+<span class="giallo-l"><span>  +setPart()</span></span>
+<span class="giallo-l"><span>  +getResult()</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>Director --&gt; Builder</span></span></code></pre></li>
+<li>
+<p><strong>Prototype</strong><br />
+Create new objects by copying an existing object (clone).</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Prototype {</span></span>
+<span class="giallo-l"><span>  +clone(): Prototype</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>class ConcretePrototype</span></span>
+<span class="giallo-l"><span>Prototype &lt;|-- ConcretePrototype</span></span></code></pre></li>
+</ul>
+</details>
+<details>
+<summary><strong>🧩 1.2 Structural Patterns</strong></summary>
+<ul>
+<li>
+<p><strong>Adapter</strong><br />
+Allow incompatible interfaces to work together.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Target</span></span>
+<span class="giallo-l"><span>class Adaptee</span></span>
+<span class="giallo-l"><span>class Adapter</span></span>
+<span class="giallo-l"><span>Target &lt;|.. Adapter</span></span>
+<span class="giallo-l"><span>Adapter --&gt; Adaptee</span></span></code></pre></li>
+<li>
+<p><strong>Bridge</strong><br />
+Separate abstraction from implementation so they can vary independently.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Abstraction</span></span>
+<span class="giallo-l"><span>class Implementor</span></span>
+<span class="giallo-l"><span>class RefinedAbstraction</span></span>
+<span class="giallo-l"><span>Abstraction &lt;|-- RefinedAbstraction</span></span>
+<span class="giallo-l"><span>RefinedAbstraction --&gt; Implementor</span></span></code></pre></li>
+<li>
+<p><strong>Composite</strong><br />
+Treat individual objects and compositions uniformly.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Component</span></span>
+<span class="giallo-l"><span>class Leaf</span></span>
+<span class="giallo-l"><span>class Composite {</span></span>
+<span class="giallo-l"><span>  +add()</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>Component &lt;|-- Leaf</span></span>
+<span class="giallo-l"><span>Component &lt;|-- Composite</span></span>
+<span class="giallo-l"><span>Composite --&gt; Component</span></span></code></pre></li>
+<li>
+<p><strong>Decorator</strong><br />
+Add responsibilities to objects dynamically.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Component</span></span>
+<span class="giallo-l"><span>class ConcreteComponent</span></span>
+<span class="giallo-l"><span>class Decorator</span></span>
+<span class="giallo-l"><span>class ConcreteDecorator</span></span>
+<span class="giallo-l"><span>Component &lt;|-- ConcreteComponent</span></span>
+<span class="giallo-l"><span>Component &lt;|-- Decorator</span></span>
+<span class="giallo-l"><span>Decorator &lt;|-- ConcreteDecorator</span></span>
+<span class="giallo-l"><span>Decorator --&gt; Component</span></span></code></pre></li>
+<li>
+<p><strong>Facade</strong><br />
+Provide a simplified interface to a complex subsystem.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Facade</span></span>
+<span class="giallo-l"><span>class SubsystemA</span></span>
+<span class="giallo-l"><span>class SubsystemB</span></span>
+<span class="giallo-l"><span>Facade --&gt; SubsystemA</span></span>
+<span class="giallo-l"><span>Facade --&gt; SubsystemB</span></span></code></pre></li>
+</ul>
+</details>
+<details>
+<summary><strong>🧠 1.3 Behavioral Patterns</strong></summary>
+<ul>
+<li>
+<p><strong>Observer</strong><br />
+Define a dependency between objects so that when one changes, others are notified.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Subject {</span></span>
+<span class="giallo-l"><span>  +attach()</span></span>
+<span class="giallo-l"><span>  +detach()</span></span>
+<span class="giallo-l"><span>  +notify()</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>class Observer {</span></span>
+<span class="giallo-l"><span>  +update()</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>Subject --&gt; Observer</span></span></code></pre></li>
+<li>
+<p><strong>Command</strong><br />
+Encapsulate a request as an object.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Command {</span></span>
+<span class="giallo-l"><span>  +execute()</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>class ConcreteCommand</span></span>
+<span class="giallo-l"><span>class Invoker</span></span>
+<span class="giallo-l"><span>class Receiver</span></span>
+<span class="giallo-l"><span>Command &lt;|-- ConcreteCommand</span></span>
+<span class="giallo-l"><span>Invoker --&gt; Command</span></span>
+<span class="giallo-l"><span>ConcreteCommand --&gt; Receiver</span></span></code></pre></li>
+<li>
+<p><strong>Strategy</strong><br />
+Define a family of algorithms, encapsulate them, and make them interchangeable.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
+<span class="giallo-l"><span>class Context {</span></span>
+<span class="giallo-l"><span>  -strategy: Strategy</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>class Strategy {</span></span>
+<span class="giallo-l"><span>  +execute()</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span>class ConcreteStrategyA</span></span>
+<span class="giallo-l"><span>Strategy &lt;|-- ConcreteStrategyA</span></span>
+<span class="giallo-l"><span>Context --&gt; Strategy</span></span></code></pre></li>
+</ul>
+</details>
+</details>
+<details>
+<summary><strong>🏛️ 2. Architectural Patterns</strong></summary>
+<ul>
+<li>
+<p><strong>MVC (Model-View-Controller)</strong><br />
+Separates application logic into three interconnected components.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
+<span class="giallo-l"><span>Model --&gt; Controller</span></span>
+<span class="giallo-l"><span>Controller --&gt; View</span></span>
+<span class="giallo-l"><span>View --&gt; Model</span></span></code></pre></li>
+<li>
+<p><strong>MVVM (Model-View-ViewModel)</strong><br />
+Enhances MVC with two-way binding between view and view model.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
+<span class="giallo-l"><span>Model --&gt; ViewModel</span></span>
+<span class="giallo-l"><span>ViewModel --&gt; View</span></span>
+<span class="giallo-l"><span>View --&gt; ViewModel</span></span></code></pre></li>
+<li>
+<p><strong>Layered Architecture</strong><br />
+Organizes code into layers with specific responsibilities.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
+<span class="giallo-l"><span>UI --&gt; Application</span></span>
+<span class="giallo-l"><span>Application --&gt; Domain</span></span>
+<span class="giallo-l"><span>Domain --&gt; Infrastructure</span></span></code></pre></li>
+<li>
+<p><strong>Client-Server</strong><br />
+Divide systems into a server (provider) and client (consumer).</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
+<span class="giallo-l"><span>Client --&gt;|Request| Server</span></span>
+<span class="giallo-l"><span>Server --&gt;|Response| Client</span></span></code></pre></li>
+<li>
+<p><strong>Microservices</strong><br />
+Decompose a system into small, independently deployable services.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
+<span class="giallo-l"><span>ServiceA --&gt; API</span></span>
+<span class="giallo-l"><span>ServiceB --&gt; API</span></span>
+<span class="giallo-l"><span>ServiceC --&gt; API</span></span>
+<span class="giallo-l"><span>API --&gt; Client</span></span></code></pre></li>
+</ul>
+</details>
+<details>
+<summary><strong>✅ Summary Table</strong></summary>
+<table><thead><tr><th>Category</th><th>Patterns</th></tr></thead><tbody>
+<tr><td>Creational</td><td>Singleton, Factory Method, Builder, Prototype</td></tr>
+<tr><td>Structural</td><td>Adapter, Composite, Facade, Bridge, Decorator</td></tr>
+<tr><td>Behavioral</td><td>Observer, Command, Strategy</td></tr>
+<tr><td>Architectural</td><td>MVC, MVVM, Layered, Client-Server, Microservices</td></tr>
+</tbody></table>
+</details>
+<hr />
+<p><br><br></p>
+<h2 id="blue-book-uml-diagrams-with-mermaid-js"><a class="zola-anchor" href="#blue-book-uml-diagrams-with-mermaid-js" aria-label="Anchor link for: blue-book-uml-diagrams-with-mermaid-js">🔗</a>📘 UML Diagrams with Mermaid.js</h2>
+<p>This document showcases the most common UML diagram types using Mermaid.js. Great for visualizing systems directly in GitHub markdown!</p>
+<details>
+<summary><strong>🧱 1. Class Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+Class diagrams represent the structure of classes in a system, showing their attributes, methods, and relationships.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram  </span></span>
+<span class="giallo-l"><span>    class Animal {  </span></span>
+<span class="giallo-l"><span>        +String name  </span></span>
+<span class="giallo-l"><span>        +int age  </span></span>
+<span class="giallo-l"><span>        +makeSound()  </span></span>
+<span class="giallo-l"><span>    }  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    class Dog {  </span></span>
+<span class="giallo-l"><span>        +String breed  </span></span>
+<span class="giallo-l"><span>        +bark()  </span></span>
+<span class="giallo-l"><span>    }  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    class Cat {  </span></span>
+<span class="giallo-l"><span>        +scratch()  </span></span>
+<span class="giallo-l"><span>    }  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    Animal &lt;|-- Dog  </span></span>
+<span class="giallo-l"><span>    Animal &lt;|-- Cat  </span></span></code></pre></details>
+<details>
+<summary><strong>🎭 2. Use Case Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+Use case diagrams visualize the interactions between users (actors) and the system to achieve goals (use cases).</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD  </span></span>
+<span class="giallo-l"><span>    Actor((👤 User)) --&gt;|Uses| System[🖥️ System]  </span></span>
+<span class="giallo-l"><span>    System --&gt; UC1(📌 Use Case 1)  </span></span>
+<span class="giallo-l"><span>    System --&gt; UC2(📌 Use Case 2)  </span></span>
+<span class="giallo-l"><span>    UC1 -.-&gt; UC2  </span></span></code></pre></details>
+<details>
+<summary><strong>🔁 3. Sequence Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+Sequence diagrams show how objects or components interact in a particular sequence of time-ordered messages.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>sequenceDiagram  </span></span>
+<span class="giallo-l"><span>    participant User as 👤 User  </span></span>
+<span class="giallo-l"><span>    participant WebApp as 🌐 WebApp  </span></span>
+<span class="giallo-l"><span>    participant Server as 🖥️ Server  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    User-&gt;&gt;WebApp: Request Page  </span></span>
+<span class="giallo-l"><span>    WebApp-&gt;&gt;Server: Fetch Data  </span></span>
+<span class="giallo-l"><span>    Server--&gt;&gt;WebApp: Return Data  </span></span>
+<span class="giallo-l"><span>    WebApp--&gt;&gt;User: Render Page  </span></span></code></pre></details>
+<details>
+<summary><strong>🏃 4. Activity Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+Activity diagrams model the flow of control or data between activities, useful for describing workflows and logic.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>flowchart TD  </span></span>
+<span class="giallo-l"><span>    Start([🚀 Start]) --&gt; A[🔐 Login]  </span></span>
+<span class="giallo-l"><span>    A --&gt; B{✅ Valid?}  </span></span>
+<span class="giallo-l"><span>    B -- Yes --&gt; C[📊 Show Dashboard]  </span></span>
+<span class="giallo-l"><span>    B -- No --&gt; D[❌ Show Error]  </span></span>
+<span class="giallo-l"><span>    C --&gt; End([🏁 End])  </span></span>
+<span class="giallo-l"><span>    D --&gt; End  </span></span></code></pre></details>
+<details>
+<summary><strong>🔄 5. State Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+State diagrams represent the possible states of an object and transitions triggered by events or actions.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>stateDiagram-v2  </span></span>
+<span class="giallo-l"><span>    [*] --&gt; Idle  </span></span>
+<span class="giallo-l"><span>    Idle --&gt; Processing : ▶️ start()  </span></span>
+<span class="giallo-l"><span>    Processing --&gt; Finished : ✔️ complete()  </span></span>
+<span class="giallo-l"><span>    Finished --&gt; [*]  </span></span></code></pre></details>
+<details>
+<summary><strong>🧩 6. Component Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+Component diagrams model the components of a system and how they interact through interfaces.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TB  </span></span>
+<span class="giallo-l"><span>    Client[&quot;🧑‍💻 Client&quot;] --&gt;|uses| API[&quot;🌐 API&quot;]  </span></span>
+<span class="giallo-l"><span>    API --&gt; Controller[&quot;🧭 Controller&quot;]  </span></span>
+<span class="giallo-l"><span>    Controller --&gt; Service[&quot;⚙️ Service&quot;]  </span></span>
+<span class="giallo-l"><span>    Service --&gt; Database[&quot;(🗄️ Database)&quot;]  </span></span></code></pre></details>
+<details>
+<summary><strong>🚚 7. Deployment Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+Deployment diagrams show the physical layout of hardware and how software components are deployed on them.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD  </span></span>
+<span class="giallo-l"><span>    subgraph &quot;🧑‍💻 Client Node&quot; </span></span>
+<span class="giallo-l"><span>        Browser[&quot;🌍 Browser&quot;]  </span></span>
+<span class="giallo-l"><span>    end  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    subgraph &quot;🖥️ Server Node&quot;  </span></span>
+<span class="giallo-l"><span>        WebApp[&quot;🧠 WebApp&quot;]  </span></span>
+<span class="giallo-l"><span>        DB[&quot;(🗃️ Database)&quot;]  </span></span>
+<span class="giallo-l"><span>    end  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    Browser --&gt; WebApp  </span></span>
+<span class="giallo-l"><span>    WebApp --&gt; DB  </span></span></code></pre></details>
+<details>
+<summary><strong>🧸 8. Object Diagram</strong></summary>
+<p><strong>Description:</strong><br />
+Object diagrams depict instances of classes (objects) and their relationships at a specific point in time.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram  </span></span>
+<span class="giallo-l"><span>    class Person {  </span></span>
+<span class="giallo-l"><span>        +String name  </span></span>
+<span class="giallo-l"><span>        +int age  </span></span>
+<span class="giallo-l"><span>    }  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    Person : name = &quot;Alice&quot;  </span></span>
+<span class="giallo-l"><span>    Person : age = 30  </span></span></code></pre></details>
+<hr />
+<p><br><br></p>
+<h2 id="fire-next-level-topics-to-master-architect-mindset"><a class="zola-anchor" href="#fire-next-level-topics-to-master-architect-mindset" aria-label="Anchor link for: fire-next-level-topics-to-master-architect-mindset">🔗</a>🔥 Next-Level Topics To Master (Architect Mindset)</h2>
+<details>
+<summary><strong>1️⃣ Architectural Styles</strong></summary>
+<ul>
+<li><strong>Layered Architecture</strong> (Controllers → Services → Repos)</li>
+<li><strong>Hexagonal Architecture</strong> (Ports &amp; Adapters, decouple domain)</li>
+<li><strong>CQRS</strong> (Command Query Responsibility Segregation)</li>
+<li><strong>Event-Driven Architecture</strong> (pub/sub systems, message queues)</li>
+</ul>
+</details>
+<details>
+<summary><strong>2️⃣ Domain-Driven Design (DDD)</strong></summary>
+<ul>
+<li>Entities → objects with identity (e.g., <code>User</code>, <code>Order</code>)</li>
+<li>Value Objects → immutable, no ID (<code>Money</code>, <code>Coordinates</code>)</li>
+<li>Aggregates → groups of entities with a root</li>
+<li>Ubiquitous Language → name code after domain terms</li>
+</ul>
+</details>
+<details>
+<summary><strong>3️⃣ Advanced State Management (Frontend)</strong></summary>
+<ul>
+<li><strong>Finite State Machines</strong> → use XState or implement manually</li>
+<li><strong>Statecharts</strong> → for complex UIs (multi-step flows)</li>
+<li><strong>Reactive Patterns</strong> → data flow graphs, not just stores</li>
+</ul>
+</details>
+<details>
+<summary><strong>4️⃣ Testing Patterns</strong></summary>
+<ul>
+<li><strong>Given-When-Then</strong> (BDD style)</li>
+<li><strong>Test Doubles</strong> (Mock, Stub, Fake)</li>
+<li><strong>Property-Based Testing</strong> (e.g., <code>hypothesis</code> in Python, <code>proptest</code> in Rust)</li>
+</ul>
+</details>
+<hr />
+<p><br><br></p>
+<h2 id="green-circle-tools-every-mastermind-should-command"><a class="zola-anchor" href="#green-circle-tools-every-mastermind-should-command" aria-label="Anchor link for: green-circle-tools-every-mastermind-should-command">🔗</a>🟢 Tools Every Mastermind Should Command</h2>
+<details>
+<summary><strong>✅ Git (Version Control)</strong></summary>
+<ul>
+<li>Rebase, squash commits</li>
+<li>Feature branch workflows</li>
+<li>Writing meaningful commit messages</li>
+<li>Handling merge conflicts like a pro</li>
+</ul>
+</details>
+<details>
+<summary><strong>✅ Docker (Containers)</strong></summary>
+<ul>
+<li>Writing multi-stage Dockerfiles</li>
+<li>Using <code>docker-compose</code> for dev envs</li>
+<li>Building minimal, production-ready images</li>
+<li>Understanding networks, volumes, healthchecks</li>
+</ul>
+</details>
+<details>
+<summary><strong>✅ Linux (Dev Environment)</strong></summary>
+<ul>
+<li>Bash scripting</li>
+<li><code>grep</code>, <code>awk</code>, <code>sed</code> for text processing</li>
+<li>Managing services with <code>systemd</code></li>
+<li>Networking basics (<code>netstat</code>, <code>curl</code>, <code>dig</code>)</li>
+</ul>
+</details>
+<details>
+<summary><strong>✅ CI/CD (Optional but Highly Recommended)</strong></summary>
+<ul>
+<li>Github Actions / Gitlab CI pipelines</li>
+<li>Lint → Test → Build → Deploy sequences</li>
+<li>Using Docker in CI pipelines</li>
+</ul>
+</details>
+<hr />
+<p><br><br></p>
+<h2 id="globe-with-meridians-clean-api-development-guide-general-rest-focus"><a class="zola-anchor" href="#globe-with-meridians-clean-api-development-guide-general-rest-focus" aria-label="Anchor link for: globe-with-meridians-clean-api-development-guide-general-rest-focus">🔗</a>🌐 Clean API Development Guide (General &amp; REST Focus)</h2>
+<details>
+<summary><strong>🚀 Goals of Clean API Design</strong></summary>
+<ul>
+<li><strong>Consistent</strong> → predictable patterns everywhere</li>
+<li><strong>Simple</strong> → easy for clients to understand &amp; use</li>
+<li><strong>Versioned</strong> → changes don't break old clients</li>
+<li><strong>Secure</strong> → protects against common vulnerabilities</li>
+<li><strong>Extensible</strong> → easy to add features without breaking old ones</li>
+<li><strong>Well-documented</strong> → clear and accurate API docs</li>
+</ul>
+</details>
+<details>
+<summary><strong>🔥 General API Design Principles (Always Apply)</strong></summary>
+<details>
+<summary>1. Use Meaningful Resource Naming</summary>
+<ul>
+<li>Use <strong>nouns</strong> for resources, <strong>verbs</strong> for actions.</li>
+<li>Examples:<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>GET /users</span></span>
+<span class="giallo-l"><span>POST /users</span></span>
+<span class="giallo-l"><span>PATCH /users/{id}</span></span></code></pre></li>
+</ul>
+</details>
+<details>
+<summary>2. Use HTTP Methods Correctly</summary>
+<table><thead><tr><th>Method</th><th>Use For</th></tr></thead><tbody>
+<tr><td>GET</td><td>Retrieve data</td></tr>
+<tr><td>POST</td><td>Create new resource</td></tr>
+<tr><td>PUT</td><td>Replace entire resource</td></tr>
+<tr><td>PATCH</td><td>Update part of resource</td></tr>
+<tr><td>DELETE</td><td>Remove resource</td></tr>
+</tbody></table>
+</details>
+<details>
+<summary>3. Version Your API (Always!)</summary>
+<ul>
+<li>Example:<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>/api/v1/users</span></span>
+<span class="giallo-l"><span>/api/v2/users</span></span></code></pre></li>
+<li>Use URI versioning or headers, but <strong>always version</strong>.</li>
+</ul>
+</details>
+<details>
+<summary>4. Use Standard HTTP Status Codes</summary>
+<table><thead><tr><th>Status Code</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>200 OK</td><td>Success</td></tr>
+<tr><td>201 Created</td><td>Resource created</td></tr>
+<tr><td>400 Bad Request</td><td>Client error</td></tr>
+<tr><td>401 Unauthorized</td><td>Auth failed</td></tr>
+<tr><td>404 Not Found</td><td>Resource missing</td></tr>
+<tr><td>500 Server Error</td><td>Internal fail</td></tr>
+</tbody></table>
+</details>
+<details>
+<summary>5. Keep Responses Consistent</summary>
+<ul>
+<li>Use a common envelope format:</li>
+</ul>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="json"><span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">  &quot;data&quot;</span><span>: {</span><span style="color: #FDAEB7;font-style: italic;"> ...</span><span> },</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">  &quot;error&quot;</span><span>:</span><span style="color: #79B8FF;"> null</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>https://swagger.io/</p>
+</details>
+</details>
+</details>
+<hr />
+<p><br><br>
+<br><br></p>
+<h2 id="purple-circle-my-personalized-pattern-map-cheat-sheet"><a class="zola-anchor" href="#purple-circle-my-personalized-pattern-map-cheat-sheet" aria-label="Anchor link for: purple-circle-my-personalized-pattern-map-cheat-sheet">🔗</a>🟣 My Personalized Pattern Map (Cheat Sheet)</h2>
+<table><thead><tr><th>When I do this...</th><th>It's called...</th></tr></thead><tbody>
+<tr><td>Pick components/classes based on condition</td><td><strong>Factory Pattern</strong></td></tr>
+<tr><td>Wrap external APIs/components to fit my code</td><td><strong>Adapter Pattern</strong></td></tr>
+<tr><td>Add features without changing base logic</td><td><strong>Decorator Pattern</strong></td></tr>
+<tr><td>Build objects/config step by step</td><td><strong>Builder Pattern</strong></td></tr>
+<tr><td>Split big things into smaller units</td><td><strong>Single Responsibility</strong></td></tr>
+<tr><td>Centralize shared state across many parts</td><td><strong>Mediator / Store Pattern</strong></td></tr>
+<tr><td>Extract repeated logic</td><td><strong>DRY Principle</strong></td></tr>
+<tr><td>Follow naming conventions</td><td><strong>Clean Code Naming</strong></td></tr>
+</tbody></table>
+</details>
+<hr />
+<p><br><br></p>
+<h2 id="white-check-mark-how-to-become-confident-when-choosing-architecture"><a class="zola-anchor" href="#white-check-mark-how-to-become-confident-when-choosing-architecture" aria-label="Anchor link for: white-check-mark-how-to-become-confident-when-choosing-architecture">🔗</a>✅ How To Become Confident When Choosing Architecture</h2>
+<ol>
+<li><strong>Small Project?</strong></li>
+</ol>
+<ul>
+<li>Use <strong>Layered Architecture</strong>.</li>
+<li>YAGNI: Don’t over-engineer.</li>
+</ul>
+<ol start="2">
+<li><strong>Medium to Large?</strong></li>
+</ol>
+<ul>
+<li>Use <strong>Hexagonal</strong> + <strong>DDD Lite</strong>.</li>
+<li>Aim for framework-independent domain logic.</li>
+</ul>
+<ol start="3">
+<li><strong>Frontend Complex State?</strong></li>
+</ol>
+<ul>
+<li>Model as <strong>State Machines</strong>.</li>
+<li>Use stores only when 2+ components need shared state.</li>
+</ul>
+<ol start="4">
+<li><strong>Backend Scaling?</strong></li>
+</ol>
+<ul>
+<li>Move to <strong>Event-Driven</strong> or <strong>CQRS</strong> if reads/writes differ in volume.</li>
+</ul>
+<ol start="5">
+<li><strong>Always</strong></li>
+</ol>
+<ul>
+<li>Start simple (Layered), then evolve to advanced when complexity forces you.</li>
+<li>Record decisions in <strong>ADR</strong> docs.</li>
+</ul>
+</details>
+<hr />
+<p><br><br></p>
+<details>
+<summary><strong>📚 Recommended Books & Videos (Curated)</strong></summary>
+<p><strong>Books:</strong></p>
+<ul>
+<li>Clean Code by Robert C. Martin</li>
+<li>Clean Architecture by Robert C. Martin</li>
+<li>Domain-Driven Design Distilled by Vaughn Vernon</li>
+<li>Patterns of Enterprise Application Architecture by Martin Fowler</li>
+<li>Refactoring UI by Adam Wathan</li>
+</ul>
+<p><strong>Videos &amp; Playlists:</strong></p>
+<details>
+<summary>Python</summary>
+<ul>
+<li><a rel="external" href="https://www.youtube.com/watch?v=cKPlPJyQrt4&amp;list=PLzg3FkRs7fcTjdBdrP6dOTcV3AJwnzL0Y">James Powell playlist</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=aIPqt-OdmS0&amp;list=PLQVvvaa0QuDfV1MIRBOcqClP6VZXsvyZS">sentdex web scraping</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=ZyhVh-qRZPA&amp;list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS">Pandas advanced</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=Iqjy9UqKKuo&amp;list=PLQVvvaa0QuDc-3szzjeP6N6b0aDrrKyL-">sentdex pandas</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=PtQiiknWUcI">Full django</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=c708Nf0cHrs">Full django (drf)</a></li>
+<li><a rel="external" href="https://roadmap.sh/">refactoring.guru</a> best design pattern explanaition</li>
+<li><a rel="external" href="https://refactoring.guru/">roadmap.sh</a> has this &amp; better</li>
+</ul>
+</details>
+<details>
+<summary>IT (networking / databases / http ...)</summary>
+<ul>
+<li><a rel="external" href="https://www.youtube.com/@hnasr/playlists">Best all in one channel i found</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=sa-TUpSx1JA">regex</a></li>
+</ul>
+</details>
+<details>
+<summary>Backend / System Design</summary>
+<ul>
+<li><a rel="external" href="https://www.youtube.com/@ByteByteGo/playlists">bytebytego</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=6kwmW_p_Tig">OPEN API SPECS</a></li>
+<li><a rel="external" href="https://www.youtube.com/@CodeOpinion/featured">APiarchitecture</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=9Ng00IlBCtw&amp;list=PL9XzOCngAkqs4m0XdULJu_78nM3Ok3Q65">API design</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=uS9wnNsamzA">web design standards</a></li>
+</ul>
+</details>
+<details>
+<summary>Rust</summary>
+<ul>
+<li><a rel="external" href="https://www.youtube.com/watch?v=ygL_xcavzQ4">All in one video</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=OX9HJsJUDxA&amp;list=PLai5B987bZ9CoVR-QEIN9foz4QCJ0H2Y8">from tust book</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=7odJDwhjCXQ&amp;list=PLEIv4NBmh-GsWGE9mY3sF9c5lgh5Z_jLr">From rust to python</a></li>
+<li>also check the <b>rustlings &amp; 100 exercices</b></li>
+</ul>
+</details>
+<details>
+<summary>Git</summary>
+<ul>
+<li><a rel="external" href="https://www.youtube.com/watch?v=RGOj5yH7evk">All in one video</a></li>
+</ul>
+</details>
+<details>
+<summary>Svelte</summary>
+<ul>
+<li><a rel="external" href="https://www.youtube.com/watch?v=MoGkX4RvZ38">All in one sveltekit</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=bxmDnn7lrnk&amp;list=PL4cUxeGkcC9gpXORlEHjc5bgnIi5HEGhw">tailwind css</a></li>
+<li>also check daisyUI and <b>skeletonUI</b></li>
+</ul>
+</details>
+<details>
+<summary>Linux</summary>
+<ul>
+<li><a rel="external" href="https://www.youtube.com/watch?v=oD5Y4Gzr6vw&amp;list=PLy1Fx2HfcmWBpD_PI4AQpjeDK5-5q6TG7">Mostafa Hamouda redhat (the best)</a></li>
+<li>also check docker</li>
+</ul>
+</details>
+<details>
+<summary>Algorithms</summary>
+<ul>
+<li><a rel="external" href="https://frontendmasters.com/courses/algorithms/introduction/">Prime's last algo</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=kp3fCihUXEg">Algorithms simple version</a></li>
+<li><a rel="external" href="https://www.youtube.com/watch?v=cQWr9DFE1ww">Datastructures simple version</a></li>
+<li>also do some leetcode, best from neetcode</li>
+</ul>
+</details>
+<details>
+<summary>AI</summary>
+- we don't do that here
+</details>
+</details>
+<hr />
+<details>
+<summary><strong>🔥 Final Tip</strong></summary>
+<blockquote>
+<p>Mastermind devs don’t memorize patterns — they <strong>name their instincts</strong> and <strong>record decisions</strong>.<br />
+Trust your intuition. Level it up by learning the names.<br />
+Then, you'll not only code well — you'll design systems that last 🔥.</p>
+</blockquote>
+</details>
+<hr />
+<details>
+<summary><strong>🛠️ Terminal, SaaS, Dev, Desktop, Data, DevOps, Cool Stuff</strong></summary>
+<details>
+<summary>Terminal</summary>
+<ul>
+<li>ranger</li>
+<li>helix</li>
+<li>tmux</li>
+<li>docker / docker-compose / lazydocker</li>
+<li>git / lazygit</li>
+<li>htop</li>
+<li>coreutils (grep / find / jq / sed ...)</li>
+<li>ansible</li>
+<li>fish / starship</li>
+<li>ollama</li>
+<li>certbot</li>
+<li>espanso</li>
+</ul>
+</details>
+<details>
+<summary>SaaS</summary>
+<ul>
+<li>Wordpress (cf7 elementor)</li>
+<li>Odoo</li>
+<li>directus</li>
+<li>n8n</li>
+<li>aapanel</li>
+<li>glpi</li>
+<li>moodle / budibase / callcom / nocobase / nocodb</li>
+</ul>
+</details>
+<details>
+<summary>Dev</summary>
+<ul>
+<li>python (django, pandas / polars, fastapi, requests, scrapy, sklearn) jupyter</li>
+<li>js (sveltekit / skeletonUi superform, drizzleORM, pwa, capacitor)</li>
+<li>fun with go / rust</li>
+<li>sentry</li>
+<li>Qdrant</li>
+</ul>
+</details>
+<details>
+<summary>Desktop</summary>
+- kde Plasma / gnome (i3/sway for tiling)
+- insomnia
+- vscodium
+- chromium
+- dbeaver
+- inkscape
+- onlyoffice
+- flameshot
+- lmstudio
+</details>
+<details>
+<summary>Data</summary>
+<ul>
+<li>dbt</li>
+<li>dagster</li>
+<li>airflow/prefect</li>
+<li>superset</li>
+<li>grafana</li>
+<li>pg / mongo / sqlite / clickhouse</li>
+<li>great_expectations</li>
+<li>querybook</li>
+</ul>
+</details>
+<details>
+<summary>DevOps</summary>
+<ul>
+<li>prometheus / grafana / uptime kuma</li>
+<li>gitlab</li>
+<li>nginx / traefik / caddy</li>
+<li>cockpit</li>
+<li>openstack</li>
+<li>portainer</li>
+</ul>
+</details>
+<details>
+<summary>Cool Stuff</summary>
+<ul>
+<li>typst</li>
+<li>automa</li>
+<li>evilimiter</li>
+<li>airgeddon</li>
+<li>PlantUML</li>
+<li>fedora / alpine / k3s / microk8s / k0s</li>
+<li>bookmarklets</li>
+</ul>
+</details>
+</details>
+<hr />
+<details>
+<summary><strong>🐍 Python Reference</strong></summary>
+<details>
+<summary>Basics</summary>
+<ul>
+<li>OOP (classes)</li>
+<li>generators (yield)</li>
+<li>Decorators (@something)</li>
+<li>Type hint</li>
+<li>List comprehension</li>
+<li>Lambda functions<br />
+<a rel="external" href="https://www.programcreek.com/python/">Code examples</a></li>
+</ul>
+</details>
+<details>
+<summary>Base Libraries</summary>
+<ul>
+<li>inspect</li>
+<li>dis</li>
+<li>toolz</li>
+<li>functools</li>
+<li>random/secret</li>
+<li>operator</li>
+<li>datetime/time</li>
+<li>os/sys</li>
+</ul>
+</details>
+<details>
+<summary>Web</summary>
+<ul>
+<li>Django / DRF / Celery</li>
+<li>flask (quart) / fastapi / django / muffin / blacksheep / aiohttp</li>
+<li>requests</li>
+<li>lxml</li>
+<li>json</li>
+<li>bs4</li>
+<li>sockets</li>
+<li>urlib3</li>
+<li>jwt</li>
+</ul>
+</details>
+<details>
+<summary>Useful Libraries</summary>
+<ul>
+<li>tabulate</li>
+<li>sqlalchemy</li>
+<li>tinydb</li>
+<li>scrapy</li>
+<li>pyautogui</li>
+<li>opencv2</li>
+<li>pynput</li>
+<li>pyinstaller</li>
+<li>pillow</li>
+<li>networkx</li>
+<li>jwt</li>
+<li>sqlacodegen (generating auto models from a database)</li>
+<li>furl (manipulate URLs)</li>
+</ul>
+</details>
+<details>
+<summary>Functional Programming</summary>
+<ul>
+<li>map</li>
+<li>reduce</li>
+<li>filter</li>
+<li>toolz</li>
+<li>functools</li>
+<li>lambda<br />
+<a rel="external" href="https://www.youtube.com/playlist?list=PLP8GkvaIxJP1z5bu4NX_bFrEInBkAgTMr">Functional playlist</a></li>
+</ul>
+</details>
+<details>
+<summary>Data Science / Analytics</summary>
+<ul>
+<li>numpy</li>
+<li>pandas</li>
+<li>matplotlib</li>
+<li>plotly</li>
+<li>scipy</li>
+<li>sklearn</li>
+<li>pytorch</li>
+<li>pandas-profiling (<a rel="external" href="https://github.com/ydataai/pandas-profiling">repo</a>)</li>
+</ul>
+</details>
+<details>
+<summary>CLI</summary>
+<ul>
+<li>fire</li>
+</ul>
+</details>
+</details>
+
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>

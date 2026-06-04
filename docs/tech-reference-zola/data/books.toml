@@ -69,6 +69,16 @@ badge_text = "Rust"
 topics = ["ownership & borrowing", "lifetimes", "structs & enums", "pattern matching", "traits & generics", "Option & Result", "error handling (?)", "closures & iterators", "concurrency (threads/async)", "Cargo & crates", "testing"]
 
 [[books]]
+vol = "08"
+title = "Frappe Framework Fundamentals FFF"
+subtitle = "DocTypes, controllers, hooks, the ORM, REST API, background jobs, and bench — everything the docs underexplain"
+path = "book/frappe"
+spine = "teal"
+badge = "teal"
+badge_text = "Frappe"
+topics = ["DocType", "ORM", "Hooks", "Controllers", "REST API", "Jinja", "Background Jobs", "Bench CLI", "Permissions", "Migrations"]
+
+[[books]]
 vol = "Bonus"
 title = "All what i find interesting in a single md file"
 subtitle = "Everything from dev, to tools, to cli, to desktop to the way of thinking..."

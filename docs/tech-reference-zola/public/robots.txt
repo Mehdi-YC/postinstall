@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+Allow: /
+Sitemap: https://tutos.mehdi-yc.com/sitemap.xml

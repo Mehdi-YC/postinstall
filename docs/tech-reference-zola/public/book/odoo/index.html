@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Odoo 19 Module Development Reference - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#module-file-structure">Module File Structure</a>
+  
+  <a class="toc-link" href="#manifest-py">manifest.py</a>
+  
+  <a class="toc-link" href="#models-models">Models (models&#x2F;)</a>
+  
+  <a class="toc-link" href="#views-views">Views (views&#x2F;)</a>
+  
+  <a class="toc-link" href="#security-security">Security (security&#x2F;)</a>
+  
+  <a class="toc-link" href="#data-files-data">Data Files (data&#x2F;)</a>
+  
+  <a class="toc-link" href="#static-assets-static">Static Assets (static&#x2F;)</a>
+  
+  <a class="toc-link" href="#commonly-missed-things">Commonly Missed Things</a>
+  
+  <a class="toc-link" href="#best-practices">Best Practices</a>
+  
+  <a class="toc-link" href="#owl-odoo-web-library-introduction">OWL — Odoo Web Library: Introduction</a>
+  
+  <a class="toc-link" href="#owl-components">OWL Components</a>
+  
+  <a class="toc-link" href="#owl-templates-qweb">OWL Templates (QWeb)</a>
+  
+  <a class="toc-link" href="#owl-advanced">OWL Advanced</a>
+  
+  <a class="toc-link" href="#devops-cli-postgresql-backups">DevOps: CLI, PostgreSQL, Backups</a>
+  
+  <a class="toc-link" href="#odoo-technical-terms-reference">Odoo Technical Terms Reference</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#module-file-structure">Module File Structure</a>
+  
+  <a class="topic" href="#manifest-py">manifest.py</a>
+  
+  <a class="topic" href="#models-models">Models (models&#x2F;)</a>
+  
+  <a class="topic" href="#views-views">Views (views&#x2F;)</a>
+  
+  <a class="topic" href="#security-security">Security (security&#x2F;)</a>
+  
+  <a class="topic" href="#data-files-data">Data Files (data&#x2F;)</a>
+  
+  <a class="topic" href="#static-assets-static">Static Assets (static&#x2F;)</a>
+  
+  <a class="topic" href="#commonly-missed-things">Commonly Missed Things</a>
+  
+  <a class="topic" href="#best-practices">Best Practices</a>
+  
+  <a class="topic" href="#owl-odoo-web-library-introduction">OWL — Odoo Web Library: Introduction</a>
+  
+  <a class="topic" href="#owl-components">OWL Components</a>
+  
+  <a class="topic" href="#owl-templates-qweb">OWL Templates (QWeb)</a>
+  
+  <a class="topic" href="#owl-advanced">OWL Advanced</a>
+  
+  <a class="topic" href="#devops-cli-postgresql-backups">DevOps: CLI, PostgreSQL, Backups</a>
+  
+  <a class="topic" href="#odoo-technical-terms-reference">Odoo Technical Terms Reference</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2024-01-15</span>
+  <h1>Odoo 19 Module Development Reference</h1>
+  
+  <p class="subtitle">File structure, conventions, commonly missed details, OWL introduction, and dev operations</p>
+  
+
+  <h2 id="module-file-structure"><a class="zola-anchor" href="#module-file-structure" aria-label="Anchor link for: module-file-structure">🔗</a>Module File Structure</h2>
+<p>Every Odoo module follows a standard directory layout. Not all folders are required. Only include what your module needs, but what you do include must follow this structure exactly.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span>    my_module</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>    __manifest__.py</span><span style="color: #6A737D;">          # Required. Without this, the folder is ignored.</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    __init__</span><span>.py</span><span style="color: #6A737D;">              # Required. Makes this a Python package. must exist.</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Models</span></span>
+<span class="giallo-l"><span>    models</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">        __init__</span><span>.py</span><span style="color: #6A737D;">          # Must import every model file in this directory.</span></span>
+<span class="giallo-l"><span>        my_model.py</span></span>
+<span class="giallo-l"><span>        my_model_line.py</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Views</span></span>
+<span class="giallo-l"><span>    views</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>        my_model_views.xml</span><span style="color: #6A737D;">   # Form, list, search, kanban views + actions + menus</span></span>
+<span class="giallo-l"><span>        templates.xml</span><span style="color: #6A737D;">        # QWeb templates (email, reports, snippets)</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Security</span></span>
+<span class="giallo-l"><span>    security</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>        ir.model.access.csv</span><span style="color: #6A737D;">  # Who can read/write/create/delete on each model</span></span>
+<span class="giallo-l"><span>        ir.rule.csv</span><span style="color: #6A737D;">          # Row-level rules (e.g. &quot;only see own records&quot;)</span></span>
+<span class="giallo-l"><span>        groups.xml</span><span style="color: #6A737D;">           # Custom user groups / roles</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Data (initial records, mail templates, sequences)</span></span>
+<span class="giallo-l"><span>    data</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>        mail_template.xml</span></span>
+<span class="giallo-l"><span>        sequence.xml</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Static assets (JS, CSS, images)</span></span>
+<span class="giallo-l"><span>    static</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>        description</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>            icon.png</span><span style="color: #6A737D;">         # Module icon. 120x120 transparent PNG.</span></span>
+<span class="giallo-l"><span>        src</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>            js</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>                my_component.js</span><span style="color: #6A737D;">   # OWL components</span></span>
+<span class="giallo-l"><span>            xml</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>                my_templates.xml</span><span style="color: #6A737D;">  # QWeb templates for OWL</span></span>
+<span class="giallo-l"><span>            css</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span>                style.css</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Tests</span></span>
+<span class="giallo-l"><span>    tests</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">        __init__</span><span>.py</span></span>
+<span class="giallo-l"><span>        test_my_model.py</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Wizards (transient multi-step flows)</span></span>
+<span class="giallo-l"><span>    wizard</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">        __init__</span><span>.py</span></span>
+<span class="giallo-l"><span>        my_wizard.py</span></span>
+<span class="giallo-l"><span>        my_wizard_views.xml</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Reports</span></span>
+<span class="giallo-l"><span>    report</span><span style="color: #F97583;">/</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">        __init__</span><span>.py</span></span>
+<span class="giallo-l"><span>        my_report.py</span></span>
+<span class="giallo-l"><span>        my_report_templates.xml</span></span></code></pre>
+<blockquote>
+<p><strong>Only three things are truly mandatory:</strong> <code>__manifest__.py</code>, root <code>__init__.py</code>, and <code>static/description/icon.png</code>. Everything else is optional.</p>
+</blockquote>
+<h2 id="manifest-py"><a class="zola-anchor" href="#manifest-py" aria-label="Anchor link for: manifest-py">🔗</a><strong>manifest</strong>.py</h2>
+<p>The manifest tells Odoo everything about your module before loading it.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">        # Internal technical name. Must be unique. Convention: snake_case.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #9ECBFF;">        &#39;name&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;My Module&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">        # Version: Odoo_major.series.iteration.patch.build</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #9ECBFF;">        &#39;version&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;19.0.1.0.0&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #9ECBFF;">        &#39;summary&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;Does X and Y&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #9ECBFF;">        &#39;description&#39;</span><span>:</span><span style="color: #9ECBFF;"> &quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #9ECBFF;">            Detailed explanation of what this module does.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #9ECBFF;">        &quot;&quot;&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #9ECBFF;">        &#39;author&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;Your Name&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #9ECBFF;">        &#39;website&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;https://example.com&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #9ECBFF;">        &#39;license&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;LGPL-3&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span style="color: #9ECBFF;">        &#39;category&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;Sales&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #6A737D;">        # Modules that must be installed first.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">        # If your code references sale.order, &#39;sale&#39; MUST be here.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #9ECBFF;">        &#39;depends&#39;</span><span>: [</span><span style="color: #9ECBFF;">&#39;base&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;sale&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;mail&#39;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span style="color: #6A737D;">        # Files loaded on install/update. ORDER MATTERS.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">        # Security first, then data, then views, then wizards/reports.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #9ECBFF;">        &#39;data&#39;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #9ECBFF;">            &#39;security/groups.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #9ECBFF;">            &#39;security/ir.model.access.csv&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #9ECBFF;">            &#39;security/ir.rule.csv&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #9ECBFF;">            &#39;data/mail_template.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span style="color: #9ECBFF;">            &#39;views/my_model_views.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #9ECBFF;">            &#39;views/templates.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #9ECBFF;">            &#39;wizard/my_wizard_views.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #9ECBFF;">            &#39;report/my_report_templates.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span>        ],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span style="color: #6A737D;">        # Demo data: only loaded in databases with demo data enabled.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span><span style="color: #9ECBFF;">        &#39;demo&#39;</span><span>: [</span><span style="color: #9ECBFF;">&#39;data/demo_data.xml&#39;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">40</span><span style="color: #9ECBFF;">        &#39;assets&#39;</span><span>: {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">41</span><span style="color: #9ECBFF;">            &#39;web.assets_backend&#39;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">42</span><span style="color: #9ECBFF;">                &#39;my_module/static/src/js/my_component.js&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">43</span><span style="color: #9ECBFF;">                &#39;my_module/static/src/css/style.css&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">44</span><span>            ],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">45</span><span style="color: #9ECBFF;">            &#39;web.assets_qweb&#39;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">46</span><span style="color: #9ECBFF;">                &#39;my_module/static/src/xml/my_templates.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">47</span><span>            ],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">48</span><span>        },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">49</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">50</span><span style="color: #9ECBFF;">        &#39;installable&#39;</span><span>:</span><span style="color: #79B8FF;"> True</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">51</span><span style="color: #9ECBFF;">        &#39;auto_install&#39;</span><span>:</span><span style="color: #79B8FF;"> False</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">52</span><span style="color: #9ECBFF;">        &#39;application&#39;</span><span>:</span><span style="color: #79B8FF;"> True</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">53</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">54</span><span style="color: #9ECBFF;">        &#39;external_dependencies&#39;</span><span>: {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">55</span><span style="color: #9ECBFF;">            &#39;python&#39;</span><span>: [</span><span style="color: #9ECBFF;">&#39;requests&#39;</span><span>],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">56</span><span>        },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">57</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">58</span><span style="color: #6A737D;">        # Hooks: format is &#39;file:function&#39; (function at module root level)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">59</span><span style="color: #9ECBFF;">        &#39;post_init_hook&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;_post_init_hook&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">60</span><span style="color: #9ECBFF;">        &#39;uninstall_hook&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;_uninstall_hook&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">61</span><span>    }</span></span></code></pre>
+<blockquote>
+<p><strong>Data file order is critical.</strong> Security files must come first. If a view references a model and its access CSV hasn't loaded yet, installation fails with an access error.</p>
+</blockquote>
+<h2 id="models-models"><a class="zola-anchor" href="#models-models" aria-label="Anchor link for: models-models">🔗</a>Models (models/)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  1</span><span style="color: #6A737D;">    # models/__init__.py</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  2</span><span style="color: #6A737D;">    # MUST import every model file. Miss one = Odoo doesn&#39;t discover it.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  3</span><span style="color: #F97583;">    from</span><span> .</span><span style="color: #F97583;"> import</span><span> my_model</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  4</span><span style="color: #F97583;">    from</span><span> .</span><span style="color: #F97583;"> import</span><span> my_model_line</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  6</span><span style="color: #6A737D;">    # models/my_model.py</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  7</span><span style="color: #F97583;">    from</span><span> odoo</span><span style="color: #F97583;"> import</span><span> models, fields, api, _</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  8</span><span style="color: #F97583;">    from</span><span> odoo.exceptions</span><span style="color: #F97583;"> import</span><span> ValidationError, UserError</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  9</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 11</span><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> MyModel</span><span>(</span><span style="color: #B392F0;">models</span><span>.</span><span style="color: #B392F0;">Model</span><span>):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 13</span><span>        _name</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;my.module&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 14</span><span>        _description</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;My Module Record&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 15</span><span>        _order</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;name asc, create_date desc&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 16</span><span>        _rec_name</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;name&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 17</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 18</span><span style="color: #6A737D;">        # ---- Field Types ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 19</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 20</span><span>        name</span><span style="color: #F97583;"> =</span><span> fields.Char(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Name&#39;</span><span>,</span><span style="color: #FFAB70;"> required</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>,</span><span style="color: #FFAB70;"> translate</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 21</span><span>        description</span><span style="color: #F97583;"> =</span><span> fields.Text(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Description&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 22</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 23</span><span>        state</span><span style="color: #F97583;"> =</span><span> fields.Selection([</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 24</span><span>            (</span><span style="color: #9ECBFF;">&#39;draft&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;Draft&#39;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 25</span><span>            (</span><span style="color: #9ECBFF;">&#39;confirmed&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;Confirmed&#39;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 26</span><span>            (</span><span style="color: #9ECBFF;">&#39;done&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;Done&#39;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 27</span><span>            (</span><span style="color: #9ECBFF;">&#39;cancelled&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;Cancelled&#39;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 28</span><span>        ],</span><span style="color: #FFAB70;"> string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Status&#39;</span><span>,</span><span style="color: #FFAB70;"> default</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;draft&#39;</span><span>,</span><span style="color: #FFAB70;"> tracking</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 29</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 30</span><span>        priority</span><span style="color: #F97583;"> =</span><span> fields.Integer(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Priority&#39;</span><span>,</span><span style="color: #FFAB70;"> default</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">0</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 31</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 32</span><span style="color: #6A737D;">        # Float: ALWAYS specify digits to avoid rounding issues.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 33</span><span>        amount</span><span style="color: #F97583;"> =</span><span> fields.Float(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Amount&#39;</span><span>,</span><span style="color: #FFAB70;"> digits</span><span style="color: #F97583;">=</span><span>(</span><span style="color: #79B8FF;">10</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>))</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 34</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 35</span><span style="color: #6A737D;">        # Monetary: use for currency amounts, NOT Float.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 36</span><span>        total</span><span style="color: #F97583;"> =</span><span> fields.Monetary(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Total&#39;</span><span>,</span><span style="color: #FFAB70;"> currency_field</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;currency_id&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 37</span><span>        currency_id</span><span style="color: #F97583;"> =</span><span> fields.Many2one(</span><span style="color: #9ECBFF;">&#39;res.currency&#39;</span><span>,</span><span style="color: #FFAB70;"> string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Currency&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 38</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 39</span><span style="color: #6A737D;">        # Many2one: foreign key. index=True on searched/grouped fields.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 40</span><span>        partner_id</span><span style="color: #F97583;"> =</span><span> fields.Many2one(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 41</span><span style="color: #9ECBFF;">            &#39;res.partner&#39;</span><span>,</span><span style="color: #FFAB70;"> string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Customer&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 42</span><span style="color: #FFAB70;">            ondelete</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;set null&#39;</span><span>,</span><span style="color: #FFAB70;"> index</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 43</span><span>        )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 44</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 45</span><span style="color: #6A737D;">        # One2many: inverse of Many2one. Virtual (not a real DB column).</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 46</span><span>        line_ids</span><span style="color: #F97583;"> =</span><span> fields.One2many(</span><span style="color: #9ECBFF;">&#39;my.module.line&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;order_id&#39;</span><span>,</span><span style="color: #FFAB70;"> string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Lines&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 47</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 48</span><span style="color: #6A737D;">        # Many2many: stored via a relational table.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 49</span><span>        tag_ids</span><span style="color: #F97583;"> =</span><span> fields.Many2many(</span><span style="color: #9ECBFF;">&#39;my.module.tag&#39;</span><span>,</span><span style="color: #FFAB70;"> string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Tags&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 50</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 51</span><span>        date</span><span style="color: #F97583;"> =</span><span> fields.Date(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Date&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 52</span><span>        date_done</span><span style="color: #F97583;"> =</span><span> fields.Datetime(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Done At&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 53</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 54</span><span style="color: #6A737D;">        # &#39;active&#39; is special: False = archived, hidden from searches by default.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 55</span><span>        active</span><span style="color: #F97583;"> =</span><span> fields.Boolean(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Active&#39;</span><span>,</span><span style="color: #FFAB70;"> default</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 56</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 57</span><span style="color: #6A737D;">        # attachment=True: stores in ir.attachment instead of base64 in DB.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 58</span><span>        document</span><span style="color: #F97583;"> =</span><span> fields.Binary(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Document&#39;</span><span>,</span><span style="color: #FFAB70;"> attachment</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 59</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 60</span><span>        notes</span><span style="color: #F97583;"> =</span><span> fields.Html(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Notes&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 61</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 62</span><span style="color: #6A737D;">        # ---- Computed Fields ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 63</span><span style="color: #6A737D;">        # store=True: required for search, sort, group by.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 64</span><span style="color: #6A737D;">        # depends: fields that trigger recomputation when changed.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 65</span><span>        display_name</span><span style="color: #F97583;"> =</span><span> fields.Char(</span><span style="color: #FFAB70;">compute</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;_compute_display_name&#39;</span><span>,</span><span style="color: #FFAB70;"> store</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 66</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 67</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> _compute_display_name</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 68</span><span style="color: #F97583;">            for</span><span> rec</span><span style="color: #F97583;"> in</span><span style="color: #79B8FF;"> self</span><span>:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 69</span><span>                rec.display_name</span><span style="color: #F97583;"> =</span><span> rec.name</span><span style="color: #F97583;"> or</span><span style="color: #9ECBFF;"> &#39;(unnamed)&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 70</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 71</span><span style="color: #6A737D;">        # ---- Related Fields ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 72</span><span style="color: #6A737D;">        # Shortcut to a field on a related model. Same as computed+stored.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 73</span><span>        partner_email</span><span style="color: #F97583;"> =</span><span> fields.Email(</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 74</span><span style="color: #FFAB70;">            related</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;partner_id.email&#39;</span><span>,</span><span style="color: #FFAB70;"> string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Customer Email&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 75</span><span style="color: #FFAB70;">            readonly</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">False</span><span>,</span><span style="color: #FFAB70;"> store</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 76</span><span>        )</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 77</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 78</span><span style="color: #6A737D;">        # ---- Constraints ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 79</span><span>        _sql_constraints</span><span style="color: #F97583;"> =</span><span> [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 80</span><span>            (</span><span style="color: #9ECBFF;">&#39;name_uniq&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;UNIQUE(name)&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;Name must be unique.&#39;</span><span>),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 81</span><span>        ]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 82</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 83</span><span style="color: #B392F0;">        @api.constrains</span><span>(</span><span style="color: #9ECBFF;">&#39;amount&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;state&#39;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 84</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> _check_amount</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 85</span><span style="color: #F97583;">            for</span><span> rec</span><span style="color: #F97583;"> in</span><span style="color: #79B8FF;"> self</span><span>:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 86</span><span style="color: #F97583;">                if</span><span> rec.state</span><span style="color: #F97583;"> ==</span><span style="color: #9ECBFF;"> &#39;confirmed&#39;</span><span style="color: #F97583;"> and</span><span> rec.amount</span><span style="color: #F97583;"> &lt;=</span><span style="color: #79B8FF;"> 0</span><span>:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 87</span><span style="color: #F97583;">                    raise</span><span> ValidationError(_(</span><span style="color: #9ECBFF;">&#39;Amount must be positive when confirmed.&#39;</span><span>))</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 88</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 89</span><span style="color: #6A737D;">        # ---- Methods ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 90</span><span style="color: #6A737D;">        # self is ALWAYS a recordset. Use &#39;for rec in self&#39; for per-record logic.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 91</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 92</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> action_confirm</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 93</span><span style="color: #F97583;">            for</span><span> rec</span><span style="color: #F97583;"> in</span><span style="color: #79B8FF;"> self</span><span>:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 94</span><span style="color: #F97583;">                if</span><span> rec.state</span><span style="color: #F97583;"> !=</span><span style="color: #9ECBFF;"> &#39;draft&#39;</span><span>:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 95</span><span style="color: #F97583;">                    raise</span><span> UserError(_(</span><span style="color: #9ECBFF;">&#39;Only draft records can be confirmed.&#39;</span><span>))</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 96</span><span style="color: #79B8FF;">            self</span><span>.write({</span><span style="color: #9ECBFF;">&#39;state&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;confirmed&#39;</span><span>})</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 97</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 98</span><span style="color: #6A737D;">        # ---- Overrides: always call super() ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 99</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> write</span><span>(self, vals):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">100</span><span>            result</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> super</span><span>().write(vals)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">101</span><span style="color: #F97583;">            return</span><span> result</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">102</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">103</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> unlink</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">104</span><span style="color: #F97583;">            for</span><span> rec</span><span style="color: #F97583;"> in</span><span style="color: #79B8FF;"> self</span><span>:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">105</span><span style="color: #F97583;">                if</span><span> rec.state</span><span style="color: #F97583;"> ==</span><span style="color: #9ECBFF;"> &#39;confirmed&#39;</span><span>:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">106</span><span style="color: #F97583;">                    raise</span><span> UserError(_(</span><span style="color: #9ECBFF;">&#39;Cannot delete confirmed records.&#39;</span><span>))</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">107</span><span style="color: #F97583;">            return</span><span style="color: #79B8FF;"> super</span><span>().unlink()</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">108</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">109</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">110</span><span style="color: #6A737D;">    # ---- Transient Model (wizard) ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">111</span><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> MyWizard</span><span>(</span><span style="color: #B392F0;">models</span><span>.</span><span style="color: #B392F0;">TransientModel</span><span>):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">112</span><span>        _name</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;my.module.wizard&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">113</span><span>        _description</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;My Module Wizard&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">114</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">115</span><span>        date_from</span><span style="color: #F97583;"> =</span><span> fields.Date(</span><span style="color: #FFAB70;">required</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">116</span><span>        date_to</span><span style="color: #F97583;"> =</span><span> fields.Date(</span><span style="color: #FFAB70;">required</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">117</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">118</span><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> action_execute</span><span>(self):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">119</span><span>            records</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> self</span><span>.env[</span><span style="color: #9ECBFF;">&#39;my.module&#39;</span><span>].search([</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">120</span><span>                (</span><span style="color: #9ECBFF;">&#39;date&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;&gt;=&#39;</span><span>,</span><span style="color: #79B8FF;"> self</span><span>.date_from),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">121</span><span>                (</span><span style="color: #9ECBFF;">&#39;date&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;&lt;=&#39;</span><span>,</span><span style="color: #79B8FF;"> self</span><span>.date_to),</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">122</span><span>            ])</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">123</span><span style="color: #F97583;">            return</span><span> {</span><span style="color: #9ECBFF;">&#39;type&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;ir.actions.act_window_close&#39;</span><span>}</span></span></code></pre>
+<blockquote>
+<p><strong>Access models via <code>self.env['model.name']</code></strong>, never by importing the class. This ensures correct database, user context, and cache.</p>
+</blockquote>
+<h3 id="inheritance-extending-existing-models"><a class="zola-anchor" href="#inheritance-extending-existing-models" aria-label="Anchor link for: inheritance-extending-existing-models">🔗</a>Inheritance: Extending Existing Models</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #6A737D;">    # Inherit WITHOUT _name: extends the existing model in place.</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # This is what you want 95% of the time.</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    from</span><span> odoo</span><span style="color: #F97583;"> import</span><span> models, fields</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> SaleOrder</span><span>(</span><span style="color: #B392F0;">models</span><span>.</span><span style="color: #B392F0;">Model</span><span>):</span></span>
+<span class="giallo-l"><span>        _inherit</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;sale.order&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>        my_custom_field</span><span style="color: #F97583;"> =</span><span> fields.Char(</span><span style="color: #FFAB70;">string</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&#39;Custom Field&#39;</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">        def</span><span style="color: #B392F0;"> action_confirm</span><span>(self):</span></span>
+<span class="giallo-l"><span>            result</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> super</span><span>().action_confirm()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">            return</span><span> result</span></span></code></pre>
+<blockquote>
+<p><strong>If you set both <code>_name</code> and <code>_inherit</code></strong>, it creates a NEW model that copies the parent (prototype inheritance). This is rarely what you want.</p>
+</blockquote>
+<h3 id="useful-mixins"><a class="zola-anchor" href="#useful-mixins" aria-label="Anchor link for: useful-mixins">🔗</a>Useful Mixins</h3>
+<table><thead><tr><th>Mixin</th><th>Adds</th></tr></thead><tbody>
+<tr><td><code>mail.thread</code></td><td>Chatter: messages, notes, followers</td></tr>
+<tr><td><code>mail.activity.mixin</code></td><td>Scheduled activities with deadlines</td></tr>
+<tr><td><code>image.mixin</code></td><td>image_1920 field with auto-thumbnail</td></tr>
+<tr><td><code>portal.mixin</code></td><td>Share records with portal users via link</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Usage:</span></span>
+<span class="giallo-l"><span>_name = &#39;my.module&#39;</span></span>
+<span class="giallo-l"><span>_inherit = [&#39;mail.thread&#39;, &#39;mail.activity.mixin&#39;]</span></span></code></pre><h2 id="views-views"><a class="zola-anchor" href="#views-views" aria-label="Anchor link for: views-views">🔗</a>Views (views/)</h2>
+<table><thead><tr><th>Type</th><th>Purpose</th><th>Key Detail</th></tr></thead><tbody>
+<tr><td><code>form</code></td><td>Create/edit one record</td><td>Header, sheet, notebook, chatter</td></tr>
+<tr><td><code>list</code></td><td>Table of records (was "tree")</td><td><code>editable="bottom"</code> for inline editing</td></tr>
+<tr><td><code>kanban</code></td><td>Card board</td><td>Needs inner QWeb template</td></tr>
+<tr><td><code>search</code></td><td>Filters, group-by, search fields</td><td>Separate from other views</td></tr>
+<tr><td><code>graph</code></td><td>Bar/line/pie charts</td><td>`type="bar</td></tr>
+<tr><td><code>pivot</code></td><td>Pivot table analysis</td><td>OLAP-style data exploration</td></tr>
+<tr><td><code>calendar</code></td><td>Calendar view</td><td>Requires <code>date_start</code> field</td></tr>
+</tbody></table>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  1</span><span>    # views/my_model_views.xml</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  2</span><span>    &lt;?</span><span style="color: #85E89D;">xml</span><span style="color: #B392F0;"> version</span><span>=</span><span style="color: #9ECBFF;">&quot;1.0&quot;</span><span style="color: #B392F0;"> encoding</span><span>=</span><span style="color: #9ECBFF;">&quot;utf-8&quot;</span><span>?&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  3</span><span>    &lt;</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  5</span><span style="color: #6A737D;">    &lt;!-- FORM VIEW --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  6</span><span>    &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_form&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;ir.ui.view&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  7</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;my.module.form&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  8</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;model&quot;</span><span>&gt;my.module&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  9</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;arch&quot;</span><span style="color: #B392F0;"> type</span><span>=</span><span style="color: #9ECBFF;">&quot;xml&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 10</span><span>            &lt;</span><span style="color: #85E89D;">form</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 11</span><span>                &lt;</span><span style="color: #85E89D;">header</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 12</span><span style="color: #6A737D;">                    &lt;!-- type=&quot;object&quot; calls a Python method --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 13</span><span>                    &lt;</span><span style="color: #85E89D;">button</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;action_confirm&quot;</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Confirm&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 14</span><span style="color: #B392F0;">                            type</span><span>=</span><span style="color: #9ECBFF;">&quot;object&quot;</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;btn-primary&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 15</span><span style="color: #B392F0;">                            invisible</span><span>=</span><span style="color: #9ECBFF;">&quot;state != &#39;draft&#39;&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 16</span><span>                    &lt;</span><span style="color: #85E89D;">button</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;action_done&quot;</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Done&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 17</span><span style="color: #B392F0;">                            type</span><span>=</span><span style="color: #9ECBFF;">&quot;object&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 18</span><span style="color: #B392F0;">                            invisible</span><span>=</span><span style="color: #9ECBFF;">&quot;state != &#39;confirmed&#39;&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 19</span><span>                    &lt;</span><span style="color: #85E89D;">button</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;action_cancel&quot;</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Cancel&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 20</span><span style="color: #B392F0;">                            type</span><span>=</span><span style="color: #9ECBFF;">&quot;object&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 21</span><span style="color: #B392F0;">                            invisible</span><span>=</span><span style="color: #9ECBFF;">&quot;state in (&#39;done&#39;, &#39;cancelled&#39;)&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 22</span><span>                    &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;state&quot;</span><span style="color: #B392F0;"> widget</span><span>=</span><span style="color: #9ECBFF;">&quot;statusbar&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 23</span><span style="color: #B392F0;">                           statusbar_visible</span><span>=</span><span style="color: #9ECBFF;">&quot;draft,confirmed&quot;</span><span style="color: #B392F0;"> clickable</span><span>=</span><span style="color: #9ECBFF;">&quot;0&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 24</span><span>                &lt;/</span><span style="color: #85E89D;">header</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 25</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 26</span><span>                &lt;</span><span style="color: #85E89D;">sheet</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 27</span><span>                    &lt;</span><span style="color: #85E89D;">div</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;oe_title&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 28</span><span>                        &lt;</span><span style="color: #85E89D;">h1</span><span>&gt;&lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span style="color: #B392F0;"> placeholder</span><span>=</span><span style="color: #9ECBFF;">&quot;Enter name...&quot;</span><span> /&gt;&lt;/</span><span style="color: #85E89D;">h1</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 29</span><span>                    &lt;/</span><span style="color: #85E89D;">div</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 30</span><span style="color: #6A737D;">                    &lt;!-- GROUP: 4-col layout (label,field,label,field). col=&quot;2&quot; for single col --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 31</span><span>                    &lt;</span><span style="color: #85E89D;">group</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 32</span><span>                        &lt;</span><span style="color: #85E89D;">group</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Information&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 33</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;partner_id&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 34</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;date&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 35</span><span>                        &lt;/</span><span style="color: #85E89D;">group</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 36</span><span>                        &lt;</span><span style="color: #85E89D;">group</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Amounts&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 37</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;currency_id&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 38</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;amount&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 39</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;total&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 40</span><span>                        &lt;/</span><span style="color: #85E89D;">group</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 41</span><span>                    &lt;/</span><span style="color: #85E89D;">group</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 42</span><span>                    &lt;</span><span style="color: #85E89D;">notebook</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 43</span><span>                        &lt;</span><span style="color: #85E89D;">page</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Lines&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 44</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;line_ids&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 45</span><span>                                &lt;</span><span style="color: #85E89D;">list</span><span style="color: #B392F0;"> editable</span><span>=</span><span style="color: #9ECBFF;">&quot;bottom&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 46</span><span>                                    &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;product_id&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 47</span><span>                                    &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;quantity&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 48</span><span>                                    &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;price_unit&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 49</span><span>                                &lt;/</span><span style="color: #85E89D;">list</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 50</span><span>                            &lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 51</span><span>                        &lt;/</span><span style="color: #85E89D;">page</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 52</span><span>                        &lt;</span><span style="color: #85E89D;">page</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Notes&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 53</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;description&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 54</span><span>                            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;notes&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 55</span><span>                        &lt;/</span><span style="color: #85E89D;">page</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 56</span><span>                    &lt;/</span><span style="color: #85E89D;">notebook</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 57</span><span>                &lt;/</span><span style="color: #85E89D;">sheet</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 58</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 59</span><span style="color: #6A737D;">                &lt;!-- CHATTER: outside sheet. Requires mail.thread. --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 60</span><span>                &lt;</span><span style="color: #85E89D;">div</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;oe_chatter&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 61</span><span>                    &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;message_follower_ids&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 62</span><span>                    &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;message_ids&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 63</span><span>                &lt;/</span><span style="color: #85E89D;">div</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 64</span><span>            &lt;/</span><span style="color: #85E89D;">form</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 65</span><span>        &lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 66</span><span>    &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 67</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 68</span><span style="color: #6A737D;">    &lt;!-- LIST VIEW --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 69</span><span>    &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_list&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;ir.ui.view&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 70</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;my.module.list&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 71</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;model&quot;</span><span>&gt;my.module&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 72</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;arch&quot;</span><span style="color: #B392F0;"> type</span><span>=</span><span style="color: #9ECBFF;">&quot;xml&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 73</span><span style="color: #6A737D;">            &lt;!-- decoration-*: danger, success, info, warning, muted --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 74</span><span>            &lt;</span><span style="color: #85E89D;">list</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Records&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 75</span><span style="color: #B392F0;">                  decoration-danger</span><span>=</span><span style="color: #9ECBFF;">&quot;state == &#39;cancelled&#39;&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 76</span><span style="color: #B392F0;">                  decoration-success</span><span>=</span><span style="color: #9ECBFF;">&quot;state == &#39;done&#39;&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 77</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 78</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;partner_id&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 79</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;amount&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 80</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;state&quot;</span><span style="color: #B392F0;"> widget</span><span>=</span><span style="color: #9ECBFF;">&quot;badge&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 81</span><span style="color: #B392F0;">                       decoration-success</span><span>=</span><span style="color: #9ECBFF;">&quot;state == &#39;done&#39;&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 82</span><span style="color: #B392F0;">                       decoration-info</span><span>=</span><span style="color: #9ECBFF;">&quot;state == &#39;confirmed&#39;&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 83</span><span style="color: #B392F0;">                       decoration-danger</span><span>=</span><span style="color: #9ECBFF;">&quot;state == &#39;cancelled&#39;&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 84</span><span>            &lt;/</span><span style="color: #85E89D;">list</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 85</span><span>        &lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 86</span><span>    &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 87</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 88</span><span style="color: #6A737D;">    &lt;!-- SEARCH VIEW --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 89</span><span>    &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_search&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;ir.ui.view&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 90</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;my.module.search&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 91</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;model&quot;</span><span>&gt;my.module&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 92</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;arch&quot;</span><span style="color: #B392F0;"> type</span><span>=</span><span style="color: #9ECBFF;">&quot;xml&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 93</span><span>            &lt;</span><span style="color: #85E89D;">search</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 94</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 95</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;partner_id&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 96</span><span>                &lt;</span><span style="color: #85E89D;">filter</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;draft&quot;</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Drafts&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 97</span><span style="color: #B392F0;">                        domain</span><span>=</span><span style="color: #9ECBFF;">&quot;[(&#39;state&#39;, &#39;=&#39;, &#39;draft&#39;)]&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 98</span><span>                &lt;</span><span style="color: #85E89D;">separator</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 99</span><span>                &lt;</span><span style="color: #85E89D;">filter</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;by_partner&quot;</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Customer&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">100</span><span style="color: #B392F0;">                        context</span><span>=</span><span style="color: #9ECBFF;">&quot;{&#39;group_by&#39;: &#39;partner_id&#39;}&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">101</span><span>                &lt;</span><span style="color: #85E89D;">filter</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;by_state&quot;</span><span style="color: #B392F0;"> string</span><span>=</span><span style="color: #9ECBFF;">&quot;Status&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">102</span><span style="color: #B392F0;">                        context</span><span>=</span><span style="color: #9ECBFF;">&quot;{&#39;group_by&#39;: &#39;state&#39;}&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">103</span><span>            &lt;/</span><span style="color: #85E89D;">search</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">104</span><span>        &lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">105</span><span>    &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">106</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">107</span><span style="color: #6A737D;">    &lt;!-- ACTION --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">108</span><span>    &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_action&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;ir.actions.act_window&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">109</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;My Records&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">110</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;res_model&quot;</span><span>&gt;my.module&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">111</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;view_mode&quot;</span><span>&gt;list,form&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">112</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;view_id&quot;</span><span style="color: #B392F0;"> ref</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_list&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">113</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;search_view_id&quot;</span><span style="color: #B392F0;"> ref</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_search&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">114</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;context&quot;</span><span>&gt;{&#39;search_default_draft&#39;: 1}&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">115</span><span>        &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;help&quot;</span><span style="color: #B392F0;"> type</span><span>=</span><span style="color: #9ECBFF;">&quot;html&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">116</span><span>            &lt;</span><span style="color: #85E89D;">p</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;o_view_nocontent_smiling_face&quot;</span><span>&gt;Create your first record!&lt;/</span><span style="color: #85E89D;">p</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">117</span><span>        &lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">118</span><span>    &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">119</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">120</span><span style="color: #6A737D;">    &lt;!-- MENUS --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">121</span><span>    &lt;</span><span style="color: #85E89D;">menuitem</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_menu_root&quot;</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;My Module&quot;</span><span style="color: #B392F0;"> sequence</span><span>=</span><span style="color: #9ECBFF;">&quot;40&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">122</span><span>    &lt;</span><span style="color: #85E89D;">menuitem</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_menu_records&quot;</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;Records&quot;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">123</span><span style="color: #B392F0;">              parent</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_menu_root&quot;</span><span style="color: #B392F0;"> action</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_action&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">124</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">125</span><span>    &lt;/</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span></code></pre>
+<blockquote>
+<p><strong>Chatter goes OUTSIDE <code>&lt;sheet&gt;</code>.</strong> Putting it inside won't render correctly.</p>
+</blockquote>
+<h2 id="security-security"><a class="zola-anchor" href="#security-security" aria-label="Anchor link for: security-security">🔗</a>Security (security/)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="csv"><span class="giallo-l"><span>    # security/ir.model.access.csv</span></span>
+<span class="giallo-l"><span>    # id,</span><span style="color: #F97583;">name,</span><span style="color: #B392F0;">model_id:id,</span><span style="color: #6A737D;">group_id:id,</span><span style="color: #9ECBFF;">perm_read,</span><span style="color: #FFAB70;">perm_write,</span><span style="color: #79B8FF;">perm_create,</span><span style="color: #B392F0;">perm_unlink</span></span>
+<span class="giallo-l"><span>    # group_id empty = public. base.group_user = all internal users.</span></span>
+<span class="giallo-l"><span>    access_my_module_manager,</span><span style="color: #F97583;">my.module.manager,</span><span style="color: #B392F0;">model_my_module,</span><span style="color: #6A737D;">my_module.group_manager,</span><span style="color: #9ECBFF;">1,</span><span style="color: #FFAB70;">1,</span><span style="color: #79B8FF;">1,</span><span style="color: #B392F0;">1</span></span>
+<span class="giallo-l"><span>    access_my_module_user,</span><span style="color: #F97583;">my.module.user,</span><span style="color: #B392F0;">model_my_module,</span><span style="color: #6A737D;">my_module.group_user,</span><span style="color: #9ECBFF;">1,</span><span style="color: #FFAB70;">1,</span><span style="color: #79B8FF;">1,</span><span style="color: #B392F0;">0</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # security/groups.xml</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    &lt;?</span><span style="color: #85E89D;">xml</span><span style="color: #B392F0;"> version</span><span>=</span><span style="color: #9ECBFF;">&quot;1.0&quot;</span><span style="color: #B392F0;"> encoding</span><span>=</span><span style="color: #9ECBFF;">&quot;utf-8&quot;</span><span>?&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    &lt;</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;module_category_my_module&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;ir.module.category&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;My Module&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>        &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>        &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;group_user&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;res.groups&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;My Module User&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;category_id&quot;</span><span style="color: #B392F0;"> ref</span><span>=</span><span style="color: #9ECBFF;">&quot;module_category_my_module&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;implied_ids&quot;</span><span style="color: #B392F0;"> eval</span><span>=</span><span style="color: #9ECBFF;">&quot;[(4, ref(&#39;base.group_user&#39;))]&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>        &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>        &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;group_manager&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;res.groups&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;My Module Manager&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;category_id&quot;</span><span style="color: #B392F0;"> ref</span><span>=</span><span style="color: #9ECBFF;">&quot;module_category_my_module&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;implied_ids&quot;</span><span style="color: #B392F0;"> eval</span><span>=</span><span style="color: #9ECBFF;">&quot;[(4, ref(&#39;my_module.group_user&#39;))]&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>        &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    &lt;/</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>    # security/ir.rule.csv (optional)</span></span>
+<span class="giallo-l"><span>    # Row-level security</span></span>
+<span class="giallo-l"><span>    my_module_rule_user,my.module.user.rule,model_my_module,[(&#39;create_uid&#39;,&#39;=&#39;,user.id)],my_module.group_user,1,1,1,0</span></span></code></pre>
+<blockquote>
+<p><strong>Missing ACL = silent access denied.</strong> If a model has no row in <code>ir.model.access.csv</code>, even admin gets errors in the UI.</p>
+</blockquote>
+<h2 id="data-files-data"><a class="zola-anchor" href="#data-files-data" aria-label="Anchor link for: data-files-data">🔗</a>Data Files (data/)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # data/sequence.xml (example)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    &lt;</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">        &lt;!-- noupdate=&quot;1&quot;: user modifications survive module updates --&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        &lt;</span><span style="color: #85E89D;">data</span><span style="color: #B392F0;"> noupdate</span><span>=</span><span style="color: #9ECBFF;">&quot;1&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>            &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module_sequence&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;ir.sequence&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;name&quot;</span><span>&gt;My Module Sequence&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;code&quot;</span><span>&gt;my.module&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;prefix&quot;</span><span>&gt;MYM/&lt;/</span><span style="color: #85E89D;">field</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>                &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;padding&quot;</span><span style="color: #B392F0;"> eval</span><span>=</span><span style="color: #9ECBFF;">&quot;5&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>            &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>        &lt;/</span><span style="color: #85E89D;">data</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>    &lt;/</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span></code></pre>
+<blockquote>
+<p><strong><code>noupdate="1"</code> matters.</strong> Without it, every module update resets sequences, mail templates, and settings to defaults, erasing user customizations.</p>
+</blockquote>
+<h2 id="static-assets-static"><a class="zola-anchor" href="#static-assets-static" aria-label="Anchor link for: static-assets-static">🔗</a>Static Assets (static/)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In __manifest__.py:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #9ECBFF;">    &#39;assets&#39;</span><span>: {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #9ECBFF;">        &#39;web.assets_backend&#39;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #9ECBFF;">            &#39;my_module/static/src/js/my_component.js&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #9ECBFF;">            &#39;my_module/static/src/css/style.css&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>        ],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #9ECBFF;">        &#39;web.assets_qweb&#39;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #9ECBFF;">            &#39;my_module/static/src/xml/my_templates.xml&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>        ],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #9ECBFF;">        &#39;web.assets_frontend&#39;</span><span>: [</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #9ECBFF;">            &#39;my_module/static/src/js/website_stuff.js&#39;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>        ],</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>    },</span></span></code></pre>
+<blockquote>
+<p><strong>After editing static files, clear your browser cache</strong> (Ctrl+Shift+R). In development, enable <strong>Developer Mode → Debug Assets</strong> or start Odoo with <code>--dev=reload</code>.</p>
+</blockquote>
+<h2 id="commonly-missed-things"><a class="zola-anchor" href="#commonly-missed-things" aria-label="Anchor link for: commonly-missed-things">🔗</a>Commonly Missed Things</h2>
+<ol>
+<li>
+<p><strong>Forgetting to import in <code>__init__.py</code>.</strong> Every model file must be imported in its directory's <code>__init__.py</code>, and every sub-directory in the root <code>__init__.py</code>.</p>
+</li>
+<li>
+<p><strong>Missing ACL entries.</strong> No row in <code>ir.model.access.csv</code> for a model = "Access Denied" when clicking the menu.</p>
+</li>
+<li>
+<p><strong>Wrong data file order in manifest.</strong> Security must load first.</p>
+</li>
+<li>
+<p><strong>Not calling <code>super()</code> in overrides.</strong> Silently breaks other modules overriding the same method.</p>
+</li>
+<li>
+<p><strong>Missing <code>store=True</code> on computed fields.</strong> Without it, can't search, sort, or group by that field.</p>
+</li>
+<li>
+<p><strong>No <code>index=True</code> on frequently searched Many2one fields.</strong></p>
+</li>
+<li>
+<p><strong>Treating <code>self</code> as a single record.</strong> Always use <code>for rec in self</code>.</p>
+</li>
+<li>
+<p><strong>Not using <code>_()</code> for translatable strings.</strong></p>
+</li>
+<li>
+<p><strong>Chatter inside <code>&lt;sheet&gt;</code>.</strong> Must be outside.</p>
+</li>
+<li>
+<p><strong>No <code>noupdate="1"</code> on user-configurable data.</strong></p>
+</li>
+<li>
+<p><strong>Forgetting <code>active</code> filter.</strong> To include archived: <code>[('active', 'in', [True, False])]</code>.</p>
+</li>
+<li>
+<p><strong>Using Float for money.</strong> Use <code>fields.Monetary</code>.</p>
+</li>
+<li>
+<p><strong>Not clearing cache after asset changes.</strong></p>
+</li>
+<li>
+<p><strong>Duplicate XML IDs across modules.</strong> Last one loaded wins silently.</p>
+</li>
+<li>
+<p><strong>Using <code>sudo()</code> carelessly.</strong> Use <code>with_user()</code> when possible. Scope <code>sudo()</code> narrowly.</p>
+</li>
+</ol>
+<h2 id="best-practices"><a class="zola-anchor" href="#best-practices" aria-label="Anchor link for: best-practices">🔗</a>Best Practices</h2>
+<ul>
+<li>Prefix all XML IDs: <code>my_module_form_view</code>, not <code>form_view</code></li>
+<li>Prefix model names: <code>my_module.order</code>, not <code>order</code></li>
+<li>Use built-in automatic fields: <code>create_date</code>, <code>write_date</code>, <code>create_uid</code>, <code>write_uid</code></li>
+<li>Keep models under ~30 fields — split with One2many if larger</li>
+<li><code>self.env.context.get('key')</code> to read context safely</li>
+<li><code>with_context()</code> to pass context without modifying current environment</li>
+<li><code>_logger = logging.getLogger(__name__)</code> instead of <code>print()</code></li>
+<li>Write tests for critical business logic</li>
+<li>Bump version after schema changes: <code>19.0.1.0.0</code> → <code>19.0.1.0.1</code></li>
+<li>Use <code>useService("orm")</code> over <code>useService("rpc")</code> in OWL</li>
+</ul>
+<h2 id="owl-odoo-web-library-introduction"><a class="zola-anchor" href="#owl-odoo-web-library-introduction" aria-label="Anchor link for: owl-odoo-web-library-introduction">🔗</a>OWL — Odoo Web Library: Introduction</h2>
+<p><strong>OWL</strong> is Odoo's internal UI framework since Odoo 16, replacing the old <code>odoo.Widget</code> system. Not a general-purpose framework — built specifically for Odoo.</p>
+<ul>
+<li><strong>Is:</strong> Lightweight component framework with reactive state, QWeb templates, lifecycle hooks. Similar concept to Vue/React but much smaller.</li>
+<li><strong>Isn't:</strong> Usable outside Odoo. No router, no state library, no CLI.</li>
+<li><strong>Replaces:</strong> <code>odoo.Widget</code> (Odoo 15 and earlier). If you see it, it's old code.</li>
+<li><strong>Used for:</strong> Custom views, field widgets, client actions, systray items.</li>
+</ul>
+<table><thead><tr><th>Concept</th><th>What It Means</th></tr></thead><tbody>
+<tr><td><code>Component</code></td><td>JS class extending <code>owl.Component</code>. Has state, methods, template.</td></tr>
+<tr><td><code>Template</code></td><td>QWeb XML with <code>t-if</code>, <code>t-foreach</code>, <code>t-on-click</code> etc.</td></tr>
+<tr><td><code>State</code></td><td>Reactive properties. Change them → template re-renders automatically.</td></tr>
+<tr><td><code>Props</code></td><td>Data from parent to child (one-way, top-down).</td></tr>
+<tr><td><code>Lifecycle</code></td><td><code>willStart()</code>, <code>mounted()</code>, <code>willUpdate()</code>, <code>updated()</code>, <code>willUnmount()</code></td></tr>
+<tr><td><code>useService</code></td><td>Access Odoo services: ORM, RPC, notifications, router.</td></tr>
+<tr><td><code>Registry</code></td><td>How components are registered for Odoo to use.</td></tr>
+</tbody></table>
+<p><strong>Reactivity loop:</strong> State changes → Template re-renders → DOM updates. Never touch the DOM directly.</p>
+<h3 id="where-owl-files-go"><a class="zola-anchor" href="#where-owl-files-go" aria-label="Anchor link for: where-owl-files-go">🔗</a>Where OWL Files Go</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>static/src/</span></span>
+<span class="giallo-l"><span>    js/</span></span>
+<span class="giallo-l"><span>        my_component.js     # Component class (web.assets_backend)</span></span>
+<span class="giallo-l"><span>    xml/</span></span>
+<span class="giallo-l"><span>        my_templates.xml   # QWeb templates (web.assets_qweb, NOT backend)</span></span>
+<span class="giallo-l"><span>    css/</span></span>
+<span class="giallo-l"><span>        style.css          # Use a scoping class name</span></span></code></pre><h3 id="owl-vs-legacy-widget"><a class="zola-anchor" href="#owl-vs-legacy-widget" aria-label="Anchor link for: owl-vs-legacy-widget">🔗</a>OWL vs Legacy Widget</h3>
+<table><thead><tr><th>Aspect</th><th>Legacy (odoo.Widget)</th><th>OWL</th></tr></thead><tbody>
+<tr><td>Rendering</td><td>Manual <code>this.$el.append()</code></td><td>Declarative QWeb, auto-re-render</td></tr>
+<tr><td>State</td><td>No reactivity; manual <code>render()</code></td><td>Automatic on property change</td></tr>
+<tr><td>Performance</td><td>Slower</td><td>Faster (compiled templates)</td></tr>
+<tr><td>Lifecycle</td><td><code>init()</code>, <code>start()</code>, <code>destroy()</code></td><td><code>setup()</code>, <code>willStart()</code>, <code>mounted()</code>, <code>willUnmount()</code></td></tr>
+<tr><td>Files</td><td>JS + inline template strings</td><td>Separate .js and .xml</td></tr>
+<tr><td>Era</td><td>Odoo 15 and earlier</td><td>Odoo 16+</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>They can coexist during migration.</strong> Start new components in OWL, migrate old ones incrementally.</p>
+</blockquote>
+<h2 id="owl-components"><a class="zola-anchor" href="#owl-components" aria-label="Anchor link for: owl-components">🔗</a>OWL Components</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="javascript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # static</span><span style="color: #F97583;">/</span><span>src</span><span style="color: #F97583;">/</span><span>js</span><span style="color: #F97583;">/</span><span>my_component.js</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    /** @odoo-module */</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    # Required for Odoo</span><span style="color: #9ECBFF;">&#39;s bundler. Without it, imports break</span><span style="color: #FDAEB7;font-style: italic;">.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #F97583;">    import</span><span> { Component }</span><span style="color: #F97583;"> from</span><span style="color: #9ECBFF;"> &quot;@odoo/owl&quot;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    import</span><span> { registry }</span><span style="color: #F97583;"> from</span><span style="color: #9ECBFF;"> &quot;@web/core/registry&quot;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #F97583;">    import</span><span> { useService }</span><span style="color: #F97583;"> from</span><span style="color: #9ECBFF;"> &quot;@web/core/utils/hooks&quot;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> MyCounter</span><span style="color: #F97583;"> extends</span><span style="color: #B392F0;"> Component</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #6A737D;">        //Must match template&#39;s t-name exactly.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #F97583;">        static</span><span style="color: #FFAB70;"> template</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;my_module.MyCounter&quot;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">        //Declare expected props (optional but recommended).</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">        static</span><span style="color: #FFAB70;"> props</span><span style="color: #F97583;"> =</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>            initialValue: { type: Number, optional:</span><span style="color: #79B8FF;"> true</span><span> },</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>        };</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #B392F0;">        setup</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #79B8FF;">            super</span><span>.</span><span style="color: #B392F0;">setup</span><span>();  # </span><span style="color: #79B8FF;">MUST</span><span> be first line</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">            //State: reactive. Changing this.count triggers re-render.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #79B8FF;">            this</span><span>.count</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> this</span><span>.props.initialValue</span><span style="color: #F97583;"> ||</span><span style="color: #79B8FF;"> 0</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">            //Odoo services (singletons).</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #79B8FF;">            this</span><span>.orm</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> useService</span><span>(</span><span style="color: #9ECBFF;">&quot;orm&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #79B8FF;">            this</span><span>.rpc</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> useService</span><span>(</span><span style="color: #9ECBFF;">&quot;rpc&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #79B8FF;">            this</span><span>.notification</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> useService</span><span>(</span><span style="color: #9ECBFF;">&quot;notification&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #79B8FF;">            this</span><span>.router</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> useService</span><span>(</span><span style="color: #9ECBFF;">&quot;router&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #79B8FF;">            this</span><span>.action</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> useService</span><span>(</span><span style="color: #9ECBFF;">&quot;action&quot;</span><span>);</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #6A737D;">        // ---- Lifecycle ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span><span style="color: #F97583;">        async</span><span style="color: #B392F0;"> willStart</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span style="color: #F97583;">            await</span><span style="color: #79B8FF;"> super</span><span>.</span><span style="color: #B392F0;">willStart</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span style="color: #6A737D;">            //Fetch initial data: this.data = await this.orm.searchRead(...)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">40</span><span style="color: #B392F0;">        mounted</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">41</span><span style="color: #79B8FF;">            super</span><span>.</span><span style="color: #B392F0;">mounted</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">42</span><span style="color: #6A737D;">            //DOM ready. Init third-party libs here.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">43</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">44</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">45</span><span style="color: #B392F0;">        willUnmount</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">46</span><span style="color: #79B8FF;">            super</span><span>.</span><span style="color: #B392F0;">willUnmount</span><span>();</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">47</span><span style="color: #6A737D;">            //CRITICAL: clean up timers, listeners, subscriptions.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">48</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">49</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">50</span><span>        # </span><span style="color: #F97583;">----</span><span> Methods</span><span style="color: #F97583;"> ----</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">51</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">52</span><span style="color: #B392F0;">        increment</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">53</span><span style="color: #79B8FF;">            this</span><span>.count</span><span style="color: #F97583;">++</span><span>;</span><span style="color: #6A737D;">  // No manual update. OWL detects change.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">54</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">55</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">56</span><span style="color: #F97583;">        async</span><span style="color: #B392F0;"> saveToServer</span><span>() {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">57</span><span style="color: #F97583;">            try</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">58</span><span style="color: #F97583;">                await</span><span style="color: #79B8FF;"> this</span><span>.orm.</span><span style="color: #B392F0;">write</span><span>(</span><span style="color: #9ECBFF;">&quot;my.module&quot;</span><span>, [</span><span style="color: #79B8FF;">this</span><span>.props.recordId], {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">59</span><span>                    count:</span><span style="color: #79B8FF;"> this</span><span>.count,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">60</span><span>                });</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">61</span><span style="color: #79B8FF;">                this</span><span>.notification.</span><span style="color: #B392F0;">add</span><span>({ type:</span><span style="color: #9ECBFF;"> &quot;success&quot;</span><span>, message:</span><span style="color: #9ECBFF;"> &quot;Saved!&quot;</span><span> });</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">62</span><span>            }</span><span style="color: #F97583;"> catch</span><span> (e) {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">63</span><span style="color: #79B8FF;">                this</span><span>.notification.</span><span style="color: #B392F0;">add</span><span>({ type:</span><span style="color: #9ECBFF;"> &quot;danger&quot;</span><span>, message: e.message });</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">64</span><span>            }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">65</span><span>        }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">66</span><span>    }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">67</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">68</span><span style="color: #6A737D;">    //Register as client action (openable from menu).</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">69</span><span>    registry.</span><span style="color: #B392F0;">category</span><span>(</span><span style="color: #9ECBFF;">&quot;actions&quot;</span><span>).</span><span style="color: #B392F0;">add</span><span>(</span><span style="color: #9ECBFF;">&quot;my_module.counter_action&quot;</span><span>, MyCounter);</span></span></code></pre><h3 id="common-odoo-services"><a class="zola-anchor" href="#common-odoo-services" aria-label="Anchor link for: common-odoo-services">🔗</a>Common Odoo Services</h3>
+<table><thead><tr><th>Service</th><th>What</th><th>Key Methods</th></tr></thead><tbody>
+<tr><td><code>orm</code></td><td>Model access</td><td><code>searchRead()</code>, <code>create()</code>, <code>write()</code>, <code>unlink()</code>, <code>read()</code></td></tr>
+<tr><td><code>rpc</code></td><td>Raw RPC</td><td><code>rpc('/my/route', params)</code></td></tr>
+<tr><td><code>notification</code></td><td>Toasts</td><td><code>add({type, message, title})</code></td></tr>
+<tr><td><code>router</code></td><td>Navigation</td><td><code>navigate('/')</code>, <code>currentRoute</code></td></tr>
+<tr><td><code>action</code></td><td>Odoo actions</td><td><code>doAction(action)</code></td></tr>
+<tr><td><code>dialog</code></td><td>Dialogs</td><td><code>add(Component, {props})</code></td></tr>
+<tr><td><code>user</code></td><td>Current user</td><td><code>userId</code>, <code>isAdmin</code>, <code>hasGroup()</code></td></tr>
+<tr><td><code>http</code></td><td>HTTP requests</td><td><code>get()</code>, <code>post()</code>, <code>put()</code>, <code>delete()</code></td></tr>
+</tbody></table>
+<h3 id="lifecycle-order"><a class="zola-anchor" href="#lifecycle-order" aria-label="Anchor link for: lifecycle-order">🔗</a>Lifecycle Order</h3>
+<table><thead><tr><th>Hook</th><th>When</th><th>Use For</th></tr></thead><tbody>
+<tr><td><code>setup()</code></td><td>Instantiation (before render)</td><td>State, useService, bind methods</td></tr>
+<tr><td><code>willStart()</code></td><td>Before first render (async OK)</td><td>Fetch initial data</td></tr>
+<tr><td><code>mounted()</code></td><td>After first render, DOM ready</td><td>DOM measurements, init libs</td></tr>
+<tr><td><code>willUpdate()</code></td><td>Before re-renders (not first)</td><td>Save scroll position</td></tr>
+<tr><td><code>updated()</code></td><td>After re-renders (not first)</td><td>Restore scroll position</td></tr>
+<tr><td><code>willUnmount()</code></td><td>Before removal</td><td>Clean up timers, listeners</td></tr>
+</tbody></table>
+<h2 id="owl-templates-qweb"><a class="zola-anchor" href="#owl-templates-qweb" aria-label="Anchor link for: owl-templates-qweb">🔗</a>OWL Templates (QWeb)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # static/src/xml/my_templates.xml</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    &lt;?</span><span style="color: #85E89D;">xml</span><span style="color: #B392F0;"> version</span><span>=</span><span style="color: #9ECBFF;">&quot;1.0&quot;</span><span style="color: #B392F0;"> encoding</span><span>=</span><span style="color: #9ECBFF;">&quot;UTF-8&quot;</span><span>?&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    &lt;</span><span style="color: #85E89D;">templates</span><span style="color: #B392F0;"> xml:space</span><span>=</span><span style="color: #9ECBFF;">&quot;preserve&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    # t-name must match static template in component class</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>    &lt;</span><span style="color: #85E89D;">t</span><span style="color: #B392F0;"> t-name</span><span>=</span><span style="color: #9ECBFF;">&quot;my_module.MyCounter&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>        &lt;</span><span style="color: #85E89D;">div</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;my_counter&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>            # t-esc: escaped text (XSS safe). Use for all user data.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>            &lt;</span><span style="color: #85E89D;">h2</span><span>&gt;&lt;</span><span style="color: #85E89D;">t</span><span style="color: #B392F0;"> t-esc</span><span>=</span><span style="color: #9ECBFF;">&quot;props.title or &#39;Counter&#39;&quot;</span><span> /&gt;&lt;/</span><span style="color: #85E89D;">h2</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span>            # t-if: conditional. Element removed from DOM if false.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span>            &lt;</span><span style="color: #85E89D;">div</span><span style="color: #B392F0;"> t-if</span><span>=</span><span style="color: #9ECBFF;">&quot;state.count &gt; 10&quot;</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;alert alert-warning&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>                Count is getting high!</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>            &lt;/</span><span style="color: #85E89D;">div</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>            # t-attf-class: dynamic class with {{interpolation}}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span><span>            &lt;</span><span style="color: #85E89D;">span</span><span style="color: #B392F0;"> t-attf-class</span><span>=</span><span style="color: #9ECBFF;">&quot;badge {{state.count &gt; 0 ? &#39;bg-success&#39; : &#39;bg-secondary&#39;}}&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span>                &lt;</span><span style="color: #85E89D;">t</span><span style="color: #B392F0;"> t-esc</span><span>=</span><span style="color: #9ECBFF;">&quot;state.count&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span>            &lt;/</span><span style="color: #85E89D;">span</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>            # t-on-click: event. &quot;-&gt;&quot; calls a method.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span>            &lt;</span><span style="color: #85E89D;">button</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;btn btn-primary&quot;</span><span style="color: #B392F0;"> t-on-click</span><span>=</span><span style="color: #9ECBFF;">&quot;increment&quot;</span><span>&gt;+&lt;/</span><span style="color: #85E89D;">button</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>            &lt;</span><span style="color: #85E89D;">button</span><span style="color: #B392F0;"> class</span><span>=</span><span style="color: #9ECBFF;">&quot;btn btn-secondary&quot;</span><span style="color: #B392F0;"> t-on-click</span><span>=</span><span style="color: #9ECBFF;">&quot;decrement&quot;</span><span>&gt;-&lt;/</span><span style="color: #85E89D;">button</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span>            # t-foreach + t-as + t-key (required for efficient DOM patching)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>            &lt;</span><span style="color: #85E89D;">ul</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span>                &lt;</span><span style="color: #85E89D;">li</span><span style="color: #B392F0;"> t-foreach</span><span>=</span><span style="color: #9ECBFF;">&quot;state.items&quot;</span><span style="color: #B392F0;"> t-as</span><span>=</span><span style="color: #9ECBFF;">&quot;item&quot;</span><span style="color: #B392F0;"> t-key</span><span>=</span><span style="color: #9ECBFF;">&quot;item.id&quot;</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span>                    &lt;</span><span style="color: #85E89D;">t</span><span style="color: #B392F0;"> t-esc</span><span>=</span><span style="color: #9ECBFF;">&quot;item.name&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span>                &lt;/</span><span style="color: #85E89D;">li</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span><span>            &lt;/</span><span style="color: #85E89D;">ul</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span>            # t-model: two-way binding on inputs</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span>            &lt;</span><span style="color: #85E89D;">input</span><span style="color: #B392F0;"> t-model</span><span>=</span><span style="color: #9ECBFF;">&quot;state.searchQuery&quot;</span><span style="color: #B392F0;"> placeholder</span><span>=</span><span style="color: #9ECBFF;">&quot;Search...&quot;</span><span> /&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">35</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">36</span><span>        &lt;/</span><span style="color: #85E89D;">div</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">37</span><span>    &lt;/</span><span style="color: #85E89D;">t</span><span>&gt;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">38</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">39</span><span>    &lt;/</span><span style="color: #85E89D;">templates</span><span>&gt;</span></span></code></pre><h3 id="key-qweb-directives"><a class="zola-anchor" href="#key-qweb-directives" aria-label="Anchor link for: key-qweb-directives">🔗</a>Key QWeb Directives</h3>
+<table><thead><tr><th>Directive</th><th>Purpose</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>t-esc</code></td><td>Escaped text (safe)</td><td><code>&lt;t t-esc="name" /&gt;</code></td></tr>
+<tr><td><code>t-raw</code></td><td>Unescaped HTML (XSS risk)</td><td><code>&lt;t t-raw="html" /&gt;</code></td></tr>
+<tr><td><code>t-if</code></td><td>Conditional</td><td><code>&lt;div t-if="x &gt; 0"&gt;</code></td></tr>
+<tr><td><code>t-elif</code> / <code>t-else</code></td><td>Else chains</td><td><code>&lt;div t-elif="..."&gt;</code></td></tr>
+<tr><td><code>t-foreach</code> + <code>t-as</code></td><td>Loop</td><td><code>&lt;li t-foreach="items" t-as="item"&gt;</code></td></tr>
+<tr><td><code>t-key</code></td><td>Unique key for loops (required)</td><td><code>t-key="item.id"</code></td></tr>
+<tr><td><code>t-on-*</code></td><td>Event binding</td><td><code>t-on-click="method"</code></td></tr>
+<tr><td><code>t-att-*</code></td><td>HTML attribute</td><td><code>t-att-href="url"</code></td></tr>
+<tr><td><code>t-attf-*</code></td><td>Attribute with interpolation</td><td><code>t-attf-class="btn {{type}}"</code></td></tr>
+<tr><td><code>t-model</code></td><td>Two-way binding</td><td><code>&lt;input t-model="state.name" /&gt;</code></td></tr>
+</tbody></table>
+<blockquote>
+<p><strong><code>t-key</code> is required in loops.</strong> Use a unique stable ID, not an index.</p>
+</blockquote>
+<h2 id="owl-advanced"><a class="zola-anchor" href="#owl-advanced" aria-label="Anchor link for: owl-advanced">🔗</a>OWL Advanced</h2>
+<h3 id="opening-an-owl-component-from-a-menu"><a class="zola-anchor" href="#opening-an-owl-component-from-a-menu" aria-label="Anchor link for: opening-an-owl-component-from-a-menu">🔗</a>Opening an OWL Component from a Menu</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># In component JS:</span></span>
+<span class="giallo-l"><span>registry.category(&quot;actions&quot;).add(&quot;my_module.counter_action&quot;, MyCounter);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># In views XML:</span></span>
+<span class="giallo-l"><span>&lt;record id=&quot;my_module_counter_action&quot; model=&quot;ir.actions.client&quot;&gt;</span></span>
+<span class="giallo-l"><span>    &lt;field name=&quot;name&quot;&gt;My Counter&lt;/field&gt;</span></span>
+<span class="giallo-l"><span>    &lt;field name=&quot;tag&quot;&gt;my_module.counter_action&lt;/field&gt;</span></span>
+<span class="giallo-l"><span>    &lt;field name=&quot;context&quot;&gt;{&#39;initial_value&#39;: 42}&lt;/field&gt;</span></span>
+<span class="giallo-l"><span>&lt;/record&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;menuitem id=&quot;my_module_menu_counter&quot; name=&quot;Counter&quot;</span></span>
+<span class="giallo-l"><span>          parent=&quot;my_module_menu_root&quot;</span></span>
+<span class="giallo-l"><span>          action=&quot;my_module_counter_action&quot; /&gt;</span></span></code></pre>
+<blockquote>
+<p><strong><code>tag</code> must match the registry key.</strong> Context dict is spread into props automatically.</p>
+</blockquote>
+<h3 id="component-composition-parent-child"><a class="zola-anchor" href="#component-composition-parent-child" aria-label="Anchor link for: component-composition-parent-child">🔗</a>Component Composition (Parent + Child)</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># static/src/js/child_component.js</span></span>
+<span class="giallo-l"><span>/** @odoo-module */</span></span>
+<span class="giallo-l"><span>import { Component } from &quot;@odoo/owl&quot;;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class ChildBadge extends Component {</span></span>
+<span class="giallo-l"><span>    static template = &quot;my_module.ChildBadge&quot;;</span></span>
+<span class="giallo-l"><span>    static props = { label: String, color: { type: String, optional: true } };</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># static/src/xml/child_templates.xml</span></span>
+<span class="giallo-l"><span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span>
+<span class="giallo-l"><span>&lt;templates xml:space=&quot;preserve&quot;&gt;</span></span>
+<span class="giallo-l"><span>&lt;t t-name=&quot;my_module.ChildBadge&quot;&gt;</span></span>
+<span class="giallo-l"><span>    &lt;span t-attf-class=&quot;badge {{props.color || &#39;bg-secondary&#39;}}&quot;</span></span>
+<span class="giallo-l"><span>          t-esc=&quot;props.label&quot; /&gt;</span></span>
+<span class="giallo-l"><span>&lt;/t&gt;</span></span>
+<span class="giallo-l"><span>&lt;/templates&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Parent using the child</span></span>
+<span class="giallo-l"><span>/** @odoo-module */</span></span>
+<span class="giallo-l"><span>import { Component } from &quot;@odoo/owl&quot;;</span></span>
+<span class="giallo-l"><span>import { ChildBadge } from &quot;./child_component&quot;;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class MyCounter extends Component {</span></span>
+<span class="giallo-l"><span>    static template = &quot;my_module.MyCounter&quot;;</span></span>
+<span class="giallo-l"><span>    static components = { ChildBadge };  # REQUIRED: declare child components</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&lt;!-- In parent template XML: --&gt;</span></span>
+<span class="giallo-l"><span>&lt;ChildBadge label=&quot;Active&quot; color=&quot;bg-success&quot; /&gt;</span></span>
+<span class="giallo-l"><span>&lt;ChildBadge label=&quot;Draft&quot; /&gt;</span></span></code></pre><h3 id="usestate-for-reactive-objects-and-arrays"><a class="zola-anchor" href="#usestate-for-reactive-objects-and-arrays" aria-label="Anchor link for: usestate-for-reactive-objects-and-arrays">🔗</a>useState for Reactive Objects and Arrays</h3>
+<p>Plain objects/arrays on <code>this</code> are <strong>not</strong> deeply reactive. Use <code>useState()</code>:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>import { Component, useState } from &quot;@odoo/owl&quot;;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>class MyList extends Component {</span></span>
+<span class="giallo-l"><span>    static template = &quot;my_module.MyList&quot;;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    setup() {</span></span>
+<span class="giallo-l"><span>        super.setup();</span></span>
+<span class="giallo-l"><span>        this.state = useState({ items: [], loading: false });</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    async loadItems() {</span></span>
+<span class="giallo-l"><span>        this.state.loading = true;</span></span>
+<span class="giallo-l"><span>        this.state.items = await this.orm.searchRead(&quot;my.module&quot;, [], [&quot;name&quot;]);</span></span>
+<span class="giallo-l"><span>        this.state.loading = false;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    addItem(item) {</span></span>
+<span class="giallo-l"><span>        # DON&#39;T: this.state.items.push(item) -- OWL won&#39;t detect it.</span></span>
+<span class="giallo-l"><span>        # DO: reassign the array.</span></span>
+<span class="giallo-l"><span>        this.state.items = [...this.state.items, item];</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    removeItem(id) {</span></span>
+<span class="giallo-l"><span>        this.state.items = this.state.items.filter(i =&gt; i.id !== id);</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<blockquote>
+<p><strong>Never mutate in place.</strong> <code>push()</code>, <code>splice()</code>, and direct property assignment on nested objects won't trigger re-renders. Always reassign.</p>
+</blockquote>
+<h3 id="event-bus-for-cross-component-communication"><a class="zola-anchor" href="#event-bus-for-cross-component-communication" aria-label="Anchor link for: event-bus-for-cross-component-communication">🔗</a>Event Bus for Cross-Component Communication</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>import { Component, useState, onWillUnmount } from &quot;@odoo/owl&quot;;</span></span>
+<span class="giallo-l"><span>import { useService } from &quot;@web/core/utils/hooks&quot;;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Emitter component:</span></span>
+<span class="giallo-l"><span>class Emitter extends Component {</span></span>
+<span class="giallo-l"><span>    setup() {</span></span>
+<span class="giallo-l"><span>        super.setup();</span></span>
+<span class="giallo-l"><span>        this.bus = useService(&quot;bus&quot;);</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>    notifyOthers() {</span></span>
+<span class="giallo-l"><span>        this.bus.emit(&quot;my_module:updated&quot;, { id: 42 });</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Listener component:</span></span>
+<span class="giallo-l"><span>class Listener extends Component {</span></span>
+<span class="giallo-l"><span>    static template = &quot;my_module.Listener&quot;;</span></span>
+<span class="giallo-l"><span>    setup() {</span></span>
+<span class="giallo-l"><span>        super.setup();</span></span>
+<span class="giallo-l"><span>        this.bus = useService(&quot;bus&quot;);</span></span>
+<span class="giallo-l"><span>        this.state = useState({ lastId: null });</span></span>
+<span class="giallo-l"><span>        this._handler = this._handler.bind(this);</span></span>
+<span class="giallo-l"><span>        this.bus.addEventListener(&quot;my_module:updated&quot;, this._handler);</span></span>
+<span class="giallo-l"><span>        # MUST clean up:</span></span>
+<span class="giallo-l"><span>        onWillUnmount(() =&gt; {</span></span>
+<span class="giallo-l"><span>            this.bus.removeEventListener(&quot;my_module:updated&quot;, this._handler);</span></span>
+<span class="giallo-l"><span>        });</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>    _handler({ detail }) { this.state.lastId = detail.id; }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h3 id="other-registration-types"><a class="zola-anchor" href="#other-registration-types" aria-label="Anchor link for: other-registration-types">🔗</a>Other Registration Types</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Custom field widget:</span></span>
+<span class="giallo-l"><span>registry.category(&quot;fields&quot;).add(&quot;my_color_picker&quot;, MyColorPicker);</span></span>
+<span class="giallo-l"><span># Use: &lt;field name=&quot;color&quot; widget=&quot;my_color_picker&quot; /&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Custom view type:</span></span>
+<span class="giallo-l"><span>registry.category(&quot;views&quot;).add(&quot;my_custom_view&quot;, MyCustomView);</span></span>
+<span class="giallo-l"><span># Use: &lt;field name=&quot;view_mode&quot;&gt;list,my_custom_view&lt;/field&gt;</span></span></code></pre><h3 id="common-owl-mistakes"><a class="zola-anchor" href="#common-owl-mistakes" aria-label="Anchor link for: common-owl-mistakes">🔗</a>Common OWL Mistakes</h3>
+<ol>
+<li><strong>Forgetting <code>/** @odoo-module */</code></strong> at top of JS files</li>
+<li><strong>Templates in wrong bundle.</strong> XML goes in <code>web.assets_qweb</code>, JS in <code>web.assets_backend</code></li>
+<li><strong>Missing <code>t-key</code> in <code>t-foreach</code></strong></li>
+<li><strong>Not cleaning up in <code>willUnmount()</code></strong> — memory leaks</li>
+<li><strong>Mutating arrays/objects in place</strong> — reassign instead</li>
+<li><strong>Mismatched <code>t-name</code> and <code>static template</code></strong> — blank render, no error</li>
+<li><strong><code>t-raw</code> with user data</strong> — XSS. Use <code>t-esc</code></li>
+<li><strong>Missing <code>static components = { Child }</code></strong> in parent</li>
+<li><strong>Not binding <code>this</code> in event callbacks</strong> — use <code>.bind(this)</code> or arrow functions</li>
+<li><strong><code>super.setup()</code> not first line of <code>setup()</code></strong></li>
+</ol>
+<h2 id="devops-cli-postgresql-backups"><a class="zola-anchor" href="#devops-cli-postgresql-backups" aria-label="Anchor link for: devops-cli-postgresql-backups">🔗</a>DevOps: CLI, PostgreSQL, Backups</h2>
+<h3 id="starting-odoo"><a class="zola-anchor" href="#starting-odoo" aria-label="Anchor link for: starting-odoo">🔗</a>Starting Odoo</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">1</span><span style="color: #B392F0;">    odoo-bin</span><span style="color: #79B8FF;"> -c</span><span style="color: #9ECBFF;"> odoo.conf</span><span style="color: #79B8FF;"> --dev=reload</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">2</span><span style="color: #6A737D;">    # -c odoo.conf     : config file (recommended over CLI flags)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">3</span><span style="color: #6A737D;">    # --dev=reload      : auto-reload Python + assets on file changes</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">4</span><span style="color: #6A737D;">    # --dev=all         : reload + verbose SQL logging + asset debug</span></span></code></pre>
+<blockquote>
+<p><strong>Use a config file.</strong> CLI flags work but get unwieldy. Put database settings, paths, and addons paths in <code>odoo.conf</code>. Only use CLI flags for development overrides.</p>
+</blockquote>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # odoo.conf (minimal)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    [options]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    addons_path = /path/to/odoo/addons,/path/to/custom_addons</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    db_host = localhost</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    db_port = 5432</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span>    db_user = odoo</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    db_password = yourpassword</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    http_port = 8069</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    logfile = /path/to/odoo.log</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    log_level = info</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    # log_level: debug_sql shows all queries (slow but useful)</span></span></code></pre><h3 id="common-cli-commands"><a class="zola-anchor" href="#common-cli-commands" aria-label="Anchor link for: common-cli-commands">🔗</a>Common CLI Commands</h3>
+<table><thead><tr><th>Command</th><th>What It Does</th></tr></thead><tbody>
+<tr><td><code>odoo-bin -c odoo.conf</code></td><td>Start Odoo with config file</td></tr>
+<tr><td><code>odoo-bin -d mydb -i my_module</code></td><td>Create DB + install module</td></tr>
+<tr><td><code>odoo-bin -d mydb -u my_module</code></td><td>Update module (apply changes)</td></tr>
+<tr><td><code>odoo-bin -d mydb -u my_module --test-enable</code></td><td>Update + run tests</td></tr>
+<tr><td><code>odoo-bin -s</code></td><td>Save current config to <code>odoo.conf</code> and exit</td></tr>
+<tr><td><code>odoo-bin --stop-after-init -i base</code></td><td>Initialize DB then stop (useful for CI)</td></tr>
+<tr><td><code>odoo-bin shell -d mydb</code></td><td>Interactive Python shell with Odoo env loaded</td></tr>
+<tr><td><code>odoo-bin scaffold my_module /path/to/addons</code></td><td>Generate a module skeleton</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong><code>-i</code> creates the database if it doesn't exist.</strong> Be careful — if you typo the database name, you get a fresh empty DB instead of updating your existing one. Always use <code>-u</code> for updates.</p>
+</blockquote>
+<h3 id="odoo-shell"><a class="zola-anchor" href="#odoo-shell" aria-label="Anchor link for: odoo-shell">🔗</a>Odoo Shell</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>The shell gives you a Python</span><span style="color: #79B8FF;"> REPL</span><span style="color: #F97583;"> with</span><span style="color: #FDAEB7;font-style: italic;"> `</span><span style="color: #79B8FF;font-style: italic;">self</span><span style="color: #FDAEB7;font-style: italic;">.env`</span><span> (the Odoo environment) already</span><span style="color: #79B8FF;"> set</span><span> up. Useful</span><span style="color: #F97583;"> for</span><span> quick debugging without writing tests.</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    odoo</span><span style="color: #F97583;">-</span><span style="color: #79B8FF;">bin</span><span style="color: #F97583;"> -</span><span>c odoo.conf shell</span><span style="color: #F97583;"> -</span><span>d mydb</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span style="color: #6A737D;">    # Inside the shell:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span style="color: #79B8FF;"> self</span><span>.env[</span><span style="color: #9ECBFF;">&#39;sale.order&#39;</span><span>].search_count([])</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #79B8FF;">    42</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span> order = </span><span style="color: #79B8FF;">self</span><span>.env[</span><span style="color: #9ECBFF;">&#39;sale.order&#39;</span><span>].browse(</span><span style="color: #79B8FF;">1</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span> order.name</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #9ECBFF;">    &#39;SO001&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span> order.partner_id.name</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span><span style="color: #9ECBFF;">    &#39;Azure Interior&#39;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span style="color: #79B8FF;"> self</span><span>.env[</span><span style="color: #9ECBFF;">&#39;sale.order&#39;</span><span>].search([(</span><span style="color: #9ECBFF;">&#39;state&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;=&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;draft&#39;</span><span>)],</span><span style="color: #FFAB70;"> limit</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">5</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    # Returns a recordset</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span style="color: #79B8FF;"> exit</span><span>()</span></span></code></pre><h3 id="working-with-postgresql"><a class="zola-anchor" href="#working-with-postgresql" aria-label="Anchor link for: working-with-postgresql">🔗</a>Working with PostgreSQL</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">1</span><span style="color: #6A737D;">    # Connect (default Odoo user is usually &quot;odoo&quot;)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">2</span><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -h</span><span style="color: #9ECBFF;"> localhost</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">4</span><span style="color: #6A737D;">    # If you get &quot;peer authentication failed&quot;, use:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">5</span><span style="color: #B392F0;">    sudo</span><span style="color: #79B8FF;"> -u</span><span style="color: #9ECBFF;"> postgres psql</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span></span></code></pre><h4 id="useful-queries"><a class="zola-anchor" href="#useful-queries" aria-label="Anchor link for: useful-queries">🔗</a>Useful Queries</h4>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    --List all tables in the Odoo database</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    \dt</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    --Describe a model&#39;s table structure (dots become underscores)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    \d sale_order</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    -- Count records in a model</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> count</span><span>(</span><span style="color: #F97583;">*</span><span>) </span><span style="color: #F97583;">FROM</span><span> sale_order;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    -- Find records by state</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span style="color: #F97583;">    SELECT</span><span> id, </span><span style="color: #F97583;">name</span><span>, </span><span style="color: #F97583;">state FROM</span><span> sale_order </span><span style="color: #F97583;">WHERE state =</span><span style="color: #9ECBFF;"> &#39;draft&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    -- Check ir.model.access.csv coverage (models without ACL)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #F97583;">    SELECT</span><span style="color: #79B8FF;"> m</span><span>.</span><span style="color: #79B8FF;">model</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    FROM</span><span> ir_model m</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span style="color: #F97583;">    LEFT JOIN</span><span> ir_model_access a </span><span style="color: #F97583;">ON</span><span style="color: #79B8FF;"> a</span><span>.</span><span style="color: #79B8FF;">model_id</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> m</span><span>.</span><span style="color: #79B8FF;">id</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span style="color: #F97583;">    WHERE</span><span style="color: #79B8FF;"> a</span><span>.</span><span style="color: #79B8FF;">id</span><span style="color: #F97583;"> IS NULL AND</span><span style="color: #79B8FF;"> m</span><span>.</span><span style="color: #79B8FF;">state</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &#39;base&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">18</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">19</span><span style="color: #6A737D;">    -- List all installed modules</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">20</span><span style="color: #F97583;">    SELECT name</span><span>, </span><span style="color: #F97583;">state FROM</span><span> ir_module_module </span><span style="color: #F97583;">WHERE state =</span><span style="color: #9ECBFF;"> &#39;installed&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span style="color: #6A737D;">    --Find which module owns a view (by XML ID)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">23</span><span style="color: #F97583;">    SELECT * FROM</span><span> ir_model_data </span><span style="color: #F97583;">WHERE name =</span><span style="color: #9ECBFF;"> &#39;my_module_form&#39;</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span style="color: #6A737D;">    --Check table size (useful for finding bloated models)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #F97583;">    SELECT</span><span> relname </span><span style="color: #F97583;">AS</span><span> table_name,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>           pg_size_pretty(pg_total_relation_size(relid)) </span><span style="color: #F97583;">AS size</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">28</span><span style="color: #F97583;">    FROM</span><span> pg_stat_user_tables</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">29</span><span style="color: #F97583;">    ORDER BY</span><span> pg_total_relation_size(relid) </span><span style="color: #F97583;">DESC</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">30</span><span style="color: #F97583;">    LIMIT</span><span style="color: #79B8FF;"> 20</span><span>;</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">31</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #6A737D;">    --Kill all connections to a database (needed before dropping it)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #F97583;">    SELECT</span><span> pg_terminate_backend(pid)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #F97583;">    FROM</span><span> pg_stat_activity </span><span style="color: #F97583;">WHERE</span><span> datname </span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;"> &#39;mydb&#39;</span><span style="color: #F97583;"> AND</span><span> pid </span><span style="color: #F97583;">&lt;&gt;</span><span> pg_backend_pid();</span></span></code></pre>
+<blockquote>
+<p><strong>Never modify Odoo tables directly via SQL</strong> unless you know exactly what you're doing. The ORM manages caches, computed fields, and triggers that raw SQL bypasses. For data fixes, use the shell or an <code>_post_init_hook</code>.</p>
+</blockquote>
+<h3 id="database-backup-and-restore"><a class="zola-anchor" href="#database-backup-and-restore" aria-label="Anchor link for: database-backup-and-restore">🔗</a>Database Backup and Restore</h3>
+<h4 id="method-1-cli-recommended-for-automation-scripts"><a class="zola-anchor" href="#method-1-cli-recommended-for-automation-scripts" aria-label="Anchor link for: method-1-cli-recommended-for-automation-scripts">🔗</a>Method 1: CLI (recommended for automation/scripts)</h4>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Backup: dump the database</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -F</span><span style="color: #9ECBFF;"> c</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> mydb_backup.dump</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -F c: custom format (compressed, supports parallel restore)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Restore: create a fresh database first</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    createdb</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo mydb_restored</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    pg_restore</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb_restored</span><span style="color: #79B8FF;"> -j 4 --no-owner</span><span style="color: #9ECBFF;"> mydb_backup.dump</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -j 4: use 4 parallel jobs (much faster)</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # --no-owner: ignore original ownership (avoids permission issues)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Quick SQL dump (smaller file, slower restore)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> mydb_backup.sql</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb_restored</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> mydb_backup.sql</span></span></code></pre><h4 id="method-2-odoo-ui-settings-database"><a class="zola-anchor" href="#method-2-odoo-ui-settings-database" aria-label="Anchor link for: method-2-odoo-ui-settings-database">🔗</a>Method 2: Odoo UI (Settings → Database)</h4>
+<p>Go to <code>http://localhost:8069/web/database/manager</code>. Backup and restore from the browser. This handles the filestore (attachments) automatically.</p>
+<blockquote>
+<p><strong>Filestore is separate from the database.</strong> When using <code>pg_dump</code>, you only get the database. The filestore (actual file attachments stored on disk) lives at <code>~/.local/share/Odoo/filestore/mydb/</code>. You must back this up separately. The UI backup handles this automatically.</p>
+</blockquote>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Filestore location (default):</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ~/.local/share/Odoo/filestore/</span><span>&lt;database_name&gt;/</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Back it up:</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tar</span><span style="color: #79B8FF;"> -czf</span><span style="color: #9ECBFF;"> mydb_filestore.tar.gz ~/.local/share/Odoo/filestore/mydb/</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Restore it:</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tar</span><span style="color: #79B8FF;"> -xzf</span><span style="color: #9ECBFF;"> mydb_filestore.tar.gz</span><span style="color: #79B8FF;"> -C</span><span style="color: #9ECBFF;"> ~/.local/share/Odoo/filestore/</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Make sure the folder name matches the new database name exactly.</span></span></code></pre><h3 id="complete-backup-script"><a class="zola-anchor" href="#complete-backup-script" aria-label="Anchor link for: complete-backup-script">🔗</a>Complete Backup Script</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    #!/bin/bash</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # backup_odoo.sh &lt;database_name&gt;</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Usage: ./backup_odoo.sh mydb</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    DB</span><span style="color: #F97583;">=</span><span style="color: #FFAB70;">$1</span></span>
+<span class="giallo-l"><span>    DATE</span><span style="color: #F97583;">=</span><span>$(</span><span style="color: #B392F0;">date</span><span style="color: #9ECBFF;"> +%Y%m%d_%H%M%S</span><span>)</span></span>
+<span class="giallo-l"><span>    BACKUP_DIR</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;./backups/</span><span>$DATE</span><span style="color: #9ECBFF;">&quot;</span></span>
+<span class="giallo-l"><span>    FILESTORE_DIR</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;</span><span>$HOME</span><span style="color: #9ECBFF;">/.local/share/Odoo/filestore&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    mkdir</span><span style="color: #79B8FF;"> -p</span><span> $BACKUP_DIR</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #9ECBFF;"> &quot;Dumping database...&quot;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span> $DB</span><span style="color: #79B8FF;"> -F</span><span style="color: #9ECBFF;"> c</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> &quot;</span><span>$BACKUP_DIR</span><span style="color: #9ECBFF;">/${</span><span>DB</span><span style="color: #9ECBFF;">}.dump&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #9ECBFF;"> &quot;Backing up filestore...&quot;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    if</span><span> [</span><span style="color: #F97583;"> -d</span><span style="color: #9ECBFF;"> &quot;</span><span>$FILESTORE_DIR</span><span style="color: #9ECBFF;">/</span><span>$DB</span><span style="color: #9ECBFF;">&quot;</span><span> ];</span><span style="color: #F97583;"> then</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        cp</span><span style="color: #79B8FF;"> -r</span><span style="color: #9ECBFF;"> &quot;</span><span>$FILESTORE_DIR</span><span style="color: #9ECBFF;">/</span><span>$DB</span><span style="color: #9ECBFF;">&quot; &quot;</span><span>$BACKUP_DIR</span><span style="color: #9ECBFF;">/filestore&quot;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    fi</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #9ECBFF;"> &quot;Done: </span><span>$BACKUP_DIR</span><span style="color: #9ECBFF;">&quot;</span></span></code></pre><h3 id="debug-mode"><a class="zola-anchor" href="#debug-mode" aria-label="Anchor link for: debug-mode">🔗</a>Debug Mode</h3>
+<p>Activate via the URL: append <code>?debug=1</code> (or <code>?debug=assets</code> for asset debugging only).</p>
+<table><thead><tr><th>Feature</th><th>Where to Find</th></tr></thead><tbody>
+<tr><td>View field technical names</td><td>Hover over any field label</td></tr>
+<tr><td>Edit view XML directly</td><td>Click the bug icon on any view</td></tr>
+<tr><td>View model records</td><td>Settings → Technical → Models</td></tr>
+<tr><td>View IR records (views, actions, etc.)</td><td>Settings → Technical → corresponding menu</td></tr>
+<tr><td>Run SQL queries</td><td>Does NOT exist natively. Use shell or pgAdmin.</td></tr>
+<tr><td>Asset debug mode</td><td><code>?debug=assets</code> — non-minified JS/CSS, no cache</td></tr>
+<tr><td>Show translated fields</td><td>Icon in top-right when multiple languages installed</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong><code>?debug=1</code> is persistent per session.</strong> Once activated, it stays on until you click "Leave Developer Mode" in the user menu or remove <code>?debug=1</code> from the URL.</p>
+</blockquote>
+<h3 id="logging"><a class="zola-anchor" href="#logging" aria-label="Anchor link for: logging">🔗</a>Logging</h3>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In Python code</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    import</span><span> logging</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    _logger</span><span style="color: #F97583;"> =</span><span> logging.getLogger(</span><span style="color: #79B8FF;">__name__</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    # Use these instead of print():</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    _logger.debug(</span><span style="color: #9ECBFF;">&quot;Detailed info for debugging: </span><span style="color: #79B8FF;">%s</span><span style="color: #9ECBFF;">&quot;</span><span>, value)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    _logger.info(</span><span style="color: #9ECBFF;">&quot;Normal operational info&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    _logger.warning(</span><span style="color: #9ECBFF;">&quot;Something unexpected happened&quot;</span><span>)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    _logger.error(</span><span style="color: #9ECBFF;">&quot;Something went wrong: </span><span style="color: #79B8FF;">%s</span><span style="color: #9ECBFF;">&quot;</span><span>, error.message)</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="toml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In odoo.conf</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    [</span><span style="color: #B392F0;">options</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # Log levels (from least to most verbose): critical, error, warning, info, debug</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    log_level = w</span><span style="color: #FDAEB7;font-style: italic;">arn</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span><span style="color: #6A737D;">    # Log only specific modules at debug level (very useful):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    log_handler = o</span><span style="color: #FDAEB7;font-style: italic;">doo.models:DEBUG</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    log_handler = o</span><span style="color: #FDAEB7;font-style: italic;">doo.http:DEBUG</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span style="color: #6A737D;">    # Log to file instead of stdout:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">11</span><span>    logfile = /</span><span style="color: #FDAEB7;font-style: italic;">var/log/odoo/odoo.log</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">12</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #6A737D;">    # Log database queries (very slow, only for debugging):</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    # Either use --dev=debug_sql or:</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>    log_level = d</span><span style="color: #FDAEB7;font-style: italic;">ebug_sql</span></span></code></pre>
+<blockquote>
+<p><strong><code>log_handler</code> with module-level filtering is the best approach.</strong> Instead of setting the entire log to debug (which floods output), log only the module you're working on: <code>log_handler = odoo.addons.my_module:DEBUG</code>.</p>
+</blockquote>
+<h3 id="development-workflow-tips"><a class="zola-anchor" href="#development-workflow-tips" aria-label="Anchor link for: development-workflow-tips">🔗</a>Development Workflow Tips</h3>
+<ul>
+<li><strong>Use <code>--dev=reload</code></strong> during development. It watches Python files for changes and reloads the server automatically. No need to restart after every model change.</li>
+<li><strong>Use <code>--dev=all</code></strong> when debugging hard issues. It adds SQL query logging and asset debugging on top of reload.</li>
+<li><strong>Keep your custom addons in a separate directory</strong> from the Odoo source. Point to both in <code>addons_path</code>. This makes updates and git management much cleaner.</li>
+<li><strong>Use a separate database per project.</strong> Don't develop multiple features in the same DB. Create/restore backups to test fresh installs.</li>
+<li><strong>Version your addons directory with git.</strong> Commit after every working change. Makes it trivial to revert when experiments go wrong.</li>
+<li><strong>Test module install on a fresh database</strong> before deploying. Update-only testing misses issues in <code>__init__.py</code>, security CSV, and data files.</li>
+<li><strong>Use <code>odoo-bin scaffold</code></strong> to start new modules. It generates the correct folder structure, manifest, and <strong>init</strong>.py files.</li>
+<li><strong>Don't edit core Odoo files.</strong> Ever. Always extend via inheritance. If you must patch core behavior, use <code>_patch()</code> or a monkey-patch in <code>post_init_hook</code>, and document it heavily.</li>
+</ul>
+<h2 id="odoo-technical-terms-reference"><a class="zola-anchor" href="#odoo-technical-terms-reference" aria-label="Anchor link for: odoo-technical-terms-reference">🔗</a>Odoo Technical Terms Reference</h2>
+<p>Comprehensive reference of key Odoo terms, their French translations, module locations, and workflow connections. Use this as a quick lookup for what each term means and where to find it in the UI.</p>
+<table><thead><tr><th>Term (English)</th><th>Term (French)</th><th>Module</th><th>Example Workflow / Connection</th></tr></thead><tbody>
+<tr><td><strong>Lead / Opportunity</strong></td><td>Prospect / Opportunité</td><td>CRM</td><td>Convert to Quotation → Sales Order → Invoice</td></tr>
+<tr><td><strong>Quotation</strong></td><td>Devis</td><td>Sales</td><td>Create → Send to customer → Confirm as Sales Order</td></tr>
+<tr><td><strong>Sales Order</strong></td><td>Commande client / Bon de commande</td><td>Sales</td><td>Confirm → Deliver products → Invoice customer</td></tr>
+<tr><td><strong>Order Tracking</strong></td><td>Suivi des commandes</td><td>Sales</td><td>Track order status from confirmation to delivery</td></tr>
+<tr><td><strong>Loyalty</strong></td><td>Fidélité</td><td>Sales</td><td>Reward repeat customers</td></tr>
+<tr><td><strong>Invoice</strong></td><td>Facture (client)</td><td>Accounting</td><td>Create → Validate → Send to customer → Register payment</td></tr>
+<tr><td><strong>Bill / Supplier Invoice</strong></td><td>Facture fournisseur</td><td>Accounting / Purchasing</td><td>Receive bill → Validate → Schedule payment → Register payment</td></tr>
+<tr><td><strong>Credit Note</strong></td><td>Avoir</td><td>Accounting</td><td>Cancel or refund part/all of an invoice, often linked to returns</td></tr>
+<tr><td><strong>Chart of Accounts</strong></td><td>Plan Comptable</td><td>Accounting</td><td>Base of accounting: defines all accounts for financial transactions</td></tr>
+<tr><td><strong>Accounting Journal</strong></td><td>Journal Comptable</td><td>Accounting</td><td>Register where all financial transactions are recorded</td></tr>
+<tr><td><strong>Customer Payment</strong></td><td>Paiement Client</td><td>Accounting</td><td>Payment received from customer to settle an invoice</td></tr>
+<tr><td><strong>Supplier Payment</strong></td><td>Paiement Fournisseur</td><td>Accounting</td><td>Payment made to supplier to settle a supplier invoice</td></tr>
+<tr><td><strong>Bank Reconciliation</strong></td><td>Rapprochement Bancaire</td><td>Accounting</td><td>Match bank transactions with recorded entries</td></tr>
+<tr><td><strong>General Ledger</strong></td><td>Grand Livre</td><td>Accounting</td><td>Register of all accounting transactions in a single document</td></tr>
+<tr><td><strong>Balance Sheet</strong></td><td>Bilan</td><td>Accounting</td><td>Assets, liabilities, and equity at a given date</td></tr>
+<tr><td><strong>Profit and Loss</strong></td><td>Compte de Résultat</td><td>Accounting</td><td>Revenue and expenses over a period</td></tr>
+<tr><td><strong>Taxes</strong></td><td>Taxes / TVA</td><td>Accounting</td><td>Tax rules applied to sales and purchase transactions</td></tr>
+<tr><td><strong>Journal Entries</strong></td><td>Écritures Comptables</td><td>Accounting</td><td>Individual entries documenting financial transactions</td></tr>
+<tr><td><strong>Depreciation</strong></td><td>Amortissement</td><td>Accounting</td><td>Loss of value of fixed assets over time</td></tr>
+<tr><td><strong>Open Invoices</strong></td><td>Encours</td><td>Accounting</td><td>Invoices still open and unpaid</td></tr>
+<tr><td><strong>Accounting Analysis</strong></td><td>Analyse Comptable</td><td>Accounting</td><td>Examine financial flows by account categories</td></tr>
+<tr><td><strong>Payroll</strong></td><td>Paie</td><td>HR</td><td>Employee contract → Generate payslip → Approve → Process payment</td></tr>
+<tr><td><strong>Leave Request</strong></td><td>Demande de congé</td><td>HR</td><td>Employee submits → Manager approves → Track absence</td></tr>
+<tr><td><strong>Purchase Order</strong></td><td>Bon de commande / Commande fournisseur</td><td>Purchasing</td><td>Create PO → Approve → Receive goods → Register bill</td></tr>
+<tr><td><strong>Purchase</strong></td><td>Achat</td><td>Purchasing</td><td>Link to supplier orders and stock replenishment</td></tr>
+<tr><td><strong>Stock Move</strong></td><td>Mouvement de stock</td><td>Inventory</td><td>Receive stock → Store in warehouse → Deliver to customer</td></tr>
+<tr><td><strong>Picking</strong></td><td>Préparation de commande</td><td>Inventory</td><td>Pick items from stock → Pack → Ship to customer</td></tr>
+<tr><td><strong>Pack</strong></td><td>Emballage</td><td>Inventory</td><td>Group picked items → Prepare for shipping</td></tr>
+<tr><td><strong>Ship</strong></td><td>Expédition</td><td>Inventory</td><td>Send packed items to customers</td></tr>
+<tr><td><strong>Receipt</strong></td><td>Réception</td><td>Inventory</td><td>Stock update when products are received from suppliers</td></tr>
+<tr><td><strong>Inventory / Stock</strong></td><td>Stock</td><td>Inventory</td><td>Updated with sales, purchases, receipts → linked to warehouse management</td></tr>
+<tr><td><strong>Warehouse</strong></td><td>Entrepôt / Stockage</td><td>Inventory</td><td>Physical location where stock is stored</td></tr>
+<tr><td><strong>Reordering Rule</strong></td><td>Règle de réapprovisionnement</td><td>Inventory</td><td>Define min/max stock levels → Auto-trigger purchase or production</td></tr>
+<tr><td><strong>Buy to Stock</strong></td><td>Achat sur stock</td><td>Inventory</td><td>Purchase goods to stock → Store in warehouse → Sell from stock</td></tr>
+<tr><td><strong>Buy to Order</strong></td><td>Achat sur commande</td><td>Inventory</td><td>Order placed → Purchase goods from supplier → Deliver to customer</td></tr>
+<tr><td><strong>Dropshipping</strong></td><td>Livraison directe</td><td>Inventory</td><td>Customer order → Purchase from supplier → Supplier ships to customer</td></tr>
+<tr><td><strong>Backorder</strong></td><td>Commande en attente</td><td>Inventory</td><td>Partially deliver an order → Create a backorder for missing items</td></tr>
+<tr><td><strong>Scrap</strong></td><td>Mise au rebut</td><td>Inventory</td><td>Remove damaged or obsolete stock from inventory</td></tr>
+<tr><td><strong>Barcode Scanning</strong></td><td>Lecture de codes-barres</td><td>Inventory</td><td>Use barcode scanner for quick stock moves and picking</td></tr>
+<tr><td><strong>Make to Stock</strong></td><td>Production sur stock</td><td>MRP</td><td>Produce goods → Store in warehouse → Sell from stock</td></tr>
+<tr><td><strong>Make to Order</strong></td><td>Production sur commande</td><td>MRP</td><td>Customer order → Manufacture product → Deliver</td></tr>
+<tr><td><strong>Manufacturing Order</strong></td><td>Ordre de fabrication</td><td>MRP</td><td>Create order → Consume raw materials → Produce finished goods</td></tr>
+<tr><td><strong>Work Order</strong></td><td>Ordre de travail</td><td>MRP</td><td>Schedule operations → Execute tasks → Complete manufacturing process</td></tr>
+<tr><td><strong>Raw Material</strong></td><td>Matière première</td><td>MRP / Inventory</td><td>Used to manufacture finished goods → linked to inventory</td></tr>
+<tr><td><strong>Report</strong></td><td>Rapport</td><td>All modules</td><td>Generated from all data to view company performance</td></tr>
+<tr><td><strong>Automation</strong></td><td>Automatisation</td><td>All modules</td><td>Execute actions automatically (notifications, document creation)</td></tr>
+<tr><td><strong>Workflow: Pick &amp; Pack &amp; Ship</strong></td><td>Préparer &amp; Emballer &amp; Expédier</td><td>Inventory</td><td>Pick items from warehouse → Pack → Ship to customer</td></tr>
+<tr><td><strong>Workflow: Backordering</strong></td><td>Commande en attente</td><td>Inventory</td><td>Auto-create backorder for missing stock when partially delivering</td></tr>
+<tr><td><strong>Workflow: Scrap Management</strong></td><td>Gestion des mises au rebut</td><td>Inventory</td><td>Use 'Scrap' function to remove damaged/obsolete stock</td></tr>
+</tbody></table>
+<p><strong>Access paths by module:</strong></p>
+<ul>
+<li><strong>Sales / CRM:</strong> Ventes &gt; Prospects, Commandes, Devis, Programme de fidélité</li>
+<li><strong>Accounting:</strong> Comptabilité &gt; Factures, Paiements, Rapprochement bancaire, Rapports</li>
+<li><strong>Purchasing:</strong> Achats &gt; Commandes fournisseurs</li>
+<li><strong>Inventory:</strong> Stocks &gt; Réceptions, Produits, Entrepôts, Mouvements de stock</li>
+<li><strong>Manufacturing:</strong> Fabrication &gt; Ordres de fabrication</li>
+<li><strong>HR:</strong> Ressources Humaines &gt; Paie, Congés</li>
+<li><strong>Technical / Configuration:</strong> Comptabilité &gt; Configuration &gt; Plan comptable, Journaux, Taxes</li>
+</ul>
+
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>

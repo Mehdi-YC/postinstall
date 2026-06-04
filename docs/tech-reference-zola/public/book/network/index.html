@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Networking Reference for Developers - Developer Reference Library</title>
+  <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
+  
+</head>
+<body>
+  
+  
+
+
+
+  
+
+
+
+  <div class="layout-container">
+    
+<aside class="sidebar">
+  <div class="sidebar-label">Contents</div>
+  
+  
+  <a class="toc-link" href="#the-model-what-a-dev-needs-to-know">The Model: What a Dev Needs to Know</a>
+  
+  <a class="toc-link" href="#physical-vs-logical-the-key-distinction">Physical vs Logical: The Key Distinction</a>
+  
+  <a class="toc-link" href="#what-happens-when-you-type-a-url-simplified">What Happens When You Type a URL (Simplified)</a>
+  
+  <a class="toc-link" href="#frames-packets-segments-messages">Frames, Packets, Segments, Messages</a>
+  
+  <a class="toc-link" href="#mac-address-vs-ip-address">MAC Address vs IP Address</a>
+  
+  <a class="toc-link" href="#tcp-transmission-control-protocol">TCP (Transmission Control Protocol)</a>
+  
+  <a class="toc-link" href="#udp-user-datagram-protocol">UDP (User Datagram Protocol)</a>
+  
+  <a class="toc-link" href="#ports">Ports</a>
+  
+  <a class="toc-link" href="#what-your-code-actually-controls">What Your Code Actually Controls</a>
+  
+  <a class="toc-link" href="#http-overview">HTTP Overview</a>
+  
+  <a class="toc-link" href="#what-dns-does">What DNS Does</a>
+  
+  <a class="toc-link" href="#what-tls-does">What TLS Does</a>
+  
+  <a class="toc-link" href="#tools">Tools</a>
+  
+  <a class="toc-link" href="#infrastructure">Infrastructure</a>
+  
+  
+</aside>
+
+    <main class="main-content">
+      
+  <div class="">
+    <div class="hero-eyebrow">Dev Library · Reference Collection</div>
+    <a href="/" style="text-decoration:none; color:inherit">
+      <h1>The Dev<span> Reference</span> Library</h1>
+    </a>
+
+
+<nav class="topics" style="position:sticky">
+  
+  <a class="topic" href="#the-model-what-a-dev-needs-to-know">The Model: What a Dev Needs to Know</a>
+  
+  <a class="topic" href="#physical-vs-logical-the-key-distinction">Physical vs Logical: The Key Distinction</a>
+  
+  <a class="topic" href="#what-happens-when-you-type-a-url-simplified">What Happens When You Type a URL (Simplified)</a>
+  
+  <a class="topic" href="#frames-packets-segments-messages">Frames, Packets, Segments, Messages</a>
+  
+  <a class="topic" href="#mac-address-vs-ip-address">MAC Address vs IP Address</a>
+  
+  <a class="topic" href="#tcp-transmission-control-protocol">TCP (Transmission Control Protocol)</a>
+  
+  <a class="topic" href="#udp-user-datagram-protocol">UDP (User Datagram Protocol)</a>
+  
+  <a class="topic" href="#ports">Ports</a>
+  
+  <a class="topic" href="#what-your-code-actually-controls">What Your Code Actually Controls</a>
+  
+  <a class="topic" href="#http-overview">HTTP Overview</a>
+  
+  <a class="topic" href="#what-dns-does">What DNS Does</a>
+  
+  <a class="topic" href="#what-tls-does">What TLS Does</a>
+  
+  <a class="topic" href="#tools">Tools</a>
+  
+  <a class="topic" href="#infrastructure">Infrastructure</a>
+  
+</nav>
+
+    </div>
+<br><br>
+<article class="reference-page">
+  <span>Last update: 2024-01-15</span>
+  <h1>Networking Reference for Developers</h1>
+  
+  <p class="subtitle">What actually happens on the wire — layers, protocols, tools, and infrastructure a developer needs to understand</p>
+  
+
+  <h1 id="the-model-what-a-dev-needs-to-know"><a class="zola-anchor" href="#the-model-what-a-dev-needs-to-know" aria-label="Anchor link for: the-model-what-a-dev-needs-to-know">🔗</a>The Model: What a Dev Needs to Know</h1>
+<p>The OSI model has 7 layers. In practice, the internet collapses into roughly <strong>4 functional layers</strong> that matter to developers. You don't need the academic version — you need to know which layer a problem lives in so you can debug it.</p>
+<table><thead><tr><th>What You Call It</th><th>What It Does</th><th>Protocols</th><th>What You Debug Here</th></tr></thead><tbody>
+<tr><td><strong>Application</strong></td><td>What your app sends/receives</td><td>HTTP, DNS, SSH, FTP, SMTP</td><td>HTTP status codes, malformed requests, wrong data format</td></tr>
+<tr><td><strong>Transport</strong></td><td>Reliable delivery between apps</td><td>TCP, UDP</td><td>Connection refused, timeouts, connection reset</td></tr>
+<tr><td><strong>Network / IP</strong></td><td>Addressing and routing between machines</td><td>IP, ICMP (ping), ARP</td><td>Host unreachable, no route to host, wrong IP</td></tr>
+<tr><td><strong>Physical / Link</strong></td><td>Bits on the wire, frame delivery on a segment</td><td>Ethernet, WiFi, MAC</td><td>Cable unplugged, wrong VLAN, MAC filtering</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>The layer determines where to look.</strong> "Connection refused" is transport (TCP). "No route to host" is network (IP). "HTTP 400" is application (HTTP). Knowing the difference saves hours of debugging.</p>
+</blockquote>
+<h1 id="physical-vs-logical-the-key-distinction"><a class="zola-anchor" href="#physical-vs-logical-the-key-distinction" aria-label="Anchor link for: physical-vs-logical-the-key-distinction">🔗</a>Physical vs Logical: The Key Distinction</h1>
+<p><strong>Physical</strong> = the actual cables, radio waves, electrical signals. A wire is a physical thing. A WiFi signal is a physical thing.</p>
+<p><strong>Logical</strong> = the addressing and organization built on top of physical connections. IP addresses, subnets, VLANs, ports, protocols — these are all logical constructs that exist in software/config, not in the wire itself.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>Physical layer:  cable/wireless carries electrical signals</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Data link (logical):  signals grouped into frames with MAC addresses (Ethernet)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Network (logical):  frames grouped into packets with IP addresses</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Transport (logical):  packets broken into segments with ports (TCP/UDP)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Application (logical):  segments carry your actual data (HTTP body, SQL query, etc.)</span></span></code></pre>
+<blockquote>
+<p><strong>A switch operates at the data link layer.</strong> It sees MAC addresses, not IP addresses. It delivers frames within a local network. A <code>switch port</code> is a physical jack. A <code>VLAN</code> is a logical partition of that switch — same physical cables, but logically isolated networks.</p>
+</blockquote>
+<h1 id="what-happens-when-you-type-a-url-simplified"><a class="zola-anchor" href="#what-happens-when-you-type-a-url-simplified" aria-label="Anchor link for: what-happens-when-you-type-a-url-simplified">🔗</a>What Happens When You Type a URL (Simplified)</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>1. Browser parses &quot;https://example.com/page&quot; → extracts host, path</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>2. DNS lookup: example.com → 93.184.216.34</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>3. TCP handshake with 93.184.216.34:443 (3-way: SYN, SYN-ACK, ACK)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>4. TLS handshake: negotiate encryption (if HTTPS)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>5. HTTP request sent:</span></span>
+<span class="giallo-l"><span>   GET /page HTTP/1.1</span></span>
+<span class="giallo-l"><span>   Host: example.com</span></span>
+<span class="giallo-l"><span>   Connection: keep-alive</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>6. Server processes request, runs app code, generates HTML</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>7. HTTP response sent:</span></span>
+<span class="giallo-l"><span>   HTTP/1.1 200 OK</span></span>
+<span class="giallo-l"><span>   Content-Type: text/html</span></span>
+<span class="giallo-l"><span>   Content-Length: 1234</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>   &lt;html&gt;...&lt;/html&gt;</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>8. Browser renders the page</span></span></code></pre>
+<p>Steps 2-4 happen in milliseconds. Step 5-7 is what your code controls. If something fails at step 2, it's a DNS problem. Step 3, it's network/firewall. Step 5-7, it's your app or the server.</p>
+<h1 id="frames-packets-segments-messages"><a class="zola-anchor" href="#frames-packets-segments-messages" aria-label="Anchor link for: frames-packets-segments-messages">🔗</a>Frames, Packets, Segments, Messages</h1>
+<p>These are all names for "data on the wire" at different layers:</p>
+<table><thead><tr><th>Name</th><th>Layer</th><th>Contains</th><th>Addressed By</th></tr></thead><tbody>
+<tr><td><strong>Frame</strong></td><td>Data link (Ethernet)</td><td>Packet + MAC addresses + checksum</td><td>MAC address (AA:BB:CC:DD:EE:FF)</td></tr>
+<tr><td><strong>Packet</strong></td><td>Network (IP)</td><td>Segment + source/dest IP + TTL</td><td>IP address (192.168.1.1)</td></tr>
+<tr><td><strong>Segment</strong></td><td>Transport (TCP/UDP)</td><td>Your data + source/dest port + sequence numbers</td><td>Port (80, 443, 5432)</td></tr>
+<tr><td><strong>Message</strong></td><td>Application (HTTP)</td><td>Headers + body (the actual content)</td><td>URL path (/page)</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Nesting: Frame wraps Packet wraps Segment wraps Message.</strong> When you send an HTTP request, it gets wrapped in a TCP segment, which gets wrapped in an IP packet, which gets wrapped in an Ethernet frame. Each layer adds its own header. This is called <strong>encapsulation</strong>.</p>
+</blockquote>
+<h1 id="mac-address-vs-ip-address"><a class="zola-anchor" href="#mac-address-vs-ip-address" aria-label="Anchor link for: mac-address-vs-ip-address">🔗</a>MAC Address vs IP Address</h1>
+<table><thead><tr><th></th><th>MAC Address</th><th>IP Address</th></tr></thead><tbody>
+<tr><td><strong>Layer</strong></td><td>Data link (2)</td><td>Network (3)</td></tr>
+<tr><td><strong>Format</strong></td><td>AA:BB:CC:DD:EE:FF (48-bit, hex)</td><td>192.168.1.1 (32-bit, decimal)</td></tr>
+<tr><td><strong>Scope</strong></td><td>Local network segment only</td><td>Global (routable)</td></tr>
+<tr><td><strong>Assigned by</strong></td><td>Hardware manufacturer (burned in)</td><td>Network admin / DHCP</td></tr>
+<tr><td><strong>Changes?</strong></td><td>No (per interface)</td><td>Yes (different network = different IP)</td></tr>
+<tr><td><strong>What a switch sees</strong></td><td>MAC addresses</td><td>Nothing (switches don't look at IP)</td></tr>
+<tr><td><strong>What a router sees</strong></td><td>Nothing (routers strip MAC, add new one)</td><td>IP addresses</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>MAC addresses don't cross routers.</strong> When a packet goes through a router, the router strips the source/dest MAC from the frame and adds new ones pointing to the next hop. MAC addresses are only meaningful on a local network segment. This is why you can't find someone's MAC address from across the internet.</p>
+</blockquote>
+<h1 id="tcp-transmission-control-protocol"><a class="zola-anchor" href="#tcp-transmission-control-protocol" aria-label="Anchor link for: tcp-transmission-control-protocol">🔗</a>TCP (Transmission Control Protocol)</h1>
+<p>TCP is <strong>reliable</strong>. It guarantees that data arrives intact, in order, and without duplication. It does this through:</p>
+<ul>
+<li><strong>Handshake:</strong> 3-way exchange before data flows</li>
+<li><strong>Sequence numbers:</strong> Every byte is numbered so the receiver can reorder and detect gaps</li>
+<li><strong>Acknowledgments (ACKs):</strong> Receiver tells sender "I got bytes up to N"</li>
+<li><strong>Retransmission:</strong> If sender doesn't get an ACK within a timeout, it resends</li>
+<li><strong>Flow control:</strong> Receiver tells sender to slow down if it's overwhelmed</li>
+<li><strong>Connection teardown:</strong> 4-way handshake to close gracefully</li>
+</ul>
+<h2 id="the-tcp-handshake-3-way"><a class="zola-anchor" href="#the-tcp-handshake-3-way" aria-label="Anchor link for: the-tcp-handshake-3-way">🔗</a>The TCP Handshake (3-Way)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>Client → SYN (I want to talk, my sequence starts at X)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Server → SYN-ACK (OK, I acknowledge X, my sequence starts at Y)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Client → ACK (I acknowledge Y)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>            === connection established ===</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Data flows in both directions...</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Either side → FIN (I&#39;m done sending)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Other side → ACK + FIN (OK, I&#39;m done too)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>First side → ACK (confirmed)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>            === connection closed ===</span></span></code></pre>
+<blockquote>
+<p><strong>"Connection refused" = the server sent a RST instead of SYN-ACK.</strong> Either nothing is listening on that port, or a firewall rejected it. "Connection timed out" = no response at all (firewall dropping packets, or host unreachable).</p>
+</blockquote>
+<h2 id="tcp-state-machine-the-important-parts"><a class="zola-anchor" href="#tcp-state-machine-the-important-parts" aria-label="Anchor link for: tcp-state-machine-the-important-parts">🔗</a>TCP State Machine (The Important Parts)</h2>
+<table><thead><tr><th>State</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>LISTEN</code></td><td>Server is waiting for connections on a port</td></tr>
+<tr><td><code>SYN_SENT</code></td><td>Client sent SYN, waiting for SYN-ACK</td></tr>
+<tr><td><code>ESTABLISHED</code></td><td>Handshake complete, data can flow</td></tr>
+<tr><td><code>FIN_WAIT_1</code></td><td>Initiated close, waiting for ACK</td></tr>
+<tr><td><code>FIN_WAIT_2</code></td><td>Sent FIN + got ACK, waiting for other side's FIN</td></tr>
+<tr><td><code>CLOSE_WAIT</code></td><td>Got other side's FIN, haven't closed yet (app hasn't called close())</td></tr>
+<tr><td><code>TIME_WAIT</code></td><td>Closed, waiting 2MSL (~60s) to ensure the other side got the ACK</td></tr>
+<tr><td><code>CLOSED</code></td><td>Connection fully closed</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong><code>TIME_WAIT</code> is normal, not an error.</strong> After closing a connection, the side that initiated the close stays in TIME_WAIT for ~60 seconds. It prevents old packets from a previous connection from being confused with a new one. Thousands of TIME_WAIT connections can exhaust ports — this is why connection reuse and keep-alive matter.</p>
+</blockquote>
+<h1 id="udp-user-datagram-protocol"><a class="zola-anchor" href="#udp-user-datagram-protocol" aria-label="Anchor link for: udp-user-datagram-protocol">🔗</a>UDP (User Datagram Protocol)</h1>
+<p>UDP is <strong>unreliable</strong>. No handshake, no acknowledgments, no ordering, no retransmission. It just sends data and hopes it arrives. So why use it?</p>
+<ul>
+<li><strong>Speed:</strong> No overhead from handshakes or ACKs. Lower latency.</li>
+<li><strong>Simplicity:</strong> No connection state to manage.</li>
+<li><strong>Broadcast/multicast:</strong> TCP can't do this. UDP can send to multiple recipients.</li>
+<li><strong>Tolerates loss:</strong> DNS queries, metrics, streaming — losing a packet is fine.</li>
+</ul>
+<table><thead><tr><th>Protocol</th><th>Transport</th><th>Why</th></tr></thead><tbody>
+<tr><td>HTTP/1.1</td><td>TCP</td><td>Reliable page delivery matters</td></tr>
+<tr><td>HTTP/2, HTTP/3</td><td>TCP / UDP (QUIC)</td><td>HTTP/3 uses UDP (QUIC) for faster connection setup</td></tr>
+<tr><td>DNS</td><td>UDP</td><td>Small queries, retry if no response is faster than TCP handshake</td></tr>
+<tr><td>SSH</td><td>TCP</td><td>Reliable shell session</td></tr>
+<tr><td>Video streaming</td><td>UDP</td><td>Dropped frames = momentary glitch, not a broken page</td></tr>
+<tr><td>Databases (PostgreSQL, MySQL)</td><td>TCP</td><td>Data integrity is non-negotiable</td></tr>
+<tr><td>Logging/metrics</td><td>UDP</td><td>Losing a log line is acceptable</td></tr>
+<tr><td>VPN (WireGuard)</td><td>UDP</td><td>Implements its own reliability on top of UDP</td></tr>
+</tbody></table>
+<h1 id="ports"><a class="zola-anchor" href="#ports" aria-label="Anchor link for: ports">🔗</a>Ports</h1>
+<p>Ports are <strong>transport-layer addresses</strong>. They identify which application on a machine should receive the data. They range from 0 to 65535.</p>
+<table><thead><tr><th>Range</th><th>Name</th><th>Examples</th></tr></thead><tbody>
+<tr><td><code>0-1023</code></td><td>Well-known (need root/admin)</td><td>80 (HTTP), 443 (HTTPS), 22 (SSH), 53 (DNS), 25 (SMTP)</td></tr>
+<tr><td><code>1024-49151</code></td><td>Registered (assigned to specific apps)</td><td>3306 (MySQL), 5432 (PostgreSQL), 6379 (Redis), 8080 (HTTP alt)</td></tr>
+<tr><td><code>49152-65535</code></td><td>Ephemeral (temporary, auto-assigned)</td><td>Your outgoing connections use these</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>A port is just a number in a header field.</strong> It's not a physical thing. When you say "port 80 is open," it means "a program on this machine is listening for TCP segments addressed to port 80." Multiple programs can use port 80 on different IP addresses (different interfaces).</p>
+</blockquote>
+<blockquote>
+<p><strong>"Address already in use" means another process is already bound to that port.</strong> Use <code>ss -tlnp | grep :8000</code> to find what's using it. <code>kill &lt;PID&gt;</code> to stop it. Or use a different port.</p>
+</blockquote>
+<h2 id="how-your-os-handles-connections"><a class="zola-anchor" href="#how-your-os-handles-connections" aria-label="Anchor link for: how-your-os-handles-connections">🔗</a>How Your OS Handles Connections</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># A TCP connection is defined by 4 things (a socket tuple):</span></span>
+<span class="giallo-l"><span>#   source IP + source port + dest IP + dest port</span></span>
+<span class="giallo-l"><span># Same dest IP+port, different source port = different connection</span></span>
+<span class="giallo-l"><span># This is why your browser can open 6 connections to the same server at once</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Only ONE process can bind to a specific local IP+port at a time.</span></span>
+<span class="giallo-l"><span># That&#39;s why you can&#39;t start two apps on port 8000.</span></span></code></pre><h1 id="what-your-code-actually-controls"><a class="zola-anchor" href="#what-your-code-actually-controls" aria-label="Anchor link for: what-your-code-actually-controls">🔗</a>What Your Code Actually Controls</h1>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># When you write this in Python:</span></span>
+<span class="giallo-l"><span>socket.connect((&quot;93.184.216.34&quot;, 443))</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Your OS:</span></span>
+<span class="giallo-l"><span># 1. Picks a random ephemeral source port (e.g., 51234)</span></span>
+<span class="giallo-l"><span># 2. Sends SYN to 93.184.216.34:443 with source 192.168.1.100:51234</span></span>
+<span class="giallo-l"><span># 3. Handles the TCP handshake, ACKs, retransmissions for you</span></span>
+<span class="giallo-l"><span># 4. Delivers the data you write() to the transport layer</span></span>
+<span class="giallo-l"><span># 5. Wraps it in IP packet with dest 93.184.216.34, source 192.168.1.100</span></span>
+<span class="giallo-l"><span># 6. Wraps that in an Ethernet frame with your router&#39;s MAC as dest</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># When you write:</span></span>
+<span class="giallo-l"><span>server = socket.socket()</span></span>
+<span class="giallo-l"><span>server.bind((&quot;0.0.0.0&quot;, 8000))</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Your OS:</span></span>
+<span class="giallo-l"><span># 1. Tells the network stack: &quot;accept TCP segments for port 8000&quot;</span></span>
+<span class="giallo-l"><span># 2. When a SYN arrives, responds with SYN-ACK (enters SYN_RCVD state)</span></span>
+<span class="giallo-l"><span># 3. When ACK comes back, moves to ESTABLISHED</span></span>
+<span class="giallo-l"><span># 4. Calls your accept() callback</span></span></code></pre><h1 id="http-overview"><a class="zola-anchor" href="#http-overview" aria-label="Anchor link for: http-overview">🔗</a>HTTP Overview</h1>
+<p>HTTP is a <strong>text-based protocol</strong> that runs on top of TCP. It's just formatted text sent over a TCP connection. That's it. No magic. Every HTTP message is either a request (client to server) or a response (server to client), and both follow the same basic structure.</p>
+<h2 id="http-request-structure"><a class="zola-anchor" href="#http-request-structure" aria-label="Anchor link for: http-request-structure">🔗</a>HTTP Request Structure</h2>
+<p>What actually gets sent on the wire:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Request line</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    GET</span><span style="color: #9ECBFF;"> /api/users?page=</span><span style="color: #79B8FF;">2</span><span>&amp;limit</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">50</span><span style="color: #B392F0;"> HTTP/1.1</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # ↑ method  ↑ path+query       ↑ version</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Headers (key: value, one per line)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Host:</span><span style="color: #9ECBFF;"> example.com</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Accept:</span><span style="color: #9ECBFF;"> application/json</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Authorization:</span><span style="color: #9ECBFF;"> Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Content-Type:</span><span style="color: #9ECBFF;"> application/json</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    User-Agent:</span><span style="color: #9ECBFF;"> Mozilla/5.0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Accept-Encoding:</span><span style="color: #9ECBFF;"> gzip, deflate</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Connection:</span><span style="color: #9ECBFF;"> keep-alive</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Empty line separates headers from body</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Body (optional - present in POST/PUT/PATCH, absent in GET/DELETE)</span></span>
+<span class="giallo-l"><span>    {</span><span style="color: #B392F0;">&quot;name&quot;</span><span style="color: #79B8FF;">:</span><span style="color: #9ECBFF;"> &quot;Alice&quot;, &quot;email&quot;: &quot;alice@example.com&quot;}</span></span></code></pre>
+<blockquote>
+<p><strong>The empty line between headers and body is mandatory.</strong> Without it, the server can't tell where headers end and body begins. If you get "400 Bad Request" and can't figure out why, check for a missing blank line between headers and body.</p>
+</blockquote>
+<h2 id="http-response-structure"><a class="zola-anchor" href="#http-response-structure" aria-label="Anchor link for: http-response-structure">🔗</a>HTTP Response Structure</h2>
+<p>What the server sends back:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Status line</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    HTTP/1.1</span><span style="color: #79B8FF;"> 200</span><span style="color: #9ECBFF;"> OK</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # ↑ version  ↑ status code  ↑ reason phrase</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Headers</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Content-Type:</span><span style="color: #9ECBFF;"> application/json</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Content-Length:</span><span style="color: #79B8FF;"> 47</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Cache-Control:</span><span style="color: #9ECBFF;"> max-age=</span><span style="color: #79B8FF;">3600</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Server:</span><span style="color: #9ECBFF;"> nginx/1.24</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    X-Request-Id:</span><span style="color: #9ECBFF;"> abc-123-def</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Empty line</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Body</span></span>
+<span class="giallo-l"><span>    {</span><span style="color: #B392F0;">&quot;id&quot;</span><span style="color: #79B8FF;">:</span><span style="color: #9ECBFF;"> 1, &quot;name&quot;: &quot;Alice&quot;}</span></span></code></pre><h2 id="http-methods-verbs"><a class="zola-anchor" href="#http-methods-verbs" aria-label="Anchor link for: http-methods-verbs">🔗</a>HTTP Methods (Verbs)</h2>
+<table><thead><tr><th>Method</th><th>Has Body?</th><th>Idempotent?</th><th>Safe?</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>GET</code></td><td>No</td><td>Yes</td><td>Yes</td><td>Retrieve a resource</td></tr>
+<tr><td><code>POST</code></td><td>Yes</td><td>No</td><td>No</td><td>Create a resource (or trigger an action)</td></tr>
+<tr><td><code>PUT</code></td><td>Yes</td><td>Yes</td><td>No</td><td>Replace a resource entirely (full update)</td></tr>
+<tr><td><code>PATCH</code></td><td>Yes</td><td>No</td><td>No</td><td>Partial update (change only the fields you send)</td></tr>
+<tr><td><code>DELETE</code></td><td>No</td><td>Yes</td><td>No</td><td>Delete a resource</td></tr>
+<tr><td><code>HEAD</code></td><td>No</td><td>Yes</td><td>Yes</td><td>Like GET but only returns headers (check if exists, get Content-Length)</td></tr>
+<tr><td><code>OPTIONS</code></td><td>No</td><td>Yes</td><td>Yes</td><td>Ask server what methods are allowed (CORS preflight)</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Idempotent</strong> = doing it once has the same effect as doing it 100 times. <code>GET</code> the same page 10 times = same result. <code>POST</code> create 10 orders = 10 different orders. This matters for retry logic: if a request fails mid-flight, safe to retry idempotent methods.</p>
+</blockquote>
+<blockquote>
+<p><strong>GET with a body is technically allowed by the spec but practically never used.</strong> Proxies and caches may strip it. Use <code>POST</code> if you need to send data, even if you're just retrieving.</p>
+</blockquote>
+<h2 id="status-codes"><a class="zola-anchor" href="#status-codes" aria-label="Anchor link for: status-codes">🔗</a>Status Codes</h2>
+<table><thead><tr><th>Range</th><th>Meaning</th><th>Common Codes</th></tr></thead><tbody>
+<tr><td><strong>1xx</strong></td><td>Informational</td><td>100 Continue, 101 Switching Protocols</td></tr>
+<tr><td><strong>2xx</strong></td><td>Success</td><td>200 OK, 201 Created, 204 No Content</td></tr>
+<tr><td><strong>3xx</strong></td><td>Redirection</td><td>301 Moved Permanently, 302 Found, 304 Not Modified</td></tr>
+<tr><td><strong>4xx</strong></td><td>Client error (your fault)</td><td>400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 405 Method Not Allowed, 413 Payload Too Large, 429 Too Many Requests, 422 Unprocessable Entity</td></tr>
+<tr><td><strong>5xx</strong></td><td>Server error (their fault)</td><td>500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout</td></tr>
+</tbody></table>
+<h2 id="the-ones-that-confuse-developers"><a class="zola-anchor" href="#the-ones-that-confuse-developers" aria-label="Anchor link for: the-ones-that-confuse-developers">🔗</a>The Ones That Confuse Developers</h2>
+<table><thead><tr><th>Code</th><th>What It Actually Means</th></tr></thead><tbody>
+<tr><td><code>400</code></td><td>Your request is malformed (bad JSON, missing required header, syntax error in URL). Read the response body for details.</td></tr>
+<tr><td><code>401</code></td><td>"I don't know who you are." Missing or invalid authentication (wrong token, expired session).</td></tr>
+<tr><td><code>403</code></td><td>"I know who you are, but you're not allowed." Authentication OK, authorization denied. Wrong role, wrong permissions.</td></tr>
+<tr><td><code>404</code></td><td>"This URL doesn't exist on this server." Route not found. Not "server not found" (that's DNS).</td></tr>
+<tr><td><code>405</code></td><td>"You used the wrong HTTP method." GET on an endpoint that only accepts POST. Or POST on one that only accepts GET.</td></tr>
+<tr><td><code>413</code></td><td>"Your request body is too big." Usually a server config limit (nginx default: 1MB).</td></tr>
+<tr><td><code>422</code></td><td>"I understood your request but the data is wrong." Validation error: missing required field, wrong data type, business rule violation.</td></tr>
+<tr><td><code>429</code></td><td>"You're sending too many requests." Rate limiting. Slow down.</td></tr>
+<tr><td><code>500</code></td><td>"Something broke on our end." Unhandled exception in the app code. Check server logs.</td></tr>
+<tr><td><code>502</code></td><td>"The server in front of me is broken." Nginx got an invalid response from the app. App is down or crashed.</td></tr>
+<tr><td><code>503</code></td><td>"The server is overloaded or down for maintenance." App isn't accepting connections yet.</td></tr>
+<tr><td><code>504</code></td><td>"The server in front of me timed out waiting for the app." App took too long to respond.</td></tr>
+<tr><td><code>301 vs 302</code></td><td><code>301</code>: "Moved permanently, update your URL." <code>302</code>: "Moved temporarily, keep using the old URL." Browsers cache 301s by default. Use 302 for POST redirects (to prevent method change to GET).</td></tr>
+<tr><td><code>304</code></td><td>"Nothing changed since last time you asked." Your cached version is still valid. No body returned.</td></tr>
+</tbody></table>
+<h2 id="headers-that-actually-matter"><a class="zola-anchor" href="#headers-that-actually-matter" aria-label="Anchor link for: headers-that-actually-matter">🔗</a>Headers That Actually Matter</h2>
+<table><thead><tr><th>Header</th><th>Direction</th><th>What It Does</th></tr></thead><tbody>
+<tr><td><code>Host</code></td><td>Request</td><td>The domain name. <strong>Mandatory in HTTP/1.1.</strong> Without it, the server can't route the request to the right virtual host. "400 Bad Request" if missing.</td></tr>
+<tr><td><code>Content-Type</code></td><td>Both</td><td>MIME type of the body. <code>application/json</code>, <code>text/html</code>, <code>multipart/form-data</code>. <strong>Mandatory</strong> when there's a body.</td></tr>
+<tr><td><code>Content-Length</code></td><td>Response</td><td>Body size in bytes. Lets the client know when the response is complete. Replaced by <code>Transfer-Encoding: chunked</code> for streaming.</td></tr>
+<tr><td><code>Authorization</code></td><td>Request</td><td>Credentials. Usually <code>Bearer &lt;token&gt;</code> for JWT, or <code>Basic base64(user:pass)</code> for simple auth.</td></tr>
+<tr><td><code>Accept</code></td><td>Request</td><td>"I can understand these formats." <code>application/json</code>, <code>text/html</code>. Server picks the best match.</td></tr>
+<tr><td><code>Cache-Control</code></td><td>Response</td><td>"You can cache this for N seconds." <code>max-age=3600</code>, <code>no-cache</code>, <code>no-store</code>, <code>private</code>.</td></tr>
+<tr><td><code>Set-Cookie</code></td><td><strong>Response only</strong></td><td>Tell the browser to store a cookie. <strong>Cannot be set by JavaScript.</strong> This is why you can't read <code>HttpOnly</code> cookies from <code>document.cookie</code>.</td></tr>
+<tr><td><code>Access-Control-Allow-Origin</code></td><td><strong>Response only</strong></td><td>CORS: which origins can call this API. <code>*</code> = any origin. <strong>Never use <code>*</code> with credentials.</strong></td></tr>
+<tr><td><code>Access-Control-Allow-Headers</code></td><td><strong>Response only</strong></td><td>CORS: which request headers are allowed in preflight.</td></tr>
+<tr><td><code>X-Forwarded-For</code></td><td>Request</td><td>Original client IP when behind a proxy. <code>X-Forwarded-For: client_ip, proxy1_ip</code>. Trust chain.</td></tr>
+<tr><td><code>X-Request-Id</code></td><td>Response</td><td>Unique ID for the request. Essential for tracing issues through logs across services.</td></tr>
+<tr><td><code>User-Agent</code></td><td>Request</td><td>Browser/app identification string. Used by servers for analytics and compatibility.</td></tr>
+<tr><td><code>Connection</code></td><td>Both</td><td><code>keep-alive</code> = reuse the TCP connection for multiple requests. <code>close</code> = close after one request.</td></tr>
+<tr><td><code>Transfer-Encoding</code></td><td>Response</td><td><code>chunked</code> = send body in chunks (no need to know Content-Length upfront). Enables streaming.</td></tr>
+</tbody></table>
+<h2 id="http-1-1-vs-http-2-vs-http-3"><a class="zola-anchor" href="#http-1-1-vs-http-2-vs-http-3" aria-label="Anchor link for: http-1-1-vs-http-2-vs-http-3">🔗</a>HTTP/1.1 vs HTTP/2 vs HTTP/3</h2>
+<table><thead><tr><th></th><th>HTTP/1.1</th><th>HTTP/2</th><th>HTTP/3</th></tr></thead><tbody>
+<tr><td><strong>Transport</strong></td><td>TCP</td><td>TCP</td><td>UDP (QUIC)</td></tr>
+<tr><td><strong>Connections</strong></td><td>1 request per TCP connection (or pipelined)</td><td>Multiplexed: many requests over one TCP connection</td><td>Multiple streams over one UDP "connection"</td></tr>
+<tr><td><strong>Headers</strong></td><td>Full headers repeated every request</td><td>HPACK compression: headers sent once, referenced after</td><td>QPACK: similar to HPACK</td></tr>
+<tr><td><strong>Ordering</strong></td><td>Sequential (head-of-line blocking)</td><td>Streams can interleave freely</td><td>Same as HTTP/2</td></tr>
+<tr><td><strong>TLS</strong></td><td>Separate handshake (2 RTTs added)</td><td>Embedded (saves ~1 RTT)</td><td>Embedded (same as HTTP/2)</td></tr>
+<tr><td><strong>Connection setup</strong></td><td>TCP handshake (1 RTT) + TLS (1-2 RTTs) = 2-3 RTTs</td><td>TCP + TLS = 2-3 RTTs</td><td>TLS (no TCP) = 1 RTT</td></tr>
+<tr><td><strong>Head-of-line blocking</strong></td><td>Yes: browser waits for one response before sending next request on same connection</td><td>No: multiplexed, no HOL blocking</td><td>No</td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>HTTP/3 is not "HTTP over UDP" in the simple sense.</strong> It uses QUIC, which adds its own reliability, ordering, and congestion control on top of UDP. Applications still see an HTTP-like interface. The complexity is pushed into the library, not your code.</p>
+</blockquote>
+<h2 id="keep-alive-and-connection-reuse"><a class="zola-anchor" href="#keep-alive-and-connection-reuse" aria-label="Anchor link for: keep-alive-and-connection-reuse">🔗</a>Keep-Alive and Connection Reuse</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># HTTP/1.1 default: keep-alive is ON</span></span>
+<span class="giallo-l"><span># Without keep-alive (Connection: close):</span></span>
+<span class="giallo-l"><span>#   Request 1: TCP handshake (1 RTT) + HTTP request/response (1 RTT) = 2 RTTs</span></span>
+<span class="giallo-l"><span>#   Request 2: TCP handshake + HTTP = 2 RTTs</span></span>
+<span class="giallo-l"><span>#   Request 3: same = 2 RTTs</span></span>
+<span class="giallo-l"><span>#   Total: 6 RTTs for 3 requests</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># With keep-alive (Connection: keep-alive):</span></span>
+<span class="giallo-l"><span>#   Request 1: TCP handshake (1 RTT) + HTTP request/response = 2 RTTs</span></span>
+<span class="giallo-l"><span>#   Request 2: just HTTP = 1 RTT</span></span>
+<span class="giallo-l"><span>#   Request 3: just HTTP = 1 RTT</span></span>
+<span class="giallo-l"><span>#   Total: 4 RTTs for 3 requests</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># HTTP/2/3: all requests multiplexed over ONE connection:</span></span>
+<span class="giallo-l"><span>#   Setup: 1 RTT (HTTP/3) or 2-3 RTTs (HTTP/2)</span></span>
+<span class="giallo-l"><span>#   Requests 1-3 (and hundreds more): 1 RTT each (all in parallel if server allows)</span></span>
+<span class="giallo-l"><span>#   Total: 2-4 RTTs for 3 requests</span></span></code></pre><h2 id="form-data-content-type-matters"><a class="zola-anchor" href="#form-data-content-type-matters" aria-label="Anchor link for: form-data-content-type-matters">🔗</a>Form Data: Content-Type Matters</h2>
+<p>application/x-www-form-urlencoded (default for HTML forms):</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># What your browser sends when you submit &lt;form&gt; without enctype</span></span>
+<span class="giallo-l"><span>POST /submit HTTP/1.1</span></span>
+<span class="giallo-l"><span>Content-Type: application/x-www-form-urlencoded</span></span>
+<span class="giallo-l"><span>Content-Length: 27</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>name=Alice&amp;email=alice%40example.com&amp;age=30</span></span>
+<span class="giallo-l"><span># URL-encoded: spaces become +, special chars become %XX</span></span></code></pre>
+<p>multipart/form-data (for file uploads):</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># What your browser sends when &lt;form enctype=&quot;multipart/form-data&quot;&gt;</span></span>
+<span class="giallo-l"><span>POST /upload HTTP/1.1</span></span>
+<span class="giallo-l"><span>Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW</span></span>
+<span class="giallo-l"><span>Content-Length: 342</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>------WebKitFormBoundary7MA4YWxkTrZu0gW</span></span>
+<span class="giallo-l"><span>Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;photo.jpg&quot;</span></span>
+<span class="giallo-l"><span>Content-Type: image/jpeg</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>[binary data]</span></span>
+<span class="giallo-l"><span>------WebKitFormBoundary7MA4YWxkTrZu0gW</span></span>
+<span class="giallo-l"><span>Content-Disposition: form-data; name=&quot;description&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>A photo of Alice</span></span>
+<span class="giallo-l"><span>------WebKitFormBoundary7MA4YWxkTrZu0gW--</span></span></code></pre>
+<p>application/json (APIs):</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>POST /api/users HTTP/1.1</span></span>
+<span class="giallo-l"><span>Content-Type: application/json</span></span>
+<span class="giallo-l"><span>Content-Length: 47</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>{&quot;name&quot;: &quot;Alice&quot;, &quot;email&quot;: &quot;alice@example.com&quot;}</span></span>
+<span class="giallo-l"><span># No URL encoding needed — JSON is the raw body, not form fields</span></span></code></pre>
+<blockquote>
+<p><strong>Wrong Content-Type = wrong parsing.</strong> Sending JSON with <code>application/x-www-form-urlencoded</code> (or no Content-Type) will make the server try to parse JSON as form fields, which silently fails. Always set Content-Type when you have a body.</p>
+</blockquote>
+<h1 id="what-dns-does"><a class="zola-anchor" href="#what-dns-does" aria-label="Anchor link for: what-dns-does">🔗</a>What DNS Does</h1>
+<p>DNS translates <strong>domain names</strong> (human-readable) into <strong>IP addresses</strong> (machine-readable). It's the phonebook of the internet. Without it, every URL would be <code>http://93.184.216.34/</code>.</p>
+<h2 id="the-resolution-process"><a class="zola-anchor" href="#the-resolution-process" aria-label="Anchor link for: the-resolution-process">🔗</a>The Resolution Process</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>1. Browser cache → &quot;Have I looked up example.com recently?&quot; (check TTL)</span></span>
+<span class="giallo-l"><span>If not found ↓</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>2. OS cache → check /etc/hosts, nscd, systemd-resolved</span></span>
+<span class="giallo-l"><span>If not found ↓</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>3. Recursive resolver (usually your ISP&#39;s DNS, e.g., 8.8.8.8 or 1.1.1.1)</span></span>
+<span class="giallo-l"><span>   ├─ Check its own cache</span></span>
+<span class="giallo-l"><span>   ├─ If cached: return IP immediately</span></span>
+<span class="giallo-l"><span>   └─ If not: continue ↓</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>4. Root nameserver → &quot;Who handles .com?&quot;</span></span>
+<span class="giallo-l"><span>   Returns the address of .com&#39;s authoritative servers</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>5. .com TLD server → &quot;Who handles example.com?&quot;</span></span>
+<span class="giallo-l"><span>   Returns the address of example.com&#39;s nameserver (usually your DNS provider&#39;s)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>6. Authoritative nameserver → &quot;What is example.com?&quot;</span></span>
+<span class="giallo-l"><span>   Returns: 93.184.216.34</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Result is cached at every level for the TTL duration</span></span></code></pre>
+<blockquote>
+<p><strong>DNS lookups typically take 20-120ms.</strong> But they're cached aggressively. Once resolved, subsequent requests are instant. The TTL (Time To Live) in the DNS record controls cache duration. Low TTL = fresh data, more lookups. High TTL = stale data, fewer lookups.</p>
+</blockquote>
+<h2 id="record-types"><a class="zola-anchor" href="#record-types" aria-label="Anchor link for: record-types">🔗</a>Record Types</h2>
+<table><thead><tr><th>Type</th><th>Points To</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>A</code></td><td>IPv4 address</td><td><code>example.com → 93.184.216.34</code></td></tr>
+<tr><td><code>AAAA</code></td><td>IPv6 address</td><td><code>example.com → 2606:2800:220:1:248:1893:25c8:1946</code></td></tr>
+<tr><td><code>CNAME</code></td><td>Alias (redirects one domain to another)</td><td><code>www.example.com → example.com</code></td></tr>
+<tr><td><code>MX</code></td><td>Mail server</td><td><code>example.com → mail.example.com</code> (with priority)</td></tr>
+<tr><td><code>NS</code></td><td>Nameserver (who is authoritative for this domain)</td><td><code>example.com → ns1.dnsprovider.com</code></td></tr>
+<tr><td><code>TXT</code></td><td>Arbitrary text (SPF, verification, etc.)</td><td><code>"v=spf1 include:_spf.google.com ~all"</code></td></tr>
+<tr><td><code>SRV</code></td><td>Service (hostname + port)</td><td><code>_sip._tcp.example.com → sip.example.com:5060</code></td></tr>
+<tr><td><code>PTR</code></td><td>Reverse DNS (IP → name)</td><td><code>93.184.216.34 → example.com</code></td></tr>
+<tr><td><code>SOA</code></td><td>Start of Authority (zone metadata)</td><td>Primary NS, admin email, serial, refresh, retry, expire, minimum TTL</td></tr>
+</tbody></table>
+<h2 id="common-dns-tools"><a class="zola-anchor" href="#common-dns-tools" aria-label="Anchor link for: common-dns-tools">🔗</a>Common DNS Tools</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Query specific record type</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> example.com A</span><span style="color: #6A737D;">                    # IPv4 address</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> example.com AAAA</span><span style="color: #6A737D;">                 # IPv6 address</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> example.com MX</span><span style="color: #6A737D;">                   # mail servers</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> example.com TXT</span><span style="color: #6A737D;">                  # text records (SPF, verification)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Trace the full resolution path (see every step)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> +trace example.com</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Query a specific DNS server</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> @1.1.1.1 example.com A</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Short output</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> +short example.com A</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Reverse DNS (IP → name)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #79B8FF;"> -x 93.184.216.34</span><span style="color: #9ECBFF;"> +short</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Check DNS propagation after a change</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    dig</span><span style="color: #9ECBFF;"> example.com @8.8.8.8 +short</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Alternative tools</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nslookup</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #6A737D;">                # simpler output, fewer options</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    host</span><span style="color: #79B8FF;"> -t</span><span style="color: #9ECBFF;"> A example.com</span><span style="color: #6A737D;">               # another alternative</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Check your DNS resolver</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    cat</span><span style="color: #9ECBFF;"> /etc/resolv.conf</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nmcli</span><span style="color: #9ECBFF;"> dev show</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> grep</span><span style="color: #9ECBFF;"> DNS</span><span style="color: #6A737D;">           # NetworkManager DNS (Linux)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Flush local DNS cache (macOS)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> dscacheutil</span><span style="color: #79B8FF;"> -flushcache</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> discoveryutil mdnsflushcache</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Flush local DNS cache (Linux with systemd-resolved)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> systemd-resolve</span><span style="color: #79B8FF;"> --flush-caches</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Flush local DNS cache (Linux with nscd)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> nscd</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> hosts</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Flush browser DNS: clear browsing data or use devtools &gt; Network &gt; Disable cache (temporarily)</span></span></code></pre><h2 id="dns-propagation"><a class="zola-anchor" href="#dns-propagation" aria-label="Anchor link for: dns-propagation">🔗</a>DNS Propagation</h2>
+<p>When you change a DNS record, it doesn't take effect everywhere instantly. Propagation happens gradually:</p>
+<ul>
+<li><strong>Authoritative server:</strong> Updated immediately (TTL clock starts ticking)</li>
+<li><strong>Recursive resolver (ISP):</strong> Updates after current TTL expires (up to the old TTL value, usually 300-3600 seconds for common records)</li>
+<li><strong>Browser cache:</strong> Respects TTL but may override with heuristics</li>
+<li><strong>OS cache:</strong> Follows TTL</li>
+</ul>
+<blockquote>
+<p><strong>Set low TTLs (300s) before making changes.</strong> If your TTL is 86400 (1 day), you'll wait up to a day for changes to propagate. Set it to 300 a day before, then make the change, then set it back to 86400 after confirming it works.</p>
+</blockquote>
+<h2 id="common-dns-problems"><a class="zola-anchor" href="#common-dns-problems" aria-label="Anchor link for: common-dns-problems">🔗</a>Common DNS Problems</h2>
+<table><thead><tr><th>Symptom</th><th>Likely Cause</th></tr></thead><tbody>
+<tr><td>Works with IP, fails with domain</td><td>DNS not resolving. Check with <code>dig</code>. Check propagation.</td></tr>
+<tr><td>Works on one device, not another</td><td>DNS cache on the failing device. Flush it.</td></tr>
+<tr><td>"Server Not Found" (NXDOMAIN)</td><td>Domain doesn't exist at all, or a typo</td></tr>
+<tr><td>"Server Failure" (SERVFAIL)</td><td>The authoritative server is misconfigured or down</td></tr>
+<tr><td>"Refused" (REFUSED)</td><td>The authoritative server refuses to answer (wrong name server, no access)</td></tr>
+<tr><td>"No answer" (NOERROR, empty response)</td><td>The domain exists but has no records of the queried type (e.g., no AAAA records)</td></tr>
+<tr><td>Sporadic failures</td><td>TTL expiring on one resolver but not another. Inconsistent propagation.</td></tr>
+<tr><td>Works in browser, fails in curl</td><td>curl doesn't use the system DNS. Use <code>curl --resolve</code> or check <code>/etc/resolv.conf</code>.</td></tr>
+<tr><td>CNAME loop</td><td>Domain A → Domain B → Domain A. Cannot resolve.</td></tr>
+</tbody></table>
+<h1 id="what-tls-does"><a class="zola-anchor" href="#what-tls-does" aria-label="Anchor link for: what-tls-does">🔗</a>What TLS Does</h1>
+<p>TLS (Transport Layer Security) encrypts the data between your browser and the server so eavesdroppers on the network can't read it. That's it. It doesn't make your app secure — it protects data <strong>in transit</strong>.</p>
+<blockquote>
+<p><strong>HTTPS = HTTP over TLS over TCP.</strong> The data on the wire is encrypted, but the server and browser see plaintext. TLS is between transport endpoints, not end-to-end encryption.</p>
+</blockquote>
+<h2 id="the-tls-handshake-what-actually-happens"><a class="zola-anchor" href="#the-tls-handshake-what-actually-happens" aria-label="Anchor link for: the-tls-handshake-what-actually-happens">🔗</a>The TLS Handshake (What Actually Happens)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>Client Hello → I want to talk HTTPS. Here are TLS version + cipher suites I support + random number (ClientHello)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Server Hello → OK, using TLS 1.3, this cipher suite, my certificate, and random number (ServerHello)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Server Certificate → Here&#39;s my certificate proving I am example.com (signed by a CA your browser trusts)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Client validates → &quot;Is this cert valid? Not expired? Correct domain? Signed by a trusted CA?&quot;</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>Key Exchange → Client and server agree on a shared secret without sending it in the clear</span></span>
+<span class="giallo-l"><span>  (using the server&#39;s public key in the certificate)</span></span>
+<span class="giallo-l"><span>│</span></span>
+<span class="giallo-l"><span>            === encryption established ===</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Application data is now encrypted before being sent</span></span></code></pre><h2 id="certificates-chain-of-trust"><a class="zola-anchor" href="#certificates-chain-of-trust" aria-label="Anchor link for: certificates-chain-of-trust">🔗</a>Certificates &amp; Chain of Trust</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Certificate contains:</span></span>
+<span class="giallo-l"><span># - Domain name (e.g., example.com)</span></span>
+<span class="giallo-l"><span># - Public key of the server</span></span>
+<span class="giallo-l"><span># - Who issued it (the CA)</span></span>
+<span class="giallo-l"><span># - Validity period (not before / not after)</span></span>
+<span class="giallo-l"><span># - Signature from the CA (cryptographic proof the CA issued it)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Chain of trust:</span></span>
+<span class="giallo-l"><span># Browser trusts Root CAs (built into OS/browser)</span></span>
+<span class="giallo-l"><span># Root CA signs Intermediate CA certificates</span></span>
+<span class="giallo-l"><span># Intermediate CA signs your certificate</span></span>
+<span class="giallo-l"><span># Browser validates: your cert → intermediate → root (must be unbroken chain)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Self-signed cert: you sign it yourself. Browsers don&#39;t trust it by default.</span></span>
+<span class="giallo-l"><span># Fine for dev/testing. Never use in production.</span></span></code></pre><h2 id="common-tls-issues"><a class="zola-anchor" href="#common-tls-issues" aria-label="Anchor link for: common-tls-issues">🔗</a>Common TLS Issues</h2>
+<table><thead><tr><th>Symptom</th><th>Likely Cause</th></tr></thead><tbody>
+<tr><td>"Your connection is not private" (NET::ERR_CERT_AUTHORITY_INVALID)</td><td>Self-signed cert, expired cert, cert for wrong domain, or cert signed by untrusted CA</td></tr>
+<tr><td>"Certificate has expired"</td><td>Cert's not-after date has passed. Renew it.</td></tr>
+<tr><td>"Hostname mismatch"</td><td>Cert is for <code>api.example.com</code> but you're connecting to <code>staging.example.com</code></td></tr>
+<tr><td>"Mixed content" warning</td><td>HTTPS page loading HTTP resources (images, scripts). Browser blocks or warns.</td></tr>
+<tr><td>Cert works in browser, fails in curl/Python</td><td>curl/Python don't use the OS certificate store. Use <code>curl -k</code> (insecure, but confirms DNS/TCP works) or set <code>REQUESTS_CA_BUNDLE</code> in Python.</td></tr>
+</tbody></table>
+<h2 id="certificate-types-let-s-encrypt-vs-commercial"><a class="zola-anchor" href="#certificate-types-let-s-encrypt-vs-commercial" aria-label="Anchor link for: certificate-types-let-s-encrypt-vs-commercial">🔗</a>Certificate Types (Let's Encrypt vs Commercial)</h2>
+<table><thead><tr><th></th><th>Let's Encrypt</th><th>Commercial (DigiCert, etc.)</th></tr></thead><tbody>
+<tr><td><strong>Cost</strong></td><td>Free</td><td>$50-$2000+/year</td></tr>
+<tr><td><strong>Validity</strong></td><td>90 days max (must renew frequently)</td><td>1-3 years</td></tr>
+<tr><td><strong>Automation</strong></td><td>Designed for full automation (certbot)</td><td>Often requires manual steps</td></tr>
+<tr><td><strong>Wildcard certs</strong></td><td>Supported (via DNS-01 challenge)</td><td>Supported</td></tr>
+<tr><td><strong>EV (green bar in browser)</strong></td><td>Not offered</td><td>Available (requires business verification)</td></tr>
+<tr><td><strong>Support</strong></td><td>Community (forums, docs)</td><td>Dedicated support</td></tr>
+</tbody></table>
+<h2 id="renewal-and-expiry"><a class="zola-anchor" href="#renewal-and-expiry" aria-label="Anchor link for: renewal-and-expiry">🔗</a>Renewal and Expiry</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Check when a cert expires:</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    echo</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> openssl</span><span style="color: #9ECBFF;"> s_client</span><span style="color: #79B8FF;"> -connect</span><span style="color: #9ECBFF;"> example.com:443</span><span style="color: #F97583;"> 2&gt;</span><span style="color: #9ECBFF;">/dev/null</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> openssl</span><span style="color: #9ECBFF;"> x509</span><span style="color: #79B8FF;"> -noout -enddate -startdate</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Let&#39;s Encrypt renewal (via certbot):</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # certbot automatically handles this with a cron/systemd timer</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> certbot renew</span><span style="color: #79B8FF;"> --dry-run</span><span style="color: #6A737D;">          # test renewal without making changes</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> certbot renew</span><span style="color: #6A737D;">                 # actually renew</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # certbot installs a timer that auto-renews when cert is 30 days old</span></span></code></pre><h2 id="mixed-content"><a class="zola-anchor" href="#mixed-content" aria-label="Anchor link for: mixed-content">🔗</a>Mixed Content</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># HTTPS page loading HTTP resource → browser blocks or warns</span></span>
+<span class="giallo-l"><span># Common causes:</span></span>
+<span class="giallo-l"><span># &lt;img src=&quot;http://example.com/img.jpg&quot;&gt;           ← blocks the image</span></span>
+<span class="giallo-l"><span># &lt;script src=&quot;http://cdn.example.com/lib.js&quot;&gt;   ← blocks the script</span></span>
+<span class="giallo-l"><span># &lt;iframe src=&quot;http://...&quot;&gt;                     ← blocks the iframe</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Fix: use https:// for ALL resources, or upgrade-insecure-requests in CSP</span></span>
+<span class="giallo-l"><span># Or for dev: chrome://flags/#allow-insecure-localhost</span></span></code></pre><h1 id="tools"><a class="zola-anchor" href="#tools" aria-label="Anchor link for: tools">🔗</a>Tools</h1>
+<h2 id="curl"><a class="zola-anchor" href="#curl" aria-label="Anchor link for: curl">🔗</a>curl</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Basic GET (same as opening in a browser)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #9ECBFF;"> https://api.example.com/users</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Verbose (see the full request and response including headers)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -v</span><span style="color: #9ECBFF;"> https://api.example.com/users</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Show only response headers</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -I</span><span style="color: #9ECBFF;"> https://api.example.com/users</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Silent mode (no progress bar)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> https://api.example.com/users</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Follow redirects</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -L</span><span style="color: #9ECBFF;"> https://example.com/nonexistent-page</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Download a file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -O</span><span style="color: #9ECBFF;"> https://example.com/file.zip</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -o</span><span style="color: #9ECBFF;"> myfile.zip https://example.com/file.zip</span><span style="color: #6A737D;">  # custom filename</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # POST with JSON</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -X</span><span style="color: #9ECBFF;"> POST https://api.example.com/users</span><span style="color: #79B8FF;"> \</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">      -H</span><span style="color: #9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="color: #79B8FF;"> \</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">      -d</span><span style="color: #9ECBFF;"> &#39;{&quot;name&quot;:&quot;Alice&quot;,&quot;email&quot;:&quot;alice@example.com&quot;}&#39;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # POST with form data</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -X</span><span style="color: #9ECBFF;"> POST https://example.com/login</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> &quot;username=alice&amp;password=secret&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # POST from a file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -X</span><span style="color: #9ECBFF;"> POST</span><span style="color: #79B8FF;"> -H</span><span style="color: #9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> @data.json https://api.example.com/users</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Add auth header</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -H</span><span style="color: #9ECBFF;"> &quot;Authorization: Bearer eyJhbGciOiJIUzI1NiIs...&quot; https://api.example.com/me</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Measure response time</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -w</span><span style="color: #9ECBFF;"> &quot;\nTime: %{time_total}s\n&quot;</span><span style="color: #79B8FF;"> -o</span><span style="color: #9ECBFF;"> /dev/null</span><span style="color: #79B8FF;"> -s</span><span style="color: #9ECBFF;"> https://example.com</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Show only status code</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -o</span><span style="color: #9ECBFF;"> /dev/null</span><span style="color: #79B8FF;"> -s -w</span><span style="color: #9ECBFF;"> &quot;%{http_code}\n&quot; https://example.com</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Show response headers + body</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> https://api.example.com/users</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Ignore SSL certificate errors (only for debugging!)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -k</span><span style="color: #9ECBFF;"> https://self-signed.example.com</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Resolve using a specific DNS server</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> --resolve</span><span style="color: #9ECBFF;"> &quot;example.com:443:127.0.0.1&quot; https://example.com</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Send a cookie</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -b</span><span style="color: #9ECBFF;"> &quot;session=abc123&quot; https://example.com/dashboard</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Save cookies to a file, then use them in next request</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -c</span><span style="color: #9ECBFF;"> cookies.txt</span><span style="color: #79B8FF;"> -X</span><span style="color: #9ECBFF;"> POST https://example.com/login</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> &quot;user=alice&quot;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -b</span><span style="color: #9ECBFF;"> cookies.txt https://example.com/dashboard</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Upload a file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -F</span><span style="color: #9ECBFF;"> &quot;file=@localfile.jpg&quot; https://example.com/upload</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -F</span><span style="color: #9ECBFF;"> &quot;file=@localfile.jpg;type=image/jpeg&quot; https://example.com/upload</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    curl</span><span style="color: #79B8FF;"> -F</span><span style="color: #9ECBFF;"> &quot;file=@localfile.jpg;filename=photo.jpg&quot; https://example.com/upload</span></span></code></pre><h2 id="netcat-nc"><a class="zola-anchor" href="#netcat-nc" aria-label="Anchor link for: netcat-nc">🔗</a>netcat (nc)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Listen on a port and respond manually</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nc</span><span style="color: #79B8FF;"> -l -p 8080</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # (type HTTP response manually, Ctrl+C to close)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Connect to a port (test if something is listening)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nc</span><span style="color: #79B8FF;"> -v</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #79B8FF;"> 80</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # If connected: something is listening. If refused: nothing there.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Connect and send raw HTTP</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    printf</span><span style="color: #9ECBFF;"> &quot;GET / HTTP/1.1\r\nHost: example.com\r\n\r\n&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> nc</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #79B8FF;"> 80</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Port scan a single port range</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nc</span><span style="color: #79B8FF;"> -zv</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #79B8FF;"> 80 443</span><span style="color: #9ECBFF;"> 8000-8010</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -z: scan without sending data (connect-only)</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -v: verbose (shows open/closed/filtered)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Simple chat between two machines</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Machine A: nc -l 9999</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Machine B: nc machine-a-ip 9999</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Both can now type and see each other&#39;s text</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Test if a port is open locally</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    nc</span><span style="color: #79B8FF;"> -z</span><span style="color: #9ECBFF;"> localhost</span><span style="color: #79B8FF;"> 8000</span></span></code></pre><h2 id="ss-socket-statistics"><a class="zola-anchor" href="#ss-socket-statistics" aria-label="Anchor link for: ss-socket-statistics">🔗</a>ss (Socket Statistics)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # All listening TCP ports</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ss</span><span style="color: #79B8FF;"> -tlnp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # All TCP connections (listening + established)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ss</span><span style="color: #79B8FF;"> -tamp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Filter by port</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ss</span><span style="color: #79B8FF;"> -tlnp</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> grep</span><span style="color: #9ECBFF;"> :5432</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Filter by process</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ss</span><span style="color: #79B8FF;"> -tlnp</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> grep</span><span style="color: #9ECBFF;"> python</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # All listening sockets (TCP + UDP)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ss</span><span style="color: #79B8FF;"> -tulnp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Show process info</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ss</span><span style="color: #79B8FF;"> -tulnp -p</span></span></code></pre><h2 id="tcpdump-packet-capture"><a class="zola-anchor" href="#tcpdump-packet-capture" aria-label="Anchor link for: tcpdump-packet-capture">🔗</a>tcpdump (Packet Capture)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Capture all traffic on eth0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> eth0</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Capture only port 80 (HTTP)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> eth0 port</span><span style="color: #79B8FF;"> 80</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Capture DNS queries</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> any port</span><span style="color: #79B8FF;"> 53</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Save capture to file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> eth0</span><span style="color: #79B8FF;"> -w</span><span style="color: #9ECBFF;"> capture.pcap</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Read a capture file</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tcpdump</span><span style="color: #79B8FF;"> -r</span><span style="color: #9ECBFF;"> capture.pcap</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Human-readable output</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> eth0</span><span style="color: #79B8FF;"> -A -nn</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Filter by host</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> eth0 host example.com</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Filter by source</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> eth0 src host</span><span style="color: #79B8FF;"> 192.168.1.100</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Combination filter</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    sudo</span><span style="color: #9ECBFF;"> tcpdump</span><span style="color: #79B8FF;"> -i</span><span style="color: #9ECBFF;"> eth0 &quot;host example.com and port 443&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -i = interface</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -A = print ASCII text alongside hex</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -nn = no name resolution (faster)</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -w file = write to file</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # -c count = stop after N packets</span></span></code></pre><h2 id="traceroute-tracepath"><a class="zola-anchor" href="#traceroute-tracepath" aria-label="Anchor link for: traceroute-tracepath">🔗</a>traceroute / tracepath</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Trace the route packets take to reach a host</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    traceroute</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #6A737D;">      # Linux/macOS (uses UDP by default)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    tracepath</span><span style="color: #9ECBFF;"> example.com</span><span style="color: #6A737D;">        # modern Linux (uses ICMP)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Output: each hop shows the router/intermediate node and the round-trip time to reach it</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # If you see * * * * at some hop, that hop blocks ICMP (common for cloud providers)</span></span></code></pre><h2 id="wireshark"><a class="zola-anchor" href="#wireshark" aria-label="Anchor link for: wireshark">🔗</a>wireshark</h2>
+<p>Wireshark is a GUI packet analyzer. It does what tcpdump does but with a proper interface.</p>
+<p>Open it, select your network interface, start capture, do the action, stop capture, then inspect.</p>
+<p>Key features:</p>
+<ul>
+<li>Color-coded protocol dissection (HTTP, TCP, DNS, TLS are highlighted differently)</li>
+<li>"Follow TCP stream" to see the full conversation between two endpoints</li>
+<li>Filters: "http" shows only HTTP, "tcp.port == 5432" shows only PostgreSQL traffic</li>
+<li>"Follow TCP stream" → right-click a packet → Follow → see full conversation</li>
+<li>Statistics → Conversations → shows all TCP streams</li>
+<li>Analyze → Expert Info → automated problem detection</li>
+</ul>
+<p>Export → "Export specified packets" → save as .pcap for later analysis or sharing</p>
+<h1 id="infrastructure"><a class="zola-anchor" href="#infrastructure" aria-label="Anchor link for: infrastructure">🔗</a>Infrastructure</h1>
+<h2 id="switch"><a class="zola-anchor" href="#switch" aria-label="Anchor link for: switch">🔗</a>Switch</h2>
+<p>A switch connects devices on a <strong>local network (LAN)</strong>. It operates at the data link layer (layer 2) and uses <strong>MAC addresses</strong> to decide where to send frames. It builds a table mapping MAC addresses to ports, and learns which device is on which port by watching source MAC addresses in incoming frames.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># What a switch actually does with a frame:</span></span>
+<span class="giallo-l"><span># Frame arrives on port 1 from MAC AA:BB:CC:DD:EE:01, dest MAC FF:FF:FF:FF:FF:FF</span></span>
+<span class="giallo-l"><span># Switch looks up FF:FF:FF:FF:FF:FF → it&#39;s on port 5</span></span>
+<span class="giallo-l"><span># Switch forwards frame out port 5</span></span>
+<span class="giallo-l"><span># It does NOT look at IP addresses. The IP inside the frame is irrelevant to the switch.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Broadcast frame (dest MAC FF:FF:FF:FF:FF:FF:FF):</span></span>
+<span class="giallo-l"><span># Switch forwards to ALL ports (except the one it arrived on)</span></span>
+<span class="giallo-l"><span># This is how ARP (&quot;Who has 192.168.1.1? Tell 192.168.1.1 → replies to that port&quot;</span></span></code></pre>
+<blockquote>
+<p><strong>A switch connects devices on the same network.</strong> Two switches can be connected to expand the network. Routers connect different networks.</p>
+</blockquote>
+<h2 id="router"><a class="zola-anchor" href="#router" aria-label="Anchor link for: router">🔗</a>Router</h2>
+<p>A router connects <strong>different networks</strong> (e.g., your LAN and the internet). It operates at the network layer (layer 3) and uses <strong>IP addresses</strong> to decide where to send packets.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># What a router does:</span></span>
+<span class="giallo-l"><span># Packet arrives from 192.168.1.100 destined for 93.184.216.34</span></span>
+<span class="giallo-l"><span># Router checks its routing table: &quot;93.184.216.34 → send via WAN port&quot;</span></span>
+<span class="giallo-l"><span># Before forwarding: strips the source MAC, adds its own MAC as source MAC</span></span>
+<span class="giallo-l"><span># (because the previous MAC is only valid on the local segment)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># This is why your app sees the server&#39;s public IP as the source IP in logs</span></span>
+<span class="giallo-l"><span># not your machine&#39;s local IP</span></span></code></pre>
+<blockquote>
+<p><strong>Your app usually sees the router's public IP, not your machine's local IP.</strong> If you need the real client IP behind a proxy/CDN, use <code>X-Forwarded-For</code> header parsing. The first IP in the chain is usually the real client IP.</p>
+</blockquote>
+<h2 id="nat-network-address-translation"><a class="zola-anchor" href="#nat-network-address-translation" aria-label="Anchor link for: nat-network-address-translation">🔗</a>NAT (Network Address Translation)</h2>
+<p>NAT maps <strong>private IP + port</strong> to <strong>public IP + port</strong>. This solves two problems:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Problem 1: IPv4 exhaustion (not enough public IPs for every device)</span></span>
+<span class="giallo-l"><span># Problem 2: private IPs aren&#39;t routable on the internet</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># What NAT does:</span></span>
+<span class="giallo-l"><span># Internal: 192.168.1.10:51234 → External: 93.184.216.34:51234</span></span>
+<span class="giallo-l"><span># Your app connects to example.com:443 from 192.168.1.10</span></span>
+<span class="giallo-l"><span># Router translates source IP: 192.168.1.10 → 93.184.216.34</span></span>
+<span class="giallo-l"><span># When response comes back, router translates dest IP back: 93.184.216.34 → 192.168.1.10</span></span>
+<span class="giallo-l"><span># Your app thinks it&#39;s talking to 192.168.1.10 but it&#39;s actually going through the router</span></span>
+<span class="giallo-l"><span># with the public IP</span></span></code></pre>
+<blockquote>
+<p><strong>Port forwarding is manual NAT for incoming connections.</strong> Outgoing connections are NAT'd automatically. But if you run a web server on 192.168.1.10:8000, the internet can't reach it because no incoming NAT mapping exists yet. You must explicitly configure: "forward port 443 to 192.168.1.10:8000" on the router.</p>
+</blockquote>
+<h2 id="firewall"><a class="zola-anchor" href="#firewall" aria-label="Anchor link for: firewall">🔗</a>Firewall</h2>
+<p>A firewall controls <strong>which packets are allowed through</strong> based on rules: source/dest IP, port, protocol, connection state (new/established/related).</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Types:</span></span>
+<span class="giallo-l"><span># - Network firewall: on your router (controls traffic between LAN and internet)</span></span>
+<span class="giallo-l"><span># - Host firewall: on your machine (controls traffic to/from your machine)</span></span>
+<span class="giallo-l"><span># - Cloud security groups: on your cloud provider (controls traffic to/from VMs)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># How rules are evaluated (usually, in order):</span></span>
+<span class="giallo-l"><span># 1. Allow established connections (return traffic for existing connections)</span></span>
+<span class="giallo-l"><span># 2. Block specific things (drop packets matching deny rules)</span></span>
+<span class="giallo-l"><span># 3. Allow everything else (default allow or default deny)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Common patterns:</span></span>
+<span class="giallo-l"><span># Allow all outgoing (default on most setups)</span></span>
+<span class="giallo-l"><span># Allow incoming: only specific ports (SSH=22, HTTP=80, HTTPS=443)</span></span>
+<span class="giallo-l"><span># Deny all incoming by default</span></span>
+<span class="giallo-l"><span># Allow ping (ICMP) for diagnostics</span></span>
+<span class="giallo-l"><span># Block specific IPs (e.g., known bad actors)</span></span></code></pre>
+<blockquote>
+<p><strong>"Connection timed out" with nothing in logs = silently dropped by firewall.</strong> Firewalls often drop packets without logging. Check both the cloud security group AND the server's host firewall. Try <code>curl -v</code> on the server itself to see if the port is actually listening. If yes, it's the firewall. If "Connection refused," it's not.</p>
+</blockquote>
+<h2 id="vpn-virtual-private-network"><a class="zola-anchor" href="#vpn-virtual-private-network" aria-label="Anchor link for: vpn-virtual-private-network">🔗</a>VPN (Virtual Private Network)</h2>
+<p>A VPN creates an encrypted tunnel through the internet to a private network. What this actually means:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Without VPN:</span></span>
+<span class="giallo-l"><span># Your laptop → open internet → raw packets → server on 203.0.113.1 → MySQL on 3306</span></span>
+<span class="giallo-l"><span># Anyone between you and the server can see you&#39;re connecting to 203.0.113.1 on port 3306</span></span>
+<span class="giallo-l"><span># They don&#39;t see what&#39;s inside the packets (TLS helps, but the metadata is visible)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># With VPN:</span></span>
+<span class="giallo-l"><span># Your laptop → VPN client → encrypted tunnel → VPN server → private network → MySQL on 10.0.0.5:3306</span></span>
+<span class="giallo-l"><span># Outsiders only see: you&#39;re sending encrypted data to 203.0.113.1</span></span>
+<span class="giallo-l"><span># They cannot see: the destination (10.0.0.5) or the port (3306)</span></span>
+<span class="giallo-l"><span># It looks like you&#39;re on the private network</span></span></code></pre>
+<blockquote>
+<p><strong>A VPN does NOT encrypt your app's actual data.</strong> It encrypts the transport. The app inside the VPN tunnel is still HTTP/JSON/<whatever> — it's just delivered through an encrypted tunnel. You still need HTTPS for application-level encryption.</p>
+</blockquote>
+<h2 id="subnets"><a class="zola-anchor" href="#subnets" aria-label="Anchor link for: subnets">🔗</a>Subnets</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># A subnet divides one IP range into smaller networks</span></span>
+<span class="giallo-l"><span># 192.168.1.0/24 means:</span></span>
+<span class="giallo-l"><span>#   Network: 192.168.1.0</span></span>
+<span class="giallo-l"><span>#   First usable: 192.168.1.1</span></span>
+<span class="giallo-l"><span>#   Last usable: 192.168.1.254</span></span>
+<span class="giallo-l"><span>#   Broadcast: 192.168.1.255</span></span>
+<span class="giallo-l"><span>#   Total usable IPs: 254</span></span>
+<span class="giallo-l"><span># /24 = 255 addresses (256 total, 1 network, 254 usable)</span></span>
+<span class="giallo-l"><span># /25 = 128 addresses (126 usable)</span></span>
+<span class="giallo-l"><span># /26 = 64 addresses (62 usable)</span></span>
+<span class="giallo-l"><span># /27 = 32 addresses (30 usable)</span></span>
+<span class="giallo-l"><span># /28 = 16 addresses (14 usable)</span></span>
+<span class="giallo-l"><span># /32 = 1 address (1 usable, commonly used for single hosts)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Subnet mask tells the OS which part of the IP is &quot;network&quot; and which is &quot;host&quot;</span></span>
+<span class="giallo-l"><span># 255.255.255.0 → /24 → last octet is host (254 usable hosts)</span></span>
+<span class="giallo-l"><span># 255.255.255.128 → /25 → last 7 bits are host (126 usable hosts)</span></span>
+<span class="giallo-l"><span># 255.255.255.192 → /26 → last 6 bits are host (62 usable hosts)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Default gateway: the router&#39;s IP in the subnet (usually .1)</span></span>
+<span class="giallo-l"><span># DNS server: usually the router&#39;s IP (same as default gateway)</span></span>
+<span class="giallo-l"><span># Subnet vs broadcast: don&#39;t use .0 (network) or .255 (broadcast) as host addresses</span></span>
+<span class="giallo-l"><span># Those have special meaning in the protocol</span></span></code></pre><h2 id="load-balancer"><a class="zola-anchor" href="#load-balancer" aria-label="Anchor link for: load-balancer">🔗</a>Load Balancer</h2>
+<p>A load balancer distributes incoming requests across multiple backend servers. What it actually does:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Client → load balancer → picks backend</span></span>
+<span class="giallo-l"><span># Load balancer → backend-1 (forwards request, remembers which client went where)</span></span>
+<span class="giallo-l"><span># Same client → same backend (session affinity / sticky sessions)</span></span>
+<span class="giallo-l"><span># Backend-1 goes down → health check fails → stop sending traffic to it</span></span>
+<span class="giallo-l"><span># Load balancer → routes around it to healthy backends</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Common algorithms:</span></span>
+<span class="giallo-l"><span># Round-robin: 1→1→1→1→1 (fair distribution)</span></span>
+<span class="giallo-l"><span># Least connections: to the backend with fewest active connections</span></span>
+<span class="giallo-l"><span># IP hash: same client → same backend (sticky sessions)</span></span>
+<span class="giallo-l"><span># Weighted round-robin: weighted 3:1 means backend-1 gets 3 requests for every 1 to backend-2</span></span>
+<span class="giallo-l"><span># Random: random backend each time (good for APIs with caching)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Health checks (how the balancer knows if a backend is alive):</span></span>
+<span class="giallo-l"><span># GET /health → 200 OK → healthy</span></span>
+<span class="giallo-l"><span># GET /health → 500 → unhealthy</span></span>
+<span class="giallo-l"><span># Run on every 5-10 seconds per backend</span></span></code></pre><h2 id="proxy"><a class="zola-anchor" href="#proxy" aria-label="Anchor link for: proxy">🔗</a>Proxy</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Forward proxy: client → proxy → server (client doesn&#39;t know about the real server)</span></span>
+<span class="giallo-l"><span># Example: Nginx sitting in front of your app, forwarding to localhost:8000</span></span>
+<span class="giallo-l"><span># Client connects to proxy&#39;s port, proxy connects to app</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Reverse proxy: client → reverse proxy → backend (client doesn&#39;t know about backends)</span></span>
+<span class="giallo-l"><span># Example: Nginx receives all traffic for example.com and routes it to different backends based on path:</span></span>
+<span class="giallo-l"><span>#   / → app-server:8000</span></span>
+<span class="giallo-l"><span>#   /api → api-server:8001</span></span>
+<span class="giallo-l"><span>#   /ws → websocket-server:8002</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># A reverse proxy also handles:</span></span>
+<span class="giallo-l"><span># - SSL termination (proxy handles TLS, backend sees plain HTTP internally)</span></span>
+<span class="giallo-l"><span># - Buffering (proxy buffers responses, not the app)</span></span>
+<span class="giallo-l"><span># - Compression (proxy compresses responses)</span></span>
+<span class="giallo-l"><span># - Rate limiting (proxy rejects excessive requests)</span></span>
+<span class="giallo-l"><span># - Static file serving (proxy serves images/CSS/JS directly, never hits your app)</span></span></code></pre>
+<blockquote>
+<p><strong>Nginx as reverse proxy is extremely common.</strong> Almost every production deployment has one. It handles SSL, static files, compression, and routing. Your app only ever receives requests that need dynamic content.</p>
+</blockquote>
+<h2 id="cdn-content-delivery-network"><a class="zola-anchor" href="#cdn-content-delivery-network" aria-label="Anchor link for: cdn-content-delivery-network">🔗</a>CDN (Content Delivery Network)</h2>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># What it does: cache your static files at edge locations worldwide</span></span>
+<span class="giallo-l"><span># User in Tokyo requests image.jpg → CDN edge server in Tokyo serves it locally (20ms instead of 200ms from your server)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># What it caches: static files (images, CSS, JS, fonts, videos, PDFs)</span></span>
+<span class="giallo-l"><span># What it doesn&#39;t cache: dynamic responses (API calls, personalized pages, authenticated pages)</span></span>
+<span class="giallo-l"><span># (unless configured otherwise)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Common: Cloudflare, Fastly, AWS CloudFront, Vercel, Netlify</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># CDN → checks cache → cache hit: served immediately</span></span>
+<span class="giallo-l"><span># CDN → cache miss → fetches from origin → stores and serves</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span># Cache invalidation:</span></span>
+<span class="giallo-l"><span># Manual: &quot;Purge all&quot; or &quot;Purge by URL&quot; in CDN dashboard</span></span>
+<span class="giallo-l"><span># Cache-Control header: &quot;no-cache&quot; or &quot;max-age=0&quot; tells CDN not to cache</span></span>
+<span class="giallo-l"><span># Versioned files: style.css?v=2 → changing the ?v=3 invalidates the old version</span></span>
+<span class="giallo-l"><span># (this is why you see ?v=hash on CSS/JS files in browsers)</span></span></code></pre>
+
+  
+</article>
+
+    </main>
+  </div>
+
+  
+</body>
+</html>
