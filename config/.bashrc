@@ -64,3 +64,5 @@ alias studio="/mnt/Work/android-studio-2024.2.1.10-linux/android-studio/bin/stud
 #         fish
 #     fi
 # fi
+export PATH="/home/mehdi/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/home/mehdi/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
