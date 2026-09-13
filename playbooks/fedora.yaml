@@ -1,19 +1,56 @@
-- name: Configure Ubuntu/Debian/Fedora/RHEL machine
+# ==============================================================================
+# HOW TO USE
+# ==============================================================================
+#
+# Prereqs:
+#   sudo dnf install ansible
+#
+# Run everything:
+#   ansible-playbook postinstall.yml --ask-become-pass
+#
+# Run only a subset, using tags:
+#   ansible-playbook postinstall.yml --ask-become-pass --tags minimal
+#   ansible-playbook postinstall.yml --ask-become-pass --tags cli
+#   ansible-playbook postinstall.yml --ask-become-pass --tags desktop
+#
+#   (tags: "minimal" = bare CLI essentials, "cli" = full CLI/dev toolset,
+#    "desktop" = VS Code + GUI extras. Espanso, Hyprland stack, and the
+#    Flatpak apps section currently have no tags and always run.)
+#
+# List tasks/tags without running anything:
+#   ansible-playbook postinstall.yml --list-tasks
+#   ansible-playbook postinstall.yml --list-tags
+#
+# Dry run (see what would change, no changes applied):
+#   ansible-playbook postinstall.yml --ask-become-pass --check
+#
+# Notes:
+#   - --ask-become-pass is needed since several tasks use `become: true`
+#     (sudo). You'll be prompted for your password once at the start.
+#   - Safe to re-run: most tasks are idempotent (dnf/pip/flatpak modules,
+#     `creates:` guards on install scripts, etc.), so re-running after a
+#     partial failure just picks up where it left off.
+#   - LM Studio is intentionally left commented out below — there's no
+#     stable download URL to script. Grab the AppImage manually from
+#     https://lmstudio.ai/download, then uncomment/adjust that task.
+#   - config_path below points at this repo; stow reads its `config/`
+#     folder to symlink dotfiles into $HOME.
+#
+# ==============================================================================
+
+- name: Configure Fedora/RHEL machine
   hosts: localhost
   vars:
     config_path: "$HOME/repos/myconfig"
 
   tasks:
-  
+
     - name: Enable COPRs (Fedora/RHEL)
       become: true
       command: 'dnf copr enable {{ item }} -y'
       with_items:
-      # - zeno/scrcpy
         - atim/starship
-        - atim/nushell
         - varlad/helix
-        - alebastr/sway-extras
 
 
 
@@ -21,7 +58,6 @@
       become: true
       package:
         name:
-          - ranger
           - stow
           - fzf
           - tmux
@@ -29,17 +65,17 @@
           - docker
           - docker-compose
           - python3-pip
-          - neovim
           - git
+          - lazygit
+          - fish
           - bat
+          - helix
           - fontawesome5*
           - fira-code-fonts
-          - helix
-          #- cargo
         state: present
         update_cache: false
         install_weak_deps: false
-      tags: 
+      tags:
         - minimal
         - cli
 
@@ -51,22 +87,62 @@
         name:
           - wget
           - curl
-          - nodejs
-          - npm
-          - ansible
           - jq
           - unzip
           - zip
-          - hyperfine
-          - tokei
           - just
-          - nushell
+          - python3
           - python3-pip
           - docker-compose
+          - chromium
         state: present
         update_cache: false
         install_weak_deps: false
-      tags: 
+      tags:
+        - cli
+
+
+
+    - name: Install starship
+      become: true
+      package:
+        name: starship
+        state: present
+      tags:
+        - cli
+
+
+
+    - name: Install lazydocker
+      shell: 'curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash'
+      args:
+        creates: "~/.local/bin/lazydocker"
+      tags:
+        - cli
+
+
+
+    - name: Install bun
+      shell: 'curl -fsSL https://bun.sh/install | bash'
+      args:
+        creates: "~/.bun/bin/bun"
+      tags:
+        - cli
+
+
+
+    - name: Install uv
+      shell: 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+      args:
+        creates: "~/.local/bin/uv"
+      tags:
+        - cli
+
+
+
+    - name: Install opencode (via bun)
+      shell: '~/.bun/bin/bun install -g opencode-ai'
+      tags:
         - cli
 
 
@@ -74,6 +150,8 @@
     - name: Install Python packages with pip
       pip:
         name:
+          - django
+          - ruff
           - beautifulsoup4
           - numpy
           - pandas
@@ -81,19 +159,50 @@
           - requests
           - fastapi
           - scrapy
-          - python-lsp-server
       tags:
         - cli
+
+
+
+    - name: Install Ollama
+      shell: 'curl -fsSL https://ollama.com/install.sh | sh'
+      tags:
+        - cli
+
+    # LM Studio ships on Linux only as an AppImage with no fixed/versioned
+    # download URL, so there's nothing reliable to script here the way we
+    # do for Espanso below. Grab the current AppImage manually from
+    # https://lmstudio.ai/download and drop it in ~/opt, e.g.:
+    # - name: Download LM Studio AppImage
+    #   get_url:
+    #     url: "<latest LM Studio Linux AppImage URL>"
+    #     dest: "~/opt/LMStudio.AppImage"
+    #     mode: "0755"
 
 
 
     - name: Install Rust via rustup
       become: yes
       shell: 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
+      args:
+        creates: "~/.cargo/bin/rustc"
+      tags:
+        - cli
 
-    - name: Install rust_analyzer
-      command: rustup component add rust-src
+    - name: Install rust-analyzer, clippy components
+      command: "rustup component add {{ item }}"
+      with_items:
+        - rust-analyzer
+        - clippy
       ignore_errors: yes
+      tags:
+        - cli
+
+    - name: Install bacon and pi-coding-agent via cargo
+      shell: '~/.cargo/bin/cargo install {{ item }}'
+      with_items:
+        - bacon
+        - pi-coding-agent
       tags:
         - cli
 
@@ -105,7 +214,7 @@
         dest: "{{ config_path }}"
         force: true
         update: true
-      tags: 
+      tags:
         - minimal
         - cli
 
@@ -119,18 +228,17 @@
         - ~/.bashrc
         - ~/.Xresources
       ignore_errors: yes
-      tags: 
+      tags:
         - minimal
         - cli
 
 
 
-
     - name: Stow the config files
       command: stow -vRd "{{ config_path }}/" -t $HOME config
-      tags: 
-          - minimal
-          - cli
+      tags:
+        - minimal
+        - cli
 
 
 
@@ -140,7 +248,7 @@
         path: /usr/share/fonts/truetype/
         recurse: true
         state: directory
-      tags: 
+      tags:
         - cli
 
 
@@ -150,83 +258,59 @@
       get_url:
         url: https://github.com/ryanoasis/nerd-fonts/raw/v3.0.2/patched-fonts/FiraCode/Regular/FiraCodeNerdFont-Regular.ttf
         dest: /usr/share/fonts/truetype/FiraCode-Regular.ttf
-      tags: 
+      tags:
         - cli
 
 
 
-
-    - name: Install i3/hyprland and related packages
+    - name: Install Hyprland desktop stack
       become: true
       package:
         name:
-        ## COMMON : rofi dunst
           - rofi
           - dunst
-
-        
-        #X11  i3 i3status picom feh
-          - i3
-          - i3status
-          - picom
-          - feh
-
-
-        #WAYLAND ! (NEW) hyprland waybar swww
           - hyprland
-          - waybar  
+          - waybar
           - swww
-
-          
         state: present
       tags: minimal
 
 
 
-    - name: add vscodium repo with rpmkeys
+    - name: Add Microsoft repo key (for VS Code)
       become: true
-      shell: |
-            rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg
-            printf "[gitlab.com_paulcarroty_vscodium_repo]\nname=download.vscodium.com\nbaseurl=https://download.vscodium.com/rpms/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg\nmetadata_expire=1h" | sudo tee -a /etc/yum.repos.d/vscodium.repo
-      tags: desktop,fedora
+      rpm_key:
+        key: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+      tags: desktop
 
-    - name: Install Flatpak and VSCodium (VSCode)
+    - name: Add VS Code repo
+      become: true
+      yum_repository:
+        name: vscode
+        description: Visual Studio Code
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: true
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+      tags: desktop
+
+    - name: Install Flatpak and VS Code
       become: true
       package:
         name:
           - flatpak
-          - codium
+          - code
         state: present
+      tags: desktop
 
 
 
-    - name: Install VSCodium extensions
-      command: codium --install-extension "{{ item }}"
+    - name: Install VS Code extensions
+      command: code --install-extension "{{ item }}"
       with_items:
-        #- asvetliakov.vscode-neovim
-        - bradlc.vscode-tailwindcss
-        #- innoverio.vscode-dbt-power-user
-        - jdinhlife.gruvbox
-        #- ms-python.python
-        #- ms-toolsai.jupyter
-        #- ms-toolsai.jupyter-keymap
-        #- ms-toolsai.jupyter-renderers
-        #- ms-toolsai.vscode-jupyter-cell-tags
-        #- ms-toolsai.vscode-jupyter-slideshow
-        #- mtxr.sqltools
-        #- mtxr.sqltools-driver-pg
-        #- mtxr.sqltools-driver-sqlite
-        - PKief.material-icon-theme
-        #- rust-lang.rust
-        #- rust-lang.rust-analyzer
-        - s-nlf-fh.glassit
-        - sainnhe.gruvbox-material
-        - samuelcolvin.jinjahtml
-        - svelte.svelte-vscode
-        - tamasfe.even-better-toml
-        #- ultram4rine.sqltools-clickhouse-driver
-        #- vscodevim.vim
         - yandeu.five-server
+        - PKief.material-icon-theme
+      tags: desktop
 
 #____________________________________________________________
 #________________________ESPASO______________________________
@@ -263,21 +347,24 @@
     #     cmd: "~/opt/Espanso.AppImage start --unmanaged"
 #____________________________________________________________
 #____________________________________________________________
+
+    - name: Ensure Flathub remote is added
+      become: true
+      flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
     - name: Install Flatpak Apps
       become: true
       flatpak:
         name:
-          - net.christianbeier.Gromit-MPX # drawing tool
-          - rest.insomnia.Insomnia #API testing
-          - org.pitivi.Pitivi #video editing
-          - org.remmina.Remmina #server access
-          - org.gimp.GIMP # Image manipulation program
-          - org.inkscape.Inkscape #vector manipulation program
-          - com.discordapp.Discord 
-          - org.mozilla.firefox
+          - com.github.tchx84.Flatseal   # manage flatpak permissions
+          - org.kde.kdenlive             # video editing
+          - org.inkscape.Inkscape        # vector manipulation
           - com.valvesoftware.Steam
-          - io.dbeaver.DBeaverCommunity #db managment
-          #- net.cozic.joplin_desktop #notes taking app (may be replaced by git repo)
-          - org.flameshot.Flameshot #screenshot tool
+          - org.onlyoffice.desktopeditors
+          - com.obsproject.Studio        # screen/stream recording
+          - io.github.mfat.sshpilot      # SSH connection manager
         method: system
         state: present
