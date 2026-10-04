@@ -50,7 +50,6 @@
       command: 'dnf copr enable {{ item }} -y'
       with_items:
         - atim/starship
-        - varlad/helix
 
 
 
@@ -59,18 +58,18 @@
       package:
         name:
           - stow
-          - fzf
+          #- fzf
           - tmux
-          - htop
+          #- htop
           - docker
           - docker-compose
-          - python3-pip
+          #- python3-pip
           - git
-          - lazygit
+          #- lazygit
           - fish
           - bat
           - helix
-          - fontawesome5*
+          #- fontawesome5*
           - fira-code-fonts
         state: present
         update_cache: false
@@ -90,10 +89,7 @@
           - jq
           - unzip
           - zip
-          - just
-          - python3
-          - python3-pip
-          - docker-compose
+          #- just
           - chromium
         state: present
         update_cache: false
@@ -131,6 +127,7 @@
 
 
 
+
     - name: Install uv
       shell: 'curl -LsSf https://astral.sh/uv/install.sh | sh'
       args:
@@ -147,27 +144,27 @@
 
 
 
-    - name: Install Python packages with pip
-      pip:
-        name:
-          - django
-          - ruff
-          - beautifulsoup4
-          - numpy
-          - pandas
-          - matplotlib
-          - requests
-          - fastapi
-          - scrapy
-      tags:
-        - cli
+    # - name: Install Python packages with pip
+    #   pip:
+    #     name:
+    #       - django
+    #       - ruff
+    #       - beautifulsoup4
+    #       - numpy
+    #       - pandas
+    #       - matplotlib
+    #       - requests
+    #       - fastapi
+    #       - scrapy
+    #   tags:
+    #     - cli
 
 
 
-    - name: Install Ollama
-      shell: 'curl -fsSL https://ollama.com/install.sh | sh'
-      tags:
-        - cli
+    # - name: Install Ollama
+    #   shell: 'curl -fsSL https://ollama.com/install.sh | sh'
+    #   tags:
+    #     - cli
 
     # LM Studio ships on Linux only as an AppImage with no fixed/versioned
     # download URL, so there's nothing reliable to script here the way we
@@ -181,64 +178,64 @@
 
 
 
-    - name: Install Rust via rustup
-      become: yes
-      shell: 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
-      args:
-        creates: "~/.cargo/bin/rustc"
-      tags:
-        - cli
+    # - name: Install Rust via rustup
+    #   become: yes
+    #   shell: 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
+    #   args:
+    #     creates: "~/.cargo/bin/rustc"
+    #   tags:
+    #     - cli
 
-    - name: Install rust-analyzer, clippy components
-      command: "rustup component add {{ item }}"
-      with_items:
-        - rust-analyzer
-        - clippy
-      ignore_errors: yes
-      tags:
-        - cli
-
-    - name: Install bacon and pi-coding-agent via cargo
-      shell: '~/.cargo/bin/cargo install {{ item }}'
-      with_items:
-        - bacon
-        - pi-coding-agent
-      tags:
-        - cli
-
-
-
-    - name: Clone config
-      git:
-        repo: https://github.com/mehdi-yc/postinstall
-        dest: "{{ config_path }}"
-        force: true
-        update: true
-      tags:
-        - minimal
-        - cli
+    # - name: Install rust-analyzer, clippy components
+    #   command: "rustup component add {{ item }}"
+    #   with_items:
+    #     - rust-analyzer
+    #     - clippy
+    #   ignore_errors: yes
+    #   tags:
+    #     - cli
+    #
+    # - name: Install bacon and pi-coding-agent via cargo
+    #   shell: '~/.cargo/bin/cargo install {{ item }}'
+    #   with_items:
+    #     - bacon
+    #     - pi-coding-agent
+    #   tags:
+    #     - cli
 
 
 
-    - name: Backup .bashrc and .Xresources
-      command: mv "{{ item }}" "{{ item }}.bak"
-      args:
-        creates: "{{ item }}.bak"
-      with_items:
-        - ~/.bashrc
-        - ~/.Xresources
-      ignore_errors: yes
-      tags:
-        - minimal
-        - cli
+    # - name: Clone config
+    #   git:
+    #     repo: https://github.com/mehdi-yc/postinstall
+    #     dest: "{{ config_path }}"
+    #     force: true
+    #     update: true
+    #   tags:
+    #     - minimal
+    #     - cli
 
 
 
-    - name: Stow the config files
-      command: stow -vRd "{{ config_path }}/" -t $HOME config
-      tags:
-        - minimal
-        - cli
+    # - name: Backup .bashrc and .Xresources
+    #   command: mv "{{ item }}" "{{ item }}.bak"
+    #   args:
+    #     creates: "{{ item }}.bak"
+    #   with_items:
+    #     - ~/.bashrc
+    #     - ~/.Xresources
+    #   ignore_errors: yes
+    #   tags:
+    #     - minimal
+    #     - cli
+    #
+    #
+    #
+    # - name: Stow the config files
+    #   command: stow -vRd "{{ config_path }}/" -t $HOME config
+    #   tags:
+    #     - minimal
+    #     - cli
 
 
 
@@ -263,17 +260,17 @@
 
 
 
-    - name: Install Hyprland desktop stack
-      become: true
-      package:
-        name:
-          - rofi
-          - dunst
-          - hyprland
-          - waybar
-          - swww
-        state: present
-      tags: minimal
+    # - name: Install Hyprland desktop stack
+    #   become: true
+    #   package:
+    #     name:
+    #       - rofi
+    #       - dunst
+    #       - hyprland
+    #       - waybar
+    #       - swww
+    #     state: present
+    #   tags: minimal
 
 
 
@@ -325,22 +322,6 @@
         state: directory
       when: not opt_dir.stat.exists
 
-    - name: Download the Espanso AppImage
-      ansible.builtin.get_url:
-        url: "https://github.com/federico-terzi/espanso/releases/download/v2.1.8/Espanso-X11.AppImage"
-        dest: "~/opt/Espanso.AppImage"
-
-    - name: Make Espanso AppImage executable
-      ansible.builtin.command:
-        cmd: "chmod u+x ~/opt/Espanso.AppImage"
-
-    - name: Register espanso command alias
-      ansible.builtin.command:
-        cmd: "sudo ~/opt/Espanso.AppImage env-path register"
-
-    - name: Register Espanso service
-      ansible.builtin.command:
-        cmd: "sudo ~/opt/Espanso.AppImage service register"
 
     # - name: Start Espanso with --unmanaged option
     #   ansible.builtin.command:
