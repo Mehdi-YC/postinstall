@@ -1,0 +1,167 @@
+# ==============================================================================
+# Fedora KDE post-install
+# ==============================================================================
+#
+#   sudo dnf install ansible
+#   ansible-playbook playbooks/fedora_new.yml --ask-become-pass
+#   ansible-playbook playbooks/fedora_new.yml --ask-become-pass --tags minimal
+#
+# `minimal` runs everything except VS Code and the flatpaks. Add --check to
+# dry-run. Safe to re-run: everything is idempotent.
+
+#
+# config_path below points at this repo; stow reads its `config/` folder to
+# symlink dotfiles into $HOME. LM Studio has no stable download URL — grab the
+# AppImage from https://lmstudio.ai/download and drop it in ~/opt.
+#
+# ==============================================================================
+
+- name: Configure Fedora KDE machine
+  hosts: localhost
+  vars:
+    home: "{{ ansible_env.HOME }}"
+    config_path: "{{ home }}/repos/myconfig"
+
+  tasks:
+
+# ------------------------------------------------------------------ repos ---
+
+    - name: Enable COPR atim/starship
+      become: true
+      command: dnf copr enable atim/starship -y
+      tags: minimal
+
+    - name: Enable Terra repository
+      become: true
+      shell: "dnf install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release terra-gpg-keys"
+      args:
+        creates: /etc/yum.repos.d/terra.repo
+      tags: minimal
+
+    # VS Code: not part of `minimal`
+    - name: Add Microsoft repo key (for VS Code)
+      become: true
+      rpm_key:
+        key: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+    - name: Add VS Code repo
+      become: true
+      yum_repository:
+        name: vscode
+        description: Visual Studio Code
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: true
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+    - name: Install VS Code
+      become: true
+      package:
+        name: code
+        state: present
+
+# -------------------------------------------------------------- packages ---
+
+    - name: Install packages (Fedora + Terra + VS Code repos)
+      become: true
+      package:
+        name:
+          # CLI
+          - stow
+          - tmux
+          - git
+          - fish
+          - bat
+          - jq
+          - wget
+          - unzip
+          - zip
+          - starship
+          - chromium
+          - podman-compose
+          # Rust + editors (all dnf, no rustup)
+          - rustc
+          - cargo
+          - rustfmt
+          - rust-clippy
+          - rust-analyzer
+          - rust-src
+          - bacon           # Terra
+          - helix
+          - espanso-wayland # Terra
+        state: present
+        install_weak_deps: false
+      tags: minimal
+
+# ------------------------------------------------------- config and tools ---
+
+    - name: Clone config
+      git:
+        repo: https://github.com/mehdi-yc/postinstall
+        dest: "{{ config_path }}"
+        force: true
+        update: true
+      tags: minimal
+
+
+
+    - name: Stow the config files
+      command: stow -vRd "{{ config_path }}/" -t "{{ home }}" config
+      tags: minimal
+
+    - name: Install lazydocker
+      shell: 'curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash'
+      args:
+        creates: "{{ home }}/.local/bin/lazydocker"
+      tags: minimal
+
+    - name: Install bun
+      shell: 'curl -fsSL https://bun.sh/install | bash'
+      args:
+        creates: "{{ home }}/.bun/bin/bun"
+      tags: minimal
+
+    - name: Install uv
+      shell: 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+      args:
+        creates: "{{ home }}/.local/bin/uv"
+      tags: minimal
+
+    - name: Install opencode (via bun)
+      shell: "{{ home }}/.bun/bin/bun install -g opencode-ai"
+      tags: minimal
+
+    - name: Create ~/opt (for manually dropped AppImages)
+      file:
+        path: "{{ home }}/opt"
+        state: directory
+      tags: minimal
+
+    # espanso (installed above): how to start it — register it once as a user
+    # service, then start it:
+    #   espanso service register
+    #   espanso start
+
+# -------------------------------------------------------------- flatpaks ---
+# Not part of `minimal`
+
+    - name: Ensure Flathub remote is added
+      become: true
+      flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    - name: Install Flatpak apps
+      become: true
+      flatpak:
+        name:
+          - com.github.tchx84.Flatseal   # manage flatpak permissions
+          - org.kde.kdenlive             # video editing
+          - org.inkscape.Inkscape        # vector manipulation
+          - com.valvesoftware.Steam
+          - org.onlyoffice.desktopeditors
+          - com.obsproject.Studio        # screen/stream recording
+          - io.github.mfat.sshpilot      # SSH connection manager
+        method: system
+        state: present
