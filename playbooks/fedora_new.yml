@@ -6,14 +6,18 @@
 #   ansible-playbook playbooks/fedora_new.yml --ask-become-pass
 #   ansible-playbook playbooks/fedora_new.yml --ask-become-pass --tags minimal
 #
-# `minimal` runs everything except VS Code and the flatpaks. Add --check to
-# dry-run. Safe to re-run: everything is idempotent.
-
+# Tags:
+#   minimal  everything except VS Code and the flatpaks
+#   vscode   VS Code repo + package only
+#   flatpak  Flathub + flatpak apps only
 #
-# config_path below points at this repo; stow reads its `config/` folder to
-# symlink dotfiles into $HOME. LM Studio has no stable download URL — grab the
-# AppImage from https://lmstudio.ai/download and drop it in ~/opt.
+# Add --check to dry-run. Safe to re-run: everything is idempotent.
 #
+# Notes:
+#   - The dotfiles repo is cloned to `config_path`. Stow adopts any existing
+#     files in $HOME, then the repo is hard-reset so the repo's version wins.
+#   - LM Studio has no stable download URL: grab the AppImage from
+#     https://lmstudio.ai/download and drop it in ~/opt.
 # ==============================================================================
 
 - name: Configure Fedora KDE machine
@@ -24,47 +28,32 @@
 
   tasks:
 
-# ------------------------------------------------------------------ repos ---
+    # ---------------------------------------------------------------- repos ---
 
-    - name: Enable COPR atim/starship
-      become: true
-      command: dnf copr enable atim/starship -y
+    - name: Repositories
       tags: minimal
+      block:
+        - name: Enable COPR atim/starship
+          become: true
+          ansible.builtin.command: dnf copr enable -y atim/starship
+          args:
+            creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:atim:starship.repo
 
-    - name: Enable Terra repository
-      become: true
-      shell: "dnf install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release terra-gpg-keys"
-      args:
-        creates: /etc/yum.repos.d/terra.repo
+        - name: Enable Terra repository
+          become: true
+          ansible.builtin.command: >
+            dnf install -y --nogpgcheck
+            --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever'
+            terra-release terra-gpg-keys
+          args:
+            creates: /etc/yum.repos.d/terra.repo
+
+    # ------------------------------------------------------------- packages ---
+
+    - name: Fedora packages
       tags: minimal
-
-    # VS Code: not part of `minimal`
-    - name: Add Microsoft repo key (for VS Code)
       become: true
-      rpm_key:
-        key: https://packages.microsoft.com/keys/microsoft.asc
-        state: present
-
-    - name: Add VS Code repo
-      become: true
-      yum_repository:
-        name: vscode
-        description: Visual Studio Code
-        baseurl: https://packages.microsoft.com/yumrepos/vscode
-        gpgcheck: true
-        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
-
-    - name: Install VS Code
-      become: true
-      package:
-        name: code
-        state: present
-
-# -------------------------------------------------------------- packages ---
-
-    - name: Install packages (Fedora + Terra + VS Code repos)
-      become: true
-      package:
+      ansible.builtin.dnf:
         name:
           # CLI
           - stow
@@ -76,92 +65,163 @@
           - wget
           - unzip
           - zip
-          - starship
+          - starship        # COPR
           - chromium
           - podman-compose
-          # Rust + editors (all dnf, no rustup)
+          # Rust toolchain (dnf, no rustup) + editor
+          - gcc             # linker, needed by `cargo install`
           - rustc
           - cargo
           - rustfmt
-          - rust-clippy
+          - clippy
           - rust-analyzer
           - rust-src
-          - bacon           # Terra
           - helix
-          - espanso-wayland # Terra
         state: present
         install_weak_deps: false
+
+    - name: Terra packages (GPG check disabled)
       tags: minimal
-
-# ------------------------------------------------------- config and tools ---
-
-    - name: Clone config
-      git:
-        repo: https://github.com/mehdi-yc/postinstall
-        dest: "{{ config_path }}"
-        force: true
-        update: true
-      tags: minimal
-
-
-
-    - name: Stow the config files
-      command: stow -vRd "{{ config_path }}/" -t "{{ home }}" config
-      tags: minimal
-
-    - name: Install lazydocker
-      shell: 'curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash'
-      args:
-        creates: "{{ home }}/.local/bin/lazydocker"
-      tags: minimal
-
-    - name: Install bun
-      shell: 'curl -fsSL https://bun.sh/install | bash'
-      args:
-        creates: "{{ home }}/.bun/bin/bun"
-      tags: minimal
-
-    - name: Install uv
-      shell: 'curl -LsSf https://astral.sh/uv/install.sh | sh'
-      args:
-        creates: "{{ home }}/.local/bin/uv"
-      tags: minimal
-
-    - name: Install opencode (via bun)
-      shell: "{{ home }}/.bun/bin/bun install -g opencode-ai"
-      tags: minimal
-
-    - name: Create ~/opt (for manually dropped AppImages)
-      file:
-        path: "{{ home }}/opt"
-        state: directory
-      tags: minimal
-
-    # espanso (installed above): how to start it — register it once as a user
-    # service, then start it:
-    #   espanso service register
-    #   espanso start
-
-# -------------------------------------------------------------- flatpaks ---
-# Not part of `minimal`
-
-    - name: Ensure Flathub remote is added
       become: true
-      flatpak_remote:
-        name: flathub
-        state: present
-        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
-
-    - name: Install Flatpak apps
-      become: true
-      flatpak:
+      ansible.builtin.dnf:
         name:
-          - com.github.tchx84.Flatseal   # manage flatpak permissions
-          - org.kde.kdenlive             # video editing
-          - org.inkscape.Inkscape        # vector manipulation
-          - com.valvesoftware.Steam
-          - org.onlyoffice.desktopeditors
-          - com.obsproject.Studio        # screen/stream recording
-          - io.github.mfat.sshpilot      # SSH connection manager
-        method: system
+          - espanso-wayland
         state: present
+        install_weak_deps: false
+        disable_gpg_check: true
+
+    # ---------------------------------------------------------------- config ---
+
+    - name: Dotfiles
+      tags: minimal
+      block:
+        - name: Clone config repo
+          ansible.builtin.git:
+            repo: https://github.com/mehdi-yc/postinstall
+            dest: "{{ config_path }}"
+            update: true
+            force: true
+
+        # --adopt pulls existing $HOME files into the repo (replacing them with
+        # symlinks); the hard reset then restores the repo's versions.
+        - name: Stow config (adopt existing files)
+          ansible.builtin.command: stow -vRd "{{ config_path }}" -t "{{ home }}" --adopt config
+
+        - name: Reset repo so its files override the adopted ones
+          ansible.builtin.command: git -C "{{ config_path }}" reset --hard HEAD
+
+    # ----------------------------------------------------------------- tools ---
+
+    - name: User-level tools
+      tags: minimal
+      block:
+        - name: Install lazydocker
+          ansible.builtin.shell: curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+          args:
+            executable: /bin/bash
+            creates: "{{ home }}/.local/bin/lazydocker"
+
+        - name: Install bun
+          ansible.builtin.shell: curl -fsSL https://bun.sh/install | bash
+          args:
+            executable: /bin/bash
+            creates: "{{ home }}/.bun/bin/bun"
+
+        - name: Install uv
+          ansible.builtin.shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+          args:
+            executable: /bin/bash
+            creates: "{{ home }}/.local/bin/uv"
+
+        - name: Install opencode (via bun)
+          ansible.builtin.command: "{{ home }}/.bun/bin/bun install -g opencode-ai"
+          args:
+            creates: "{{ home }}/.bun/bin/opencode"
+
+        - name: Install bacon (via cargo)
+          ansible.builtin.command: cargo install --locked bacon
+          args:
+            creates: "{{ home }}/.cargo/bin/bacon"
+
+        - name: Create ~/opt (for manually dropped AppImages)
+          ansible.builtin.file:
+            path: "{{ home }}/opt"
+            state: directory
+            mode: "0755"
+
+    # ------------------------------------------------------------- fish PATH ---
+
+    - name: Add tool directories to fish PATH
+      tags: minimal
+      ansible.builtin.command: >
+        fish -c 'fish_add_path
+        {{ home }}/.local/bin
+        {{ home }}/.bun/bin
+        {{ home }}/.cargo/bin'
+      changed_when: false
+
+    # --------------------------------------------------------------- espanso ---
+
+    - name: Espanso user service
+      tags: minimal
+      block:
+        - name: Register espanso service
+          ansible.builtin.command: espanso service register
+          args:
+            creates: "{{ home }}/.config/systemd/user/espanso.service"
+
+        - name: Enable and start espanso
+          ansible.builtin.systemd:
+            name: espanso
+            scope: user
+            enabled: true
+            state: started
+
+    # ---------------------------------------------------------------- vscode ---
+
+    - name: VS Code
+      tags: vscode
+      become: true
+      block:
+        - name: Add Microsoft repo key
+          ansible.builtin.rpm_key:
+            key: https://packages.microsoft.com/keys/microsoft.asc
+            state: present
+
+        - name: Add VS Code repo
+          ansible.builtin.yum_repository:
+            name: vscode
+            description: Visual Studio Code
+            baseurl: https://packages.microsoft.com/yumrepos/vscode
+            gpgcheck: true
+            gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+        - name: Install VS Code
+          ansible.builtin.dnf:
+            name: code
+            state: present
+
+    # --------------------------------------------------------------- flatpaks ---
+
+    - name: Flatpaks
+      tags: flatpak
+      become: true
+      block:
+        - name: Add Flathub remote
+          community.general.flatpak_remote:
+            name: flathub
+            state: present
+            flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+        - name: Install Flatpak apps
+          community.general.flatpak:
+            name:
+              #- com.github.tchx84.Flatseal      # manage flatpak permissions
+              - org.kde.kdenlive                # video editing
+              - org.inkscape.Inkscape           # vector graphics
+              #- com.valvesoftware.Steam
+              #- org.onlyoffice.desktopeditors
+              #- com.obsproject.Studio           # screen/stream recording
+              #- io.github.mfat.sshpilot         # SSH connection manager
+            method: system
+            state: present
