@@ -144,6 +144,30 @@ machine does not match the file, which makes them usable from a health check.
 Output for an operation with no `check` says so, rather than pretending to be
 idempotent.
 
+## Reading the output
+
+```
+apply · 12 operations
+── lane 1 ──────────────────────────���──────────────────────────────
+  ✓ exec.copr  already correct
+  ✗ exec.terra  would run
+  ✓ repos.vscode  enabled
+
+── lane 2 ────────────────────────────────────────────────────────
+  ✗ packages.dnf
+      ✓ stow  installed
+      ✗ wget  missing
+```
+
+A rule marks each lane, so the wave structure is visible rather than something
+you have to reconstruct. An operation with nothing to say about its items is one
+line; one with items gets a heading and a list.
+
+Colour is on when output is a terminal, and off when it is a pipe or when
+`NO_COLOR` is set — colour in a log file or a `grep` result is noise. Rules are
+sized from `$COLUMNS`. `check | head` works: a reader that goes away is not an
+error.
+
 ## Logs
 
 Every command's stdout and stderr goes to a per-run directory, never to your

@@ -98,15 +98,6 @@ impl Report {
     pub fn converged(&self) -> bool {
         self.error.is_none() && !self.lines.iter().any(|l| l.state == State::Failed)
     }
-
-    /// Its symbol.
-    pub fn symbol(&self) -> &'static str {
-        if self.converged() {
-            State::Kept.symbol()
-        } else {
-            State::Failed.symbol()
-        }
-    }
 }
 
 /// Counts for the final summary.
@@ -151,12 +142,15 @@ pub struct Ctx {
 }
 
 /// What became of an operation, as far as anything depending on it is concerned.
-#[derive(Debug)]
+///
+/// No detail is carried: the operation that failed has already printed its own
+/// error, and repeating it once per level turns a two-word skip into a paragraph.
+#[derive(Debug, PartialEq)]
 enum Verdict {
     /// It ran, and reached the state it wanted.
     Done,
     /// It did not: it failed, or something it needed failed first.
-    Failed(String),
+    Failed,
 }
 
 /// Run every operation and collect the reports.
@@ -191,7 +185,7 @@ where
             let report = Report::skip(&why);
             on_done(op, &report);
             summary.absorb(&report);
-            settled.insert(&op.id, Verdict::Failed(why));
+            settled.insert(&op.id, Verdict::Failed);
         }
 
         let ready: Vec<&Op> = ops
@@ -208,22 +202,15 @@ where
         for (op, report) in wave.iter().zip(execute(&wave, ctx)) {
             on_done(op, &report);
             summary.absorb(&report);
-            settled.insert(
-                &op.id,
-                if report.converged() {
-                    Verdict::Done
-                } else {
-                    // Not just `error`: an installer that exits 0 without
-                    // installing what was asked for has not succeeded either, and
-                    // whatever comes next would fail confusingly.
-                    Verdict::Failed(
-                        report
-                            .error
-                            .clone()
-                            .unwrap_or_else(|| "did not reach the state it wanted".into()),
-                    )
-                },
-            );
+            // Not just `error`: an installer that exits 0 without installing
+            // what was asked for has not succeeded either, and whatever comes
+            // next would fail confusingly.
+            let verdict = if report.converged() {
+                Verdict::Done
+            } else {
+                Verdict::Failed
+            };
+            settled.insert(&op.id, verdict);
         }
     }
 
@@ -259,7 +246,7 @@ fn blame(op: &Op, ids: &BTreeSet<&str>, settled: &HashMap<&str, Verdict>) -> Opt
         return None;
     }
     deps.iter().find_map(|dep| match &settled[dep.as_str()] {
-        Verdict::Failed(why) => Some(format!("{dep}: {why}")),
+        Verdict::Failed => Some(format!("{dep} did not succeed")),
         Verdict::Done => None,
     })
 }

@@ -11,6 +11,18 @@
 //! lanes, dependencies, privilege escalation — exists to make that safe to run
 //! twice, on a laptop, while something else is using the network.
 
+/// `println!` that treats a closed pipe as normal.
+///
+/// `bootstrapper check | head` is a reasonable thing to type, and `println!`
+/// panics the moment the reader goes away — printing a Rust backtrace after the
+/// output you asked for. A pipeline that stops reading is not an error.
+macro_rules! say {
+    ($($arg:tt)*) => {{
+        use std::io::Write;
+        let _ = writeln!(std::io::stdout().lock(), $($arg)*);
+    }};
+}
+
 mod config;
 mod dotfiles;
 mod os;
@@ -18,11 +30,12 @@ mod plan;
 mod run;
 
 use std::collections::BTreeSet;
+use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use config::Error;
-use run::{State, Summary};
+use config::{Error, Lane};
+use run::{Report, State, Summary};
 
 const USAGE: &str = "\
 minimal_bootstrapper — declarative workstation configurator
@@ -148,7 +161,7 @@ fn default_path() -> PathBuf {
 fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
     let args = Args::parse(&argv).map_err(Error)?;
     if args.command == Command::Help {
-        print!("{USAGE}");
+        say!("{USAGE}");
         return Ok(ExitCode::SUCCESS);
     }
 
@@ -178,7 +191,7 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
         .map(String::as_str)
         .collect();
     if !assumed.is_empty() {
-        println!(
+        say!(
             "assuming already done: {}",
             assumed.into_iter().collect::<Vec<_>>().join(", ")
         );
@@ -224,37 +237,167 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
         ctx.run.note(&format!("{} sudo={}", op.id, op.sudo));
     }
 
-    println!();
-    println!(
-        "{} · {} operation(s) · {}",
-        verb(&args.command),
-        ops.len(),
-        ctx.run.dir().display()
+    let style = Style::detect();
+    say!();
+    say!(
+        "{} {} {}",
+        style.loud(verb(&args.command)),
+        style.dim("·"),
+        style.dim(&format!("{} operation(s)", ops.len()))
     );
 
-    // Reported per operation, when it finishes, as one contiguous block.
-    // Announcing the start instead would interleave: with a wave running
-    // concurrently, a slow operation's heading ends up far from its results.
-    let summary = run::run(&ops, &ctx, |op, report| match &report.skipped {
-        Some(why) => println!("  - {}  skipped: {why}", op.id),
-        None => {
-            println!("  {} {}", report.symbol(), op.id);
-            for line in &report.lines {
-                println!("      {} {}  {}", line.state.symbol(), line.name, line.note);
+    // Reported per operation as one contiguous block, with a rule whenever the
+    // lane changes. Lanes are barriers, so the completion stream is already
+    // grouped by lane — which is the one thing about the wave structure that was
+    // previously invisible.
+    let mut lane: Option<Lane> = None;
+    let summary = run::run(&ops, &ctx, |op, report| {
+        if lane.as_ref() != Some(&op.lane) {
+            if lane.is_some() {
+                say!();
             }
-            if let Some(error) = &report.error {
-                println!("      {error}");
+            lane = Some(op.lane.clone());
+            say!("{}", style.rule(&format!("lane {}", op.lane)));
+        }
+
+        match &report.skipped {
+            Some(why) => say!(
+                "  {} {}",
+                style.dim("-"),
+                style.dim(&format!("{}  {why}", op.id))
+            ),
+            // An operation with nothing to say beyond itself is one line. `vscode`
+            // under `repos.vscode` is the same name twice, so a name that is
+            // already the tail of the id does not earn its own row.
+            None if report.lines.len() == 1 && repeats_itself(&report.lines[0].name, &op.id) => {
+                say!(
+                    "  {} {}  {}",
+                    report_symbol(&style, report),
+                    op.id,
+                    style.dim(&report.lines[0].note)
+                )
             }
+            None => {
+                say!("  {} {}", report_symbol(&style, report), op.id);
+                for line in &report.lines {
+                    say!(
+                        "      {} {}  {}",
+                        style.symbol(line.state),
+                        line.name,
+                        style.dim(&line.note)
+                    );
+                }
+            }
+        }
+        if let Some(error) = &report.error {
+            say!("      {}", style.failed(error));
         }
     });
 
-    // A variable named in `secret` is withheld from the run log above, but the
-    // value can still reach a log through a command that printed it.
     os::redact(ctx.run.dir(), &secret_values(&config));
 
-    println!();
-    println!("{}", summary_line(summary, mutating));
+    say!();
+    say!("{}", style.rule(""));
+    say!("{}", summary_line(summary, mutating, &style));
+    say!(
+        "{} {}",
+        style.dim("logs"),
+        style.dim(&ctx.run.dir().display().to_string())
+    );
     Ok(ExitCode::from(u8::from(summary.failed > 0)))
+}
+
+/// Colour, but only where a person can see it.
+///
+/// `IsTerminal` is std, so knowing whether this is a pipe costs no dependency.
+/// Colour in a log file or a `grep` result is noise, and `NO_COLOR` is a
+/// convention worth honouring rather than fighting.
+struct Style {
+    on: bool,
+    /// How wide a rule may be. `COLUMNS` is a convention every shell honours, and
+    /// a fixed width would wrap in a narrow terminal, which is worse than no
+    /// rule at all.
+    width: usize,
+}
+
+impl Style {
+    fn detect() -> Self {
+        let columns = std::env::var("COLUMNS")
+            .ok()
+            .and_then(|value| value.parse::<usize>().ok())
+            .unwrap_or(72)
+            .clamp(32, 100);
+        Style {
+            on: std::io::stdout().is_terminal()
+                && std::env::var_os("NO_COLOR").is_none()
+                && std::env::var("TERM").map_or(true, |term| term != "dumb"),
+            width: columns,
+        }
+    }
+
+    fn paint(&self, code: &str, text: &str) -> String {
+        if self.on {
+            format!("\x1b[{code}m{text}\x1b[0m")
+        } else {
+            text.to_string()
+        }
+    }
+
+    fn kept(&self, text: &str) -> String {
+        self.paint("32", text)
+    }
+
+    fn changed(&self, text: &str) -> String {
+        self.paint("33", text)
+    }
+
+    fn failed(&self, text: &str) -> String {
+        self.paint("31", text)
+    }
+
+    fn dim(&self, text: &str) -> String {
+        self.paint("2", text)
+    }
+
+    fn loud(&self, text: &str) -> String {
+        self.paint("1", text)
+    }
+
+    /// A status symbol, in the colour that matches its state.
+    fn symbol(&self, state: State) -> String {
+        let mark = state.symbol();
+        match state {
+            State::Kept => self.kept(mark),
+            State::Changed => self.changed(mark),
+            State::Failed => self.failed(mark),
+        }
+    }
+
+    /// A horizontal rule, optionally titled.
+    fn rule(&self, title: &str) -> String {
+        let (label, used) = match title.is_empty() {
+            true => (String::new(), 0),
+            false => (format!(" {title} "), title.chars().count() + 2),
+        };
+        self.dim(&format!(
+            "──{label}{}",
+            "─".repeat(self.width.saturating_sub(2 + used))
+        ))
+    }
+}
+
+/// Is this item just the operation's own name, spelled the short way?
+fn repeats_itself(name: &str, id: &str) -> bool {
+    name == id || id.ends_with(&format!(".{name}"))
+}
+
+/// An operation's own mark, coloured by whether it converged.
+fn report_symbol(style: &Style, report: &Report) -> String {
+    if report.converged() {
+        style.kept(State::Kept.symbol())
+    } else {
+        style.failed(State::Failed.symbol())
+    }
 }
 
 /// The values of the variables named in `secret`.
@@ -276,28 +419,45 @@ fn verb(command: &Command) -> &'static str {
     }
 }
 
-fn summary_line(summary: Summary, mutating: bool) -> String {
+fn summary_line(summary: Summary, mutating: bool, style: &Style) -> String {
     // Skipped is a fourth column, not a replacement for failed: a run can have
     // both, and overwriting one with the other hid the failures.
-    let mut parts = vec![
-        ("kept", summary.kept, State::Kept),
-        ("changed", summary.changed, State::Changed),
-    ];
+    let widest = [
+        summary.kept,
+        summary.changed,
+        summary.failed,
+        summary.skipped,
+    ]
+    .iter()
+    .map(usize::to_string)
+    .map(|n| n.len())
+    .max()
+    .unwrap_or(1);
+
+    let cell = |mark: &str, count: usize, name: &str| format!("{mark} {count:>widest$} {name}");
+    let mut columns = Vec::new();
+    if summary.kept > 0 {
+        columns.push(cell(&style.symbol(State::Kept), summary.kept, "kept"));
+    }
+    if summary.changed > 0 {
+        columns.push(cell(
+            &style.symbol(State::Changed),
+            summary.changed,
+            "changed",
+        ));
+    }
     if summary.failed > 0 {
-        parts.push(("failed", summary.failed, State::Failed));
+        columns.push(cell(&style.symbol(State::Failed), summary.failed, "failed"));
     }
     if summary.skipped > 0 {
-        parts.push(("skipped", summary.skipped, State::Kept));
+        columns.push(cell(&style.dim("✓"), summary.skipped, "skipped"));
     }
-    let rendered = parts
-        .iter()
-        .map(|(name, count, state)| format!("{} {count} {name}", state.symbol()))
-        .collect::<Vec<_>>()
-        .join("  ");
+    let rendered = columns.join("   ");
 
     let settled = summary.failed == 0 && summary.changed == 0 && summary.skipped == 0;
     match (mutating, settled) {
-        (true, true) => format!("{rendered}\neverything is configured"),
+        (true, true) => format!("{rendered}\n{}", style.kept("everything is configured")),
+        (false, true) => format!("{rendered}\n{}", style.dim("nothing was changed")),
         _ => rendered,
     }
 }
@@ -327,43 +487,57 @@ fn select<'a>(all: &'a [plan::Op], args: &Args) -> Vec<&'a plan::Op> {
 
 /// `list`: what would run, and in what order.
 fn list(ops: &[&plan::Op], config: &config::Config) -> Result<ExitCode, Error> {
-    println!();
+    let style = Style::detect();
+    say!();
     for op in ops {
-        println!("  {}", op.id);
-        println!("      {}", plan::describe(op));
-        println!("      lane {}", op.lane);
+        say!("  {}", style.loud(&op.id));
+        say!("      {}", style.dim(&plan::describe(op)));
+        say!("      {}", style.dim(&format!("lane {}", op.lane)));
         if op.sudo {
-            println!("      sudo");
+            say!("      {}", style.changed("sudo"));
         }
         if !op.after.is_empty() {
-            println!("      after {}", op.after.join(", "));
+            say!(
+                "      {}",
+                style.dim(&format!("after {}", op.after.join(", ")))
+            );
         }
         if let Some(resource) = op.body.resource() {
-            println!("      resource {resource} (exclusive)");
+            say!(
+                "      {}",
+                style.dim(&format!("resource {resource} (exclusive)"))
+            );
         }
     }
 
-    println!();
-    println!("{} operation(s) selected", ops.len());
+    say!();
+    say!(
+        "{}",
+        style.dim(&format!("{} operation(s) selected", ops.len()))
+    );
 
     // An installer nothing installs through reads as enabled and never runs,
     // which is the kind of thing you only notice six months later.
     let used: Vec<String> = config.packages.keys().cloned().collect();
     let unused = plan::unused_installers(config, &used);
     if !unused.is_empty() {
-        println!();
-        println!("declared but unused: {}", unused.join(", "));
+        say!();
+        say!(
+            "{} {}",
+            style.changed("declared but unused:"),
+            unused.join(", ")
+        );
     }
 
     let lanes: std::collections::BTreeSet<_> = ops.iter().map(|op| op.lane.clone()).collect();
     if lanes.is_empty() {
-        println!("no lanes");
+        say!("no lanes");
     } else {
         let lanes: Vec<String> = lanes.into_iter().map(|l| l.to_string()).collect();
-        println!("lanes: {}", lanes.join(", "));
+        say!("{}", style.dim(&format!("lanes: {}", lanes.join(", "))));
     }
-    println!("run `bootstrapper apply` to make it so");
-    println!();
+    say!("{}", style.dim("run `bootstrapper apply` to make it so"));
+    say!();
     Ok(ExitCode::SUCCESS)
 }
 
@@ -390,6 +564,14 @@ mod tests {
         assert_eq!(a.from.as_deref(), Some("exec.b"));
     }
 
+    /// Style with colour off, which is what a pipe or `NO_COLOR` sees.
+    fn plain() -> Style {
+        Style {
+            on: false,
+            width: 72,
+        }
+    }
+
     #[test]
     fn the_summary_shows_failures_and_skips_side_by_side() {
         // Overwriting one with the other hid the failures, which is the one
@@ -402,6 +584,7 @@ mod tests {
                 skipped: 4,
             },
             true,
+            &plain(),
         );
 
         assert!(line.contains("3 failed"), "{line}");
@@ -417,6 +600,7 @@ mod tests {
                 ..Summary::default()
             },
             true,
+            &plain(),
         );
         assert!(line.ends_with("everything is configured"), "{line}");
     }
@@ -430,6 +614,7 @@ mod tests {
                 ..Summary::default()
             },
             false,
+            &plain(),
         );
         assert!(!line.contains("everything is configured"), "{line}");
     }
