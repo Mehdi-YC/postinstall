@@ -57,6 +57,7 @@ pub struct Report {
 }
 
 impl Report {
+    /// An operation that did nothing and had nothing to report.
     pub fn new() -> Self {
         Report::default()
     }
@@ -76,11 +77,6 @@ impl Report {
 
     /// An item this run changed.
     pub fn changed(&mut self, name: impl Into<String>, note: impl Into<String>) {
-        self.add(State::Changed, name, note);
-    }
-
-    /// A step worth showing, such as "cloning into ...".
-    pub fn step(&mut self, name: impl Into<String>, note: impl Into<String>) {
         self.add(State::Changed, name, note);
     }
 

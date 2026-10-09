@@ -141,7 +141,7 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
     let path = args.path();
     // Every error carries the file name: it is the one thing the reader needs,
     // and no layer below this one knows it.
-    let where_ = &path.display().to_string();
+    let where_ = path.display();
     let text = std::fs::read_to_string(&path).map_err(|e| Error(format!("{where_}: {e}")))?;
 
     let config = config::Config::load(&text).map_err(|e| Error(format!("{where_}: {e}")))?;
@@ -233,10 +233,7 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
 
     // A variable named in `secret` is withheld from the run log above, but the
     // value can still reach a log through a command that printed it.
-    os::redact(
-        ctx.run.dir(),
-        &secret_values(&config),
-    );
+    os::redact(ctx.run.dir(), &secret_values(&config));
 
     println!();
     println!("{}", summary_line(summary, mutating));

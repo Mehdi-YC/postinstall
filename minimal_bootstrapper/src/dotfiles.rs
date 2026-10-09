@@ -93,7 +93,7 @@ pub fn run(dotfiles: &Dotfiles, home: &Path, run: &Run) -> Result<Report, String
 
     let script = if repo.join(".git").exists() {
         // The repository version wins: local edits are overwritten on apply.
-        report.step("repository", "updating");
+        report.changed("repository", "updating");
         format!(
             "git -C {} fetch --all --quiet && git -C {} reset --hard --quiet",
             repo.display(),
@@ -105,7 +105,7 @@ pub fn run(dotfiles: &Dotfiles, home: &Path, run: &Run) -> Result<Report, String
             .as_deref()
             .map(|b| format!("--branch {b} "))
             .unwrap_or_default();
-        report.step("repository", format!("cloning into {}", repo.display()));
+        report.changed("repository", format!("cloning into {}", repo.display()));
         format!("git clone --quiet {branch}{} {}", dotfiles.repo, repo.display())
     };
 
