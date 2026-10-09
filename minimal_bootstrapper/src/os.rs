@@ -66,10 +66,13 @@ pub fn prime_sudo() -> Result<(), String> {
         .stderr(Stdio::inherit())
         .status()
         .map_err(|e| format!("`sudo`: {e}"))?;
-    status
-        .success()
-        .then_some(())
-        .ok_or_else(|| "`sudo -v` failed: authentication rejected".to_string())
+    status.success().then_some(()).ok_or_else(|| {
+        // Not "rejected": with no terminal, or a policy that refuses, the
+        // password was never even read.
+        "`sudo -v` failed, so nothing can be escalated: there was no terminal to \
+         read the password on, or sudo refused. Run this from your own terminal."
+            .to_string()
+    })
 }
 
 /// Does this binary exist? `PATH` is the contract, so ask the shell.

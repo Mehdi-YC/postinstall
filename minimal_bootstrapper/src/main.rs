@@ -259,13 +259,17 @@ fn verb(command: &Command) -> &'static str {
 }
 
 fn summary_line(summary: Summary, mutating: bool) -> String {
-    let mut parts = [
+    // Skipped is a fourth column, not a replacement for failed: a run can have
+    // both, and overwriting one with the other hid the failures.
+    let mut parts = vec![
         ("kept", summary.kept, State::Kept),
         ("changed", summary.changed, State::Changed),
-        ("failed", summary.failed, State::Failed),
     ];
+    if summary.failed > 0 {
+        parts.push(("failed", summary.failed, State::Failed));
+    }
     if summary.skipped > 0 {
-        parts[2] = ("skipped", summary.skipped, State::Kept);
+        parts.push(("skipped", summary.skipped, State::Kept));
     }
     let rendered = parts
         .iter()
@@ -273,7 +277,8 @@ fn summary_line(summary: Summary, mutating: bool) -> String {
         .collect::<Vec<_>>()
         .join("  ");
 
-    match (mutating, summary.failed == 0 && summary.changed == 0 && summary.skipped == 0) {
+    let settled = summary.failed == 0 && summary.changed == 0 && summary.skipped == 0;
+    match (mutating, settled) {
         (true, true) => format!("{rendered}\neverything is configured"),
         _ => rendered,
     }
@@ -363,6 +368,50 @@ mod tests {
         assert!(a.sudo);
         assert_eq!(a.only, vec!["dnf", "uv"]);
         assert_eq!(a.from.as_deref(), Some("exec.b"));
+    }
+
+    #[test]
+    fn the_summary_shows_failures_and_skips_side_by_side() {
+        // Overwriting one with the other hid the failures, which is the one
+        // thing the last line of output exists to say.
+        let line = summary_line(
+            Summary {
+                kept: 1,
+                changed: 2,
+                failed: 3,
+                skipped: 4,
+            },
+            true,
+        );
+
+        assert!(line.contains("3 failed"), "{line}");
+        assert!(line.contains("4 skipped"), "{line}");
+        assert!(!line.contains("everything is configured"), "{line}");
+    }
+
+    #[test]
+    fn a_clean_apply_says_so() {
+        let line = summary_line(
+            Summary {
+                kept: 5,
+                ..Summary::default()
+            },
+            true,
+        );
+        assert!(line.ends_with("everything is configured"), "{line}");
+    }
+
+    #[test]
+    fn a_clean_check_does_not_claim_to_have_configured_anything() {
+        // `check` changes nothing, so "everything is configured" would be a lie.
+        let line = summary_line(
+            Summary {
+                kept: 5,
+                ..Summary::default()
+            },
+            false,
+        );
+        assert!(!line.contains("everything is configured"), "{line}");
     }
 
     #[test]
