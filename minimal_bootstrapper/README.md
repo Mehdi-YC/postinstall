@@ -159,6 +159,21 @@ bootstrapper [check|plan|apply|list] [OPTIONS]
 
 `--only dnf` matches `packages.dnf`; `--only packages.dnf` matches exactly.
 
+The playbook's `--tags minimal` has no equivalent key, because `--only` is
+already the same idea:
+
+```sh
+bootstrapper apply --only packages.dnf,exec --sudo    # no flatpaks
+```
+
+## A real config
+
+[`example.toml`](example.toml) is `playbooks/fedora_new.yml` ported in full —
+every task in the playbook and nothing else, kept next to it so the two can be
+read side by side. It is also the config this machine is checked against, so
+`bootstrapper check -c example.toml` is a live answer to "is this machine
+actually configured?"
+
 Exit status is `0` when nothing failed and `1` otherwise.
 
 ## Tests

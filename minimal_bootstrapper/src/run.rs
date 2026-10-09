@@ -10,11 +10,12 @@
 //! a time, which is what a laptop on battery wants.
 
 use std::collections::{BTreeSet, HashMap, HashSet};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
-use crate::config::{Error, Lane, Wait};
+use crate::config::{Error, Lane, Repo, Wait};
 use crate::dotfiles;
 use crate::os::{self, Run};
+use crate::config::Installer;
 use crate::plan::{Body, Op};
 
 /// How one item ended up.
@@ -294,7 +295,7 @@ fn one(op: &Op, ctx: &Ctx) -> Report {
 /// look for is worse than no checker.
 fn packages(
     op: &Op,
-    installer: &crate::config::Installer,
+    installer: &Installer,
     names: &[String],
     ctx: &Ctx,
 ) -> Result<Report, String> {
@@ -371,32 +372,30 @@ fn command(op: &Op, check: Option<&str>, run: &str, ctx: &Ctx) -> Result<Report,
 }
 
 /// Write a `.repo` file and import its key.
-fn repo(op: &Op, repo: &crate::config::Repo, ctx: &Ctx) -> Result<Report, String> {
-    let name = repo.name.clone().unwrap_or_else(|| op.id.split('.').nth(1).unwrap_or("").to_string());
-    let path = format!("/etc/yum.repos.d/{name}.repo");
+fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
+    // The section id is the config key, which is also the file name — dnf uses
+    // the file name as the repo id, so `dnf --repo vscode` has to work. `name` is
+    // the human-readable description, a separate thing entirely.
+    let id = op.id.rsplit('.').next().unwrap_or(&op.id).to_string();
+    let path = format!("/etc/yum.repos.d/{id}.repo");
     let mut report = Report::new();
 
-    let mut body = format!(
-        "[{name}]\nname={name}\nbaseurl={}\nenabled={}\ngpgcheck={}",
+    let body = format!(
+        "[{id}]\nname={}\nbaseurl={}\nenabled={}\ngpgcheck={}\n{}",
+        repo.name.as_deref().unwrap_or(&id),
         repo.url,
         u8::from(repo.enabled),
         u8::from(repo.gpgcheck),
+        repo.key.as_deref().map_or_else(String::new, |key| format!("gpgkey={key}\n")),
     );
-    if let Some(key) = &repo.key {
-        body.push_str(&format!("\ngpgkey={key}"));
-    }
 
-    if let Some(parent) = Path::new(&path).parent() {
-        let _ = std::fs::create_dir_all(parent);
-    }
-
-    let already = std::fs::read_to_string(&path).is_ok_and(|current| current == body);
-    if already {
-        report.kept(name.clone(), "enabled");
+    let current = std::fs::read_to_string(&path).ok();
+    if current.as_deref().is_some_and(|written| same_repo(written, &body)) {
+        report.kept(id, "enabled");
         return Ok(report);
     }
     if !ctx.mutating {
-        report.missed(name, "would be written");
+        report.missed(id, "would be written");
         return Ok(report);
     }
 
@@ -413,14 +412,54 @@ fn repo(op: &Op, repo: &crate::config::Repo, ctx: &Ctx) -> Result<Report, String
     }
 
     if let Some(key) = &repo.key {
-        let imported = logged(&op.id, ctx, &format!("rpm --import {key}"), true)?;
-        if !imported {
+        if !logged(&op.id, ctx, &format!("rpm --import {key}"), true)? {
             return Err(format!("could not import the GPG key {key}; see the run log"));
         }
     }
 
-    report.changed(name.clone(), "enabled");
+    report.changed(id, "enabled");
     Ok(report)
+}
+
+/// Do these two `.repo` files say the same thing?
+///
+/// Compared key by key rather than byte by byte. A file written by dnf, by
+/// `yum_repository`, or by a person's editor differs from ours only in spacing,
+/// and rewriting a correct file on every apply because of a space would make
+/// `check` cry wolf — which is how a checker stops being believed.
+fn same_repo(a: &str, b: &str) -> bool {
+    // dnf's defaults. A file that omits these is enabled and checked, which is
+    // the same thing we would have written explicitly.
+    const IMPLICIT: [(&str, &str); 2] = [("enabled", "1"), ("gpgcheck", "1")];
+
+    fn settings(text: &str) -> Option<Vec<(String, String)>> {
+        let mut out: Vec<(String, String)> = text
+            .lines()
+            .filter_map(|line| {
+                let (key, value) = line.split_once('=')?;
+                Some((key.trim().to_lowercase(), value.trim().to_string()))
+            })
+            .collect();
+        // Nothing readable in the file at all. Returning None before the
+        // implicit defaults go in is what stops a missing file from matching a
+        // default one.
+        if out.is_empty() {
+            return None;
+        }
+        for (key, value) in IMPLICIT {
+            if !out.iter().any(|(k, _)| k == key) {
+                out.push((key.to_string(), value.to_string()));
+            }
+        }
+        // A file may repeat a key under several sections; only the values matter.
+        out.sort();
+        out.dedup();
+        Some(out)
+    }
+
+    // `None == None` would say an absent file matches an unreadable one, so
+    // the emptiness check has to be explicit.
+    settings(a).is_some() && settings(a) == settings(b)
 }
 
 fn quote(text: &str) -> String {
@@ -479,6 +518,7 @@ pub fn validate(ops: &[Op]) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
     use std::time::{Duration, Instant};
 
     use super::*;
@@ -718,6 +758,33 @@ mod tests {
 
         assert_eq!(summary.failed, 1, "the package is still not installed: {summary:?}");
         let _ = home;
+    }
+
+    #[test]
+    fn a_repo_written_by_another_tool_reads_as_already_written() {
+        // This is the file Ansible's yum_repository left on the machine. It has
+        // no `enabled` line, spaces around `=`, and a description. Rewriting it
+        // on every apply because of a space is how a checker stops being
+        // believed.
+        let theirs = "[vscode]\nbaseurl = https://packages.microsoft.com/yumrepos/vscode\n\
+                      gpgcheck = 1\ngpgkey = https://packages.microsoft.com/keys/microsoft.asc\n\
+                      name = Visual Studio Code\n";
+        let theirs_name = "Visual Studio Code";
+        let ours = format!("[vscode]\nname={theirs_name}\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc\n");
+
+        assert!(same_repo(theirs, &ours), "spacing and an implicit `enabled` are not a difference");
+    }
+
+    #[test]
+    fn a_repo_that_disabled_something_is_not_the_same() {
+        let enabled = "[a]\nbaseurl=https://x\nenabled=1\n";
+        let disabled = "[a]\nbaseurl=https://x\nenabled=0\n";
+        let unchecked = "[a]\nbaseurl=https://x\ngpgcheck=0\n";
+
+        assert!(!same_repo(enabled, disabled), "enabled=0 is a real difference");
+        assert!(!same_repo(enabled, unchecked), "gpgcheck=0 is a real difference");
+        assert!(!same_repo(enabled, "[a]\nbaseurl=https://y\nenabled=1\n"), "a different url matters");
+        assert!(!same_repo("", "[a]\nenabled=1\n"), "an empty file is not a match");
     }
 
     #[test]
