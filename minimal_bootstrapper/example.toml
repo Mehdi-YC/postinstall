@@ -1,0 +1,114 @@
+# A worked example: every kind of section, with nothing machine-specific in it.
+#
+#   bootstrapper list  -c example.toml
+#   bootstrapper check -c example.toml
+#
+# Read alongside ../playbooks/fedora.toml, which is the real thing.
+
+# A variable named here has its value kept out of the run log. The spelling is
+# the opposite of what it looks like: listing a name *hides* it.
+#
+# Note the position: TOML puts every key after a `[table]` header inside that
+# table, so top-level keys like this one have to come before the first header.
+secret = ["token"]
+
+[variables]
+mirror = "https://mirror.internal"
+dots = "https://github.com/me/dots"
+
+# ---- repositories -----------------------------------------------------------
+#
+# A `.repo` file is written into /etc/yum.repos.d and the key is imported, so
+# the configuration is verifiable afterwards. Needs root; that is the default.
+
+[repos.internal]
+parallel = 1
+url = "${mirror}/repo/$release/$basearch"
+key = "${mirror}/repo.key"
+# name = "internal"   # defaults to the section name
+
+# ---- installers -------------------------------------------------------------
+#
+# Two shell commands. `{package}` is one package; `{packages}` is all of them,
+# in one transaction. Both placeholders are this file's own, and deliberately a
+# different sigil from `${...}` so the two can never be confused.
+
+[installer.dnf]
+check = "rpm -q {package}"
+install = "dnf install -y {packages}"
+sudo = true
+# dnf and `rpm --import` both take the rpmdb lock, so nothing else may hold it
+# at the same time.
+resource = "rpm"
+
+[installer.pipx]
+check = "pipx list --short | grep -qx {package}"
+install = "pipx install {packages}"
+path = ["$HOME/.local/bin"]
+
+# A manager installed into a directory a login shell has not reached yet needs
+# `path`, or its own check will fail forever and reinstall on every apply.
+[installer.cargo]
+check = "cargo install --list | grep -q '^{package} v'"
+install = "cargo install {packages}"
+path = ["$HOME/.cargo/bin"]
+
+# ---- packages ---------------------------------------------------------------
+#
+# `parallel` is the lane: everything in the lowest ready lane runs together,
+# then the next one. Segments compare as numbers, so "2.1" precedes "2.10".
+
+[packages.dnf]
+parallel = 2
+names = ["git", "fish", "tmux", "bat"]
+
+[packages.cargo]
+parallel = 3
+after = ["packages.dnf"]   # cargo is a dnf package; nothing infers that
+names = ["ripgrep", "fd-find"]
+
+# `sudo` defaults to the installer's. Set it here to override either way.
+[packages.pipx]
+parallel = 3
+names = ["httpie"]
+
+# ---- dotfiles ---------------------------------------------------------------
+#
+# An existing file is moved to `<name>.bk` before stow links over it, and an
+# earlier backup is never overwritten.
+
+[dotfiles]
+parallel = 3
+repo = "${dots}"
+branch = "main"
+stow = ["config", "vim"]
+
+# ---- one-shot installers ----------------------------------------------------
+#
+# `curl | sh` needs a guard, or it runs on every apply. Without a check, the
+# output says so out loud rather than pretending to be idempotent.
+
+[exec.copr]
+parallel = 1
+check = "dnf repolist --enabled | grep -q example/starship"
+run = "dnf install -y 'dnf-command(copr)' && dnf copr enable -y example/starship"
+
+[exec.uv]
+parallel = 3
+check = "test -x $HOME/.local/bin/uv"
+run = "curl -LsSf https://astral.sh/uv/install.sh | sh"
+
+[exec.opt]
+parallel = 3
+check = "test -d $HOME/opt"
+run = "mkdir -p $HOME/opt"
+sudo = false
+
+# ---- pacing -----------------------------------------------------------------
+#
+# A wait exists to pace a run and to give the scheduler something with a known
+# duration. Almost nothing needs it.
+
+[wait.settle]
+parallel = 3
+seconds = 2.0
