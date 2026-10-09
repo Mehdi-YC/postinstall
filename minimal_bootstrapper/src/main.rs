@@ -18,6 +18,7 @@ mod plan;
 mod run;
 
 use std::collections::BTreeSet;
+use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use config::Error;
@@ -65,18 +66,23 @@ enum Command {
     Check,
     Apply,
     List,
+    Help,
 }
 
 /// The parsed command line.
 struct Args {
     command: Command,
-    config: Option<String>,
+    config: Option<PathBuf>,
     only: Vec<String>,
     from: Option<String>,
     sudo: bool,
 }
 
 impl Args {
+    /// Parse, or say what is wrong with the arguments.
+    ///
+    /// No printing and no exiting: `--help` is a [`Command`] like any other, so
+    /// this stays a pure function of its input.
     fn parse(argv: &[String]) -> Result<Self, String> {
         let mut args = Args {
             command: Command::Apply,
@@ -85,35 +91,38 @@ impl Args {
             from: None,
             sudo: false,
         };
-        let mut argv = argv.iter();
+        let mut rest = argv.iter();
 
-        while let Some(arg) = argv.next() {
+        while let Some(arg) = rest.next() {
             match arg.as_str() {
                 "check" | "plan" => args.command = Command::Check,
                 "apply" => args.command = Command::Apply,
                 "list" => args.command = Command::List,
-                "--help" | "-h" => {
-                    print!("{USAGE}");
-                    std::process::exit(0);
-                }
+                "--help" | "-h" => args.command = Command::Help,
                 "--sudo" => args.sudo = true,
                 "-c" | "--config" => {
-                    args.config = Some(argv.next().ok_or(format!("{arg} needs a path"))?.clone());
+                    let path = rest.next().ok_or(format!("{arg} needs a path"))?;
+                    args.config = Some(path.into());
                 }
                 "--only" => {
-                    let value = argv.next().ok_or("--only needs tags")?;
-                    args.only
-                        .extend(value.split(',').map(str::trim).filter(|s| !s.is_empty()).map(str::to_string));
+                    let value = rest.next().ok_or("--only needs tags")?;
+                    args.only.extend(
+                        value
+                            .split(',')
+                            .map(str::trim)
+                            .filter(|s| !s.is_empty())
+                            .map(str::to_string),
+                    );
                 }
-                "--from" => args.from = Some(argv.next().ok_or("--from needs an id")?.clone()),
+                "--from" => args.from = Some(rest.next().ok_or("--from needs an id")?.clone()),
                 other => return Err(format!("unknown argument `{other}`; try --help")),
             }
         }
         Ok(args)
     }
 
-    fn path(&self) -> std::path::PathBuf {
-        self.config.as_deref().map_or_else(default_path, Into::into)
+    fn path(&self) -> PathBuf {
+        self.config.clone().unwrap_or_else(default_path)
     }
 }
 
@@ -121,12 +130,13 @@ impl Args {
 ///
 /// The working directory wins, so a checkout is self-contained; the XDG path is
 /// the fallback for a machine-wide install.
-fn default_path() -> std::path::PathBuf {
-    let local = std::path::Path::new("bootstrap.toml");
+fn default_path() -> PathBuf {
+    let local = Path::new("bootstrap.toml");
     if local.exists() {
         return local.to_path_buf();
     }
-    let base = std::env::var("XDG_CONFIG_HOME").map_or_else(|_| os::home().join(".config"), Into::into);
+    let base =
+        std::env::var("XDG_CONFIG_HOME").map_or_else(|_| os::home().join(".config"), Into::into);
     let global = base.join("bootstrapper/bootstrap.toml");
     if global.exists() {
         global
@@ -137,6 +147,10 @@ fn default_path() -> std::path::PathBuf {
 
 fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
     let args = Args::parse(&argv).map_err(Error)?;
+    if args.command == Command::Help {
+        print!("{USAGE}");
+        return Ok(ExitCode::SUCCESS);
+    }
 
     let path = args.path();
     // Every error carries the file name: it is the one thing the reader needs,
@@ -164,7 +178,10 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
         .map(String::as_str)
         .collect();
     if !assumed.is_empty() {
-        println!("assuming already done: {}", assumed.into_iter().collect::<Vec<_>>().join(", "));
+        println!(
+            "assuming already done: {}",
+            assumed.into_iter().collect::<Vec<_>>().join(", ")
+        );
     }
 
     if args.command == Command::List {
@@ -229,7 +246,7 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
                 println!("      {error}");
             }
         }
-    })?;
+    });
 
     // A variable named in `secret` is withheld from the run log above, but the
     // value can still reach a log through a command that printed it.
@@ -255,6 +272,7 @@ fn verb(command: &Command) -> &'static str {
         Command::Check => "check",
         Command::Apply => "apply",
         Command::List => "list",
+        Command::Help => "help",
     }
 }
 
@@ -291,7 +309,9 @@ fn select<'a>(all: &'a [plan::Op], args: &Args) -> Vec<&'a plan::Op> {
     } else {
         all.iter()
             .filter(|op| {
-                args.only.iter().any(|want| op.id == *want || op.id.ends_with(&format!(".{want}")))
+                args.only
+                    .iter()
+                    .any(|want| op.id == *want || op.id.ends_with(&format!(".{want}")))
             })
             .collect()
     };
@@ -412,6 +432,19 @@ mod tests {
             false,
         );
         assert!(!line.contains("everything is configured"), "{line}");
+    }
+
+    #[test]
+    fn help_is_a_command_rather_than_an_exit() {
+        // If parsing exited, it could not be tested at all.
+        assert_eq!(args(&["--help"]).unwrap().command, Command::Help);
+        assert_eq!(args(&["-h"]).unwrap().command, Command::Help);
+    }
+
+    #[test]
+    fn a_config_path_keeps_its_shape() {
+        let a = args(&["-c", "../playbooks/fedora.toml"]).unwrap();
+        assert_eq!(a.path(), PathBuf::from("../playbooks/fedora.toml"));
     }
 
     #[test]

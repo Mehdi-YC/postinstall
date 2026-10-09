@@ -93,7 +93,10 @@ pub fn shell(script: &str) -> Result<bool, String> {
         .map_err(|e| format!("{script}: {e}"))
 }
 
-/// Expand a leading `~` using `$HOME`.
+/// The user's home directory.
+///
+/// `HOME` rather than a password-database lookup, because the whole point of
+/// `--sudo` is that operations still run as the person who typed the command.
 pub fn home() -> PathBuf {
     std::env::var("HOME").map_or_else(|_| PathBuf::from("/"), PathBuf::from)
 }
@@ -106,7 +109,8 @@ pub struct Run {
 impl Run {
     /// Create a timestamped directory under the state directory.
     pub fn create() -> Result<Self, String> {
-        let base = std::env::var("XDG_STATE_HOME").map_or_else(|_| home().join(".local/state"), PathBuf::from);
+        let base = std::env::var("XDG_STATE_HOME")
+            .map_or_else(|_| home().join(".local/state"), PathBuf::from);
         let dir = base.join("minimal_bootstrapper/runs").join(stamp());
         fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
         Ok(Run { dir })
@@ -147,20 +151,20 @@ impl Run {
     }
 }
 
-/// Take secret values back out of the logs.
+/// A secret shorter than this is not treated as one.
 ///
-/// Withholding a secret from the run log is not enough on its own: the value can
-/// reach a log through a command that echoed it, or through a tool that printed
-/// its own configuration. So the logs are swept once the run is over.
-///
-/// Values shorter than [`MIN_SECRET`] are skipped. Replacing a two-character
-/// secret everywhere would corrupt the logs and hide nothing useful.
+/// Replacing a two-character value everywhere would corrupt every log it
+/// appears in and hide nothing, so short values are left alone.
 const MIN_SECRET: usize = 8;
 
-/// The value to put in place of a secret.
+/// What a secret is replaced with.
 pub const REDACTED: &str = "(withheld)";
 
-/// Rewrite every file under `dir` with the secrets removed.
+/// Rewrite every file in `dir` with the secret values removed.
+///
+/// Withholding a secret from the run log is not enough on its own: the value can
+/// still reach a log through a command that echoed it, or through a tool that
+/// printed its own configuration. So the logs are swept once the run is over.
 pub fn redact(dir: &Path, secrets: &[String]) {
     let needles: Vec<&String> = secrets
         .iter()
@@ -226,6 +230,7 @@ fn stamp() -> String {
         midnight % 60
     )
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -245,7 +250,10 @@ mod tests {
 
         redact(&dir, &["hunter2secret".to_string()]);
 
-        assert_eq!(fs::read_to_string(dir.join("op.log")).unwrap(), format!("token={REDACTED}\nall done\n"));
+        assert_eq!(
+            fs::read_to_string(dir.join("op.log")).unwrap(),
+            format!("token={REDACTED}\nall done\n")
+        );
     }
 
     #[test]
@@ -256,7 +264,10 @@ mod tests {
 
         redact(&dir, &["ok".to_string()]);
 
-        assert_eq!(fs::read_to_string(dir.join("op.log")).unwrap(), "ok ok ok\n");
+        assert_eq!(
+            fs::read_to_string(dir.join("op.log")).unwrap(),
+            "ok ok ok\n"
+        );
     }
 
     #[test]
@@ -265,8 +276,14 @@ mod tests {
 
         redact(&dir, &["hunter2secret".to_string()]);
 
-        assert_eq!(fs::read_to_string(dir.join("op.log")).unwrap(), "nothing secret here\n");
-        assert!(!dir.join("op.redacting").exists(), "no staging file left behind");
+        assert_eq!(
+            fs::read_to_string(dir.join("op.log")).unwrap(),
+            "nothing secret here\n"
+        );
+        assert!(
+            !dir.join("op.redacting").exists(),
+            "no staging file left behind"
+        );
     }
 
     #[test]

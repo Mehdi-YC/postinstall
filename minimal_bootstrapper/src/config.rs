@@ -93,10 +93,10 @@ impl FromStr for Lane {
     fn from_str(text: &str) -> Result<Self, Self::Err> {
         let mut segments = Vec::new();
         for part in text.trim().split('.') {
-            segments.push(
-                part.parse()
-                    .map_err(|_| Error(format!("`{text}` is not a lane; expected `2` or `1.2`")))?,
-            );
+            segments
+                .push(part.parse().map_err(|_| {
+                    Error(format!("`{text}` is not a lane; expected `2` or `1.2`"))
+                })?);
         }
         Ok(Lane(segments))
     }
@@ -288,11 +288,11 @@ pub struct Config {
 }
 
 impl Config {
-    /// Parse, then expand every `${...}`.
+    /// Parse, resolve `[variables]`, then expand every `${...}`.
     pub fn load(text: &str) -> Result<Self, Error> {
         let mut config: Self = toml::from_str(text).map_err(|e| Error(e.to_string()))?;
         let vars = resolve(&config.variables)?;
-        expand(&mut config, &vars);
+        expand(&mut config, &vars)?;
         Ok(config)
     }
 
@@ -361,10 +361,9 @@ fn whole_env_name(value: &str) -> Option<&str> {
     let name = value.strip_prefix('$')?;
     let mut chars = name.chars();
     let first = chars.next()?;
-    (first.is_ascii_alphabetic() || first == '_')
-        .then(|| chars.all(|c| c.is_ascii_alphanumeric() || c == '_'))
-        .filter(|ok| *ok)
-        .map(|_| name)
+    let plausible = (first.is_ascii_alphabetic() || first == '_')
+        && chars.all(|c| c.is_ascii_alphanumeric() || c == '_');
+    plausible.then_some(name)
 }
 
 /// Replace every `${name}` with its value.
@@ -397,28 +396,34 @@ fn substitute(input: &str, vars: &BTreeMap<String, String>) -> Result<String, Er
 /// Rewrite every variable reference in the config, in place.
 ///
 /// Installer commands are deliberately left alone: their `{package}` is this
-/// tool's own placeholder, substituted per command at run time.
-fn expand(config: &mut Config, vars: &BTreeMap<String, String>) {
+/// tool's own placeholder, substituted per command at run time. The two use
+/// different sigils, so expansion here cannot touch one by mistake.
+///
+/// Strict, unlike the first pass. `[variables]` is already fully resolved by the
+/// time this runs, so an unknown name here can only be a typo — and a typo left
+/// in place becomes a literal `${nope}` in a baseurl, which dnf reports much
+/// later as an unexplained failure.
+fn expand(config: &mut Config, vars: &BTreeMap<String, String>) -> Result<(), Error> {
     for repo in config.repos.values_mut() {
-        repo.url = substitute_lossy(&repo.url, vars);
-        repo.key = repo.key.as_deref().map(|k| substitute_lossy(k, vars));
+        repo.url = substitute(&repo.url, vars)?;
+        repo.key = repo
+            .key
+            .as_deref()
+            .map(|key| substitute(key, vars))
+            .transpose()?;
     }
     if let Some(dotfiles) = &mut config.dotfiles {
-        dotfiles.repo = substitute_lossy(&dotfiles.repo, vars);
+        dotfiles.repo = substitute(&dotfiles.repo, vars)?;
     }
     for exec in config.exec.values_mut() {
-        exec.run = substitute_lossy(&exec.run, vars);
-        exec.check = exec.check.as_deref().map(|c| substitute_lossy(c, vars));
+        exec.run = substitute(&exec.run, vars)?;
+        exec.check = exec
+            .check
+            .as_deref()
+            .map(|check| substitute(check, vars))
+            .transpose()?;
     }
-}
-
-/// Expansion during a second pass, where every name is known to resolve.
-///
-/// `load` resolves `[variables]` first and errors on anything undefined, so by
-/// the time the rest of the config is rewritten every reference in it resolves
-/// too. The fallback keeps that property local instead of relying on ordering.
-fn substitute_lossy(input: &str, vars: &BTreeMap<String, String>) -> String {
-    substitute(input, vars).unwrap_or_else(|_| input.to_string())
+    Ok(())
 }
 
 #[cfg(test)]
@@ -432,7 +437,10 @@ mod tests {
     #[test]
     fn lanes_compare_segment_by_segment() {
         assert!(lane("1") < lane("1.1"));
-        assert!(lane("1.2") < lane("1.10"), "1.2 comes before 1.10, not after");
+        assert!(
+            lane("1.2") < lane("1.10"),
+            "1.2 comes before 1.10, not after"
+        );
         assert!(lane("1.10") < lane("2"));
     }
 
@@ -480,8 +488,7 @@ mod tests {
         .expect("config loads");
 
         assert_eq!(
-            config.repos["internal"].url,
-            "https://mirror.internal/repo/$release/$basearch",
+            config.repos["internal"].url, "https://mirror.internal/repo/$release/$basearch",
             "`$release` belongs to dnf and must survive untouched"
         );
     }
@@ -554,8 +561,9 @@ mod tests {
 
     #[test]
     fn no_path_means_no_prefix() {
-        let config = Config::load("[installer.x]\ncheck = \"c {package}\"\ninstall = \"i {packages}\"\n")
-            .expect("config loads");
+        let config =
+            Config::load("[installer.x]\ncheck = \"c {package}\"\ninstall = \"i {packages}\"\n")
+                .expect("config loads");
         assert_eq!(config.installer["x"].check_one("a"), "c a");
     }
 
@@ -591,6 +599,29 @@ mod tests {
         // quietly never runs.
         let err = Config::load("[packges.dnf]\nnames = [\"git\"]\n").unwrap_err();
         assert!(err.0.contains("packges"), "{err}");
+    }
+
+    #[test]
+    fn a_typo_outside_variables_is_still_an_error() {
+        // Leaving `${nope}` in place would write it into a baseurl literally, and
+        // dnf would fail much later with nothing pointing back here.
+        let err = Config::load(
+            r#"
+            [variables]
+            mirror = "https://m"
+
+            [repos.internal]
+            url = "${mirrror}/repo"
+            "#,
+        )
+        .unwrap_err();
+        assert!(err.0.contains("mirrror"), "{err}");
+    }
+
+    #[test]
+    fn a_negative_wait_is_clamped_rather_than_panicking() {
+        let config = Config::load("[wait.bad]\nseconds = -5.0\n").unwrap();
+        assert_eq!(config.wait["bad"].duration(), Duration::ZERO);
     }
 
     #[test]

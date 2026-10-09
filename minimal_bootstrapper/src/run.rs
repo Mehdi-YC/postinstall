@@ -12,10 +12,10 @@
 use std::collections::{BTreeSet, HashMap, HashSet};
 use std::path::PathBuf;
 
-use crate::config::{Error, Lane, Repo, Wait};
+use crate::config::Installer;
+use crate::config::{Dotfiles, Error, Lane, Repo, Wait};
 use crate::dotfiles;
 use crate::os::{self, Run};
-use crate::config::Installer;
 use crate::plan::{Body, Op};
 
 /// How one item ended up.
@@ -101,7 +101,11 @@ impl Report {
 
     /// Its symbol.
     pub fn symbol(&self) -> &'static str {
-        if self.converged() { State::Kept.symbol() } else { State::Failed.symbol() }
+        if self.converged() {
+            State::Kept.symbol()
+        } else {
+            State::Failed.symbol()
+        }
     }
 }
 
@@ -118,6 +122,26 @@ pub struct Summary {
     pub skipped: usize,
 }
 
+impl Summary {
+    /// Fold one operation's report into the totals.
+    fn absorb(&mut self, report: &Report) {
+        // kept and changed count *items*; failed and skipped count *operations*,
+        // because an operation is the thing that either happened or did not.
+        for line in &report.lines {
+            match line.state {
+                State::Kept => self.kept += 1,
+                State::Changed => self.changed += 1,
+                State::Failed => {}
+            }
+        }
+        if report.skipped.is_some() {
+            self.skipped += 1;
+        } else if !report.converged() {
+            self.failed += 1;
+        }
+    }
+}
+
 /// Everything a run needs that is not in the plan.
 pub struct Ctx {
     pub run: Run,
@@ -126,42 +150,54 @@ pub struct Ctx {
     pub mutating: bool,
 }
 
+/// What became of an operation, as far as anything depending on it is concerned.
+#[derive(Debug)]
+enum Verdict {
+    /// It ran, and reached the state it wanted.
+    Done,
+    /// It did not: it failed, or something it needed failed first.
+    Failed(String),
+}
+
 /// Run every operation and collect the reports.
 ///
 /// The engine never prints. Everything it learns arrives through `on_done`, so
 /// the presentation is the caller's business and the scheduler stays testable.
-pub fn run<G>(ops: &[&Op], ctx: &Ctx, mut on_done: G) -> Result<Summary, Error>
+pub fn run<G>(ops: &[&Op], ctx: &Ctx, mut on_done: G) -> Summary
 where
     G: FnMut(&Op, &Report),
 {
     let ids: BTreeSet<&str> = ops.iter().map(|op| op.id.as_str()).collect();
-    let mut settled: HashMap<&str, Option<String>> = HashMap::new();
+    let mut settled: HashMap<&str, Verdict> = HashMap::new();
     let mut summary = Summary::default();
 
     loop {
-        // Operations whose dependencies have finished but did not succeed are
-        // skipped, and recorded at once so nothing waits on them for ever.
-        for op in ops {
+        // Anything whose dependencies have settled unsuccessfully is skipped, and
+        // recorded at once so nothing waits on it. Recording the skip as a
+        // failure is what makes it propagate: an operation that never ran cannot
+        // satisfy its own dependents.
+        //
+        // Only while applying. `check` is a report on each operation's own state,
+        // and there a prerequisite that has not run yet is not a reason to say
+        // nothing about the packages behind it — that is the whole question
+        // being asked.
+        for op in ops.iter().filter(|_| ctx.mutating) {
             if settled.contains_key(op.id.as_str()) {
                 continue;
             }
-            let Some(why) = blame(&wanted(op, &ids), &settled) else {
+            let Some(why) = blame(op, &ids, &settled) else {
                 continue;
             };
-            on_done(op, &Report::skip(why));
-            summary.skipped += 1;
-            settled.insert(&op.id, None);
+            let report = Report::skip(&why);
+            on_done(op, &report);
+            summary.absorb(&report);
+            settled.insert(&op.id, Verdict::Failed(why));
         }
 
         let ready: Vec<&Op> = ops
             .iter()
             .copied()
-            .filter(|op| {
-                !settled.contains_key(op.id.as_str())
-                    && wanted(op, &ids)
-                        .iter()
-                        .all(|d| settled.contains_key(d.as_str()))
-            })
+            .filter(|op| !settled.contains_key(op.id.as_str()) && satisfied(op, &ids, &settled))
             .collect();
 
         let Some(lane) = ready.iter().map(|op| op.lane.clone()).min() else {
@@ -171,59 +207,61 @@ where
         let wave = take_wave(&ready, &lane);
         for (op, report) in wave.iter().zip(execute(&wave, ctx)) {
             on_done(op, &report);
-            // kept and changed count *items*; failed counts *operations*, so a
-            // dnf that never ran cannot hide behind zero reported items.
-            for line in &report.lines {
-                match line.state {
-                    State::Kept => summary.kept += 1,
-                    State::Changed => summary.changed += 1,
-                    State::Failed => {}
-                }
-            }
-            summary.failed += usize::from(!report.converged());
-            settled.insert(&op.id, report.error.clone());
+            summary.absorb(&report);
+            settled.insert(
+                &op.id,
+                if report.converged() {
+                    Verdict::Done
+                } else {
+                    // Not just `error`: an installer that exits 0 without
+                    // installing what was asked for has not succeeded either, and
+                    // whatever comes next would fail confusingly.
+                    Verdict::Failed(
+                        report
+                            .error
+                            .clone()
+                            .unwrap_or_else(|| "did not reach the state it wanted".into()),
+                    )
+                },
+            );
         }
     }
 
-    Ok(summary)
+    summary
 }
 
 /// The dependencies of `op` that are part of this run.
 ///
-/// A dependency on an operation that was filtered out by `--only` or `--from` is
-/// out of scope, not unsatisfiable. `--from exec.bun` means "everything before
-/// this is done", and treating the excluded predecessor as missing would
-/// deadlock on the first wave.
-fn wanted<'a>(op: &'a Op, ids: &BTreeSet<&str>) -> Vec<&'a String> {
+/// A dependency on an operation filtered out by `--only` or `--from` is out of
+/// scope, not unsatisfiable: `--from exec.bun` means "everything before this is
+/// done", and treating the excluded predecessor as missing would deadlock on the
+/// first wave.
+fn in_scope<'a, 'set>(
+    op: &'a Op,
+    ids: &'set BTreeSet<&'a str>,
+) -> impl Iterator<Item = &'a String> + use<'a, 'set> {
     op.after
         .iter()
-        .filter(|dep| ids.contains(dep.as_str()))
-        .collect()
+        .filter(move |dep| ids.contains(dep.as_str()))
 }
 
-/// Dependencies this run is relying on something else to have done.
-pub fn out_of_scope<'a>(op: &'a Op, ids: &BTreeSet<&str>) -> Vec<&'a String> {
-    op.after
-        .iter()
-        .filter(|dep| !ids.contains(dep.as_str()))
-        .collect()
+/// Has every in-scope dependency of this operation finished?
+fn satisfied(op: &Op, ids: &BTreeSet<&str>, settled: &HashMap<&str, Verdict>) -> bool {
+    in_scope(op, ids).all(|dep| settled.contains_key(dep.as_str()))
 }
 
 /// Why this operation cannot run, if it cannot.
 ///
 /// `None` means "not decided yet": some dependency has not finished.
-fn blame(deps: &[&String], settled: &HashMap<&str, Option<String>>) -> Option<String> {
-    let mut blamed: Option<String> = None;
-    for dep in deps {
-        match settled.get(dep.as_str()) {
-            None => return None,
-            Some(Some(error)) if blamed.is_none() => {
-                blamed = Some(format!("{dep} failed: {error}"));
-            }
-            _ => {}
-        }
+fn blame(op: &Op, ids: &BTreeSet<&str>, settled: &HashMap<&str, Verdict>) -> Option<String> {
+    let deps: Vec<&String> = in_scope(op, ids).collect();
+    if deps.iter().any(|dep| !settled.contains_key(dep.as_str())) {
+        return None;
     }
-    blamed
+    deps.iter().find_map(|dep| match &settled[dep.as_str()] {
+        Verdict::Failed(why) => Some(format!("{dep}: {why}")),
+        Verdict::Done => None,
+    })
 }
 
 /// The operations in `lane` that can start now, minus resource conflicts.
@@ -293,12 +331,7 @@ fn one(op: &Op, ctx: &Ctx) -> Report {
 /// In `check` mode nothing is installed, but everything missing is still
 /// reported: a checker that stays quiet about the one thing you asked it to
 /// look for is worse than no checker.
-fn packages(
-    op: &Op,
-    installer: &Installer,
-    names: &[String],
-    ctx: &Ctx,
-) -> Result<Report, String> {
+fn packages(op: &Op, installer: &Installer, names: &[String], ctx: &Ctx) -> Result<Report, String> {
     let mut report = Report::new();
     let mut missing = Vec::new();
 
@@ -386,11 +419,16 @@ fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
         repo.url,
         u8::from(repo.enabled),
         u8::from(repo.gpgcheck),
-        repo.key.as_deref().map_or_else(String::new, |key| format!("gpgkey={key}\n")),
+        repo.key
+            .as_deref()
+            .map_or_else(String::new, |key| format!("gpgkey={key}\n")),
     );
 
     let current = std::fs::read_to_string(&path).ok();
-    if current.as_deref().is_some_and(|written| same_repo(written, &body)) {
+    if current
+        .as_deref()
+        .is_some_and(|written| same_repo(written, &body))
+    {
         report.kept(id, "enabled");
         return Ok(report);
     }
@@ -413,7 +451,9 @@ fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
 
     if let Some(key) = &repo.key {
         if !logged(&op.id, ctx, &format!("rpm --import {key}"), true)? {
-            return Err(format!("could not import the GPG key {key}; see the run log"));
+            return Err(format!(
+                "could not import the GPG key {key}; see the run log"
+            ));
         }
     }
 
@@ -466,19 +506,27 @@ fn quote(text: &str) -> String {
     format!("'{}'", text.replace('\'', r"'\''"))
 }
 
-/// Clone and stow dotfiles.
-fn dotfiles_body(config: &crate::config::Dotfiles, ctx: &Ctx) -> Report {
+/// Clone, update and stow dotfiles.
+///
+/// Applying always goes to the repository, even when every link already looks
+/// right. `converged` can only see that a path resolves into the checkout — not
+/// whether the checkout is current — so short-circuiting on it meant that once
+/// the links existed, no commit you ever pushed again reached your home
+/// directory, and the tool reported "everything is configured" while serving
+/// stale files. Reporting on `converged` is for `check`, which touches no
+/// network and changes nothing.
+fn dotfiles_body(config: &Dotfiles, ctx: &Ctx) -> Report {
+    if ctx.mutating {
+        return dotfiles::run(config, &ctx.home, &ctx.run).unwrap_or_else(|e| failed(&e));
+    }
+
+    let mut report = Report::new();
     if dotfiles::converged(config, &ctx.home) {
-        let mut report = Report::new();
-        report.kept("repository", "up to date");
-        return report;
-    }
-    if !ctx.mutating {
-        let mut report = Report::new();
+        report.kept("repository", "stowed");
+    } else {
         report.missed("repository", "not stowed yet");
-        return report;
     }
-    dotfiles::run(config, &ctx.home, &ctx.run).unwrap_or_else(|e| failed(&e))
+    report
 }
 
 /// Sleep, and say so.
@@ -502,6 +550,16 @@ fn logged(op_id: &str, ctx: &Ctx, script: &str, sudo: bool) -> Result<bool, Stri
     Ok(child.wait().map_err(|e| e.to_string())?.success())
 }
 
+/// Dependencies this run is relying on something else to have done.
+///
+/// Reported before anything runs, so `--from` is never a quiet way to skip a step.
+pub fn out_of_scope<'a>(op: &'a Op, ids: &BTreeSet<&str>) -> Vec<&'a String> {
+    op.after
+        .iter()
+        .filter(|dep| !ids.contains(dep.as_str()))
+        .collect()
+}
+
 /// Reject an `after =` that names nothing, before the run starts.
 pub fn validate(ops: &[Op]) -> Result<(), Error> {
     let ids: BTreeSet<&str> = ops.iter().map(|op| op.id.as_str()).collect();
@@ -509,7 +567,12 @@ pub fn validate(ops: &[Op]) -> Result<(), Error> {
         op.after
             .iter()
             .find(|dep| !ids.contains(dep.as_str()))
-            .map(|missing| format!("`{}` depends on `{missing}`, which is not an operation", op.id))
+            .map(|missing| {
+                format!(
+                    "`{}` depends on `{missing}`, which is not an operation",
+                    op.id
+                )
+            })
     }) {
         Some(message) => Err(Error(message)),
         None => Ok(()),
@@ -555,7 +618,7 @@ mod tests {
     /// The engine runs a *selection*, which is a slice of references.
     fn run_all(ops: &[Op], ctx: &Ctx) -> Summary {
         let selected: Vec<&Op> = ops.iter().collect();
-        run(&selected, ctx, |_, _| {}).expect("run")
+        run(&selected, ctx, |_, _| {})
     }
 
     #[test]
@@ -611,7 +674,10 @@ mod tests {
 
         run_all(&ops, &ctx);
 
-        assert!(started.elapsed() >= Duration::from_millis(400), "they overlapped");
+        assert!(
+            started.elapsed() >= Duration::from_millis(400),
+            "they overlapped"
+        );
     }
 
     #[test]
@@ -710,7 +776,10 @@ mod tests {
 
         run_all(&ops, &ctx);
 
-        assert!(!home.join("written").exists(), "check must not change anything");
+        assert!(
+            !home.join("written").exists(),
+            "check must not change anything"
+        );
     }
 
     #[test]
@@ -737,6 +806,76 @@ mod tests {
     }
 
     #[test]
+    fn a_skip_propagates_further_downstream() {
+        // a fails, so b is skipped. Does c, which depends on b, notice? b never
+        // ran, so c must not run either — a failure has to propagate all the way
+        // down, not one level.
+        let (home, ctx) = scratch("chain");
+        let ops = plan_for(
+            &home,
+            r#"
+            [exec.a]
+            run = "exit 1"
+
+            [exec.b]
+            run = "touch $HOME/b-ran"
+            after = ["exec.a"]
+
+            [exec.c]
+            run = "touch $HOME/c-ran"
+            after = ["exec.b"]
+            "#,
+        );
+
+        let summary = run_all(&ops, &ctx);
+
+        assert_eq!(summary.skipped, 2, "both b and c are skipped: {summary:?}");
+        assert!(
+            !home.join("b-ran").exists(),
+            "b depends on something that failed"
+        );
+        assert!(
+            !home.join("c-ran").exists(),
+            "and so does c, one level further down"
+        );
+    }
+
+    #[test]
+    fn a_prerequisite_that_would_run_does_not_hide_what_is_behind_it() {
+        // In check mode nothing is going to run, so "dnf has not happened yet" is
+        // not a reason to say nothing about the packages. Reporting the skip here
+        // would answer a different question than the one that was asked.
+        let (home, mut ctx) = scratch("checktail");
+        ctx.mutating = false;
+        let ops = plan_for(
+            &home,
+            r#"
+            [installer.marked]
+            check = "test -f $HOME/{package}"
+            install = "cd $HOME && touch {packages}"
+
+            [packages.marked]
+            parallel = 2
+            after = ["exec.unrun"]
+            names = ["absent"]
+
+            [exec.unrun]
+            parallel = 1
+            run = "touch $HOME/unrun"
+            "#,
+        );
+
+        let summary = run_all(&ops, &ctx);
+
+        assert_eq!(
+            summary.skipped, 0,
+            "nothing is skipped in check mode: {summary:?}"
+        );
+        assert_eq!(summary.failed, 2, "both operations are short: {summary:?}");
+        assert!(!home.join("unrun").exists(), "check still changes nothing");
+    }
+
+    #[test]
     fn an_installer_that_lies_is_not_believed() {
         // A `check` that keeps failing after a successful install is reported,
         // not hidden behind a zero exit status.
@@ -756,7 +895,10 @@ mod tests {
 
         let summary = run_all(&ops, &ctx);
 
-        assert_eq!(summary.failed, 1, "the package is still not installed: {summary:?}");
+        assert_eq!(
+            summary.failed, 1,
+            "the package is still not installed: {summary:?}"
+        );
         let _ = home;
     }
 
@@ -772,7 +914,10 @@ mod tests {
         let theirs_name = "Visual Studio Code";
         let ours = format!("[vscode]\nname={theirs_name}\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc\n");
 
-        assert!(same_repo(theirs, &ours), "spacing and an implicit `enabled` are not a difference");
+        assert!(
+            same_repo(theirs, &ours),
+            "spacing and an implicit `enabled` are not a difference"
+        );
     }
 
     #[test]
@@ -781,10 +926,22 @@ mod tests {
         let disabled = "[a]\nbaseurl=https://x\nenabled=0\n";
         let unchecked = "[a]\nbaseurl=https://x\ngpgcheck=0\n";
 
-        assert!(!same_repo(enabled, disabled), "enabled=0 is a real difference");
-        assert!(!same_repo(enabled, unchecked), "gpgcheck=0 is a real difference");
-        assert!(!same_repo(enabled, "[a]\nbaseurl=https://y\nenabled=1\n"), "a different url matters");
-        assert!(!same_repo("", "[a]\nenabled=1\n"), "an empty file is not a match");
+        assert!(
+            !same_repo(enabled, disabled),
+            "enabled=0 is a real difference"
+        );
+        assert!(
+            !same_repo(enabled, unchecked),
+            "gpgcheck=0 is a real difference"
+        );
+        assert!(
+            !same_repo(enabled, "[a]\nbaseurl=https://y\nenabled=1\n"),
+            "a different url matters"
+        );
+        assert!(
+            !same_repo("", "[a]\nenabled=1\n"),
+            "an empty file is not a match"
+        );
     }
 
     #[test]
@@ -850,7 +1007,10 @@ mod tests {
     #[test]
     fn an_after_naming_nothing_is_rejected_up_front() {
         let (home, _ctx) = scratch("baddep");
-        let ops = plan_for(&home, "[exec.a]\nrun = \"true\"\nafter = [\"exec.missing\"]\n");
+        let ops = plan_for(
+            &home,
+            "[exec.a]\nrun = \"true\"\nafter = [\"exec.missing\"]\n",
+        );
 
         let err = validate(&ops).unwrap_err();
 
@@ -877,7 +1037,7 @@ mod tests {
         });
         let selected: Vec<&Op> = ops.iter().collect();
 
-        let summary = run(&selected, &ctx, |_, _| {}).expect("terminates");
+        let summary = run(&selected, &ctx, |_, _| {});
 
         assert_eq!(summary.kept + summary.changed, 0, "{summary:?}");
     }

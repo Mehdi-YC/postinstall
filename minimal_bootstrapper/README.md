@@ -67,7 +67,13 @@ after = ["exec.bun"]
 ```
 
 A dependency that fails skips what depended on it, and says which dependency was
-to blame.
+to blame. That propagates all the way down: if `a` fails and `b` is skipped
+because of it, `c` is skipped too — an operation that never ran cannot satisfy
+anything that needed it.
+
+`check` is the exception. Nothing is going to run, so there a prerequisite that
+has not happened yet is no reason to say nothing about the packages behind it.
+`check` reports each operation's own state.
 
 ## Escalation
 
@@ -111,8 +117,14 @@ branch = "main"
 stow = ["config", "vim"]
 ```
 
-Cloned to `~/.local/share/dotfiles` if it is not there, then `git reset --hard`
-so the repository version wins.
+Cloned to `~/.local/share/dotfiles` if it is not there. On every apply the
+checkout is advanced with `git pull --ff-only` and then `git reset --hard`, so
+the repository version wins: a commit you pushed arrives, and an edit you made
+through a symlink is reverted.
+
+`--ff-only` on purpose. Local *commits* in your dotfiles fail loudly rather than
+being silently discarded; local edits to the working tree are discarded, because
+that is what the rest of this tool does with drift.
 
 Stow will not replace a real file with a symlink, and a real `~/.tmux.conf` is
 the normal state of a machine set up some other way. So **an existing file is

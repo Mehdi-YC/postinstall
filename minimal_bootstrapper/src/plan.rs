@@ -34,10 +34,7 @@ pub enum Body {
         names: Vec<String>,
     },
     /// Run `run` unless `check` says otherwise.
-    Command {
-        check: Option<String>,
-        run: String,
-    },
+    Command { check: Option<String>, run: String },
     /// Write a `.repo` file and import its key.
     Repo(Repo),
     /// Clone or update a dotfiles repository and stow it into `$HOME`.
@@ -77,14 +74,11 @@ pub fn build(config: &Config) -> Result<Vec<Op>, Error> {
     }
 
     for (manager, packages) in &config.packages {
-        let installer = config
-            .installer
-            .get(manager)
-            .ok_or_else(|| {
-                Error(format!(
-                    "no installer named `{manager}`; declare [installer.{manager}]"
-                ))
-            })?;
+        let installer = config.installer.get(manager).ok_or_else(|| {
+            Error(format!(
+                "no installer named `{manager}`; declare [installer.{manager}]"
+            ))
+        })?;
         ops.push(op(
             format!("packages.{manager}"),
             Body::Packages {
@@ -175,13 +169,16 @@ mod tests {
     use crate::config::{Config, Lane};
 
     fn ids(text: &str) -> Vec<String> {
-        build(&Config::load(text).expect("config")).expect("plan").into_iter().map(|o| o.id).collect()
+        build(&Config::load(text).expect("config"))
+            .expect("plan")
+            .into_iter()
+            .map(|o| o.id)
+            .collect()
     }
 
     #[test]
     fn every_section_kind_becomes_an_operation() {
-        let ops = ids(
-            r#"
+        let ops = ids(r#"
             [installer.fake]
             check = "true"
             install = "true"
@@ -202,8 +199,7 @@ mod tests {
             [dotfiles]
             repo = "https://example.invalid/dots"
             stow = ["config"]
-            "#,
-        );
+            "#);
 
         assert_eq!(
             ops,
@@ -226,14 +222,21 @@ mod tests {
 
     #[test]
     fn a_missing_installer_names_the_section_to_write() {
-        let err = build(&Config::load("[packages.pacman]\nnames = [\"bash\"]\n").unwrap()).unwrap_err();
+        let err =
+            build(&Config::load("[packages.pacman]\nnames = [\"bash\"]\n").unwrap()).unwrap_err();
         assert!(err.0.contains("[installer.pacman]"), "{err}");
     }
 
     #[test]
     fn lanes_are_opt_in() {
-        let ops = build(&Config::load("[exec.a]\nrun = \"t\"\n[exec.b]\nrun = \"t\"\nparallel = 1\n").unwrap()).unwrap();
-        assert!(ops.iter().any(|o| o.lane_declared), "one section declared a lane");
+        let ops = build(
+            &Config::load("[exec.a]\nrun = \"t\"\n[exec.b]\nrun = \"t\"\nparallel = 1\n").unwrap(),
+        )
+        .unwrap();
+        assert!(
+            ops.iter().any(|o| o.lane_declared),
+            "one section declared a lane"
+        );
         // Undeclared operations join the default lane rather than floating.
         assert!(ops.iter().all(|o| o.lane == Lane::default()));
     }
@@ -296,8 +299,9 @@ mod tests {
 
     #[test]
     fn resources_are_claimed_by_the_bodies_that_hold_them() {
-        let ops = build(&Config::load(
-            r#"
+        let ops = build(
+            &Config::load(
+                r#"
             [installer.dnf]
             check = "t"
             install = "t"
@@ -309,11 +313,18 @@ mod tests {
             [exec.plain]
             run = "t"
             "#,
-        ).unwrap()).unwrap();
+            )
+            .unwrap(),
+        )
+        .unwrap();
 
         let resource = |id: &str| ops.iter().find(|op| op.id == id).unwrap().body.resource();
         assert_eq!(resource("packages.dnf"), Some("rpm"));
-        assert_eq!(resource("exec.plain"), None, "a plain command holds nothing");
+        assert_eq!(
+            resource("exec.plain"),
+            None,
+            "a plain command holds nothing"
+        );
     }
 
     #[test]
