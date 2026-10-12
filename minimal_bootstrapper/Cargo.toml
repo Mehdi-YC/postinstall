@@ -1,0 +1,16 @@
+[package]
+name = "minimal_bootstrapper"
+version = "0.1.0"
+edition = "2021"
+description = "Declarative workstation configurator: TOML in, a machine that matches it out"
+license = "MIT"
+
+[dependencies]
+# TOML parsing, and the derive macros that turn it into typed config.
+# These are the only dependencies in the project; everything else is std.
+toml = "1.1"
+serde = { version = "1", features = ["derive"] }
+
+[profile.release]
+opt-level = 2
+strip = true

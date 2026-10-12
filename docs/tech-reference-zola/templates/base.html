@@ -15,7 +15,7 @@
 
   {% block toc_tags %}{% endblock %}
 
-  <div class="layout-container">
+  <div class="{% block layout_class %}layout-container{% endblock %}">
     {% block sidebar %}{% endblock %}
     <main class="main-content">
       {% block content %}{% endblock %}

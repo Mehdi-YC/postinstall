@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://tutos.mehdi-yc.com/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/django/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/django/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/docker_and_tools/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/docker_and_tools/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/everything/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/everything/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/frappe/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/frappe/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/network/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/network/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/odoo/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/odoo/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/postgres/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/postgres/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/python/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/python/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/book/rust/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/rust/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/categories/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/book/rust_advanced/</loc>
     </url>
     <url>
-        <loc>https://tutos.mehdi-yc.com/tags/</loc>
+        <loc>https://mehdi-yc.github.io/postinstall/categories/</loc>
+    </url>
+    <url>
+        <loc>https://mehdi-yc.github.io/postinstall/tags/</loc>
     </url>
 </urlset>

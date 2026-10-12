@@ -1,0 +1,232 @@
+# ==============================================================================
+# fedora_new.yml, in TOML.
+#
+# This is the whole playbook and nothing else: every task below has a
+# counterpart in playbooks/fedora_new.yml, and every task in that playbook is
+# here. Read them side by side.
+#
+#   minimal_bootstrapper list  -c example.toml
+#   minimal_bootstrapper check -c example.toml     # read-only, exits 1 if behind
+#   minimal_bootstrapper apply -c example.toml --sudo
+#
+# Run it as yourself. `--sudo` asks once, up front, then escalates per command.
+#
+# The playbook's `--tags minimal` has no equivalent key, because `--only` is
+# already the same idea:
+#
+#   minimal_bootstrapper apply --only packages.dnf,exec --sudo   # no flatpaks
+#
+# ==============================================================================
+#
+#   playbook task                     here
+#   ------------------------------    ----------------------------
+#   dnf copr enable atim/starship     [exec.copr]
+#   Terra repo                        [exec.terra]
+#   Microsoft repo key + repo         [repos.vscode]
+#   Install VS Code                   "code" in [packages.dnf]
+#   package: name: [...]              [packages.dnf]
+#   git clone + stow                  [dotfiles]
+#   curl | bash (lazydocker)          [exec.lazydocker]
+#   curl | bash (bun, uv)             [exec.bun], [exec.uv]
+#   bun install -g opencode-ai        [exec.opencode]
+#   file: ~/opt state=directory       [exec.opt]
+#   flatpak_remote flathub            [exec.flathub]
+#   flatpak method: system            [installer.flatpak], sudo = true
+#
+# One difference worth naming: `install_weak_deps: false` has no equivalent,
+# because dnf does not pull weak dependencies by default.
+
+# ---- privilege, for reference -----------------------------------------------
+#
+# Set `sudo` per section to override these. Repos write to /etc, so they need
+# root; dnf takes the rpmdb lock. Everything else is $HOME and needs none.
+#
+#   [repos.*]      [installer.dnf]        root
+#   [exec.*]       [installer.bun|cargo]  none
+
+# ---- variables --------------------------------------------------------------
+#
+# `${name}` expands anywhere outside an installer's own commands, including in
+# URLs. Variables may reference each other in any order.
+#
+# A whole `$NAME` on its own reads the environment — which is why `$releasever`
+# and `$basearch` below reach dnf untouched instead of being eaten by a shell.
+
+[variables]
+config_repo = "https://github.com/mehdi-yc/postinstall"
+vscode_base = "https://packages.microsoft.com"
+
+# ---- installers -------------------------------------------------------------
+#
+# Two shell commands: `check` for one package, `install` for everything missing
+# at once. `{package}` and `{packages}` are this file's own placeholders, on a
+# different sigil from `${...}` so the two can never be confused.
+
+[installer.dnf]
+check = "rpm -q {package}"
+install = "dnf install -y {packages}"
+sudo = true
+# dnf and `rpm --import` both take the rpmdb lock, so nothing else may hold it
+# at the same time, whatever their lanes say.
+resource = "rpm"
+
+[installer.flatpak]
+check = "flatpak info {package}"
+install = "flatpak install -y --system {packages}"
+# `method: system` in the playbook: machine-wide, so root.
+sudo = true
+resource = "flatpak"
+
+# ---- repositories -----------------------------------------------------------
+
+# `vscode` is the section id and the file name, which is what dnf calls the repo.
+# `name` is the description — a separate field, not the id.
+[repos.vscode]
+parallel = 1
+url = "${vscode_base}/yumrepos/vscode"
+key = "${vscode_base}/keys/microsoft.asc"
+name = "Visual Studio Code"
+after = ["exec.copr"]
+
+# ---- packages ---------------------------------------------------------------
+#
+# `parallel` is the lane: everything in the lowest ready lane runs together,
+# then the next one. Segments compare as numbers, so "2.10" comes after "2.9".
+
+[packages.dnf]
+parallel = 2
+after = ["exec.copr", "exec.terra", "repos.vscode"]
+names = [
+    # CLI
+    "stow", "tmux", "git", "fish", "bat", "jq", "wget", "unzip", "zip",
+    "starship", "chromium", "podman-compose",
+    # Rust and editors
+    #
+    # The playbook installs the toolchain from dnf. This machine does not use
+    # that: `command -v cargo` is ~/.cargo/bin/cargo, which no package owns, so
+    # it came from rustup. Installing the dnf toolchain as well would put a
+    # second, older Rust on the PATH and quietly shadow it. Left commented out
+    # for that reason — uncomment if you want dnf's Rust instead of rustup's.
+    #
+    #   "rustc", "cargo", "rustfmt", "rust-clippy", "rust-analyzer", "rust-src",
+    #
+    # Terra
+    "bacon", "espanso-wayland",
+    # the rest
+    "helix", "wayland", "noctalia",
+    # from [repos.vscode]
+    "code",
+]
+
+# `after` is not decoration. Nothing in the graph knows that a COPR has to be
+# enabled before `dnf install starship` can find it, or that Terra has to exist
+# before bacon can. Say it, and a failure upstream skips the whole thing instead
+# of leaving you half-configured.
+
+[packages.flatpak]
+parallel = 3
+after = ["exec.flathub"]
+names = [
+    "com.github.tchx84.Flatseal",   # manage flatpak permissions
+    "org.kde.kdenlive",             # video editing
+    "org.inkscape.Inkscape",        # vector manipulation
+    "com.valvesoftware.Steam",
+    "org.onlyoffice.desktopeditors",
+    "com.obsproject.Studio",        # screen and stream recording
+    "io.github.mfat.sshpilot",      # SSH connection manager
+]
+
+# ---- dotfiles ---------------------------------------------------------------
+
+[dotfiles]
+parallel = 3
+repo = "${config_repo}"
+branch = "main"
+stow = ["config"]
+
+# The playbook clones to ~/repos/myconfig; this clones to
+# ~/.local/share/dotfiles. If you want them to match, that is the one line to
+# change.
+#
+# An existing file is moved to `<name>.bk` before stow links over it, and an
+# earlier backup is never overwritten — so run this twice and you still have
+# both versions. Your machine already has a real ~/.tmux.conf,
+# ~/.config/starship.toml and ~/.config/fish/config.fish, and stow refuses to
+# replace a real file with a symlink.
+#
+# If the playbook has already stowed those files on this machine, remove its
+# clone and stow tasks first: two systems managing the same paths will fight.
+
+# ---- one-shot installers ----------------------------------------------------
+#
+# `curl | sh` needs a guard, or it runs on every apply. Each `check` below is
+# the same condition the playbook used in `creates:`. Without one the output
+# says so out loud rather than pretending to be idempotent.
+
+# The check has to name the repo the way dnf does. `copr enable atim/starship`
+# registers it as `copr:copr.fedorainfracloud.org:atim:starship` — colons, not a
+# slash — so grepping for `atim/starship` matches nothing and re-enables the
+# COPR on every single apply.
+[exec.copr]
+parallel = 1
+check = "dnf repolist --enabled -q | grep -q 'atim:starship'"
+run = "dnf install -y 'dnf-command(copr)' && dnf copr enable -y atim/starship"
+sudo = true
+
+# Kept as the playbook wrote it — a one-shot install of terra-release, which
+# writes /etc/yum.repos.d/terra.repo itself — rather than a [repos.terra]
+# declaration. Declaring the repo directly would be tidier, but it would mean
+# inventing a GPG key URL, and a wrong key URL is worse than an honest
+# one-shot install.
+#
+# The single quotes matter more here than they look: unquoted, the shell would
+# expand `$releasever` to nothing before dnf ever saw it. (The playbook gets
+# away with it because the resulting flat URL happens to work.)
+[exec.terra]
+parallel = 1
+check = "test -f /etc/yum.repos.d/terra.repo"
+run = "dnf install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release terra-gpg-keys"
+sudo = true
+after = ["exec.copr"]
+
+[exec.flathub]
+parallel = 2
+sudo = true
+run = "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
+
+[exec.bun]
+parallel = 3
+check = "test -x $HOME/.bun/bin/bun"
+run = "curl -fsSL https://bun.sh/install | bash"
+
+[exec.uv]
+parallel = 3
+check = "test -x $HOME/.local/bin/uv"
+run = "curl -LsSf https://astral.sh/uv/install.sh | sh"
+
+[exec.lazydocker]
+parallel = 3
+check = "test -x $HOME/.local/bin/lazydocker"
+run = "curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash"
+
+# The playbook has no `creates:` here, so it re-runs this every time. The
+# `check` is the one place this file is stricter than the playbook — and it is
+# worth being stricter, because `bun install -g` on every run is not free.
+[exec.opencode]
+parallel = 3
+check = "$HOME/.bun/bin/bun pm ls -g | grep -q 'opencode-ai@'"
+run = "$HOME/.bun/bin/bun install -g opencode-ai"
+
+# For AppImages dropped in by hand; LM Studio has no stable download URL.
+[exec.opt]
+parallel = 3
+check = "test -d $HOME/opt"
+run = "mkdir -p $HOME/opt"
+
+# espanso is installed by [packages.dnf]. To run it as a user service:
+#
+#   espanso service register
+#   espanso start
+#
+# Not automated here, and not in the playbook either: `service register` is not
+# idempotent and re-running it fails. Do it once.

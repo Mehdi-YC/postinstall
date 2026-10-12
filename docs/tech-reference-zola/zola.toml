@@ -1,5 +1,8 @@
-# The URL the site will be built for
-base_url = "https://tutos.mehdi-yc.com"
+# The URL the site will be built for.
+# This is a GitHub *project* page (the repo is not Mehdi-YC.github.io), so the
+# /postinstall path prefix is required. Every internal link and the sitemap are
+# derived from this value — changing it means rebuilding the whole site.
+base_url = "https://mehdi-yc.github.io/postinstall"
 title = "Developer Reference Library"
 description = "Rust, Python, Odoo, Django, PostgreSQL, Networking, and DevOps reference guides"
 default_language = "en"
@@ -8,6 +11,11 @@ compile_sass = false
 
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
+
+# Several books document Jinja/Django/JS syntax ({{ ... }}) in fenced code
+# blocks. Zola >= 0.20 treats content files as Tera templates and would try to
+# execute them, so content templating is disabled site-wide.
+skip_content_templating = ["**/*.md"]
 
 
 
@@ -24,7 +32,6 @@ insert_anchor_links = "left"
 render_emoji = false
 
 [markdown.highlighting]
-enabled = true
 theme = "github-dark"
 
 
