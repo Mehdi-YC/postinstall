@@ -1,8 +1,7 @@
 # The URL the site will be built for.
-# This is a GitHub *project* page (the repo is not Mehdi-YC.github.io), so the
-# /postinstall path prefix is required. Every internal link and the sitemap are
-# derived from this value — changing it means rebuilding the whole site.
-base_url = "https://mehdi-yc.github.io/postinstall"
+# Served at the domain root by nginx. Every internal link, canonical tag and
+# sitemap URL is derived from this value — changing it means rebuilding.
+base_url = "https://tutos.mehdi-yc.com"
 title = "Developer Reference Library"
 description = "Rust, Python, Odoo, Django, PostgreSQL, Networking, and DevOps reference guides"
 default_language = "en"

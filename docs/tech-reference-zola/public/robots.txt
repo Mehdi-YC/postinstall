@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 Allow: /
-Sitemap: https://mehdi-yc.github.io/postinstall/sitemap.xml
+Sitemap: https://tutos.mehdi-yc.com/sitemap.xml
