@@ -88,6 +88,8 @@
           - rust-src
           - bacon           # Terra
           - helix
+          - wayland
+          - noctalia
           - espanso-wayland # Terra
         state: present
         install_weak_deps: false
