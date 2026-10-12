@@ -79,6 +79,16 @@ badge_text = "Frappe"
 topics = ["DocType", "ORM", "Hooks", "Controllers", "REST API", "Jinja", "Background Jobs", "Bench CLI", "Permissions", "Migrations"]
 
 [[books]]
+vol = "09"
+title = "Rust — Beyond the Basics"
+subtitle = "Data structure choices, borrow checker escapes, trait design, and the crates that will still be here in 2030"
+path = "book/rust_advanced"
+spine = "rust"
+badge = "rust"
+badge_text = "Rust II"
+topics = ["data structure selection", "typestate & newtypes", "clone vs borrow", "lifetimes", "generics vs dyn", "trait design", "errors that carry info", "iterators", "smart pointers", "concurrency", "async & cancellation", "unsafe", "testing", "cargo & profiling", "ecosystem (verified)", "best practices"]
+
+[[books]]
 vol = "Bonus"
 title = "All what i find interesting in a single md file"
 subtitle = "Everything from dev, to tools, to cli, to desktop to the way of thinking..."

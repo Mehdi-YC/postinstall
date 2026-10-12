@@ -195,44 +195,44 @@ Focus on understanding the pattern, not just the solution.<br />
 <li>
 <p><strong>Singleton</strong><br />
 Ensure a class has only one instance and provide a global point of access.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Singleton {</span></span>
-<span class="giallo-l"><span>  -instance: Singleton</span></span>
-<span class="giallo-l"><span>  +getInstance(): Singleton</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Singleton</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span>  -instance:</span><span style="color: #F97583;"> Singleton</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">getInstance</span><span>(): Singleton</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span></code></pre></li>
 <li>
 <p><strong>Factory Method</strong><br />
 Define an interface for creating an object, but let subclasses decide which class to instantiate.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Product</span></span>
-<span class="giallo-l"><span>class ConcreteProduct</span></span>
-<span class="giallo-l"><span>class Creator {</span></span>
-<span class="giallo-l"><span>  +factoryMethod(): Product</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>class ConcreteCreator {</span></span>
-<span class="giallo-l"><span>  +factoryMethod(): Product</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>Creator &lt;|-- ConcreteCreator</span></span>
-<span class="giallo-l"><span>Product &lt;|-- ConcreteProduct</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Product</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> ConcreteProduct</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Creator</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">factoryMethod</span><span>(): Product</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> ConcreteCreator</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">factoryMethod</span><span>(): Product</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Creator</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> ConcreteCreator</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Product</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> ConcreteProduct</span></span></code></pre></li>
 <li>
 <p><strong>Builder</strong><br />
 Separate the construction of a complex object from its representation.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Director</span></span>
-<span class="giallo-l"><span>class Builder {</span></span>
-<span class="giallo-l"><span>  +setPart()</span></span>
-<span class="giallo-l"><span>  +getResult()</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>Director --&gt; Builder</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Director</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Builder</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">setPart</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">getResult</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Director</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Builder</span></span></code></pre></li>
 <li>
 <p><strong>Prototype</strong><br />
 Create new objects by copying an existing object (clone).</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Prototype {</span></span>
-<span class="giallo-l"><span>  +clone(): Prototype</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>class ConcretePrototype</span></span>
-<span class="giallo-l"><span>Prototype &lt;|-- ConcretePrototype</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Prototype</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">clone</span><span>(): Prototype</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> ConcretePrototype</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Prototype</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> ConcretePrototype</span></span></code></pre></li>
 </ul>
 </details>
 <details>
@@ -241,54 +241,54 @@ Create new objects by copying an existing object (clone).</p>
 <li>
 <p><strong>Adapter</strong><br />
 Allow incompatible interfaces to work together.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Target</span></span>
-<span class="giallo-l"><span>class Adaptee</span></span>
-<span class="giallo-l"><span>class Adapter</span></span>
-<span class="giallo-l"><span>Target &lt;|.. Adapter</span></span>
-<span class="giallo-l"><span>Adapter --&gt; Adaptee</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Target</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Adaptee</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Adapter</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Target</span><span style="color: #F97583;"> &lt;|..</span><span style="color: #B392F0;"> Adapter</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Adapter</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Adaptee</span></span></code></pre></li>
 <li>
 <p><strong>Bridge</strong><br />
 Separate abstraction from implementation so they can vary independently.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Abstraction</span></span>
-<span class="giallo-l"><span>class Implementor</span></span>
-<span class="giallo-l"><span>class RefinedAbstraction</span></span>
-<span class="giallo-l"><span>Abstraction &lt;|-- RefinedAbstraction</span></span>
-<span class="giallo-l"><span>RefinedAbstraction --&gt; Implementor</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Abstraction</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Implementor</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> RefinedAbstraction</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Abstraction</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> RefinedAbstraction</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">RefinedAbstraction</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Implementor</span></span></code></pre></li>
 <li>
 <p><strong>Composite</strong><br />
 Treat individual objects and compositions uniformly.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Component</span></span>
-<span class="giallo-l"><span>class Leaf</span></span>
-<span class="giallo-l"><span>class Composite {</span></span>
-<span class="giallo-l"><span>  +add()</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>Component &lt;|-- Leaf</span></span>
-<span class="giallo-l"><span>Component &lt;|-- Composite</span></span>
-<span class="giallo-l"><span>Composite --&gt; Component</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Component</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Leaf</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Composite</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">add</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Component</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> Leaf</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Component</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> Composite</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Composite</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Component</span></span></code></pre></li>
 <li>
 <p><strong>Decorator</strong><br />
 Add responsibilities to objects dynamically.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Component</span></span>
-<span class="giallo-l"><span>class ConcreteComponent</span></span>
-<span class="giallo-l"><span>class Decorator</span></span>
-<span class="giallo-l"><span>class ConcreteDecorator</span></span>
-<span class="giallo-l"><span>Component &lt;|-- ConcreteComponent</span></span>
-<span class="giallo-l"><span>Component &lt;|-- Decorator</span></span>
-<span class="giallo-l"><span>Decorator &lt;|-- ConcreteDecorator</span></span>
-<span class="giallo-l"><span>Decorator --&gt; Component</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Component</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> ConcreteComponent</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Decorator</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> ConcreteDecorator</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Component</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> ConcreteComponent</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Component</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> Decorator</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Decorator</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> ConcreteDecorator</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Decorator</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Component</span></span></code></pre></li>
 <li>
 <p><strong>Facade</strong><br />
 Provide a simplified interface to a complex subsystem.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Facade</span></span>
-<span class="giallo-l"><span>class SubsystemA</span></span>
-<span class="giallo-l"><span>class SubsystemB</span></span>
-<span class="giallo-l"><span>Facade --&gt; SubsystemA</span></span>
-<span class="giallo-l"><span>Facade --&gt; SubsystemB</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Facade</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> SubsystemA</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> SubsystemB</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Facade</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> SubsystemA</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Facade</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> SubsystemB</span></span></code></pre></li>
 </ul>
 </details>
 <details>
@@ -297,42 +297,42 @@ Provide a simplified interface to a complex subsystem.</p>
 <li>
 <p><strong>Observer</strong><br />
 Define a dependency between objects so that when one changes, others are notified.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Subject {</span></span>
-<span class="giallo-l"><span>  +attach()</span></span>
-<span class="giallo-l"><span>  +detach()</span></span>
-<span class="giallo-l"><span>  +notify()</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>class Observer {</span></span>
-<span class="giallo-l"><span>  +update()</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>Subject --&gt; Observer</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Subject</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">attach</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">detach</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">notify</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Observer</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">update</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Subject</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Observer</span></span></code></pre></li>
 <li>
 <p><strong>Command</strong><br />
 Encapsulate a request as an object.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Command {</span></span>
-<span class="giallo-l"><span>  +execute()</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>class ConcreteCommand</span></span>
-<span class="giallo-l"><span>class Invoker</span></span>
-<span class="giallo-l"><span>class Receiver</span></span>
-<span class="giallo-l"><span>Command &lt;|-- ConcreteCommand</span></span>
-<span class="giallo-l"><span>Invoker --&gt; Command</span></span>
-<span class="giallo-l"><span>ConcreteCommand --&gt; Receiver</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Command</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">execute</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> ConcreteCommand</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Invoker</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Receiver</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Command</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> ConcreteCommand</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Invoker</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Command</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">ConcreteCommand</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Receiver</span></span></code></pre></li>
 <li>
 <p><strong>Strategy</strong><br />
 Define a family of algorithms, encapsulate them, and make them interchangeable.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram</span></span>
-<span class="giallo-l"><span>class Context {</span></span>
-<span class="giallo-l"><span>  -strategy: Strategy</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>class Strategy {</span></span>
-<span class="giallo-l"><span>  +execute()</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"><span>class ConcreteStrategyA</span></span>
-<span class="giallo-l"><span>Strategy &lt;|-- ConcreteStrategyA</span></span>
-<span class="giallo-l"><span>Context --&gt; Strategy</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Context</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span>  -strategy:</span><span style="color: #F97583;"> Strategy</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> Strategy</span><span style="color: #F97583;"> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">  +</span><span style="color: #B392F0;">execute</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #F97583;">}</span></span>
+<span class="giallo-l"><span style="color: #F97583;">class</span><span style="color: #B392F0;"> ConcreteStrategyA</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Strategy</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> ConcreteStrategyA</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">Context</span><span style="color: #F97583;"> --&gt;</span><span style="color: #B392F0;"> Strategy</span></span></code></pre></li>
 </ul>
 </details>
 </details>
@@ -342,38 +342,38 @@ Define a family of algorithms, encapsulate them, and make them interchangeable.<
 <li>
 <p><strong>MVC (Model-View-Controller)</strong><br />
 Separates application logic into three interconnected components.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
-<span class="giallo-l"><span>Model --&gt; Controller</span></span>
-<span class="giallo-l"><span>Controller --&gt; View</span></span>
-<span class="giallo-l"><span>View --&gt; Model</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TD</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">Model </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Controller</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">Controller </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> View</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">View </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Model</span></span></code></pre></li>
 <li>
 <p><strong>MVVM (Model-View-ViewModel)</strong><br />
 Enhances MVC with two-way binding between view and view model.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
-<span class="giallo-l"><span>Model --&gt; ViewModel</span></span>
-<span class="giallo-l"><span>ViewModel --&gt; View</span></span>
-<span class="giallo-l"><span>View --&gt; ViewModel</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TD</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">Model </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> ViewModel</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">ViewModel </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> View</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">View </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> ViewModel</span></span></code></pre></li>
 <li>
 <p><strong>Layered Architecture</strong><br />
 Organizes code into layers with specific responsibilities.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
-<span class="giallo-l"><span>UI --&gt; Application</span></span>
-<span class="giallo-l"><span>Application --&gt; Domain</span></span>
-<span class="giallo-l"><span>Domain --&gt; Infrastructure</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TD</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">UI </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Application</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">Application </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Domain</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">Domain </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Infrastructure</span></span></code></pre></li>
 <li>
 <p><strong>Client-Server</strong><br />
 Divide systems into a server (provider) and client (consumer).</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
-<span class="giallo-l"><span>Client --&gt;|Request| Server</span></span>
-<span class="giallo-l"><span>Server --&gt;|Response| Client</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TD</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">Client </span><span style="color: #F97583;">--&gt;|</span><span style="color: #9ECBFF;">Request</span><span style="color: #F97583;">|</span><span style="color: #FFAB70;"> Server</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">Server </span><span style="color: #F97583;">--&gt;|</span><span style="color: #9ECBFF;">Response</span><span style="color: #F97583;">|</span><span style="color: #FFAB70;"> Client</span></span></code></pre></li>
 <li>
 <p><strong>Microservices</strong><br />
 Decompose a system into small, independently deployable services.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD</span></span>
-<span class="giallo-l"><span>ServiceA --&gt; API</span></span>
-<span class="giallo-l"><span>ServiceB --&gt; API</span></span>
-<span class="giallo-l"><span>ServiceC --&gt; API</span></span>
-<span class="giallo-l"><span>API --&gt; Client</span></span></code></pre></li>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TD</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">ServiceA </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> API</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">ServiceB </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> API</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">ServiceC </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> API</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">API </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Client</span></span></code></pre></li>
 </ul>
 </details>
 <details>
@@ -393,100 +393,100 @@ Decompose a system into small, independently deployable services.</p>
 <summary><strong>🧱 1. Class Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 Class diagrams represent the structure of classes in a system, showing their attributes, methods, and relationships.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram  </span></span>
-<span class="giallo-l"><span>    class Animal {  </span></span>
-<span class="giallo-l"><span>        +String name  </span></span>
-<span class="giallo-l"><span>        +int age  </span></span>
-<span class="giallo-l"><span>        +makeSound()  </span></span>
-<span class="giallo-l"><span>    }  </span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> Animal</span><span style="color: #F97583;"> {</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +String</span><span style="color: #B392F0;"> name</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +int</span><span style="color: #B392F0;"> age</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +</span><span style="color: #B392F0;">makeSound</span><span>()  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    }</span><span>  </span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span>    class Dog {  </span></span>
-<span class="giallo-l"><span>        +String breed  </span></span>
-<span class="giallo-l"><span>        +bark()  </span></span>
-<span class="giallo-l"><span>    }  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> Dog</span><span style="color: #F97583;"> {</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +String</span><span style="color: #B392F0;"> breed</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +</span><span style="color: #B392F0;">bark</span><span>()  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    }</span><span>  </span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span>    class Cat {  </span></span>
-<span class="giallo-l"><span>        +scratch()  </span></span>
-<span class="giallo-l"><span>    }  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> Cat</span><span style="color: #F97583;"> {</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +</span><span style="color: #B392F0;">scratch</span><span>()  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    }</span><span>  </span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span>    Animal &lt;|-- Dog  </span></span>
-<span class="giallo-l"><span>    Animal &lt;|-- Cat  </span></span></code></pre></details>
+<span class="giallo-l"><span style="color: #B392F0;">    Animal</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> Dog</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Animal</span><span style="color: #F97583;"> &lt;|--</span><span style="color: #B392F0;"> Cat</span><span>  </span></span></code></pre></details>
 <details>
 <summary><strong>🎭 2. Use Case Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 Use case diagrams visualize the interactions between users (actors) and the system to achieve goals (use cases).</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD  </span></span>
-<span class="giallo-l"><span>    Actor((👤 User)) --&gt;|Uses| System[🖥️ System]  </span></span>
-<span class="giallo-l"><span>    System --&gt; UC1(📌 Use Case 1)  </span></span>
-<span class="giallo-l"><span>    System --&gt; UC2(📌 Use Case 2)  </span></span>
-<span class="giallo-l"><span>    UC1 -.-&gt; UC2  </span></span></code></pre></details>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TD  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Actor</span><span style="color: #F97583;">((</span><span>👤</span><span style="color: #9ECBFF;"> User</span><span style="color: #F97583;">)) --&gt;|</span><span style="color: #9ECBFF;">Uses</span><span style="color: #F97583;">|</span><span style="color: #FFAB70;"> System</span><span style="color: #F97583;">[</span><span>🖥</span><span style="color: #9ECBFF;">️ System</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    System </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> UC1</span><span style="color: #F97583;">(</span><span>📌</span><span style="color: #9ECBFF;"> Use Case 1</span><span style="color: #F97583;">)</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    System </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> UC2</span><span style="color: #F97583;">(</span><span>📌</span><span style="color: #9ECBFF;"> Use Case 2</span><span style="color: #F97583;">)</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    UC1 </span><span style="color: #F97583;">-.-&gt;</span><span style="color: #FFAB70;"> UC2  </span></span></code></pre></details>
 <details>
 <summary><strong>🔁 3. Sequence Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 Sequence diagrams show how objects or components interact in a particular sequence of time-ordered messages.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>sequenceDiagram  </span></span>
-<span class="giallo-l"><span>    participant User as 👤 User  </span></span>
-<span class="giallo-l"><span>    participant WebApp as 🌐 WebApp  </span></span>
-<span class="giallo-l"><span>    participant Server as 🖥️ Server  </span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">sequenceDiagram</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    participant</span><span style="color: #FFAB70;"> User</span><span style="color: #F97583;"> as</span><span> 👤 User  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    participant</span><span style="color: #FFAB70;"> WebApp</span><span style="color: #F97583;"> as</span><span> 🌐 WebApp  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    participant</span><span style="color: #FFAB70;"> Server</span><span style="color: #F97583;"> as</span><span> 🖥️ Server  </span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span>    User-&gt;&gt;WebApp: Request Page  </span></span>
-<span class="giallo-l"><span>    WebApp-&gt;&gt;Server: Fetch Data  </span></span>
-<span class="giallo-l"><span>    Server--&gt;&gt;WebApp: Return Data  </span></span>
-<span class="giallo-l"><span>    WebApp--&gt;&gt;User: Render Page  </span></span></code></pre></details>
+<span class="giallo-l"><span style="color: #FFAB70;">    User</span><span style="color: #F97583;">-&gt;&gt;</span><span style="color: #FFAB70;">WebApp</span><span style="color: #F97583;">:</span><span style="color: #9ECBFF;"> Request Page  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    WebApp</span><span style="color: #F97583;">-&gt;&gt;</span><span style="color: #FFAB70;">Server</span><span style="color: #F97583;">:</span><span style="color: #9ECBFF;"> Fetch Data  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Server</span><span style="color: #F97583;">--&gt;&gt;</span><span style="color: #FFAB70;">WebApp</span><span style="color: #F97583;">:</span><span style="color: #9ECBFF;"> Return Data  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    WebApp</span><span style="color: #F97583;">--&gt;&gt;</span><span style="color: #FFAB70;">User</span><span style="color: #F97583;">:</span><span style="color: #9ECBFF;"> Render Page  </span></span></code></pre></details>
 <details>
 <summary><strong>🏃 4. Activity Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 Activity diagrams model the flow of control or data between activities, useful for describing workflows and logic.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>flowchart TD  </span></span>
-<span class="giallo-l"><span>    Start([🚀 Start]) --&gt; A[🔐 Login]  </span></span>
-<span class="giallo-l"><span>    A --&gt; B{✅ Valid?}  </span></span>
-<span class="giallo-l"><span>    B -- Yes --&gt; C[📊 Show Dashboard]  </span></span>
-<span class="giallo-l"><span>    B -- No --&gt; D[❌ Show Error]  </span></span>
-<span class="giallo-l"><span>    C --&gt; End([🏁 End])  </span></span>
-<span class="giallo-l"><span>    D --&gt; End  </span></span></code></pre></details>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">flowchart</span><span style="color: #B392F0;"> TD  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Start</span><span style="color: #F97583;">([</span><span>🚀</span><span style="color: #9ECBFF;"> Start</span><span style="color: #F97583;">]) --&gt;</span><span style="color: #FFAB70;"> A</span><span style="color: #F97583;">[</span><span>🔐</span><span style="color: #9ECBFF;"> Login</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    A </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> B</span><span style="color: #F97583;">{</span><span>✅</span><span style="color: #9ECBFF;"> Valid?</span><span style="color: #F97583;">}</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    B </span><span style="color: #F97583;">--</span><span style="color: #9ECBFF;"> Yes </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> C</span><span style="color: #F97583;">[</span><span>📊</span><span style="color: #9ECBFF;"> Show Dashboard</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    B </span><span style="color: #F97583;">--</span><span style="color: #9ECBFF;"> No </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> D</span><span style="color: #F97583;">[</span><span>❌</span><span style="color: #9ECBFF;"> Show Error</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    C </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> End</span><span style="color: #F97583;">([</span><span>🏁</span><span style="color: #9ECBFF;"> End</span><span style="color: #F97583;">])</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    D </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> End  </span></span></code></pre></details>
 <details>
 <summary><strong>🔄 5. State Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 State diagrams represent the possible states of an object and transitions triggered by events or actions.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>stateDiagram-v2  </span></span>
-<span class="giallo-l"><span>    [*] --&gt; Idle  </span></span>
-<span class="giallo-l"><span>    Idle --&gt; Processing : ▶️ start()  </span></span>
-<span class="giallo-l"><span>    Processing --&gt; Finished : ✔️ complete()  </span></span>
-<span class="giallo-l"><span>    Finished --&gt; [*]  </span></span></code></pre></details>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">stateDiagram-v2</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    [*] --&gt;</span><span style="color: #FFAB70;"> Idle</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Idle</span><span style="color: #F97583;"> --&gt;</span><span style="color: #FFAB70;"> Processing</span><span style="color: #F97583;"> :</span><span style="color: #9ECBFF;"> ▶️ start()  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Processing</span><span style="color: #F97583;"> --&gt;</span><span style="color: #FFAB70;"> Finished</span><span style="color: #F97583;"> :</span><span style="color: #9ECBFF;"> ✔️ complete()  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Finished</span><span style="color: #F97583;"> --&gt; [*]</span><span>  </span></span></code></pre></details>
 <details>
 <summary><strong>🧩 6. Component Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 Component diagrams model the components of a system and how they interact through interfaces.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TB  </span></span>
-<span class="giallo-l"><span>    Client[&quot;🧑‍💻 Client&quot;] --&gt;|uses| API[&quot;🌐 API&quot;]  </span></span>
-<span class="giallo-l"><span>    API --&gt; Controller[&quot;🧭 Controller&quot;]  </span></span>
-<span class="giallo-l"><span>    Controller --&gt; Service[&quot;⚙️ Service&quot;]  </span></span>
-<span class="giallo-l"><span>    Service --&gt; Database[&quot;(🗄️ Database)&quot;]  </span></span></code></pre></details>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TB  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Client</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;🧑‍💻 Client&quot;</span><span style="color: #F97583;">] --&gt;|</span><span style="color: #9ECBFF;">uses</span><span style="color: #F97583;">|</span><span style="color: #FFAB70;"> API</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;🌐 API&quot;</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    API </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Controller</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;🧭 Controller&quot;</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Controller </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Service</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;⚙️ Service&quot;</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    Service </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> Database</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;(🗄️ Database)&quot;</span><span style="color: #F97583;">]</span><span>  </span></span></code></pre></details>
 <details>
 <summary><strong>🚚 7. Deployment Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 Deployment diagrams show the physical layout of hardware and how software components are deployed on them.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>graph TD  </span></span>
-<span class="giallo-l"><span>    subgraph &quot;🧑‍💻 Client Node&quot; </span></span>
-<span class="giallo-l"><span>        Browser[&quot;🌍 Browser&quot;]  </span></span>
-<span class="giallo-l"><span>    end  </span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">graph</span><span style="color: #B392F0;"> TD  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    subgraph </span><span>&quot;🧑‍💻 </span><span style="color: #FFAB70;">Client Node</span><span>&quot; </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">        Browser</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;🌍 Browser&quot;</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    end</span><span>  </span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span>    subgraph &quot;🖥️ Server Node&quot;  </span></span>
-<span class="giallo-l"><span>        WebApp[&quot;🧠 WebApp&quot;]  </span></span>
-<span class="giallo-l"><span>        DB[&quot;(🗃️ Database)&quot;]  </span></span>
-<span class="giallo-l"><span>    end  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    subgraph </span><span>&quot;🖥</span><span style="color: #FFAB70;">️ Server Node</span><span>&quot;  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">        WebApp</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;🧠 WebApp&quot;</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">        DB</span><span style="color: #F97583;">[</span><span style="color: #9ECBFF;">&quot;(🗃️ Database)&quot;</span><span style="color: #F97583;">]</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    end</span><span>  </span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span>    Browser --&gt; WebApp  </span></span>
-<span class="giallo-l"><span>    WebApp --&gt; DB  </span></span></code></pre></details>
+<span class="giallo-l"><span style="color: #FFAB70;">    Browser </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> WebApp  </span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">    WebApp </span><span style="color: #F97583;">--&gt;</span><span style="color: #FFAB70;"> DB  </span></span></code></pre></details>
 <details>
 <summary><strong>🧸 8. Object Diagram</strong></summary>
 <p><strong>Description:</strong><br />
 Object diagrams depict instances of classes (objects) and their relationships at a specific point in time.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="mermaid"><span class="giallo-l"><span>classDiagram  </span></span>
-<span class="giallo-l"><span>    class Person {  </span></span>
-<span class="giallo-l"><span>        +String name  </span></span>
-<span class="giallo-l"><span>        +int age  </span></span>
-<span class="giallo-l"><span>    }  </span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: #F97583;">classDiagram</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> Person</span><span style="color: #F97583;"> {</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +String</span><span style="color: #B392F0;"> name</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">        +int</span><span style="color: #B392F0;"> age</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    }</span><span>  </span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span>    Person : name = &quot;Alice&quot;  </span></span>
 <span class="giallo-l"><span>    Person : age = 30  </span></span></code></pre></details>
@@ -585,7 +585,7 @@ Object diagrams depict instances of classes (objects) and their relationships at
 <summary>1. Use Meaningful Resource Naming</summary>
 <ul>
 <li>Use <strong>nouns</strong> for resources, <strong>verbs</strong> for actions.</li>
-<li>Examples:<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>GET /users</span></span>
+<li>Examples:<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>GET /users</span></span>
 <span class="giallo-l"><span>POST /users</span></span>
 <span class="giallo-l"><span>PATCH /users/{id}</span></span></code></pre></li>
 </ul>
@@ -603,7 +603,7 @@ Object diagrams depict instances of classes (objects) and their relationships at
 <details>
 <summary>3. Version Your API (Always!)</summary>
 <ul>
-<li>Example:<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>/api/v1/users</span></span>
+<li>Example:<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>/api/v1/users</span></span>
 <span class="giallo-l"><span>/api/v2/users</span></span></code></pre></li>
 <li>Use URI versioning or headers, but <strong>always version</strong>.</li>
 </ul>
@@ -624,7 +624,7 @@ Object diagrams depict instances of classes (objects) and their relationships at
 <ul>
 <li>Use a common envelope format:</li>
 </ul>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="json"><span class="giallo-l"><span>{</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="json"><span class="giallo-l"><span>{</span></span>
 <span class="giallo-l"><span style="color: #79B8FF;">  &quot;data&quot;</span><span>: {</span><span style="color: #FDAEB7;font-style: italic;"> ...</span><span> },</span></span>
 <span class="giallo-l"><span style="color: #79B8FF;">  &quot;error&quot;</span><span>:</span><span style="color: #79B8FF;"> null</span></span>
 <span class="giallo-l"><span>}</span></span></code></pre>

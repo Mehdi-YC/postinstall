@@ -1,4 +1,6 @@
-# The URL the site will be built for
+# The URL the site will be built for.
+# Served at the domain root by nginx. Every internal link, canonical tag and
+# sitemap URL is derived from this value — changing it means rebuilding.
 base_url = "https://tutos.mehdi-yc.com"
 title = "Developer Reference Library"
 description = "Rust, Python, Odoo, Django, PostgreSQL, Networking, and DevOps reference guides"
@@ -8,6 +10,11 @@ compile_sass = false
 
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
+
+# Several books document Jinja/Django/JS syntax ({{ ... }}) in fenced code
+# blocks. Zola >= 0.20 treats content files as Tera templates and would try to
+# execute them, so content templating is disabled site-wide.
+skip_content_templating = ["**/*.md"]
 
 
 
@@ -24,7 +31,6 @@ insert_anchor_links = "left"
 render_emoji = false
 
 [markdown.highlighting]
-enabled = true
 theme = "github-dark"
 
 

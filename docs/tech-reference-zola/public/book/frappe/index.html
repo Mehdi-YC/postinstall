@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Django Development Reference - Developer Reference Library</title>
+  <title>Frappe Framework Reference - Developer Reference Library</title>
   <link rel="stylesheet" href="https://tutos.mehdi-yc.com/css/style.css">
   
 </head>
@@ -99,16 +99,16 @@
 <br><br>
 <article class="reference-page">
   <span>Last update: 2026-06-04</span>
-  <h1>Django Development Reference</h1>
+  <h1>Frappe Framework Reference</h1>
   
-  <p class="subtitle">Project structure, ORM, views, templates, forms, admin, and dev operations</p>
+  <p class="subtitle">DocTypes, controllers, hooks, the ORM, REST API, background jobs, and bench — everything the docs underexplain</p>
   
 
   <h1 id="frappe-framework-reference"><a class="zola-anchor" href="#frappe-framework-reference" aria-label="Anchor link for: frappe-framework-reference">🔗</a>Frappe Framework Reference</h1>
 <p><em>DocTypes, controllers, hooks, the ORM, REST API, background jobs, and bench —
 everything the official docs underexplain.</em></p>
 <h1 id="project-structure"><a class="zola-anchor" href="#project-structure" aria-label="Anchor link for: project-structure">🔗</a>Project Structure</h1>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Create a new bench</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Create a new bench</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> init my-bench</span><span style="color: #79B8FF;"> --frappe-branch</span><span style="color: #9ECBFF;"> version-15</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #79B8FF;">    cd</span><span style="color: #9ECBFF;"> my-bench</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
@@ -142,7 +142,7 @@ everything the official docs underexplain.</em></p>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">32</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       ├── site_config.json</span><span style="color: #6A737D;">    # DB credentials, site settings</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">33</span><span style="color: #B392F0;">    │</span><span style="color: #9ECBFF;">       └── private/files/</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">34</span><span style="color: #B392F0;">    └──</span><span style="color: #9ECBFF;"> Procfile</span></span></code></pre><h1 id="bench-cli"><a class="zola-anchor" href="#bench-cli" aria-label="Anchor link for: bench-cli">🔗</a>Bench CLI</h1>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Development</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Development</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> start</span><span style="color: #6A737D;">                        # start all processes (web, worker, scheduler)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite console</span><span style="color: #6A737D;">        # interactive Python REPL with frappe loaded</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #B392F0;">    bench</span><span style="color: #79B8FF;"> --site</span><span style="color: #9ECBFF;"> mysite mariadb</span><span style="color: #6A737D;">        # open MariaDB shell for the site</span></span>
@@ -171,7 +171,7 @@ everything the official docs underexplain.</em></p>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    bench</span><span style="color: #9ECBFF;"> update</span><span style="color: #6A737D;">                       # pull all apps + migrate + build</span></span></code></pre><h1 id="doctype-schema"><a class="zola-anchor" href="#doctype-schema" aria-label="Anchor link for: doctype-schema">🔗</a>DocType Schema</h1>
 <p>A DocType is defined by its <code>.json</code> file. You rarely edit it by hand — use the
 Desk UI — but understanding the structure is essential.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="json"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    {</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="json"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    {</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #79B8FF;">      &quot;name&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;Project&quot;</span><span>,</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #79B8FF;">      &quot;module&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;My Module&quot;</span><span>,</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #79B8FF;">      &quot;doctype&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;DocType&quot;</span><span>,</span></span>
@@ -242,7 +242,7 @@ Desk UI — but understanding the structure is essential.</p>
 <h1 id="controller-python"><a class="zola-anchor" href="#controller-python" aria-label="Anchor link for: controller-python">🔗</a>Controller (Python)</h1>
 <p>The controller is a Python class that inherits from <code>Document</code>. Frappe calls
 lifecycle hooks automatically — you never instantiate or call these yourself.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    from</span><span> frappe.model.document</span><span style="color: #F97583;"> import</span><span> Document</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    class</span><span style="color: #B392F0;"> Project</span><span>(</span><span style="color: #B392F0;">Document</span><span>):</span></span>
@@ -305,7 +305,7 @@ lifecycle hooks automatically — you never instantiate or call these yourself.<
 <p><strong>Never call <code>self.save()</code> inside <code>validate()</code> or <code>on_update()</code>.</strong> It causes infinite recursion. Use <code>self.db_set("field", value)</code> for direct column updates that bypass the lifecycle, or set <code>self.field = value</code> before the current save completes.</p>
 </blockquote>
 <h1 id="the-orm-frappe-db"><a class="zola-anchor" href="#the-orm-frappe-db" aria-label="Anchor link for: the-orm-frappe-db">🔗</a>The ORM: frappe.db</h1>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # ── Single value ──────────────────────────────────────────────────────</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
@@ -379,7 +379,7 @@ lifecycle hooks automatically — you never instantiate or call these yourself.<
 <h1 id="hooks-py"><a class="zola-anchor" href="#hooks-py" aria-label="Anchor link for: hooks-py">🔗</a>hooks.py</h1>
 <p><code>hooks.py</code> is the central wiring file for your app. It controls how your app
 integrates with Frappe's event system.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # my_app/hooks.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # my_app/hooks.py</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    app_name</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;my_app&quot;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    app_title</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;My App&quot;</span></span>
@@ -445,7 +445,7 @@ integrates with Frappe's event system.</p>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">64</span><span style="color: #9ECBFF;">        &quot;Project&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;public/js/project.js&quot;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">65</span><span>    }</span></span></code></pre><h1 id="rest-api"><a class="zola-anchor" href="#rest-api" aria-label="Anchor link for: rest-api">🔗</a>REST API</h1>
 <p>Every DocType automatically gets a REST API. No extra code needed.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Authentication: get a token</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Authentication: get a token</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #B392F0;">    POST</span><span style="color: #9ECBFF;"> /api/method/login</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    {</span><span style="color: #B392F0;"> &quot;usr&quot;</span><span style="color: #79B8FF;">:</span><span style="color: #9ECBFF;"> &quot;admin@example.com&quot;, &quot;pwd&quot;: &quot;password&quot; }</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    # → sets a session cookie, or use token auth below</span></span>
@@ -471,7 +471,7 @@ integrates with Frappe's event system.</p>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>    {</span><span style="color: #B392F0;"> &quot;status&quot;</span><span style="color: #79B8FF;">:</span><span style="color: #9ECBFF;"> &quot;Closed&quot; }</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #6A737D;">    # Delete</span></span>
-<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    DELETE</span><span style="color: #9ECBFF;"> /api/resource/Project/PROJ-0001</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # ── Whitelisted methods ───────────────────────────────────────────────</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span style="color: #B392F0;">    DELETE</span><span style="color: #9ECBFF;"> /api/resource/Project/PROJ-0001</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # ── Whitelisted methods ───────────────────────────────────────────────</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    # Expose a Python function as an API endpoint.</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
@@ -497,7 +497,7 @@ integrates with Frappe's event system.</p>
 <p><strong><code>@frappe.whitelist()</code> does not check permissions.</strong> Anyone authenticated can call it. Add explicit <code>frappe.has_permission()</code> checks inside the function if the data is sensitive.</p>
 </blockquote>
 <h1 id="permissions"><a class="zola-anchor" href="#permissions" aria-label="Anchor link for: permissions">🔗</a>Permissions</h1>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # Check if current user can access a document</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    frappe.has_permission(</span><span style="color: #9ECBFF;">&quot;Project&quot;</span><span>,</span><span style="color: #FFAB70;"> doc</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">&quot;PROJ-0001&quot;</span><span>,</span><span style="color: #FFAB70;"> throw</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span><span>)</span></span>
@@ -520,7 +520,7 @@ integrates with Frappe's event system.</p>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">21</span><span style="color: #6A737D;">    # ... do privileged work ...</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">22</span><span>    frappe.set_user(original_user)</span></span></code></pre><h1 id="background-jobs"><a class="zola-anchor" href="#background-jobs" aria-label="Anchor link for: background-jobs">🔗</a>Background Jobs</h1>
 <p>Long-running tasks should never block a web request. Enqueue them.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # Enqueue a function to run in a background worker</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    frappe.enqueue(</span></span>
@@ -548,14 +548,14 @@ integrates with Frappe's event system.</p>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span style="color: #FFAB70;">        deduplicate</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">True</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">27</span><span>    )</span></span></code></pre><h1 id="jinja-templates"><a class="zola-anchor" href="#jinja-templates" aria-label="Anchor link for: jinja-templates">🔗</a>Jinja Templates</h1>
 <p>Frappe uses Jinja2 for print formats, email templates, and web pages.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Render a Jinja string from Python</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # Render a Jinja string from Python</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    html</span><span style="color: #F97583;"> =</span><span> frappe.render_template(</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #9ECBFF;">        &quot;&lt;p&gt;Hello </span><span style="color: #79B8FF;">{{</span><span style="color: #9ECBFF;"> doc.title </span><span style="color: #79B8FF;">}}</span><span style="color: #9ECBFF;">&lt;/p&gt;&quot;</span><span>,</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        {</span><span style="color: #9ECBFF;">&quot;doc&quot;</span><span>: doc}</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 5</span><span>    )</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 6</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span style="color: #6A737D;">    # Render a template file (relative to app root)</span></span>
-<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    html</span><span style="color: #F97583;"> =</span><span> frappe.render_template(</span><span style="color: #9ECBFF;">&quot;my_app/templates/email/welcome.html&quot;</span><span>, context)</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="html"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    {# ── Frappe-specific Jinja globals available in all templates ── #}</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    html</span><span style="color: #F97583;"> =</span><span> frappe.render_template(</span><span style="color: #9ECBFF;">&quot;my_app/templates/email/welcome.html&quot;</span><span>, context)</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="html"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    {# ── Frappe-specific Jinja globals available in all templates ── #}</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    {# Current user #}</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    {{ frappe.session.user }}</span></span>
@@ -581,7 +581,7 @@ integrates with Frappe's event system.</p>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">24</span><span>    {% for task in doc.tasks %}</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">25</span><span>      &lt;</span><span style="color: #85E89D;">li</span><span>&gt;{{ task.title }} — {{ task.assigned_to }}&lt;/</span><span style="color: #85E89D;">li</span><span>&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">26</span><span>    {% endfor %}</span></span></code></pre><h1 id="migrations-and-patches"><a class="zola-anchor" href="#migrations-and-patches" aria-label="Anchor link for: migrations-and-patches">🔗</a>Migrations and Patches</h1>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # patches.txt: list of patch modules to run on migrate (one per line, never remove old ones)</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # patches.txt: list of patch modules to run on migrate (one per line, never remove old ones)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    # my_app/patches.txt</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    my_app.patches.v1_0.set_default_status</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    my_app.patches.v1_1.backfill_project_codes</span></span>
@@ -599,7 +599,7 @@ integrates with Frappe's event system.</p>
 <p><strong>Patches run exactly once per site.</strong> Frappe tracks executed patches in the <code>tabPatch Log</code> table. If a patch fails halfway, fix it and run <code>bench --site mysite migrate</code> again — it will retry only the failed patch.</p>
 </blockquote>
 <h1 id="useful-frappe-utilities"><a class="zola-anchor" href="#useful-frappe-utilities" aria-label="Anchor link for: useful-frappe-utilities">🔗</a>Useful frappe Utilities</h1>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #F97583;">    import</span><span> frappe</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    from</span><span> frappe.utils</span><span style="color: #F97583;"> import</span><span> (</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>        today, now, nowdate, nowdatetime,</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        add_days, add_months, date_diff,</span></span>

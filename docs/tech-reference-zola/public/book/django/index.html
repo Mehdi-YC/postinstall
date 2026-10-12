@@ -110,7 +110,7 @@
 
   <h2 id="file-structure"><a class="zola-anchor" href="#file-structure" aria-label="Anchor link for: file-structure">🔗</a>File Structure</h2>
 <p>A Django <strong>project</strong> contains one or more <strong>apps</strong>. The project is the configuration container; apps are the reusable units of functionality.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>myproject/</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>myproject/</span></span>
 <span class="giallo-l"><span>├── manage.py                  # CLI entry point. Don&#39;t edit this file.</span></span>
 <span class="giallo-l"><span>├── myproject/                # Project configuration package (same name as project)</span></span>
 <span class="giallo-l"><span>│   ├── __init__.py          # Empty. Makes this a Python package.</span></span>
@@ -153,7 +153,7 @@
 </blockquote>
 <h2 id="settings-py"><a class="zola-anchor" href="#settings-py" aria-label="Anchor link for: settings-py">🔗</a>settings.py</h2>
 <p>The central configuration file. Key settings every developer needs to know:</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myproject/settings.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myproject/settings.py</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span># Base directory of the project (for building paths)</span></span>
 <span class="giallo-l"><span>import os</span></span>
@@ -253,7 +253,7 @@
 <blockquote>
 <p><strong><code>SECRET_KEY</code> in version control = compromised.</strong> Use <code>python-decouple</code> or <code>django-environ</code> to load from <code>.env</code>. Add <code>.env</code> to <code>.gitignore</code>.</p>
 </blockquote>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># .env (never commit this)</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># .env (never commit this)</span></span>
 <span class="giallo-l"><span>SECRET_KEY=django-insecure-xxx-change-this-in-production</span></span>
 <span class="giallo-l"><span>DEBUG=True</span></span>
 <span class="giallo-l"><span>ALLOWED_HOSTS=localhost,127.0.0.1</span></span>
@@ -276,7 +276,7 @@
 <p><strong><code>USE_TZ = True</code> is the standard.</strong> All datetimes are stored as UTC in PostgreSQL. Use <code>{{ mydate|localtime }}</code> in templates to convert to the user's timezone, or set <code>TIME_ZONE</code> in settings for a fixed display timezone.</p>
 </blockquote>
 <h2 id="models-models-py"><a class="zola-anchor" href="#models-models-py" aria-label="Anchor link for: models-models-py">🔗</a>Models (models.py)</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/models.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myapp/models.py</span></span>
 <span class="giallo-l"><span>from django.db import models</span></span>
 <span class="giallo-l"><span>from django.core.validators import MinValueValidator, MaxLengthValidator</span></span>
 <span class="giallo-l"><span>from django.urls import reverse</span></span>
@@ -546,7 +546,7 @@
 </blockquote>
 <h3 id="data-migrations"><a class="zola-anchor" href="#data-migrations" aria-label="Anchor link for: data-migrations">🔗</a>Data Migrations</h3>
 <p>For data changes (inserting, updating, deleting rows) that need to happen alongside schema changes:</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Generated with: python manage.py makemigrations --empty myapp</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># Generated with: python manage.py makemigrations --empty myapp</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span>from django.db import migrations</span></span>
 <span class="giallo-l"></span>
@@ -577,7 +577,7 @@
 </blockquote>
 <h2 id="views"><a class="zola-anchor" href="#views" aria-label="Anchor link for: views">🔗</a>Views</h2>
 <h3 id="function-based-views-fbv"><a class="zola-anchor" href="#function-based-views-fbv" aria-label="Anchor link for: function-based-views-fbv">🔗</a>Function-Based Views (FBV)</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/views.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myapp/views.py</span></span>
 <span class="giallo-l"><span>from django.shortcuts import render, redirect, get_object_or_404</span></span>
 <span class="giallo-l"><span>from django.http import HttpResponse, JsonResponse, Http404</span></span>
 <span class="giallo-l"><span>from django.contrib.auth.decorators import login_required, permission_required</span></span>
@@ -638,7 +638,7 @@
 <span class="giallo-l"><span>@permission_required(&#39;myapp.change_product&#39;, raise_exception=True)</span></span>
 <span class="giallo-l"><span>def product_edit(request, pk):</span></span>
 <span class="giallo-l"><span>    ...</span></span></code></pre><h3 id="class-based-views-cbv"><a class="zola-anchor" href="#class-based-views-cbv" aria-label="Anchor link for: class-based-views-cbv">🔗</a>Class-Based Views (CBV)</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView</span></span>
 <span class="giallo-l"><span>from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin</span></span>
 <span class="giallo-l"><span>from django.urls import reverse_lazy</span></span>
 <span class="giallo-l"><span>from .models import Product</span></span>
@@ -709,7 +709,7 @@
 <p><strong>Mixin order matters.</strong> In Python MRO, the leftmost mixin wins conflicts. Put <code>LoginRequiredMixin</code> before the view class.</p>
 </blockquote>
 <h2 id="urls"><a class="zola-anchor" href="#urls" aria-label="Anchor link for: urls">🔗</a>URLs</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myproject/urls.py (root)</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myproject/urls.py (root)</span></span>
 <span class="giallo-l"><span>from django.contrib import admin</span></span>
 <span class="giallo-l"><span>from django.urls import path, include</span></span>
 <span class="giallo-l"></span>
@@ -756,7 +756,7 @@
 </blockquote>
 <h2 id="templates"><a class="zola-anchor" href="#templates" aria-label="Anchor link for: templates">🔗</a>Templates</h2>
 <h3 id="template-inheritance"><a class="zola-anchor" href="#template-inheritance" aria-label="Anchor link for: template-inheritance">🔗</a>Template Inheritance</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># templates/base.html</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># templates/base.html</span></span>
 <span class="giallo-l"><span>&lt;!DOCTYPE html&gt;</span></span>
 <span class="giallo-l"><span>&lt;html lang=&quot;en&quot;&gt;</span></span>
 <span class="giallo-l"><span>&lt;head&gt;</span></span>
@@ -840,7 +840,7 @@
 <p><strong><code>|safe</code> is an XSS vector if the content comes from users.</strong> Only use it on content you fully control (e.g., admin-entered HTML).</p>
 </blockquote>
 <h2 id="forms"><a class="zola-anchor" href="#forms" aria-label="Anchor link for: forms">🔗</a>Forms</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/forms.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myapp/forms.py</span></span>
 <span class="giallo-l"><span>from django import forms</span></span>
 <span class="giallo-l"><span>from .models import Product</span></span>
 <span class="giallo-l"></span>
@@ -914,7 +914,7 @@
 <span class="giallo-l"><span># {% endfor %}</span></span>
 <span class="giallo-l"><span># &lt;button type=&quot;submit&quot;&gt;Save&lt;/button&gt;</span></span>
 <span class="giallo-l"><span># &lt;/form&gt;</span></span></code></pre><h2 id="admin-admin-py"><a class="zola-anchor" href="#admin-admin-py" aria-label="Anchor link for: admin-admin-py">🔗</a>Admin (admin.py)</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/admin.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myapp/admin.py</span></span>
 <span class="giallo-l"><span>from django.contrib import admin</span></span>
 <span class="giallo-l"><span>from .models import Product, Category</span></span>
 <span class="giallo-l"></span>
@@ -1008,7 +1008,7 @@
 <span class="giallo-l"><span>#     fieldsets = UserAdmin.fieldsets + (</span></span>
 <span class="giallo-l"><span>#         (&#39;Extra&#39;, {&#39;fields&#39;: [&#39;phone&#39;, &#39;department&#39;]}),</span></span>
 <span class="giallo-l"><span>#     )</span></span></code></pre><h2 id="signals"><a class="zola-anchor" href="#signals" aria-label="Anchor link for: signals">🔗</a>Signals</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/signals.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myapp/signals.py</span></span>
 <span class="giallo-l"><span>from django.db.models.signals import post_save, pre_delete, m2m_changed</span></span>
 <span class="giallo-l"><span>from django.dispatch import receiver</span></span>
 <span class="giallo-l"><span>from django.core.mail import send_mail</span></span>
@@ -1059,7 +1059,7 @@
 <p><strong>Always connect signals in <code>AppConfig.ready()</code>.</strong> Connecting at module level in <code>models.py</code> can cause issues with AppConfig not being ready, and the import may happen multiple times in testing.</p>
 </blockquote>
 <h2 id="middleware"><a class="zola-anchor" href="#middleware" aria-label="Anchor link for: middleware">🔗</a>Middleware</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># myapp/middleware.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># myapp/middleware.py</span></span>
 <span class="giallo-l"><span>import time</span></span>
 <span class="giallo-l"><span>import logging</span></span>
 <span class="giallo-l"></span>
@@ -1099,7 +1099,7 @@
 <p><strong>Middleware order is critical.</strong> Request flows top-to-bottom. Response flows bottom-to-top. Authentication middleware must come before anything that checks <code>request.user</code>.</p>
 </blockquote>
 <h2 id="static-files"><a class="zola-anchor" href="#static-files" aria-label="Anchor link for: static-files">🔗</a>Static Files</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Static file locations (checked in this order):</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># Static file locations (checked in this order):</span></span>
 <span class="giallo-l"><span># 1. Each app&#39;s static/ directory (if APP_DIRS or StaticFilesFinder is active)</span></span>
 <span class="giallo-l"><span># 2. Directories listed in STATICFILES_DIRS (project-level static files)</span></span>
 <span class="giallo-l"><span># 3. STATIC_ROOT (only used by collectstatic, not for development)</span></span>
@@ -1221,7 +1221,7 @@
 </ul>
 <h2 id="devops-cli-postgresql-backups"><a class="zola-anchor" href="#devops-cli-postgresql-backups" aria-label="Anchor link for: devops-cli-postgresql-backups">🔗</a>DevOps: CLI, PostgreSQL, Backups</h2>
 <h3 id="starting-a-project"><a class="zola-anchor" href="#starting-a-project" aria-label="Anchor link for: starting-a-project">🔗</a>Starting a Project</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>django-admin startproject myproject</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>django-admin startproject myproject</span></span>
 <span class="giallo-l"><span>cd myproject</span></span>
 <span class="giallo-l"><span>python manage.py startapp myapp</span></span>
 <span class="giallo-l"></span>
@@ -1252,7 +1252,7 @@
 <tr><td><code>manage.py reset_db</code></td><td>Drops and recreates the entire DB (requires django-extensions)</td></tr>
 </tbody></table>
 <h3 id="django-shell"><a class="zola-anchor" href="#django-shell" aria-label="Anchor link for: django-shell">🔗</a>Django Shell</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>python manage.py shell</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>python manage.py shell</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span># Or with shell_plus (auto-imports models):</span></span>
 <span class="giallo-l"><span>python manage.py shell_plus</span></span>
@@ -1271,7 +1271,7 @@
 <span class="giallo-l"><span>&gt;&gt;&gt; from django.db import connection</span></span>
 <span class="giallo-l"><span>&gt;&gt;&gt; connection.queries[-1][&#39;sql&#39;]</span></span>
 <span class="giallo-l"><span># Shows the last SQL query executed</span></span></code></pre><h3 id="working-with-postgresql"><a class="zola-anchor" href="#working-with-postgresql" aria-label="Anchor link for: working-with-postgresql">🔗</a>Working with PostgreSQL</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>psql -U myuser -d mydb -h localhost</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>psql -U myuser -d mydb -h localhost</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span># List all tables</span></span>
 <span class="giallo-l"><span>\dt</span></span>
@@ -1299,7 +1299,7 @@
 <p><strong>Don't modify Django tables via raw SQL</strong> unless you know exactly what you're doing. The ORM manages constraints, triggers, and caches that raw SQL bypasses.</p>
 </blockquote>
 <h3 id="database-backup-and-restore"><a class="zola-anchor" href="#database-backup-and-restore" aria-label="Anchor link for: database-backup-and-restore">🔗</a>Database Backup and Restore</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Backup</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># Backup</span></span>
 <span class="giallo-l"><span>pg_dump -U myuser -d mydb -F c -f mydb_backup.dump</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span># Restore (create fresh DB first)</span></span>
@@ -1324,7 +1324,7 @@
 <tr><td>500 email on error</td><td>Set <code>ADMINS = [('Name', 'email')]</code> in settings</td></tr>
 </tbody></table>
 <h3 id="logging"><a class="zola-anchor" href="#logging" aria-label="Anchor link for: logging">🔗</a>Logging</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># In settings.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># In settings.py</span></span>
 <span class="giallo-l"><span>LOGGING = {</span></span>
 <span class="giallo-l"><span>    &#39;version&#39;: 1,</span></span>
 <span class="giallo-l"><span>    &#39;disable_existing_loggers&#39;: False,</span></span>

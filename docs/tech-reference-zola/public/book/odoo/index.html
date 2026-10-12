@@ -27,15 +27,15 @@
   
   <a class="toc-link" href="#manifest-py">manifest.py</a>
   
-  <a class="toc-link" href="#models-models">Models (models&#x2F;)</a>
+  <a class="toc-link" href="#models-models">Models (models/)</a>
   
-  <a class="toc-link" href="#views-views">Views (views&#x2F;)</a>
+  <a class="toc-link" href="#views-views">Views (views/)</a>
   
-  <a class="toc-link" href="#security-security">Security (security&#x2F;)</a>
+  <a class="toc-link" href="#security-security">Security (security/)</a>
   
-  <a class="toc-link" href="#data-files-data">Data Files (data&#x2F;)</a>
+  <a class="toc-link" href="#data-files-data">Data Files (data/)</a>
   
-  <a class="toc-link" href="#static-assets-static">Static Assets (static&#x2F;)</a>
+  <a class="toc-link" href="#static-assets-static">Static Assets (static/)</a>
   
   <a class="toc-link" href="#commonly-missed-things">Commonly Missed Things</a>
   
@@ -71,15 +71,15 @@
   
   <a class="topic" href="#manifest-py">manifest.py</a>
   
-  <a class="topic" href="#models-models">Models (models&#x2F;)</a>
+  <a class="topic" href="#models-models">Models (models/)</a>
   
-  <a class="topic" href="#views-views">Views (views&#x2F;)</a>
+  <a class="topic" href="#views-views">Views (views/)</a>
   
-  <a class="topic" href="#security-security">Security (security&#x2F;)</a>
+  <a class="topic" href="#security-security">Security (security/)</a>
   
-  <a class="topic" href="#data-files-data">Data Files (data&#x2F;)</a>
+  <a class="topic" href="#data-files-data">Data Files (data/)</a>
   
-  <a class="topic" href="#static-assets-static">Static Assets (static&#x2F;)</a>
+  <a class="topic" href="#static-assets-static">Static Assets (static/)</a>
   
   <a class="topic" href="#commonly-missed-things">Commonly Missed Things</a>
   
@@ -110,7 +110,7 @@
 
   <h2 id="module-file-structure"><a class="zola-anchor" href="#module-file-structure" aria-label="Anchor link for: module-file-structure">🔗</a>Module File Structure</h2>
 <p>Every Odoo module follows a standard directory layout. Not all folders are required. Only include what your module needs, but what you do include must follow this structure exactly.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span>    my_module</span><span style="color: #F97583;">/</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span>    my_module</span><span style="color: #F97583;">/</span></span>
 <span class="giallo-l"><span>    __manifest__.py</span><span style="color: #6A737D;">          # Required. Without this, the folder is ignored.</span></span>
 <span class="giallo-l"><span style="color: #79B8FF;">    __init__</span><span>.py</span><span style="color: #6A737D;">              # Required. Makes this a Python package. must exist.</span></span>
 <span class="giallo-l"><span>    </span></span>
@@ -169,7 +169,7 @@
 </blockquote>
 <h2 id="manifest-py"><a class="zola-anchor" href="#manifest-py" aria-label="Anchor link for: manifest-py">🔗</a><strong>manifest</strong>.py</h2>
 <p>The manifest tells Odoo everything about your module before loading it.</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    {</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">        # Internal technical name. Must be unique. Convention: snake_case.</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #9ECBFF;">        &#39;name&#39;</span><span>:</span><span style="color: #9ECBFF;"> &#39;My Module&#39;</span><span>,</span></span>
@@ -234,7 +234,7 @@
 <p><strong>Data file order is critical.</strong> Security files must come first. If a view references a model and its access CSV hasn't loaded yet, installation fails with an access error.</p>
 </blockquote>
 <h2 id="models-models"><a class="zola-anchor" href="#models-models" aria-label="Anchor link for: models-models">🔗</a>Models (models/)</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  1</span><span style="color: #6A737D;">    # models/__init__.py</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  1</span><span style="color: #6A737D;">    # models/__init__.py</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  2</span><span style="color: #6A737D;">    # MUST import every model file. Miss one = Odoo doesn&#39;t discover it.</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  3</span><span style="color: #F97583;">    from</span><span> .</span><span style="color: #F97583;"> import</span><span> my_model</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  4</span><span style="color: #F97583;">    from</span><span> .</span><span style="color: #F97583;"> import</span><span> my_model_line</span></span>
@@ -361,7 +361,7 @@
 <p><strong>Access models via <code>self.env['model.name']</code></strong>, never by importing the class. This ensures correct database, user context, and cache.</p>
 </blockquote>
 <h3 id="inheritance-extending-existing-models"><a class="zola-anchor" href="#inheritance-extending-existing-models" aria-label="Anchor link for: inheritance-extending-existing-models">🔗</a>Inheritance: Extending Existing Models</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #6A737D;">    # Inherit WITHOUT _name: extends the existing model in place.</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span style="color: #6A737D;">    # Inherit WITHOUT _name: extends the existing model in place.</span></span>
 <span class="giallo-l"><span style="color: #6A737D;">    # This is what you want 95% of the time.</span></span>
 <span class="giallo-l"><span style="color: #F97583;">    from</span><span> odoo</span><span style="color: #F97583;"> import</span><span> models, fields</span></span>
 <span class="giallo-l"></span>
@@ -383,7 +383,7 @@
 <tr><td><code>image.mixin</code></td><td>image_1920 field with auto-thumbnail</td></tr>
 <tr><td><code>portal.mixin</code></td><td>Share records with portal users via link</td></tr>
 </tbody></table>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Usage:</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># Usage:</span></span>
 <span class="giallo-l"><span>_name = &#39;my.module&#39;</span></span>
 <span class="giallo-l"><span>_inherit = [&#39;mail.thread&#39;, &#39;mail.activity.mixin&#39;]</span></span></code></pre><h2 id="views-views"><a class="zola-anchor" href="#views-views" aria-label="Anchor link for: views-views">🔗</a>Views (views/)</h2>
 <table><thead><tr><th>Type</th><th>Purpose</th><th>Key Detail</th></tr></thead><tbody>
@@ -395,7 +395,7 @@
 <tr><td><code>pivot</code></td><td>Pivot table analysis</td><td>OLAP-style data exploration</td></tr>
 <tr><td><code>calendar</code></td><td>Calendar view</td><td>Requires <code>date_start</code> field</td></tr>
 </tbody></table>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  1</span><span>    # views/my_model_views.xml</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  1</span><span>    # views/my_model_views.xml</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  2</span><span>    &lt;?</span><span style="color: #85E89D;">xml</span><span style="color: #B392F0;"> version</span><span>=</span><span style="color: #9ECBFF;">&quot;1.0&quot;</span><span style="color: #B392F0;"> encoding</span><span>=</span><span style="color: #9ECBFF;">&quot;utf-8&quot;</span><span>?&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  3</span><span>    &lt;</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">  4</span></span>
@@ -524,11 +524,11 @@
 <p><strong>Chatter goes OUTSIDE <code>&lt;sheet&gt;</code>.</strong> Putting it inside won't render correctly.</p>
 </blockquote>
 <h2 id="security-security"><a class="zola-anchor" href="#security-security" aria-label="Anchor link for: security-security">🔗</a>Security (security/)</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="csv"><span class="giallo-l"><span>    # security/ir.model.access.csv</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="csv"><span class="giallo-l"><span>    # security/ir.model.access.csv</span></span>
 <span class="giallo-l"><span>    # id,</span><span style="color: #F97583;">name,</span><span style="color: #B392F0;">model_id:id,</span><span style="color: #6A737D;">group_id:id,</span><span style="color: #9ECBFF;">perm_read,</span><span style="color: #FFAB70;">perm_write,</span><span style="color: #79B8FF;">perm_create,</span><span style="color: #B392F0;">perm_unlink</span></span>
 <span class="giallo-l"><span>    # group_id empty = public. base.group_user = all internal users.</span></span>
 <span class="giallo-l"><span>    access_my_module_manager,</span><span style="color: #F97583;">my.module.manager,</span><span style="color: #B392F0;">model_my_module,</span><span style="color: #6A737D;">my_module.group_manager,</span><span style="color: #9ECBFF;">1,</span><span style="color: #FFAB70;">1,</span><span style="color: #79B8FF;">1,</span><span style="color: #B392F0;">1</span></span>
-<span class="giallo-l"><span>    access_my_module_user,</span><span style="color: #F97583;">my.module.user,</span><span style="color: #B392F0;">model_my_module,</span><span style="color: #6A737D;">my_module.group_user,</span><span style="color: #9ECBFF;">1,</span><span style="color: #FFAB70;">1,</span><span style="color: #79B8FF;">1,</span><span style="color: #B392F0;">0</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # security/groups.xml</span></span>
+<span class="giallo-l"><span>    access_my_module_user,</span><span style="color: #F97583;">my.module.user,</span><span style="color: #B392F0;">model_my_module,</span><span style="color: #6A737D;">my_module.group_user,</span><span style="color: #9ECBFF;">1,</span><span style="color: #FFAB70;">1,</span><span style="color: #79B8FF;">1,</span><span style="color: #B392F0;">0</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # security/groups.xml</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    &lt;?</span><span style="color: #85E89D;">xml</span><span style="color: #B392F0;"> version</span><span>=</span><span style="color: #9ECBFF;">&quot;1.0&quot;</span><span style="color: #B392F0;"> encoding</span><span>=</span><span style="color: #9ECBFF;">&quot;utf-8&quot;</span><span>?&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    &lt;</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        &lt;</span><span style="color: #85E89D;">record</span><span style="color: #B392F0;"> id</span><span>=</span><span style="color: #9ECBFF;">&quot;module_category_my_module&quot;</span><span style="color: #B392F0;"> model</span><span>=</span><span style="color: #9ECBFF;">&quot;ir.module.category&quot;</span><span>&gt;</span></span>
@@ -544,14 +544,14 @@
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;category_id&quot;</span><span style="color: #B392F0;"> ref</span><span>=</span><span style="color: #9ECBFF;">&quot;module_category_my_module&quot;</span><span> /&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span>            &lt;</span><span style="color: #85E89D;">field</span><span style="color: #B392F0;"> name</span><span>=</span><span style="color: #9ECBFF;">&quot;implied_ids&quot;</span><span style="color: #B392F0;"> eval</span><span>=</span><span style="color: #9ECBFF;">&quot;[(4, ref(&#39;my_module.group_user&#39;))]&quot;</span><span> /&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">16</span><span>        &lt;/</span><span style="color: #85E89D;">record</span><span>&gt;</span></span>
-<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    &lt;/</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>    # security/ir.rule.csv (optional)</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">17</span><span>    &lt;/</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>    # security/ir.rule.csv (optional)</span></span>
 <span class="giallo-l"><span>    # Row-level security</span></span>
 <span class="giallo-l"><span>    my_module_rule_user,my.module.user.rule,model_my_module,[(&#39;create_uid&#39;,&#39;=&#39;,user.id)],my_module.group_user,1,1,1,0</span></span></code></pre>
 <blockquote>
 <p><strong>Missing ACL = silent access denied.</strong> If a model has no row in <code>ir.model.access.csv</code>, even admin gets errors in the UI.</p>
 </blockquote>
 <h2 id="data-files-data"><a class="zola-anchor" href="#data-files-data" aria-label="Anchor link for: data-files-data">🔗</a>Data Files (data/)</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # data/sequence.xml (example)</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # data/sequence.xml (example)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    &lt;</span><span style="color: #85E89D;">odoo</span><span>&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">        &lt;!-- noupdate=&quot;1&quot;: user modifications survive module updates --&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>        &lt;</span><span style="color: #85E89D;">data</span><span style="color: #B392F0;"> noupdate</span><span>=</span><span style="color: #9ECBFF;">&quot;1&quot;</span><span>&gt;</span></span>
@@ -567,7 +567,7 @@
 <p><strong><code>noupdate="1"</code> matters.</strong> Without it, every module update resets sequences, mail templates, and settings to defaults, erasing user customizations.</p>
 </blockquote>
 <h2 id="static-assets-static"><a class="zola-anchor" href="#static-assets-static" aria-label="Anchor link for: static-assets-static">🔗</a>Static Assets (static/)</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In __manifest__.py:</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In __manifest__.py:</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #9ECBFF;">    &#39;assets&#39;</span><span>: {</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #9ECBFF;">        &#39;web.assets_backend&#39;</span><span>: [</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #9ECBFF;">            &#39;my_module/static/src/js/my_component.js&#39;</span><span>,</span></span>
@@ -663,7 +663,7 @@
 </tbody></table>
 <p><strong>Reactivity loop:</strong> State changes → Template re-renders → DOM updates. Never touch the DOM directly.</p>
 <h3 id="where-owl-files-go"><a class="zola-anchor" href="#where-owl-files-go" aria-label="Anchor link for: where-owl-files-go">🔗</a>Where OWL Files Go</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>static/src/</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>static/src/</span></span>
 <span class="giallo-l"><span>    js/</span></span>
 <span class="giallo-l"><span>        my_component.js     # Component class (web.assets_backend)</span></span>
 <span class="giallo-l"><span>    xml/</span></span>
@@ -682,7 +682,7 @@
 <p><strong>They can coexist during migration.</strong> Start new components in OWL, migrate old ones incrementally.</p>
 </blockquote>
 <h2 id="owl-components"><a class="zola-anchor" href="#owl-components" aria-label="Anchor link for: owl-components">🔗</a>OWL Components</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="javascript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # static</span><span style="color: #F97583;">/</span><span>src</span><span style="color: #F97583;">/</span><span>js</span><span style="color: #F97583;">/</span><span>my_component.js</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="javascript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # static</span><span style="color: #F97583;">/</span><span>src</span><span style="color: #F97583;">/</span><span>js</span><span style="color: #F97583;">/</span><span>my_component.js</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #6A737D;">    /** @odoo-module */</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    # Required for Odoo</span><span style="color: #9ECBFF;">&#39;s bundler. Without it, imports break</span><span style="color: #FDAEB7;font-style: italic;">.</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
@@ -771,7 +771,7 @@
 <tr><td><code>willUnmount()</code></td><td>Before removal</td><td>Clean up timers, listeners</td></tr>
 </tbody></table>
 <h2 id="owl-templates-qweb"><a class="zola-anchor" href="#owl-templates-qweb" aria-label="Anchor link for: owl-templates-qweb">🔗</a>OWL Templates (QWeb)</h2>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # static/src/xml/my_templates.xml</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="xml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # static/src/xml/my_templates.xml</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    &lt;?</span><span style="color: #85E89D;">xml</span><span style="color: #B392F0;"> version</span><span>=</span><span style="color: #9ECBFF;">&quot;1.0&quot;</span><span style="color: #B392F0;"> encoding</span><span>=</span><span style="color: #9ECBFF;">&quot;UTF-8&quot;</span><span>?&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    &lt;</span><span style="color: #85E89D;">templates</span><span style="color: #B392F0;"> xml:space</span><span>=</span><span style="color: #9ECBFF;">&quot;preserve&quot;</span><span>&gt;</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
@@ -827,7 +827,7 @@
 </blockquote>
 <h2 id="owl-advanced"><a class="zola-anchor" href="#owl-advanced" aria-label="Anchor link for: owl-advanced">🔗</a>OWL Advanced</h2>
 <h3 id="opening-an-owl-component-from-a-menu"><a class="zola-anchor" href="#opening-an-owl-component-from-a-menu" aria-label="Anchor link for: opening-an-owl-component-from-a-menu">🔗</a>Opening an OWL Component from a Menu</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># In component JS:</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># In component JS:</span></span>
 <span class="giallo-l"><span>registry.category(&quot;actions&quot;).add(&quot;my_module.counter_action&quot;, MyCounter);</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span># In views XML:</span></span>
@@ -844,7 +844,7 @@
 <p><strong><code>tag</code> must match the registry key.</strong> Context dict is spread into props automatically.</p>
 </blockquote>
 <h3 id="component-composition-parent-child"><a class="zola-anchor" href="#component-composition-parent-child" aria-label="Anchor link for: component-composition-parent-child">🔗</a>Component Composition (Parent + Child)</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># static/src/js/child_component.js</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># static/src/js/child_component.js</span></span>
 <span class="giallo-l"><span>/** @odoo-module */</span></span>
 <span class="giallo-l"><span>import { Component } from &quot;@odoo/owl&quot;;</span></span>
 <span class="giallo-l"></span>
@@ -876,7 +876,7 @@
 <span class="giallo-l"><span>&lt;ChildBadge label=&quot;Active&quot; color=&quot;bg-success&quot; /&gt;</span></span>
 <span class="giallo-l"><span>&lt;ChildBadge label=&quot;Draft&quot; /&gt;</span></span></code></pre><h3 id="usestate-for-reactive-objects-and-arrays"><a class="zola-anchor" href="#usestate-for-reactive-objects-and-arrays" aria-label="Anchor link for: usestate-for-reactive-objects-and-arrays">🔗</a>useState for Reactive Objects and Arrays</h3>
 <p>Plain objects/arrays on <code>this</code> are <strong>not</strong> deeply reactive. Use <code>useState()</code>:</p>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>import { Component, useState } from &quot;@odoo/owl&quot;;</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>import { Component, useState } from &quot;@odoo/owl&quot;;</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span>class MyList extends Component {</span></span>
 <span class="giallo-l"><span>    static template = &quot;my_module.MyList&quot;;</span></span>
@@ -906,7 +906,7 @@
 <p><strong>Never mutate in place.</strong> <code>push()</code>, <code>splice()</code>, and direct property assignment on nested objects won't trigger re-renders. Always reassign.</p>
 </blockquote>
 <h3 id="event-bus-for-cross-component-communication"><a class="zola-anchor" href="#event-bus-for-cross-component-communication" aria-label="Anchor link for: event-bus-for-cross-component-communication">🔗</a>Event Bus for Cross-Component Communication</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>import { Component, useState, onWillUnmount } from &quot;@odoo/owl&quot;;</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span>import { Component, useState, onWillUnmount } from &quot;@odoo/owl&quot;;</span></span>
 <span class="giallo-l"><span>import { useService } from &quot;@web/core/utils/hooks&quot;;</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span># Emitter component:</span></span>
@@ -936,7 +936,7 @@
 <span class="giallo-l"><span>    }</span></span>
 <span class="giallo-l"><span>    _handler({ detail }) { this.state.lastId = detail.id; }</span></span>
 <span class="giallo-l"><span>}</span></span></code></pre><h3 id="other-registration-types"><a class="zola-anchor" href="#other-registration-types" aria-label="Anchor link for: other-registration-types">🔗</a>Other Registration Types</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span># Custom field widget:</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span># Custom field widget:</span></span>
 <span class="giallo-l"><span>registry.category(&quot;fields&quot;).add(&quot;my_color_picker&quot;, MyColorPicker);</span></span>
 <span class="giallo-l"><span># Use: &lt;field name=&quot;color&quot; widget=&quot;my_color_picker&quot; /&gt;</span></span>
 <span class="giallo-l"></span>
@@ -957,14 +957,14 @@
 </ol>
 <h2 id="devops-cli-postgresql-backups"><a class="zola-anchor" href="#devops-cli-postgresql-backups" aria-label="Anchor link for: devops-cli-postgresql-backups">🔗</a>DevOps: CLI, PostgreSQL, Backups</h2>
 <h3 id="starting-odoo"><a class="zola-anchor" href="#starting-odoo" aria-label="Anchor link for: starting-odoo">🔗</a>Starting Odoo</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">1</span><span style="color: #B392F0;">    odoo-bin</span><span style="color: #79B8FF;"> -c</span><span style="color: #9ECBFF;"> odoo.conf</span><span style="color: #79B8FF;"> --dev=reload</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">1</span><span style="color: #B392F0;">    odoo-bin</span><span style="color: #79B8FF;"> -c</span><span style="color: #9ECBFF;"> odoo.conf</span><span style="color: #79B8FF;"> --dev=reload</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">2</span><span style="color: #6A737D;">    # -c odoo.conf     : config file (recommended over CLI flags)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">3</span><span style="color: #6A737D;">    # --dev=reload      : auto-reload Python + assets on file changes</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">4</span><span style="color: #6A737D;">    # --dev=all         : reload + verbose SQL logging + asset debug</span></span></code></pre>
 <blockquote>
 <p><strong>Use a config file.</strong> CLI flags work but get unwieldy. Put database settings, paths, and addons paths in <code>odoo.conf</code>. Only use CLI flags for development overrides.</p>
 </blockquote>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # odoo.conf (minimal)</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="plain"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>    # odoo.conf (minimal)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    [options]</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    addons_path = /path/to/odoo/addons,/path/to/custom_addons</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    db_host = localhost</span></span>
@@ -989,7 +989,7 @@
 <p><strong><code>-i</code> creates the database if it doesn't exist.</strong> Be careful — if you typo the database name, you get a fresh empty DB instead of updating your existing one. Always use <code>-u</code> for updates.</p>
 </blockquote>
 <h3 id="odoo-shell"><a class="zola-anchor" href="#odoo-shell" aria-label="Anchor link for: odoo-shell">🔗</a>Odoo Shell</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>The shell gives you a Python</span><span style="color: #79B8FF;"> REPL</span><span style="color: #F97583;"> with</span><span style="color: #FDAEB7;font-style: italic;"> `</span><span style="color: #79B8FF;font-style: italic;">self</span><span style="color: #FDAEB7;font-style: italic;">.env`</span><span> (the Odoo environment) already</span><span style="color: #79B8FF;"> set</span><span> up. Useful</span><span style="color: #F97583;"> for</span><span> quick debugging without writing tests.</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span>The shell gives you a Python</span><span style="color: #79B8FF;"> REPL</span><span style="color: #F97583;"> with</span><span style="color: #FDAEB7;font-style: italic;"> `</span><span style="color: #79B8FF;font-style: italic;">self</span><span style="color: #FDAEB7;font-style: italic;">.env`</span><span> (the Odoo environment) already</span><span style="color: #79B8FF;"> set</span><span> up. Useful</span><span style="color: #F97583;"> for</span><span> quick debugging without writing tests.</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span>    odoo</span><span style="color: #F97583;">-</span><span style="color: #79B8FF;">bin</span><span style="color: #F97583;"> -</span><span>c odoo.conf shell</span><span style="color: #F97583;"> -</span><span>d mydb</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span></span>
@@ -1004,12 +1004,12 @@
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">13</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span style="color: #79B8FF;"> self</span><span>.env[</span><span style="color: #9ECBFF;">&#39;sale.order&#39;</span><span>].search([(</span><span style="color: #9ECBFF;">&#39;state&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;=&#39;</span><span>,</span><span style="color: #9ECBFF;"> &#39;draft&#39;</span><span>)],</span><span style="color: #FFAB70;"> limit</span><span style="color: #F97583;">=</span><span style="color: #79B8FF;">5</span><span>)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">14</span><span style="color: #6A737D;">    # Returns a recordset</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">15</span><span style="color: #F97583;">    &gt;&gt;&gt;</span><span style="color: #79B8FF;"> exit</span><span>()</span></span></code></pre><h3 id="working-with-postgresql"><a class="zola-anchor" href="#working-with-postgresql" aria-label="Anchor link for: working-with-postgresql">🔗</a>Working with PostgreSQL</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">1</span><span style="color: #6A737D;">    # Connect (default Odoo user is usually &quot;odoo&quot;)</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">1</span><span style="color: #6A737D;">    # Connect (default Odoo user is usually &quot;odoo&quot;)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">2</span><span style="color: #B392F0;">    psql</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -h</span><span style="color: #9ECBFF;"> localhost</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">3</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">4</span><span style="color: #6A737D;">    # If you get &quot;peer authentication failed&quot;, use:</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">5</span><span style="color: #B392F0;">    sudo</span><span style="color: #79B8FF;"> -u</span><span style="color: #9ECBFF;"> postgres psql</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span></span></code></pre><h4 id="useful-queries"><a class="zola-anchor" href="#useful-queries" aria-label="Anchor link for: useful-queries">🔗</a>Useful Queries</h4>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    --List all tables in the Odoo database</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="sql"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    --List all tables in the Odoo database</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    \dt</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span style="color: #6A737D;">    --Describe a model&#39;s table structure (dots become underscores)</span></span>
@@ -1048,7 +1048,7 @@
 </blockquote>
 <h3 id="database-backup-and-restore"><a class="zola-anchor" href="#database-backup-and-restore" aria-label="Anchor link for: database-backup-and-restore">🔗</a>Database Backup and Restore</h3>
 <h4 id="method-1-cli-recommended-for-automation-scripts"><a class="zola-anchor" href="#method-1-cli-recommended-for-automation-scripts" aria-label="Anchor link for: method-1-cli-recommended-for-automation-scripts">🔗</a>Method 1: CLI (recommended for automation/scripts)</h4>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Backup: dump the database</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Backup: dump the database</span></span>
 <span class="giallo-l"><span style="color: #B392F0;">    pg_dump</span><span style="color: #79B8FF;"> -U</span><span style="color: #9ECBFF;"> odoo</span><span style="color: #79B8FF;"> -d</span><span style="color: #9ECBFF;"> mydb</span><span style="color: #79B8FF;"> -F</span><span style="color: #9ECBFF;"> c</span><span style="color: #79B8FF;"> -f</span><span style="color: #9ECBFF;"> mydb_backup.dump</span></span>
 <span class="giallo-l"><span style="color: #6A737D;">    # -F c: custom format (compressed, supports parallel restore)</span></span>
 <span class="giallo-l"></span>
@@ -1065,7 +1065,7 @@
 <blockquote>
 <p><strong>Filestore is separate from the database.</strong> When using <code>pg_dump</code>, you only get the database. The filestore (actual file attachments stored on disk) lives at <code>~/.local/share/Odoo/filestore/mydb/</code>. You must back this up separately. The UI backup handles this automatically.</p>
 </blockquote>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Filestore location (default):</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    # Filestore location (default):</span></span>
 <span class="giallo-l"><span style="color: #B392F0;">    ~/.local/share/Odoo/filestore/</span><span>&lt;database_name&gt;/</span></span>
 <span class="giallo-l"></span>
 <span class="giallo-l"><span style="color: #6A737D;">    # Back it up:</span></span>
@@ -1074,7 +1074,7 @@
 <span class="giallo-l"><span style="color: #6A737D;">    # Restore it:</span></span>
 <span class="giallo-l"><span style="color: #B392F0;">    tar</span><span style="color: #79B8FF;"> -xzf</span><span style="color: #9ECBFF;"> mydb_filestore.tar.gz</span><span style="color: #79B8FF;"> -C</span><span style="color: #9ECBFF;"> ~/.local/share/Odoo/filestore/</span></span>
 <span class="giallo-l"><span style="color: #6A737D;">    # Make sure the folder name matches the new database name exactly.</span></span></code></pre><h3 id="complete-backup-script"><a class="zola-anchor" href="#complete-backup-script" aria-label="Anchor link for: complete-backup-script">🔗</a>Complete Backup Script</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    #!/bin/bash</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;">    #!/bin/bash</span></span>
 <span class="giallo-l"><span style="color: #6A737D;">    # backup_odoo.sh &lt;database_name&gt;</span></span>
 <span class="giallo-l"><span style="color: #6A737D;">    # Usage: ./backup_odoo.sh mydb</span></span>
 <span class="giallo-l"></span>
@@ -1108,7 +1108,7 @@
 <p><strong><code>?debug=1</code> is persistent per session.</strong> Once activated, it stays on until you click "Leave Developer Mode" in the user menu or remove <code>?debug=1</code> from the URL.</p>
 </blockquote>
 <h3 id="logging"><a class="zola-anchor" href="#logging" aria-label="Anchor link for: logging">🔗</a>Logging</h3>
-<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In Python code</span></span>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="python"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In Python code</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span style="color: #F97583;">    import</span><span> logging</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    _logger</span><span style="color: #F97583;"> =</span><span> logging.getLogger(</span><span style="color: #79B8FF;">__name__</span><span>)</span></span>
@@ -1117,7 +1117,7 @@
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 7</span><span>    _logger.debug(</span><span style="color: #9ECBFF;">&quot;Detailed info for debugging: </span><span style="color: #79B8FF;">%s</span><span style="color: #9ECBFF;">&quot;</span><span>, value)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 8</span><span>    _logger.info(</span><span style="color: #9ECBFF;">&quot;Normal operational info&quot;</span><span>)</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 9</span><span>    _logger.warning(</span><span style="color: #9ECBFF;">&quot;Something unexpected happened&quot;</span><span>)</span></span>
-<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    _logger.error(</span><span style="color: #9ECBFF;">&quot;Something went wrong: </span><span style="color: #79B8FF;">%s</span><span style="color: #9ECBFF;">&quot;</span><span>, error.message)</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="toml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In odoo.conf</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;">10</span><span>    _logger.error(</span><span style="color: #9ECBFF;">&quot;Something went wrong: </span><span style="color: #79B8FF;">%s</span><span style="color: #9ECBFF;">&quot;</span><span>, error.message)</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;" ><code data-lang="toml"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 1</span><span style="color: #6A737D;">    # In odoo.conf</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 2</span><span>    [</span><span style="color: #B392F0;">options</span><span>]</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 3</span><span style="color: #6A737D;">    # Log levels (from least to most verbose): critical, error, warning, info, debug</span></span>
 <span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: #444D56;"> 4</span><span>    log_level = w</span><span style="color: #FDAEB7;font-style: italic;">arn</span></span>
