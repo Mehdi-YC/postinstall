@@ -1,3 +1,70 @@
+- =========================================
+-- Minimal Hyprland + Noctalia
+-- Kubuntu | French AZERTY | 4 Workspaces
+-- =========================================
+
+-- Applications
+local terminal = "konsole"
+local file_manager = "dolphin"
+local browser = "firefox"
+
+-- =========================================
+-- Monitors - Swapped Positions
+-- =========================================
+
+hl.monitor({
+    output = "MONITOR_1",
+    mode = "preferred",
+    position = "0x0",
+    scale = 1,
+})
+
+hl.monitor({
+    output = "MONITOR_2",
+    mode = "preferred",
+    position = "1920x0",
+    scale = 1,
+})
+
+-- =========================================
+-- Main Configuration
+-- =========================================
+
+hl.config({
+
+    input = {
+        kb_layout = "fr",
+        kb_variant = "",
+        numlock_by_default = true,
+        follow_mouse = 1,
+    },
+
+    general = {
+        gaps_in = 5,
+        gaps_out = 8,
+        border_size = 2,
+
+        ["col.active_border"] = "rgb(45aed1)",
+        ["col.inactive_border"] = "rgba(eeeeee00)",
+
+        layout = "dwindle",
+    },
+
+    decoration = {
+        rounding = 0,
+
+        blur = {
+            enabled = true,
+            size = 3,
+            passes = 1,
+        },
+
+        shadow = {
+            enabled = false,
+        },
+    },
+
+    dwindle = {
         preserve_split = true,
     },
 
@@ -168,5 +235,4 @@ end
 
 -- =========================================
 -- End Configuration
--- =========================================
-
+-- ====
