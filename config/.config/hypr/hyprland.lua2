@@ -1,0 +1,172 @@
+        preserve_split = true,
+    },
+
+    animations = {
+        enabled = true,
+
+        bezier = {
+            "fast, 0.05, 0.9, 0.1, 1.0",
+        },
+
+        animation = {
+            "windows, 1, 3, fast",
+            "windowsIn, 1, 3, fast, popin",
+            "windowsOut, 1, 3, fast, popin",
+            "fade, 1, 3, fast",
+            "workspaces, 1, 3, fast",
+        },
+    },
+
+    misc = {
+        force_default_wallpaper = 0,
+    },
+
+})
+
+-- =========================================
+-- Start Noctalia
+-- =========================================
+
+hl.on("hyprland.start", function()
+    hl.exec_cmd("noctalia")
+end)
+
+-- =========================================
+-- Keybind Helper
+-- =========================================
+
+local function bind(keys, action, desc)
+    hl.bind(keys, action, {
+        description = desc,
+    })
+end
+
+-- =========================================
+-- Applications
+-- =========================================
+
+bind("SUPER + RETURN",
+    hl.dsp.exec_cmd(terminal),
+    "Terminal")
+
+bind("SUPER + E",
+    hl.dsp.exec_cmd(file_manager),
+    "File Manager")
+
+bind("SUPER + B",
+    hl.dsp.exec_cmd(browser),
+    "Firefox")
+
+bind("SUPER + P",
+    hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"),
+    "Launcher")
+
+bind("SUPER + D",
+    hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"),
+    "App Launcher")
+
+-- =========================================
+-- Window Management
+-- =========================================
+
+bind("SUPER + Q",
+    hl.dsp.window.close(),
+    "Close Window")
+
+bind("SUPER + SPACE",
+    hl.dsp.window.float({
+        action = "toggle",
+    }),
+    "Toggle Floating")
+
+bind("SUPER + M",
+    hl.dsp.window.fullscreen({
+        action = "toggle",
+    }),
+    "Toggle Fullscreen")
+
+-- =========================================
+-- Mouse Controls
+-- =========================================
+
+-- SUPER + LEFT CLICK: Move Window
+hl.bind(
+    "SUPER + mouse:272",
+    hl.dsp.window.drag(),
+    { mouse = true }
+)
+
+-- SUPER + RIGHT CLICK: Resize Window
+hl.bind(
+    "SUPER + mouse:273",
+    hl.dsp.window.resize(),
+    { mouse = true }
+)
+
+-- =========================================
+-- Focus and Move Windows
+-- =========================================
+
+for _, d in ipairs({
+    "left",
+    "right",
+    "up",
+    "down"
+}) do
+
+    bind(
+        "SUPER + " .. d:upper(),
+        hl.dsp.focus({
+            direction = d,
+        }),
+        "Focus " .. d
+    )
+
+    bind(
+        "SUPER + SHIFT + " .. d:upper(),
+        hl.dsp.window.move({
+            direction = d,
+        }),
+        "Move Window " .. d
+    )
+
+end
+
+-- =========================================
+-- Four Workspaces - French AZERTY
+-- =========================================
+
+local workspaces = {
+    {key = "code:10", number = "1"},
+    {key = "code:11", number = "2"},
+    {key = "code:12", number = "3"},
+    {key = "code:13", number = "4"},
+}
+
+for _, i in ipairs(workspaces) do
+
+    -- Switch Workspace
+    bind(
+        "SUPER + " .. i.key,
+        hl.dsp.focus({
+            workspace = i.number,
+        }),
+        "Workspace " .. i.number
+    )
+
+    -- Move Window and Follow
+    bind(
+        "SUPER + SHIFT + " .. i.key,
+        hl.dsp.window.move({
+            workspace = i.number,
+            follow = true,
+        }),
+        "Move to Workspace " .. i.number
+    )
+
+end
+
+-- =========================================
+-- End Configuration
+-- =========================================
+
