@@ -1,30 +1,77 @@
-- =========================================
--- Minimal Hyprland + Noctalia
--- Kubuntu | French AZERTY | 4 Workspaces
--- =========================================
+-- =========================================================================
+-- Minimal Hyprland + Noctalia Setup (Fedora | French AZERTY | 5 Workspaces)
+-- =========================================================================
+--
+-- [1] INSTALL HYPRLAND (Fedora Official Repo or COPR for latest Lua 0.55+)
+--     Option A (Official):
+--       sudo dnf install hyprland xdg-desktop-portal-hyprland
+--     Option B (COPR - recommended for newest Hyprland Lua features):
+--       sudo dnf copr enable lionheartp/Hyprland
+--       sudo dnf install hyprland xdg-desktop-portal-hyprland
+--
+-- [2] INSTALL NOCTALIA SHELL (v5+)
+--     Fedora 44+ Official Repo:
+--       sudo dnf install noctalia
+--     (Or via COPR if on older Fedora / wanting git builds):
+--       sudo dnf copr enable lionheartp/Hyprland
+--       sudo dnf install noctalia-git
+--
+-- [3] INSTALL CORE APPS & SCREENSHOT / ANNOTATION TOOLS
+--     sudo dnf install konsole dolphin firefox grim slurp swappy wl-clipboard
+--
+-- [4] INSTALL WAYSCRIBER (Live Screen Drawing Overlay)
+--     cat <<'EOF' | sudo tee /etc/yum.repos.d/wayscriber.repo
+--     [wayscriber]
+--     name=Wayscriber Repo
+--     baseurl=https://wayscriber.com
+--     enabled=1
+--     gpgcheck=1
+--     repo_gpgcheck=1
+--     gpgkey=https://wayscriber.com/RPM-GPG-KEY-wayscriber.asc
+--     EOF
+--     sudo dnf install wayscriber
+--
+-- [5] APPLY CONFIG
+--     Save this file to: ~/.config/hypr/hyprland.lua
+--     Reload anytime with: hyprctl reload
+-- =========================================================================
+
 
 -- Applications
 local terminal = "konsole"
 local file_manager = "dolphin"
-local browser = "firefox"
+local browser = "chromium-browser"
 
 -- =========================================
--- Monitors - Swapped Positions
+-- Monitors - External Left, Laptop Right
 -- =========================================
 
 hl.monitor({
-    output = "MONITOR_1",
-    mode = "preferred",
+    output = "DP-2",
+    mode = "2560x1440@60",
     position = "0x0",
     scale = 1,
 })
 
 hl.monitor({
-    output = "MONITOR_2",
-    mode = "preferred",
-    position = "1920x0",
-    scale = 1,
+    output = "eDP-1",
+    mode = "1920x1200@60",
+    position = "2560x0",
+    scale = 1.5,
 })
+
+-- =========================================
+-- Workspace Rules
+-- =========================================
+
+-- Big Monitor (DP-2): Workspaces 1 to 4
+hl.workspace_rule({ workspace = "1", monitor = "DP-2", default = true, persistent = true })
+hl.workspace_rule({ workspace = "2", monitor = "DP-2", persistent = true })
+hl.workspace_rule({ workspace = "3", monitor = "DP-2", persistent = true })
+hl.workspace_rule({ workspace = "4", monitor = "DP-2", persistent = true })
+
+-- Small Laptop Screen (eDP-1): Workspace 5
+hl.workspace_rule({ workspace = "5", monitor = "eDP-1", default = true, persistent = true })
 
 -- =========================================
 -- Main Configuration
@@ -70,18 +117,6 @@ hl.config({
 
     animations = {
         enabled = true,
-
-        bezier = {
-            "fast, 0.05, 0.9, 0.1, 1.0",
-        },
-
-        animation = {
-            "windows, 1, 3, fast",
-            "windowsIn, 1, 3, fast, popin",
-            "windowsOut, 1, 3, fast, popin",
-            "fade, 1, 3, fast",
-            "workspaces, 1, 3, fast",
-        },
     },
 
     misc = {
@@ -89,6 +124,26 @@ hl.config({
     },
 
 })
+
+-- =========================================
+-- Curves & Animations
+-- =========================================
+
+hl.curve("fast", {
+    type = "bezier",
+    points = { { 0.05, 0.9 }, { 0.1, 1.0 } },
+})
+
+-- Instant window open (windowsIn & fadeIn disabled), keep close/move & vertical workspaces
+hl.animation({ leaf = "windows", enabled = true, speed = 3, bezier = "fast" })
+hl.animation({ leaf = "windowsIn", enabled = false })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 3, bezier = "fast", style = "popin" })
+hl.animation({ leaf = "windowsMove", enabled = true, speed = 3, bezier = "fast" })
+hl.animation({ leaf = "fade", enabled = true, speed = 3, bezier = "fast" })
+hl.animation({ leaf = "fadeIn", enabled = false })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 3, bezier = "fast", style = "slidevert" })
+hl.animation({ leaf = "workspacesIn", enabled = true, speed = 3, bezier = "fast", style = "slidevert" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 3, bezier = "fast", style = "slidevert" })
 
 -- =========================================
 -- Start Noctalia
@@ -133,6 +188,25 @@ bind("SUPER + D",
     "App Launcher")
 
 -- =========================================
+-- Screenshots & Live Screen Drawing
+-- =========================================
+
+-- Region Screenshot + Annotate in Swappy
+bind("PRINT",
+    hl.dsp.exec_cmd('grim -g "$(slurp)" - | swappy -f -'),
+    "Screenshot Region and Annotate")
+
+-- Fullscreen Screenshot + Annotate in Swappy
+bind("SHIFT + PRINT",
+    hl.dsp.exec_cmd("grim - | swappy -f -"),
+    "Fullscreen Screenshot and Annotate")
+
+-- Live Screen Drawing Overlay (Press ESC to exit drawing)
+bind("SUPER + SHIFT + D",
+    hl.dsp.exec_cmd("wayscriber --active"),
+    "Live Screen Drawing")
+
+-- =========================================
 -- Window Management
 -- =========================================
 
@@ -171,14 +245,12 @@ hl.bind(
 )
 
 -- =========================================
--- Focus and Move Windows
+-- Focus and Move Windows (Left / Right)
 -- =========================================
 
 for _, d in ipairs({
     "left",
     "right",
-    "up",
-    "down"
 }) do
 
     bind(
@@ -200,7 +272,52 @@ for _, d in ipairs({
 end
 
 -- =========================================
--- Four Workspaces - French AZERTY
+-- Vertical Workspace Navigation (Up / Down)
+-- =========================================
+
+-- Switch Workspace Up / Down (CTRL + SUPER + UP/DOWN)
+bind("CTRL + SUPER + UP",
+    hl.dsp.focus({
+        workspace = "r-1",
+    }),
+    "Previous Workspace")
+
+bind("CTRL + SUPER + DOWN",
+    hl.dsp.focus({
+        workspace = "r+1",
+    }),
+    "Next Workspace")
+
+-- Switch Workspace Up / Down (SUPER + UP/DOWN)
+bind("SUPER + UP",
+    hl.dsp.focus({
+        workspace = "r-1",
+    }),
+    "Previous Workspace")
+
+bind("SUPER + DOWN",
+    hl.dsp.focus({
+        workspace = "r+1",
+    }),
+    "Next Workspace")
+
+-- Move Window Up / Down and Follow (SHIFT + SUPER + UP/DOWN)
+bind("SHIFT + SUPER + UP",
+    hl.dsp.window.move({
+        workspace = "r-1",
+        follow = true,
+    }),
+    "Move Window Up and Follow")
+
+bind("SHIFT + SUPER + DOWN",
+    hl.dsp.window.move({
+        workspace = "r+1",
+        follow = true,
+    }),
+    "Move Window Down and Follow")
+
+-- =========================================
+-- Five Workspaces - French AZERTY
 -- =========================================
 
 local workspaces = {
@@ -208,6 +325,7 @@ local workspaces = {
     {key = "code:11", number = "2"},
     {key = "code:12", number = "3"},
     {key = "code:13", number = "4"},
+    {key = "code:14", number = "5"},
 }
 
 for _, i in ipairs(workspaces) do
@@ -235,4 +353,4 @@ end
 
 -- =========================================
 -- End Configuration
--- ====
+-- =========================================
