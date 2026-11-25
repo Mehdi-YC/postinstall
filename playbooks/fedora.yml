@@ -63,8 +63,6 @@
           - bat
           - jq
           - wget
-          - unzip
-          - zip
           - starship        # COPR
           - chromium
           - podman-compose
@@ -77,7 +75,7 @@
           - rust-analyzer
           - rust-src
           - helix
-          - wayland
+          - hyprland
           - noctalia
         state: present
         install_weak_deps: false
@@ -129,11 +127,11 @@
             executable: /bin/bash
             creates: "{{ home }}/.bun/bin/bun"
 
-        - name: Install uv
-          ansible.builtin.shell: curl -LsSf https://astral.sh/uv/install.sh | sh
-          args:
-            executable: /bin/bash
-            creates: "{{ home }}/.local/bin/uv"
+#        - name: Install uv
+#          ansible.builtin.shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+#          args:
+#            executable: /bin/bash
+#            creates: "{{ home }}/.local/bin/uv"
 
         - name: Install opencode (via bun)
           ansible.builtin.command: "{{ home }}/.bun/bin/bun install -g opencode-ai"
@@ -145,11 +143,6 @@
           args:
             creates: "{{ home }}/.cargo/bin/bacon"
 
-        - name: Create ~/opt (for manually dropped AppImages)
-          ansible.builtin.file:
-            path: "{{ home }}/opt"
-            state: directory
-            mode: "0755"
 
     # ------------------------------------------------------------- fish PATH ---
 
@@ -223,7 +216,7 @@
               - org.inkscape.Inkscape           # vector graphics
               #- com.valvesoftware.Steam
               #- org.onlyoffice.desktopeditors
-              #- com.obsproject.Studio           # screen/stream recording
+              - com.obsproject.Studio           # screen/stream recording
               #- io.github.mfat.sshpilot         # SSH connection manager
             method: system
             state: present
