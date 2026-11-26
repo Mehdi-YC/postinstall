@@ -7,11 +7,11 @@
 //!   * stdout and stderr go to a log file, never to our terminal
 //!   * nothing noisy panics: a missing command is an ordinary outcome
 
-use std::fs::{self, File};
+use std::fs::{self, DirBuilder};
 use std::io::Write;
+use std::os::unix::fs::{DirBuilderExt, OpenOptionsExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::OnceLock;
 
 /// True when we are already root, so `sudo` would be pointless.
@@ -25,27 +25,19 @@ pub fn is_root() -> bool {
     })
 }
 
-/// Whether `--sudo` was asked for. Set once, at startup.
-static SUDO: AtomicBool = AtomicBool::new(false);
-
-pub fn set_sudo(on: bool) {
-    SUDO.store(on, Ordering::Relaxed);
-}
-
 /// Build a command, escalating it if the operation needs root.
 ///
-/// Under `--sudo` the credential was refreshed by [`prime_sudo`] up front, and
-/// `-n` guarantees a worker thread can never stop on an invisible password
-/// prompt: it runs or it fails, immediately.
+/// Escalation always uses `sudo -n`. The tool refuses up front to run an
+/// escalated operation unless `--sudo` was passed (or it is already root), so
+/// the sudo credential is always fresh by the time this is called. `-n` is what
+/// keeps that promise: without it a worker thread could open `/dev/tty` and
+/// stop on a password prompt whose text went into a log file.
 pub fn command(program: &str, sudo: bool) -> Command {
     if !(sudo && !is_root()) {
         return Command::new(program);
     }
     let mut cmd = Command::new("sudo");
-    if SUDO.load(Ordering::Relaxed) {
-        cmd.arg("-n");
-    }
-    cmd.arg(program);
+    cmd.arg("-n").arg(program);
     cmd
 }
 
@@ -82,7 +74,17 @@ pub fn have(binary: &str) -> bool {
 
 /// Run a shell command, discarding its output. Success is all we need.
 pub fn shell(script: &str) -> Result<bool, String> {
-    Command::new("sh")
+    shell_as(script, false)
+}
+
+/// Like [`shell`], under the operation's own privilege.
+///
+/// A `check` that needs root has to run as root too, or it fails as the user
+/// and the operation it guards runs on every single apply. The script itself is
+/// never echoed in the error: it may contain a secret that has yet to be
+/// redacted from stdout.
+pub fn shell_as(script: &str, sudo: bool) -> Result<bool, String> {
+    command("sh", sudo)
         .arg("-c")
         .arg(script)
         .stdin(Stdio::null())
@@ -90,7 +92,7 @@ pub fn shell(script: &str) -> Result<bool, String> {
         .stderr(Stdio::null())
         .status()
         .map(|status| status.success())
-        .map_err(|e| format!("{script}: {e}"))
+        .map_err(|e| format!("could not run a check: {e}"))
 }
 
 /// The user's home directory.
@@ -107,13 +109,55 @@ pub struct Run {
 }
 
 impl Run {
-    /// Create a timestamped directory under the state directory.
+    /// Create a timestamped directory under the system temp directory.
+    ///
+    /// A suffix is added if the stamp is already taken, so two runs in the same
+    /// second cannot truncate each other's logs.
+    ///
+    /// The directory is private (`0700`) and so are the logs (`0600`): a shared
+    /// `/tmp` is not a place to leave a file that can still hold a secret
+    /// between the command and the redaction sweep. A base someone else already
+    /// made readable is refused rather than written into.
     pub fn create() -> Result<Self, String> {
-        let base = std::env::var("XDG_STATE_HOME")
-            .map_or_else(|_| home().join(".local/state"), PathBuf::from);
-        let dir = base.join("minimal_bootstrapper/runs").join(stamp());
-        fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-        Ok(Run { dir })
+        let base = std::env::temp_dir().join("minimal_bootstrapper");
+        DirBuilder::new()
+            .recursive(true)
+            .mode(0o700)
+            .create(&base)
+            .map_err(|e| format!("{}: {e}", base.display()))?;
+        // A directory somebody else pre-created is refused, not written into.
+        let private = fs::symlink_metadata(&base)
+            .is_ok_and(|meta| meta.file_type().is_dir() && meta.permissions().mode() & 0o077 == 0);
+        if !private {
+            return Err(format!(
+                "{} is not a private directory; remove it and run again",
+                base.display()
+            ));
+        }
+
+        let runs = base.join("runs");
+        DirBuilder::new()
+            .recursive(true)
+            .mode(0o700)
+            .create(&runs)
+            .map_err(|e| format!("{}: {e}", runs.display()))?;
+        let stamp = stamp();
+        for attempt in 0..100 {
+            let name = match attempt {
+                0 => stamp.clone(),
+                n => format!("{stamp}-{n}"),
+            };
+            let dir = runs.join(name);
+            match DirBuilder::new().mode(0o700).create(&dir) {
+                Ok(()) => return Ok(Run { dir }),
+                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+                Err(e) => return Err(format!("{}: {e}", dir.display())),
+            }
+        }
+        Err(format!(
+            "{}: too many runs in one second; giving up",
+            runs.display()
+        ))
     }
 
     /// A run rooted at a directory the caller chose.
@@ -131,6 +175,7 @@ impl Run {
         if let Ok(mut file) = fs::OpenOptions::new()
             .create(true)
             .append(true)
+            .mode(0o600)
             .open(self.dir.join("run.log"))
         {
             let _ = writeln!(file, "{line}");
@@ -139,7 +184,13 @@ impl Run {
 
     /// Start a command with both streams redirected into `name`'s log file.
     pub fn spawn(&self, script: &str, sudo: bool, name: &str) -> Result<Child, String> {
-        let file = File::create(self.dir.join(name)).map_err(|e| format!("{name}: {e}"))?;
+        let file = fs::OpenOptions::new()
+            .create(true)
+            .truncate(true)
+            .write(true)
+            .mode(0o600)
+            .open(self.dir.join(name))
+            .map_err(|e| format!("{name}: {e}"))?;
         let err = file.try_clone().map_err(|e| e.to_string())?;
         command("sh", sudo)
             .args(["-c", script])
@@ -147,7 +198,7 @@ impl Run {
             .stdout(Stdio::from(file))
             .stderr(Stdio::from(err))
             .spawn()
-            .map_err(|e| format!("{script}: {e}"))
+            .map_err(|e| format!("could not start `sh`: {e}"))
     }
 }
 
@@ -191,8 +242,11 @@ pub fn redact(dir: &Path, secrets: &[String]) {
         }
         if clean != text {
             // Write beside and rename, so a crash mid-sweep cannot truncate the
-            // one copy of a log.
-            let staged = path.with_extension("redacting");
+            // one copy of a log. The staging name is the file's own name plus a
+            // suffix, so two files sharing a stem cannot stage over each other.
+            let mut staged_name = path.file_name().unwrap_or_default().to_os_string();
+            staged_name.push(".redacting");
+            let staged = path.with_file_name(staged_name);
             if fs::write(&staged, clean).is_ok() && fs::rename(&staged, &path).is_err() {
                 let _ = fs::remove_file(&staged);
             }
@@ -245,6 +299,33 @@ mod tests {
     }
 
     #[test]
+    fn a_run_lives_in_the_temp_directory_and_is_private() {
+        // /tmp is shared, and a log can hold a secret until the sweep.
+        let run = Run::create().expect("run");
+        assert!(
+            run.dir().starts_with(std::env::temp_dir()),
+            "{} is not under the temp directory",
+            run.dir().display()
+        );
+
+        let mode = |path: &Path| fs::metadata(path).unwrap().permissions().mode() & 0o777;
+        assert_eq!(mode(run.dir()), 0o700, "the run directory must be private");
+
+        run.note("hello");
+        let mut child = run.spawn("true", false, "op.log").expect("spawn");
+        child.wait().unwrap();
+
+        for name in ["run.log", "op.log"] {
+            assert_eq!(
+                mode(&run.dir().join(name)),
+                0o600,
+                "{name} must not be world readable"
+            );
+        }
+        let _ = fs::remove_dir_all(run.dir());
+    }
+
+    #[test]
     fn a_secret_is_taken_back_out_of_the_log() {
         let dir = log_with("token=hunter2secret\nall done\n", "redact");
 
@@ -281,7 +362,7 @@ mod tests {
             "nothing secret here\n"
         );
         assert!(
-            !dir.join("op.redacting").exists(),
+            !dir.join("op.log.redacting").exists(),
             "no staging file left behind"
         );
     }

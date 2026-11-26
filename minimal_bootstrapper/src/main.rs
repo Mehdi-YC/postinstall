@@ -114,11 +114,11 @@ impl Args {
                 "--help" | "-h" => args.command = Command::Help,
                 "--sudo" => args.sudo = true,
                 "-c" | "--config" => {
-                    let path = rest.next().ok_or(format!("{arg} needs a path"))?;
+                    let path = flag_value(&mut rest, arg)?;
                     args.config = Some(path.into());
                 }
                 "--only" => {
-                    let value = rest.next().ok_or("--only needs tags")?;
+                    let value = flag_value(&mut rest, arg)?;
                     args.only.extend(
                         value
                             .split(',')
@@ -127,7 +127,7 @@ impl Args {
                             .map(str::to_string),
                     );
                 }
-                "--from" => args.from = Some(rest.next().ok_or("--from needs an id")?.clone()),
+                "--from" => args.from = Some(flag_value(&mut rest, arg)?.clone()),
                 other => return Err(format!("unknown argument `{other}`; try --help")),
             }
         }
@@ -137,6 +137,21 @@ impl Args {
     fn path(&self) -> PathBuf {
         self.config.clone().unwrap_or_else(default_path)
     }
+}
+
+/// The value a flag takes, refusing another flag in its place.
+///
+/// `--config --sudo` is a typo, not a file named `--sudo`; consuming it would
+/// turn a missing argument into a confusing read error.
+fn flag_value<'a>(
+    rest: &mut impl Iterator<Item = &'a String>,
+    flag: &str,
+) -> Result<&'a String, String> {
+    let value = rest.next().ok_or_else(|| format!("{flag} needs a value"))?;
+    if value.starts_with('-') {
+        return Err(format!("{flag} needs a value, not `{value}`"));
+    }
+    Ok(value)
 }
 
 /// The config to use when `--config` is not given.
@@ -174,9 +189,13 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
     let config = config::Config::load(&text).map_err(|e| Error(format!("{where_}: {e}")))?;
     let all = plan::build(&config).map_err(|e| Error(format!("{where_}: {e}")))?;
 
-    let ops = select(&all, &args);
+    let ops = select(&all, &args).map_err(Error)?;
     if ops.is_empty() {
-        return Err(Error("nothing selected; check --only".into()));
+        return Err(Error(if args.only.is_empty() {
+            "the configuration declares no operations".into()
+        } else {
+            "nothing selected: no operation matches --only".into()
+        }));
     }
     // Validated against the whole plan, so a typo in `after =` is caught even
     // when `--only` happens to leave that operation out.
@@ -212,8 +231,27 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
                 .into(),
         ));
     }
+    // An escalated operation without a primed credential would either fail
+    // halfway through or stop on a password prompt nobody can see. Refuse up
+    // front, and name what needs it. `check` is exempt: it changes nothing, and
+    // its reports are still useful unprivileged.
+    if args.command == Command::Apply && !args.sudo && !os::is_root() {
+        let escalated: Vec<&str> = ops
+            .iter()
+            .filter(|op| op.sudo)
+            .map(|op| op.id.as_str())
+            .collect();
+        if !escalated.is_empty() {
+            return Err(Error(format!(
+                "{} operation(s) need root: {}\n\
+                 Re-run with --sudo: it asks for your password once, up front, and escalates only \
+                 those commands.",
+                escalated.len(),
+                escalated.join(", ")
+            )));
+        }
+    }
     if args.sudo {
-        os::set_sudo(true);
         os::prime_sudo()?;
     }
 
@@ -223,6 +261,7 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
         run,
         home: os::home(),
         mutating,
+        escalation: args.sudo || os::is_root(),
     };
 
     for (key, value) in &config.variables {
@@ -245,6 +284,8 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
         style.dim("·"),
         style.dim(&format!("{} operation(s)", ops.len()))
     );
+
+    let secrets = secret_values(&config);
 
     // Reported per operation as one contiguous block, with a rule whenever the
     // lane changes. Lanes are barriers, so the completion stream is already
@@ -290,11 +331,11 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
             }
         }
         if let Some(error) = &report.error {
-            say!("      {}", style.failed(error));
+            say!("      {}", style.failed(&redact_text(error, &secrets)));
         }
     });
 
-    os::redact(ctx.run.dir(), &secret_values(&config));
+    os::redact(ctx.run.dir(), &secrets);
 
     say!();
     say!("{}", style.rule(""));
@@ -391,12 +432,19 @@ fn repeats_itself(name: &str, id: &str) -> bool {
     name == id || id.ends_with(&format!(".{name}"))
 }
 
-/// An operation's own mark, coloured by whether it converged.
+/// An operation's own mark, coloured by what became of it.
+///
+/// `✓` only when every item was already correct; `+` when this run changed
+/// something; `✗` for a failure. A converged operation that changed five things
+/// is not a check mark.
 fn report_symbol(style: &Style, report: &Report) -> String {
-    if report.converged() {
-        style.kept(State::Kept.symbol())
+    if !report.converged() {
+        return style.failed(State::Failed.symbol());
+    }
+    if report.lines.iter().any(|line| line.state == State::Changed) {
+        style.changed(State::Changed.symbol())
     } else {
-        style.failed(State::Failed.symbol())
+        style.kept(State::Kept.symbol())
     }
 }
 
@@ -408,6 +456,18 @@ fn secret_values(config: &config::Config) -> Vec<String> {
         .filter(|(name, _)| config.is_secret(name))
         .map(|(_, value)| value.clone())
         .collect()
+}
+
+/// Take secret values back out of a message headed for the terminal.
+///
+/// The run logs are swept afterwards, but the terminal is not a file anyone
+/// sweeps. Errors are short, so every secret is replaced here, however short.
+fn redact_text(text: &str, secrets: &[String]) -> String {
+    let mut clean = text.to_string();
+    for secret in secrets.iter().filter(|value| !value.is_empty()) {
+        clean = clean.replace(secret.as_str(), os::REDACTED);
+    }
+    clean
 }
 
 fn verb(command: &Command) -> &'static str {
@@ -463,7 +523,7 @@ fn summary_line(summary: Summary, mutating: bool, style: &Style) -> String {
 }
 
 /// Apply `--only` and `--from`.
-fn select<'a>(all: &'a [plan::Op], args: &Args) -> Vec<&'a plan::Op> {
+fn select<'a>(all: &'a [plan::Op], args: &Args) -> Result<Vec<&'a plan::Op>, String> {
     let selected: Vec<&plan::Op> = if args.only.is_empty() {
         all.iter().collect()
     } else {
@@ -477,19 +537,33 @@ fn select<'a>(all: &'a [plan::Op], args: &Args) -> Vec<&'a plan::Op> {
     };
 
     let Some(from) = &args.from else {
-        return selected;
+        return Ok(selected);
     };
-    let Some(start) = selected.iter().position(|op| &op.id == from) else {
-        return selected;
-    };
-    selected[start..].to_vec()
+    // Exact first, then the same suffix rule `--only` uses. A typo must not
+    // quietly mean "start at the beginning": that turns a resume into a full
+    // re-apply.
+    let start = selected
+        .iter()
+        .position(|op| op.id == *from)
+        .or_else(|| {
+            selected
+                .iter()
+                .position(|op| op.id.ends_with(&format!(".{from}")))
+        })
+        .ok_or_else(|| format!("--from: no operation matches `{from}`"))?;
+    Ok(selected[start..].to_vec())
 }
 
 /// `list`: what would run, and in what order.
 fn list(ops: &[&plan::Op], config: &config::Config) -> Result<ExitCode, Error> {
     let style = Style::detect();
+    // Lanes are barriers and `plan::build` sorts by id, so the execution order
+    // is lane first, then id. `list` claims to show the order; show that one.
+    let mut ordered: Vec<&plan::Op> = ops.to_vec();
+    ordered.sort_by(|a, b| a.lane.cmp(&b.lane).then_with(|| a.id.cmp(&b.id)));
+
     say!();
-    for op in ops {
+    for op in &ordered {
         say!("  {}", style.loud(&op.id));
         say!("      {}", style.dim(&plan::describe(op)));
         say!("      {}", style.dim(&format!("lane {}", op.lane)));
@@ -655,15 +729,48 @@ mod tests {
         .unwrap();
         let all = plan::build(&config).unwrap();
 
-        let by_suffix = select(&all, &args(&["--only", "x"]).unwrap());
+        let by_suffix = select(&all, &args(&["--only", "x"]).unwrap()).unwrap();
         assert_eq!(by_suffix.len(), 1);
         assert_eq!(by_suffix[0].id, "packages.x");
 
-        let by_full = select(&all, &args(&["--only", "packages.x"]).unwrap());
+        let by_full = select(&all, &args(&["--only", "packages.x"]).unwrap()).unwrap();
         assert_eq!(by_full.len(), 1);
 
-        let none = select(&all, &args(&["--only", "nope"]).unwrap());
+        let none = select(&all, &args(&["--only", "nope"]).unwrap()).unwrap();
         assert!(none.is_empty(), "an unmatched tag selects nothing");
+    }
+
+    #[test]
+    fn from_refuses_a_name_it_cannot_find() {
+        // Silently starting from the top would turn a typo in a resume into a
+        // full re-apply.
+        let config =
+            config::Config::load("[exec.a]\nrun = \"true\"\n[exec.b]\nrun = \"true\"\n").unwrap();
+        let all = plan::build(&config).unwrap();
+
+        let err = select(&all, &args(&["--from", "exec.typo"]).unwrap()).unwrap_err();
+
+        assert!(err.contains("exec.typo"), "{err}");
+    }
+
+    #[test]
+    fn from_accepts_the_same_suffix_shortcut_as_only() {
+        let config =
+            config::Config::load("[exec.a]\nrun = \"true\"\n[exec.b]\nrun = \"true\"\n").unwrap();
+        let all = plan::build(&config).unwrap();
+
+        let picked = select(&all, &args(&["--from", "b"]).unwrap()).unwrap();
+
+        assert_eq!(picked.len(), 1);
+        assert_eq!(picked[0].id, "exec.b");
+    }
+
+    #[test]
+    fn a_flag_is_not_a_value() {
+        // `-c --sudo` would otherwise read a file named `--sudo`.
+        assert!(args(&["-c", "--sudo"]).is_err());
+        assert!(args(&["--only", "--sudo"]).is_err());
+        assert!(args(&["--from", "--only"]).is_err());
     }
 
     #[test]
@@ -680,7 +787,7 @@ mod tests {
         )
         .unwrap();
         let all = plan::build(&config).unwrap();
-        let picked = select(&all, &args(&["--from", "exec.b"]).unwrap());
+        let picked = select(&all, &args(&["--from", "exec.b"]).unwrap()).unwrap();
         assert_eq!(
             picked.iter().map(|o| o.id.as_str()).collect::<Vec<_>>(),
             vec!["exec.b", "exec.c"]

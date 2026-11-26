@@ -1,0 +1,205 @@
+# ==============================================================================
+# Fedora KDE — bootstrapper config
+# ==============================================================================
+#
+#   bootstrapper check -c playbooks/fedora.toml          # read-only report
+#   bootstrapper list  -c playbooks/fedora.toml          # plan, in execution order
+#   bootstrapper apply -c playbooks/fedora.toml --sudo   # make it so
+#   bootstrapper apply -c playbooks/fedora.toml --only packages --sudo
+#
+# Run it as yourself, never `sudo bootstrapper`. Under root, $HOME is /root,
+# so `bun install -g` puts your tools somewhere your PATH never looks. --sudo
+# asks for your password once, up front, then escalates only the commands that
+# need it. Without it the tool refuses to run an escalated operation rather
+# than failing halfway through.
+#
+# The same file in the old .cfg shorthand is fedora.cfg; this one is what the
+# tool actually reads. Kept parallel to fedora.yml deliberately:
+#
+#   playbook task                     here
+#   ------------------------------    --------------------------------------
+#   dnf copr enable atim/starship     [exec.copr]
+#   Terra repo                        [exec.terra]
+#   VS Code key + repo + install      [repos.vscode] + [packages.dnf]
+#   package: name: [...]              [packages.dnf]
+#   git clone + stow                  [dotfiles]
+#   curl | bash installers            [exec.*], guarded by a `check`
+#   bun install -g opencode-ai        [exec.opencode]
+#   flatpak_remote flathub            [exec.flathub]
+#   flatpak method: system            [packages.flatpak] + sudo = true
+
+# ---- variables --------------------------------------------------------------
+#
+# `${name}` expands anywhere outside an installer's own commands: URLs, package
+# lists, stow targets, `after` ids. Variables may reference each other in any
+# order.
+#
+# A value that is exactly `$NAME` reads the environment. That is why `home`
+# below picks up $HOME, while `$releasever` in [exec.terra] reaches dnf
+# untouched.
+#
+# A variable named in `secret` has its value withheld from the run log and
+# removed from the terminal output. Listing a name here *hides* it.
+
+[variables]
+config_repo = "https://github.com/mehdi-yc/postinstall"
+home = "$HOME"
+
+# ---- installers -------------------------------------------------------------
+#
+# Two shell commands: `check` answers one package, `install` takes everything
+# missing at once. `{package}` and `{packages}` are this file's own
+# placeholders, on a different sigil from `${...}`.
+
+[installer.dnf]
+check = "rpm -q {package}"
+install = "dnf install -y {packages}"
+sudo = true
+# dnf and `rpm --import` both take the rpmdb lock, so nothing else may hold it
+# at the same time, whatever their lanes say.
+resource = "rpm"
+
+[installer.flatpak]
+check = "flatpak info {package}"
+install = "flatpak install -y --system {packages}"
+sudo = true
+resource = "flatpak"
+
+# ---- repositories -----------------------------------------------------------
+
+# `vscode` is the section id and the file name, which is what dnf calls the
+# repo. `name` is the description — a separate field, not the id.
+
+[repos.vscode]
+parallel = 1
+url = "https://packages.microsoft.com/yumrepos/vscode"
+key = "https://packages.microsoft.com/keys/microsoft.asc"
+name = "Visual Studio Code"
+after = ["exec.copr"]
+
+# ---- packages ---------------------------------------------------------------
+#
+# `parallel` is the lane: everything in the lowest ready lane runs together,
+# then the next one. Segments compare as numbers, so 2.10 comes after 2.9.
+#
+# `after` is not decoration. Nothing in the graph knows that a COPR has to be
+# enabled before `dnf install starship` can find it, or that the VS Code repo
+# has to be written before `code` exists. Say it.
+
+[packages.dnf]
+parallel = 2
+after = ["exec.copr", "exec.terra", "repos.vscode"]
+names = [
+    # CLI
+    "stow", "tmux", "git", "fish", "bat", "starship", "chromium", "podman-compose",
+    # Rust + editors (all dnf, no rustup)
+    "rustc", "cargo", "rustfmt", "rust-clippy", "rust-analyzer", "rust-src",
+    "bacon",            # Terra
+    "helix", "hyprland", "noctalia",
+    "espanso-wayland",  # Terra
+    # VS Code, from [repos.vscode]
+    "code",
+]
+
+[packages.flatpak]
+parallel = 3
+after = ["exec.flathub"]
+# `method: system` in the playbook: machine-wide, so root. Drop the `sudo` line
+# for a per-user install instead.
+sudo = true
+names = [
+    "com.github.tchx84.Flatseal",   # manage flatpak permissions
+    "org.kde.kdenlive",             # video editing
+    # "org.inkscape.Inkscape",      # vector manipulation
+    # "com.valvesoftware.Steam",
+    # "org.onlyoffice.desktopeditors",
+    "com.obsproject.Studio",        # screen/stream recording
+    "io.github.mfat.sshpilot",      # SSH connection manager
+]
+
+# ---- dotfiles ---------------------------------------------------------------
+
+[dotfiles]
+parallel = 3
+repo = "${config_repo}"
+branch = "main"
+stow = ["config"]
+
+# An existing real file is moved to `<name>.bk` before stow links over it, and
+# an earlier backup is never overwritten — so run this twice and you still have
+# both versions. Directories are left alone: stow links *into* one.
+#
+# If the Ansible playbook already stowed these files, remove its git and stow
+# tasks first: two systems managing the same paths will fight.
+
+# ---- sources that are one-shot commands -------------------------------------
+#
+# COPR, Terra and Flathub are not repo files the tool can write: each is an
+# install command with its own guard. `dnf install` and `flatpak remote-add`
+# both tolerate being told twice, but the guard is what makes `check` honest.
+
+# The guard has to name the repo the way dnf does. `copr enable atim/starship`
+# registers it as `copr:copr.fedorainfracloud.org:atim:starship` — colons, not
+# a slash — so grepping for `atim/starship` matches nothing and re-enables the
+# COPR on every apply.
+[exec.copr]
+parallel = 1
+sudo = true
+check = "dnf repolist --enabled -q | grep -q 'atim:starship'"
+run = "dnf install -y 'dnf-command(copr)' && dnf copr enable -y atim/starship"
+
+# One-shot install of terra-release, which writes /etc/yum.repos.d/terra.repo
+# itself. Declaring the repo directly would mean inventing a GPG key URL, and a
+# wrong key URL is worse than an honest one-shot install.
+#
+# The single quotes matter: unquoted, the shell would expand `$releasever` to
+# nothing before dnf ever saw it.
+[exec.terra]
+parallel = 1
+sudo = true
+after = ["exec.copr"]
+check = "test -f /etc/yum.repos.d/terra.repo"
+run = "dnf install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release terra-gpg-keys"
+
+[exec.flathub]
+parallel = 1
+sudo = true
+check = "flatpak remotes --columns=name | grep -qx flathub"
+run = "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
+
+# ---- user-space tools -------------------------------------------------------
+#
+# Installers are `curl | sh`, so each one is guarded by a `check`. Without one
+# the operation would be "run it every time", and the output says so rather
+# than pretending to be idempotent.
+
+[exec.bun]
+parallel = 3
+check = "test -x ${home}/.bun/bin/bun"
+run = "curl -fsSL https://bun.sh/install | bash"
+
+[exec.lazydocker]
+parallel = 3
+check = "test -x ${home}/.local/bin/lazydocker"
+run = "curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash"
+
+# Nothing in the graph knows that bun has to exist before `bun install -g` can
+# work, so say it — otherwise opencode-ai races [exec.bun] inside lane 3.
+[exec.opencode]
+parallel = 3
+after = ["exec.bun"]
+check = "command -v opencode"
+run = "${home}/.bun/bin/bun install -g opencode-ai"
+
+# [exec.uv]
+# parallel = 3
+# check = "test -x ${home}/.local/bin/uv"
+# run = "curl -LsSf https://astral.sh/uv/install.sh | sh"
+
+# espanso is installed by [packages.dnf]. To run it as a user service:
+#
+#   espanso service register
+#   espanso start
+#
+# Not automated here, and not in the playbook either: `service register` is not
+# idempotent and re-running it fails. Do it once.

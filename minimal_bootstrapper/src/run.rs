@@ -9,11 +9,11 @@
 //! Concurrency is opt-in. With no `parallel =` anywhere, operations run one at
 //! a time, which is what a laptop on battery wants.
 
-use std::collections::{BTreeSet, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::path::PathBuf;
 
 use crate::config::Installer;
-use crate::config::{Dotfiles, Error, Lane, Repo, Wait};
+use crate::config::{Dotfiles, Error, Lane, Repo};
 use crate::dotfiles;
 use crate::os::{self, Run};
 use crate::plan::{Body, Op};
@@ -139,6 +139,10 @@ pub struct Ctx {
     pub home: PathBuf,
     /// `check` and `plan` report; only `apply` changes anything.
     pub mutating: bool,
+    /// Whether a `sudo` credential is available: `--sudo` was passed, or the
+    /// process is already root. Checks run escalated only when it is, because
+    /// a read-only report must not require a password to look.
+    pub escalation: bool,
 }
 
 /// What became of an operation, as far as anything depending on it is concerned.
@@ -212,6 +216,21 @@ where
             };
             settled.insert(&op.id, verdict);
         }
+    }
+
+    // A safety net for a graph that never became ready. `validate` rejects
+    // cycles before anything runs, but if one ever slipped through, the loop
+    // above would exit silently and the summary would claim everything is
+    // configured while nothing ran. An operation that never settled is a
+    // failure, whatever the reason.
+    for op in ops {
+        if settled.contains_key(op.id.as_str()) {
+            continue;
+        }
+        let report = failed("never ran: its dependencies form a cycle");
+        on_done(op, &report);
+        summary.absorb(&report);
+        settled.insert(&op.id, Verdict::Failed);
     }
 
     summary
@@ -304,7 +323,6 @@ fn one(op: &Op, ctx: &Ctx) -> Report {
         Body::Command { check, run } => command(op, check.as_deref(), run, ctx),
         Body::Repo(repo) => self::repo(op, repo, ctx),
         Body::Dotfiles(dotfiles) => return dotfiles_body(dotfiles, ctx),
-        Body::Wait(wait) => return waiting(op, wait),
     };
 
     match report {
@@ -323,7 +341,12 @@ fn packages(op: &Op, installer: &Installer, names: &[String], ctx: &Ctx) -> Resu
     let mut missing = Vec::new();
 
     for name in names {
-        if os::shell(&installer.check_one(name))? {
+        // The check runs under the same privilege as the install when one is
+        // available: a check that always fails reinstalls everything on every
+        // apply. Without a credential there is nothing to escalate with, and a
+        // report is still worth having unprivileged.
+        let escalate = installer.sudo && ctx.escalation;
+        if os::shell_as(&installer.check_one(name), escalate)? {
             report.kept(name.clone(), "installed");
         } else {
             missing.push(name.clone());
@@ -345,12 +368,16 @@ fn packages(op: &Op, installer: &Installer, names: &[String], ctx: &Ctx) -> Resu
     let script = installer.install_many(&missing);
     let ok = logged(&op.id, ctx, &script, installer.sudo)?;
     if !ok {
-        return Err(format!("`{script}` failed; see the run log"));
+        return Err(format!(
+            "installing the missing packages failed; see {}",
+            log_name(&op.id)
+        ));
     }
 
     // Re-check each one: an installer exiting 0 is not proof of what was asked.
+    let escalate = installer.sudo && ctx.escalation;
     for name in &missing {
-        if os::shell(&installer.check_one(name))? {
+        if os::shell_as(&installer.check_one(name), escalate)? {
             report.changed(name.clone(), "installed");
         } else {
             report.missed(name.clone(), "still not installed");
@@ -366,7 +393,7 @@ fn command(op: &Op, check: Option<&str>, run: &str, ctx: &Ctx) -> Result<Report,
     // Without a check there is no way to know whether this has to run, so it
     // is treated as needed and said out loud rather than quietly assumed done.
     let needed = match check {
-        Some(check) => !os::shell(check)?,
+        Some(check) => !os::shell_as(check, op.sudo && ctx.escalation)?,
         None => true,
     };
 
@@ -385,7 +412,7 @@ fn command(op: &Op, check: Option<&str>, run: &str, ctx: &Ctx) -> Result<Report,
     }
 
     if !logged(&op.id, ctx, run, op.sudo)? {
-        return Err(format!("`{run}` failed; see the run log"));
+        return Err(format!("the command failed; see {}", log_name(&op.id)));
     }
     report.changed(op.id.clone(), "done");
     Ok(report)
@@ -395,8 +422,10 @@ fn command(op: &Op, check: Option<&str>, run: &str, ctx: &Ctx) -> Result<Report,
 fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
     // The section id is the config key, which is also the file name — dnf uses
     // the file name as the repo id, so `dnf --repo vscode` has to work. `name` is
-    // the human-readable description, a separate thing entirely.
-    let id = op.id.rsplit('.').next().unwrap_or(&op.id).to_string();
+    // the human-readable description, a separate thing entirely. Stripping the
+    // prefix rather than splitting on the last dot keeps a quoted key such as
+    // `[repos."a.b"]` intact.
+    let id = op.id.strip_prefix("repos.").unwrap_or(&op.id).to_string();
     let path = format!("/etc/yum.repos.d/{id}.repo");
     let mut report = Report::new();
 
@@ -414,7 +443,7 @@ fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
     let current = std::fs::read_to_string(&path).ok();
     if current
         .as_deref()
-        .is_some_and(|written| same_repo(written, &body))
+        .is_some_and(|written| same_repo(&id, written, &body))
     {
         report.kept(id, "enabled");
         return Ok(report);
@@ -424,22 +453,25 @@ fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
         return Ok(report);
     }
 
-    // `tee` keeps the write inside the escalated command, so this process never
-    // holds a root file descriptor.
+    // The redirect is inside the escalated shell, so this process never holds a
+    // root file descriptor — and it uses the operation's own `sudo`, not a
+    // hardcoded one, so this still works when already root without `sudo`
+    // installed.
     let ok = logged(
         &op.id,
         ctx,
-        &format!("printf '%s' {} | sudo tee {path} >/dev/null", quote(&body)),
-        true,
+        &format!("printf '%s' {} > {path}", quote(&body)),
+        op.sudo,
     )?;
     if !ok {
-        return Err(format!("could not write {path}; see the run log"));
+        return Err(format!("could not write {path}; see {}", log_name(&op.id)));
     }
 
     if let Some(key) = &repo.key {
-        if !logged(&op.id, ctx, &format!("rpm --import {key}"), true)? {
+        if !logged(&op.id, ctx, &format!("rpm --import {key}"), op.sudo)? {
             return Err(format!(
-                "could not import the GPG key {key}; see the run log"
+                "could not import the GPG key {key}; see {}",
+                log_name(&op.id)
             ));
         }
     }
@@ -454,17 +486,37 @@ fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
 /// `yum_repository`, or by a person's editor differs from ours only in spacing,
 /// and rewriting a correct file on every apply because of a space would make
 /// `check` cry wolf — which is how a checker stops being believed.
-fn same_repo(a: &str, b: &str) -> bool {
+///
+/// Two things do count as differences: the section header must name the repo
+/// dnf will look for, and the description (`name`) is ignored because it is
+/// cosmetic and another tool's wording is not a reason to rewrite the file.
+fn same_repo(id: &str, written: &str, ours: &str) -> bool {
     // dnf's defaults. A file that omits these is enabled and checked, which is
     // the same thing we would have written explicitly.
     const IMPLICIT: [(&str, &str); 2] = [("enabled", "1"), ("gpgcheck", "1")];
+    const IGNORED: [&str; 1] = ["name"];
+
+    /// The `[id]` header, which dnf uses as the repo id.
+    fn has_section(text: &str, id: &str) -> bool {
+        text.lines().any(|line| {
+            let line = line.trim();
+            line.len() > 2
+                && line.starts_with('[')
+                && line.ends_with(']')
+                && line[1..line.len() - 1].trim() == id
+        })
+    }
 
     fn settings(text: &str) -> Option<Vec<(String, String)>> {
         let mut out: Vec<(String, String)> = text
             .lines()
             .filter_map(|line| {
                 let (key, value) = line.split_once('=')?;
-                Some((key.trim().to_lowercase(), value.trim().to_string()))
+                let key = key.trim().to_lowercase();
+                if IGNORED.contains(&key.as_str()) {
+                    return None;
+                }
+                Some((key, value.trim().to_string()))
             })
             .collect();
         // Nothing readable in the file at all. Returning None before the
@@ -486,7 +538,7 @@ fn same_repo(a: &str, b: &str) -> bool {
 
     // `None == None` would say an absent file matches an unreadable one, so
     // the emptiness check has to be explicit.
-    settings(a).is_some() && settings(a) == settings(b)
+    has_section(written, id) && settings(written).is_some() && settings(written) == settings(ours)
 }
 
 fn quote(text: &str) -> String {
@@ -516,25 +568,15 @@ fn dotfiles_body(config: &Dotfiles, ctx: &Ctx) -> Report {
     report
 }
 
-/// Sleep, and say so.
-///
-/// The only reason this body exists is to pace a run and to give the scheduler
-/// something with a known duration to test against.
-fn waiting(op: &Op, wait: &Wait) -> Report {
-    let duration = wait.duration();
-    std::thread::sleep(duration);
-
-    let mut report = Report::new();
-    report.kept(&op.id, format!("waited {duration:?}"));
-    report
-}
-
 /// Run a command into the run log and wait for it.
 fn logged(op_id: &str, ctx: &Ctx, script: &str, sudo: bool) -> Result<bool, String> {
-    let mut child = ctx
-        .run
-        .spawn(script, sudo, &format!("{}.log", op_id.replace('.', "-")))?;
+    let mut child = ctx.run.spawn(script, sudo, &log_name(op_id))?;
     Ok(child.wait().map_err(|e| e.to_string())?.success())
+}
+
+/// The log file an operation's commands go to.
+fn log_name(op_id: &str) -> String {
+    format!("{}.log", op_id.replace('.', "-"))
 }
 
 /// Dependencies this run is relying on something else to have done.
@@ -547,10 +589,14 @@ pub fn out_of_scope<'a>(op: &'a Op, ids: &BTreeSet<&str>) -> Vec<&'a String> {
         .collect()
 }
 
-/// Reject an `after =` that names nothing, before the run starts.
+/// Reject an `after =` that names nothing, and any dependency cycle.
+///
+/// Both are checked before a single command runs. A cycle is the dangerous one:
+/// nothing in it ever becomes ready, so the scheduler would exit having done
+/// nothing and the summary would report success.
 pub fn validate(ops: &[Op]) -> Result<(), Error> {
     let ids: BTreeSet<&str> = ops.iter().map(|op| op.id.as_str()).collect();
-    match ops.iter().find_map(|op| {
+    if let Some(message) = ops.iter().find_map(|op| {
         op.after
             .iter()
             .find(|dep| !ids.contains(dep.as_str()))
@@ -561,9 +607,58 @@ pub fn validate(ops: &[Op]) -> Result<(), Error> {
                 )
             })
     }) {
-        Some(message) => Err(Error(message)),
-        None => Ok(()),
+        return Err(Error(message));
     }
+
+    let graph: BTreeMap<&str, Vec<&str>> = ops
+        .iter()
+        .map(|op| {
+            (
+                op.id.as_str(),
+                op.after.iter().map(String::as_str).collect::<Vec<_>>(),
+            )
+        })
+        .collect();
+    let mut state: HashMap<&str, Mark> = HashMap::new();
+    let mut path: Vec<&str> = Vec::new();
+    for id in graph.keys() {
+        walk(id, &graph, &mut state, &mut path)?;
+    }
+    Ok(())
+}
+
+/// Depth-first visit, keeping the path so a cycle can be named in full.
+#[derive(Clone, Copy, PartialEq)]
+enum Mark {
+    Active,
+    Done,
+}
+
+fn walk<'a>(
+    id: &'a str,
+    graph: &BTreeMap<&'a str, Vec<&'a str>>,
+    state: &mut HashMap<&'a str, Mark>,
+    path: &mut Vec<&'a str>,
+) -> Result<(), Error> {
+    match state.get(id) {
+        Some(Mark::Done) => return Ok(()),
+        Some(Mark::Active) => {
+            let start = path.iter().position(|seen| *seen == id).unwrap_or(0);
+            let mut cycle: Vec<&str> = path[start..].to_vec();
+            cycle.push(id);
+            return Err(Error(format!("dependency cycle: {}", cycle.join(" → "))));
+        }
+        None => {}
+    }
+
+    state.insert(id, Mark::Active);
+    path.push(id);
+    for dep in &graph[id] {
+        walk(dep, graph, state, path)?;
+    }
+    path.pop();
+    state.insert(id, Mark::Done);
+    Ok(())
 }
 
 #[cfg(test)]
@@ -588,6 +683,7 @@ mod tests {
             run,
             home: home.clone(),
             mutating: true,
+            escalation: false,
         };
         (home, ctx)
     }
@@ -902,9 +998,27 @@ mod tests {
         let ours = format!("[vscode]\nname={theirs_name}\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc\n");
 
         assert!(
-            same_repo(theirs, &ours),
+            same_repo("vscode", theirs, &ours),
             "spacing and an implicit `enabled` are not a difference"
         );
+    }
+
+    #[test]
+    fn a_repo_file_for_a_different_id_is_not_the_same() {
+        // The header is the repo id dnf looks for, so it is not cosmetic.
+        let ours = "[vscode]\nbaseurl=https://x\nenabled=1\ngpgcheck=1\n";
+        let theirs = "[code]\nbaseurl=https://x\nenabled=1\ngpgcheck=1\n";
+
+        assert!(!same_repo("vscode", theirs, ours));
+        assert!(same_repo("vscode", ours, ours));
+    }
+
+    #[test]
+    fn a_different_description_is_not_a_difference() {
+        // Another tool's wording must not make `check` rewrite the file forever.
+        let ours = "[vscode]\nname=Visual Studio Code\nbaseurl=https://x\n";
+        let theirs = "[vscode]\nname=Visual Studio Code - Stable\nbaseurl=https://x\n";
+        assert!(same_repo("vscode", theirs, ours));
     }
 
     #[test]
@@ -914,19 +1028,19 @@ mod tests {
         let unchecked = "[a]\nbaseurl=https://x\ngpgcheck=0\n";
 
         assert!(
-            !same_repo(enabled, disabled),
+            !same_repo("a", disabled, enabled),
             "enabled=0 is a real difference"
         );
         assert!(
-            !same_repo(enabled, unchecked),
+            !same_repo("a", unchecked, enabled),
             "gpgcheck=0 is a real difference"
         );
         assert!(
-            !same_repo(enabled, "[a]\nbaseurl=https://y\nenabled=1\n"),
+            !same_repo("a", "[a]\nbaseurl=https://y\nenabled=1\n", enabled),
             "a different url matters"
         );
         assert!(
-            !same_repo("", "[a]\nenabled=1\n"),
+            !same_repo("a", "", "[a]\nenabled=1\n"),
             "an empty file is not a match"
         );
     }
@@ -1005,10 +1119,27 @@ mod tests {
     }
 
     #[test]
-    fn a_cycle_terminates_instead_of_spinning() {
-        // Two operations each declared as a prerequisite of the other. Nothing
-        // is ready, so nothing runs — but the loop must still end.
-        let (home, ctx) = scratch("cycle");
+    fn a_cycle_is_rejected_before_anything_runs() {
+        let (home, _ctx) = scratch("cycle-validate");
+        let ops = plan_for(
+            &home,
+            "[exec.a]\nrun = \"true\"\nafter = [\"exec.b\"]\n[exec.b]\nrun = \"true\"\nafter = [\"exec.a\"]\n",
+        );
+
+        let err = validate(&ops).unwrap_err();
+
+        assert!(err.0.contains("cycle"), "{err}");
+        assert!(
+            err.0.contains("exec.a") && err.0.contains("exec.b"),
+            "{err}"
+        );
+    }
+
+    #[test]
+    fn a_cycle_that_bypasses_validation_is_a_failure_not_a_success() {
+        // The safety net behind `validate`: if the scheduler ever sees a cycle,
+        // it must report two failures, never "everything is configured".
+        let (home, ctx) = scratch("cycle-run");
         let mut ops = plan_for(&home, "[exec.a]\nrun = \"true\"\n");
         ops[0].after = vec!["exec.b".into()];
         ops.push(Op {
@@ -1027,15 +1158,6 @@ mod tests {
         let summary = run(&selected, &ctx, |_, _| {});
 
         assert_eq!(summary.kept + summary.changed, 0, "{summary:?}");
-    }
-
-    #[test]
-    fn waiting_returns_and_reports() {
-        let (home, ctx) = scratch("wait");
-        let ops = plan_for(&home, "[wait.short]\nseconds = 0.05\n");
-
-        let summary = run_all(&ops, &ctx);
-
-        assert_eq!(summary.kept, 1, "{summary:?}");
+        assert_eq!(summary.failed, 2, "both are reported: {summary:?}");
     }
 }

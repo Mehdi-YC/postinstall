@@ -31,7 +31,13 @@ fn collect(root: &Path, dir: &Path, out: &mut Vec<PathBuf>) {
     };
     for entry in entries.flatten() {
         let path = entry.path();
-        if path.is_dir() {
+        // `symlink_metadata` does not follow the link. A symlink inside the
+        // repository is a leaf to stow, not a tree to walk: following one could
+        // recurse forever or wander outside the checkout.
+        let Ok(meta) = fs::symlink_metadata(&path) else {
+            continue;
+        };
+        if meta.is_dir() {
             collect(root, &path, out);
         } else if let Ok(relative) = path.strip_prefix(root) {
             out.push(relative.to_path_buf());
@@ -155,8 +161,7 @@ pub fn run(dotfiles: &Dotfiles, home: &Path, logs: &Run) -> Result<Report, Strin
         .iter()
         .map(|p| package_files(&repo, p).len())
         .sum();
-    report.changed(format!("{total} file(s) linked"), "linked");
-    report.kept("repository", repo.display().to_string());
+    report.changed("links", format!("{total} file(s) stowed"));
     Ok(report)
 }
 
@@ -300,6 +305,25 @@ mod tests {
         let moved = back_up(&home, &repo, &["config".to_string()]).unwrap();
         assert_eq!(moved, vec![home.join(".tmux.conf.bk")]);
         assert_eq!(fs::read_to_string(&moved[0]).unwrap(), "SOMETHING ELSE\n");
+    }
+
+    #[test]
+    fn a_symlink_inside_a_package_is_not_followed() {
+        // Following a symlinked directory could walk out of the checkout, or
+        // loop forever on a self-referential one.
+        let (_, repo) = fixture("symlink");
+        std::os::unix::fs::symlink(repo.join("config"), repo.join("config/loop")).unwrap();
+
+        let files = package_files(&repo, "config");
+        assert_eq!(
+            files,
+            vec![
+                PathBuf::from(".config/fish/config.fish"),
+                PathBuf::from(".tmux.conf"),
+                PathBuf::from("loop"),
+            ],
+            "the link is a leaf to stow and was not descended into"
+        );
     }
 
     #[test]

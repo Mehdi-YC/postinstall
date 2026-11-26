@@ -90,7 +90,9 @@ once, where a human can see the prompt, and every escalated command afterwards
 runs `sudo -n`, which fails immediately instead of hanging on an invisible
 password prompt on a worker thread.
 
-The tool refuses `--sudo` if it detects it is already root.
+The tool refuses `--sudo` if it detects it is already root, and `apply` refuses
+to start when an operation needs root and `--sudo` was not passed. `check` still
+runs: it changes nothing, and its reports are useful unprivileged.
 
 ## Secrets
 
@@ -104,6 +106,12 @@ token = "hunter2"
 ```
 
 The spelling is the opposite of what it looks like: listing a name *hides* it.
+
+Redaction is best effort. Values shorter than eight characters are left alone in
+the log files, because replacing a two-character string would corrupt everything
+and hide nothing; the terminal output is cleaned of every secret value, short
+ones included. The logs are swept once the run ends, so a hard kill mid-run can
+leave a secret in a log file.
 
 Note the position: TOML puts every key after a `[table]` header inside that
 table, so top-level keys like `secret` have to come before the first header.
@@ -136,7 +144,7 @@ one, so your own files inside it are none of stow's business.
 
 ## check / plan / apply
 
-`check` and `plan` are the same thing under two names: run everything, change
+`plan` and `check` are the same thing under two names: run everything, change
 nothing. Both report every difference — a missing package, an unguarded command
 that would run, a repository that is not written. They exit non-zero when the
 machine does not match the file, which makes them usable from a health check.
@@ -148,20 +156,21 @@ idempotent.
 
 ```
 apply · 12 operations
-── lane 1 ──────────────────────────���──────────────────────────────
+── lane 1 ────────────────────────────────────────────────────────
   ✓ exec.copr  already correct
-  ✗ exec.terra  would run
+  + exec.terra  done
   ✓ repos.vscode  enabled
 
 ── lane 2 ────────────────────────────────────────────────────────
-  ✗ packages.dnf
+  + packages.dnf
       ✓ stow  installed
-      ✗ wget  missing
+      + wget  installed
 ```
 
 A rule marks each lane, so the wave structure is visible rather than something
 you have to reconstruct. An operation with nothing to say about its items is one
-line; one with items gets a heading and a list.
+line; one with items gets a heading and a list. `✓` is "already correct", `+` is
+"changed by this run", `✗` is a failure — for an item and for its operation.
 
 Colour is on when output is a terminal, and off when it is a pipe or when
 `NO_COLOR` is set — colour in a log file or a `grep` result is noise. Rules are
@@ -174,11 +183,16 @@ Every command's stdout and stderr goes to a per-run directory, never to your
 terminal:
 
 ```
-~/.local/state/minimal_bootstrapper/runs/2026-10-09-110937/
+/tmp/minimal_bootstrapper/runs/2026-11-26-124332/
 ├── run.log
 ├── packages-dnf.log
 └── dotfiles-git.log
 ```
+
+They live in the system temp directory (`$TMPDIR`, usually `/tmp`) and are
+scratch: the OS clears them eventually, so copy anything you want to keep. The
+run directory is `0700` and the files `0600`, because a log can hold a secret
+until the sweep at the end. The path is printed on the last line of every run.
 
 ## Commands
 
@@ -194,6 +208,10 @@ bootstrapper [check|plan|apply|list] [OPTIONS]
 ```
 
 `--only dnf` matches `packages.dnf`; `--only packages.dnf` matches exactly.
+`--from` takes the same exact-or-suffix spelling and is an error when nothing
+matches, so a typo can never turn a resume into a full re-apply. When a
+selection leaves out a dependency, the tool prints which steps it is assuming
+are already done.
 
 The playbook's `--tags minimal` has no equivalent key, because `--only` is
 already the same idea:
@@ -204,13 +222,17 @@ bootstrapper apply --only packages.dnf,exec --sudo    # no flatpaks
 
 ## A real config
 
-[`example.toml`](example.toml) is `playbooks/fedora_new.yml` ported in full —
-every task in the playbook and nothing else, kept next to it so the two can be
-read side by side. It is also the config this machine is checked against, so
-`bootstrapper check -c example.toml` is a live answer to "is this machine
-actually configured?"
+[`playbooks/fedora.toml`](../playbooks/fedora.toml) is `fedora.yml` ported in
+full — every task in the playbook and nothing else, kept next to it so the two
+can be read side by side. It is also the config this machine is checked
+against, so `bootstrapper check -c ../playbooks/fedora.toml` is a live answer
+to "is this machine actually configured?"
 
-Exit status is `0` when nothing failed and `1` otherwise.
+Exit status is `0` when nothing failed, `1` when the machine is behind, and `2`
+for a configuration or usage error.
+
+Cycles in `after` are rejected before anything runs, naming the loop; nothing
+can quietly do nothing and still report success.
 
 ## Tests
 

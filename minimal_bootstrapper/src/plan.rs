@@ -4,7 +4,7 @@
 //! answers the same two questions: how do I check whether this is done, and how
 //! do I make it done. That is the whole reason this crate is small.
 
-use crate::config::{Config, Dotfiles, Error, Installer, Repo, Schedule, Wait};
+use crate::config::{Config, Dotfiles, Error, Installer, Repo, Schedule};
 
 /// One thing to do.
 #[derive(Debug)]
@@ -22,9 +22,9 @@ pub struct Op {
 
 /// The shapes an operation can take.
 ///
-/// Three of the four are the same shape wearing different names: check, then
-/// fix. They stay separate because the *reporting* differs — a batch reports
-/// one line per package, a wait reports nothing — and merging them would make
+/// All of them are the same shape wearing different names: check, then fix.
+/// They stay separate because the *reporting* differs — a batch reports one
+/// line per package, a command reports one line — and merging them would make
 /// the interesting case worse to serve the trivial one.
 #[derive(Debug)]
 pub enum Body {
@@ -39,8 +39,6 @@ pub enum Body {
     Repo(Repo),
     /// Clone or update a dotfiles repository and stow it into `$HOME`.
     Dotfiles(Dotfiles),
-    /// Sleep. Exists to pace a run and to exercise the scheduler.
-    Wait(Wait),
 }
 
 impl Body {
@@ -62,6 +60,7 @@ impl Body {
 /// Returns the operations in a stable order, so `list` prints the same thing
 /// twice and a diff of two runs means something.
 pub fn build(config: &Config) -> Result<Vec<Op>, Error> {
+    check(config)?;
     let mut ops = Vec::new();
 
     for (name, repo) in &config.repos {
@@ -113,17 +112,47 @@ pub fn build(config: &Config) -> Result<Vec<Op>, Error> {
         ));
     }
 
-    for (name, wait) in &config.wait {
-        ops.push(op(
-            format!("wait.{name}"),
-            Body::Wait(wait.clone()),
-            &wait.schedule,
-            false,
-        ));
-    }
-
     ops.sort_by(|a, b| a.id.cmp(&b.id));
     Ok(ops)
+}
+
+/// Reject sections that would quietly do nothing, or something dangerous.
+///
+/// A list with a blank entry is the dangerous shape: `names = [""]` asks the
+/// package manager about the empty string, and `stow = [""]` makes the package
+/// path the repository itself, which would walk and link `.git`.
+fn check(config: &Config) -> Result<(), Error> {
+    for (name, installer) in &config.installer {
+        for (field, value) in [("check", &installer.check), ("install", &installer.install)] {
+            if value.trim().is_empty() {
+                return Err(Error(format!(
+                    "`installer.{name}`: `{field}` is empty; without it the installer does nothing"
+                )));
+            }
+        }
+    }
+    for (name, packages) in &config.packages {
+        if packages.names.is_empty() {
+            return Err(Error(format!(
+                "`packages.{name}` names no packages; remove the section or list at least one"
+            )));
+        }
+        if let Some(blank) = packages.names.iter().position(|p| p.trim().is_empty()) {
+            return Err(Error(format!(
+                "`packages.{name}`: package #{} is empty",
+                blank + 1
+            )));
+        }
+    }
+    if let Some(dotfiles) = &config.dotfiles {
+        if let Some(blank) = dotfiles.stow.iter().position(|p| p.trim().is_empty()) {
+            return Err(Error(format!(
+                "`dotfiles.stow` entry #{} is empty; an empty stow target is the whole repository",
+                blank + 1
+            )));
+        }
+    }
+    Ok(())
 }
 
 /// Build one operation, resolving its lane, escalation and dependencies.
@@ -158,8 +187,8 @@ pub fn describe(op: &Op) -> String {
         Body::Command { check: None, .. } => "run every time".into(),
         Body::Command { check: Some(_), .. } => "check, then run".into(),
         Body::Repo(_) => "write a .repo file".into(),
+        Body::Dotfiles(d) if d.stow.is_empty() => "clone only".into(),
         Body::Dotfiles(d) => format!("stow {}", d.stow.join(", ")),
-        Body::Wait(w) => format!("wait {}s", w.seconds),
     }
 }
 
@@ -193,9 +222,6 @@ mod tests {
             [exec.setup]
             run = "true"
 
-            [wait.slow]
-            seconds = 1
-
             [dotfiles]
             repo = "https://example.invalid/dots"
             stow = ["config"]
@@ -203,13 +229,7 @@ mod tests {
 
         assert_eq!(
             ops,
-            vec![
-                "dotfiles",
-                "exec.setup",
-                "packages.fake",
-                "repos.terra",
-                "wait.slow"
-            ]
+            vec!["dotfiles", "exec.setup", "packages.fake", "repos.terra"]
         );
     }
 
@@ -218,6 +238,45 @@ mod tests {
         // `list` twice must print the same thing, or a diff of two runs is noise.
         let text = "[installer.x]\ncheck = \"t\"\ninstall = \"t\"\n[packages.x]\nnames = [\"a\"]\n[exec.b]\nrun = \"t\"\n";
         assert_eq!(ids(text), ids(text));
+    }
+
+    #[test]
+    fn a_section_that_would_do_nothing_is_rejected() {
+        let empty = build(
+            &Config::load(
+                "[installer.x]\ncheck = \"true\"\ninstall = \"true\"\n[packages.x]\nnames = []\n",
+            )
+            .unwrap(),
+        )
+        .unwrap_err();
+        assert!(empty.0.contains("names no packages"), "{empty}");
+
+        let blank = build(
+            &Config::load("[installer.x]\ncheck = \"true\"\ninstall = \"true\"\n[packages.x]\nnames = [\"a\", \"\"]\n")
+                .unwrap(),
+        )
+        .unwrap_err();
+        assert!(blank.0.contains("#2"), "{blank}");
+    }
+
+    #[test]
+    fn an_empty_stow_target_is_rejected() {
+        // `stow = [""]` is the repository root, `.git` included.
+        let err =
+            build(&Config::load("[dotfiles]\nrepo = \"https://x\"\nstow = [\"\"]\n").unwrap())
+                .unwrap_err();
+        assert!(err.0.contains("whole repository"), "{err}");
+    }
+
+    #[test]
+    fn an_installer_with_no_command_is_rejected() {
+        let err = build(
+            &Config::load("[installer.x]\ncheck = \"true\"\ninstall = \"  \"\n[packages.x]\nnames = [\"a\"]\n")
+                .unwrap(),
+        )
+        .unwrap_err();
+        assert!(err.0.contains("installer.x"), "{err}");
+        assert!(err.0.contains("install"), "{err}");
     }
 
     #[test]

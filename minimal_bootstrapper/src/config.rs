@@ -16,7 +16,6 @@
 use std::collections::BTreeMap;
 use std::fmt;
 use std::str::FromStr;
-use std::time::Duration;
 
 use serde::Deserialize;
 
@@ -114,9 +113,33 @@ pub struct Schedule {
     /// Operation ids that must succeed first.
     #[serde(default)]
     pub after: Vec<String>,
+    /// Every other key in the section.
+    ///
+    /// `flatten` means the parent's `deny_unknown_fields` cannot see these, so
+    /// a typo like `sodu = true` would be dropped on the floor and the
+    /// operation would run unescalated. [`Config::load`] rejects whatever lands
+    /// here instead of pretending the typo was understood.
+    #[serde(flatten)]
+    pub unknown: BTreeMap<String, toml::Value>,
 }
 
 impl Schedule {
+    /// Fail if the section carried a key this crate does not know.
+    fn reject_unknown(&self, section: &str) -> Result<(), Error> {
+        let keys: Vec<&str> = self.unknown.keys().map(String::as_str).collect();
+        if keys.is_empty() {
+            return Ok(());
+        }
+        Err(Error(format!(
+            "`{section}`: unknown key{} {}; expected `parallel`, `sudo` or `after`",
+            if keys.len() == 1 { "" } else { "s" },
+            keys.iter()
+                .map(|key| format!("`{key}`"))
+                .collect::<Vec<_>>()
+                .join(", ")
+        )))
+    }
+
     /// The lane, falling back to the default.
     pub fn lane(&self) -> Lane {
         self.parallel.clone().unwrap_or_default()
@@ -125,6 +148,7 @@ impl Schedule {
 
 /// A package manager: how to ask about a package, how to install it.
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Installer {
     /// Run with `{package}` substituted. Exit status is the answer.
     pub check: String,
@@ -132,7 +156,6 @@ pub struct Installer {
     pub install: String,
     #[serde(default)]
     pub sudo: bool,
-    /// Directories prepended to `PATH` for this installer's commands.
     /// Directories prepended to `PATH` for this installer's commands, for
     /// managers that install somewhere a login shell has not reached yet.
     #[serde(default)]
@@ -246,25 +269,6 @@ pub struct Dotfiles {
     pub schedule: Schedule,
 }
 
-/// A sleep, for pacing a run or exercising the scheduler.
-#[derive(Debug, Clone, Deserialize)]
-pub struct Wait {
-    #[serde(default = "one_second")]
-    pub seconds: f64,
-    #[serde(flatten)]
-    pub schedule: Schedule,
-}
-
-const fn one_second() -> f64 {
-    1.0
-}
-
-impl Wait {
-    pub fn duration(&self) -> Duration {
-        Duration::from_secs_f64(self.seconds.max(0.0))
-    }
-}
-
 /// The whole file.
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -282,15 +286,14 @@ pub struct Config {
     pub exec: BTreeMap<String, Exec>,
     #[serde(default)]
     pub repos: BTreeMap<String, Repo>,
-    #[serde(default)]
-    pub wait: BTreeMap<String, Wait>,
     pub dotfiles: Option<Dotfiles>,
 }
 
 impl Config {
-    /// Parse, resolve `[variables]`, then expand every `${...}`.
+    /// Parse, resolve `[variables]`, reject unknown keys, expand `${...}`.
     pub fn load(text: &str) -> Result<Self, Error> {
         let mut config: Self = toml::from_str(text).map_err(|e| Error(e.to_string()))?;
+        config.reject_unknown()?;
         let vars = resolve(&config.variables)?;
         expand(&mut config, &vars)?;
         Ok(config)
@@ -299,6 +302,30 @@ impl Config {
     /// Should this variable be kept out of the run log?
     pub fn is_secret(&self, name: &str) -> bool {
         self.secret.iter().any(|s| s == name)
+    }
+
+    /// Reject a key no operation type understands.
+    ///
+    /// The sections flatten [`Schedule`], so a typo such as `sodu = true`
+    /// parses cleanly and is silently ignored. That is the one class of typo
+    /// with a dangerous failure mode: the operation still runs, just without
+    /// the escalation the file asked for.
+    fn reject_unknown(&self) -> Result<(), Error> {
+        for (name, packages) in &self.packages {
+            packages
+                .schedule
+                .reject_unknown(&format!("packages.{name}"))?;
+        }
+        for (name, exec) in &self.exec {
+            exec.schedule.reject_unknown(&format!("exec.{name}"))?;
+        }
+        for (name, repo) in &self.repos {
+            repo.schedule.reject_unknown(&format!("repos.{name}"))?;
+        }
+        if let Some(dotfiles) = &self.dotfiles {
+            dotfiles.schedule.reject_unknown("dotfiles")?;
+        }
+        Ok(())
     }
 }
 
@@ -395,9 +422,11 @@ fn substitute(input: &str, vars: &BTreeMap<String, String>) -> Result<String, Er
 
 /// Rewrite every variable reference in the config, in place.
 ///
-/// Installer commands are deliberately left alone: their `{package}` is this
-/// tool's own placeholder, substituted per command at run time. The two use
-/// different sigils, so expansion here cannot touch one by mistake.
+/// Every field a person might want composed from a variable is covered: URLs,
+/// names, package lists, stow targets, `PATH` entries and `after` ids. Installer
+/// commands are deliberately left alone: their `{package}` is this tool's own
+/// placeholder, substituted per command at run time. The two use different
+/// sigils, so expansion here cannot touch one by mistake.
 ///
 /// Strict, unlike the first pass. `[variables]` is already fully resolved by the
 /// time this runs, so an unknown name here can only be a typo — and a typo left
@@ -406,14 +435,34 @@ fn substitute(input: &str, vars: &BTreeMap<String, String>) -> Result<String, Er
 fn expand(config: &mut Config, vars: &BTreeMap<String, String>) -> Result<(), Error> {
     for repo in config.repos.values_mut() {
         repo.url = substitute(&repo.url, vars)?;
+        repo.name = repo
+            .name
+            .as_deref()
+            .map(|name| substitute(name, vars))
+            .transpose()?;
         repo.key = repo
             .key
             .as_deref()
             .map(|key| substitute(key, vars))
             .transpose()?;
+        expand_list(&mut repo.schedule.after, vars)?;
+    }
+    for installer in config.installer.values_mut() {
+        expand_list(&mut installer.path, vars)?;
+    }
+    for packages in config.packages.values_mut() {
+        expand_list(&mut packages.names, vars)?;
+        expand_list(&mut packages.schedule.after, vars)?;
     }
     if let Some(dotfiles) = &mut config.dotfiles {
         dotfiles.repo = substitute(&dotfiles.repo, vars)?;
+        dotfiles.branch = dotfiles
+            .branch
+            .as_deref()
+            .map(|branch| substitute(branch, vars))
+            .transpose()?;
+        expand_list(&mut dotfiles.stow, vars)?;
+        expand_list(&mut dotfiles.schedule.after, vars)?;
     }
     for exec in config.exec.values_mut() {
         exec.run = substitute(&exec.run, vars)?;
@@ -422,6 +471,15 @@ fn expand(config: &mut Config, vars: &BTreeMap<String, String>) -> Result<(), Er
             .as_deref()
             .map(|check| substitute(check, vars))
             .transpose()?;
+        expand_list(&mut exec.schedule.after, vars)?;
+    }
+    Ok(())
+}
+
+/// Expand every `${name}` in a list, in place.
+fn expand_list(list: &mut [String], vars: &BTreeMap<String, String>) -> Result<(), Error> {
+    for item in list.iter_mut() {
+        *item = substitute(item, vars)?;
     }
     Ok(())
 }
@@ -619,21 +677,79 @@ mod tests {
     }
 
     #[test]
-    fn a_negative_wait_is_clamped_rather_than_panicking() {
-        let config = Config::load("[wait.bad]\nseconds = -5.0\n").unwrap();
-        assert_eq!(config.wait["bad"].duration(), Duration::ZERO);
-    }
-
-    #[test]
-    fn a_wait_takes_fractional_seconds() {
-        let config = Config::load("[wait.short]\nseconds = 0.25\n").unwrap();
-        assert_eq!(config.wait["short"].duration(), Duration::from_millis(250));
-    }
-
-    #[test]
     fn a_config_with_nothing_in_it_is_valid() {
         // An empty file should be an empty plan, not an error.
         let ops = crate::plan::build(&Config::load("").unwrap()).unwrap();
         assert!(ops.is_empty());
+    }
+
+    #[test]
+    fn a_typo_in_a_section_is_an_error_not_a_silent_default() {
+        // `sudo0` would otherwise be dropped by the flattened schedule, and the
+        // operation would run without the escalation the file asked for.
+        let err = Config::load("[exec.a]\nrun = \"true\"\nsudo0 = true\n").unwrap_err();
+        assert!(err.0.contains("sudo0"), "{err}");
+        assert!(err.0.contains("exec.a"), "{err}");
+    }
+
+    #[test]
+    fn a_typo_in_any_kind_of_section_is_an_error() {
+        let packages = Config::load(
+            "[installer.x]\ncheck = \"t\"\ninstall = \"t\"\n[packages.x]\nnamse = [\"a\"]\n",
+        )
+        .unwrap_err();
+        assert!(packages.0.contains("namse"), "{packages}");
+
+        let installer = Config::load("[installer.x]\ncheck = \"t\"\ninstal = \"t\"\n").unwrap_err();
+        assert!(installer.0.contains("instal"), "{installer}");
+
+        let dotfiles =
+            Config::load("[dotfiles]\nrepo = \"r\"\nstoww = [\"config\"]\n").unwrap_err();
+        assert!(dotfiles.0.contains("stoww"), "{dotfiles}");
+    }
+
+    #[test]
+    fn variables_expand_in_lists_and_names_too() {
+        // The docs promise `${name}` expands anywhere outside an installer's own
+        // commands. A package name was the one place it silently did not.
+        let config = Config::load(
+            r#"
+            [variables]
+            tool = "git"
+            bin = "/opt/bin"
+
+            [installer.x]
+            check = "c {package}"
+            install = "i {packages}"
+            path = ["${bin}"]
+
+            [packages.x]
+            names = ["${tool}"]
+            after = ["exec.${tool}"]
+
+            [repos.r]
+            url = "https://x"
+            name = "the ${tool} repo"
+
+            [dotfiles]
+            repo = "https://example.invalid/dots"
+            branch = "${tool}"
+            stow = ["${tool}"]
+
+            [exec.git]
+            run = "true"
+            "#,
+        )
+        .expect("config loads");
+
+        assert_eq!(config.packages["x"].names, vec!["git"]);
+        assert_eq!(config.packages["x"].schedule.after, vec!["exec.git"]);
+        assert_eq!(config.installer["x"].path, vec!["/opt/bin"]);
+        assert_eq!(config.repos["r"].name.as_deref(), Some("the git repo"));
+        assert_eq!(config.dotfiles.as_ref().unwrap().stow, vec!["git"]);
+        assert_eq!(
+            config.dotfiles.as_ref().unwrap().branch.as_deref(),
+            Some("git")
+        );
     }
 }
