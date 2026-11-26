@@ -41,6 +41,10 @@
 # A variable named in `secret` has its value withheld from the run log and
 # removed from the terminal output. Listing a name here *hides* it.
 
+# also install unsloth, and add some models to it like inking,qwen,ornith,ling,gemma
+# artcraft installer and install everything in it
+
+
 [variables]
 config_repo = "https://github.com/mehdi-yc/postinstall"
 home = "$HOME"
@@ -95,7 +99,7 @@ names = [
     # Rust + editors (all dnf, no rustup)
     "rustc", "cargo", "rustfmt", "rust-clippy", "rust-analyzer", "rust-src",
     "bacon",            # Terra
-    "helix", "hyprland", "noctalia",
+    "helix", "hyprland", "noctalia","wayscriber"
     "espanso-wayland",  # Terra
     # VS Code, from [repos.vscode]
     "code",
@@ -190,6 +194,9 @@ parallel = 3
 after = ["exec.bun"]
 check = "command -v opencode"
 run = "${home}/.bun/bin/bun install -g opencode-ai"
+
+
+
 
 # [exec.uv]
 # parallel = 3
