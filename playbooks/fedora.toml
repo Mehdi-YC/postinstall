@@ -91,7 +91,7 @@ parallel = 2
 after = ["exec.copr", "exec.terra", "repos.vscode"]
 names = [
     # CLI
-    "stow", "tmux", "git", "fish", "bat", "starship", "chromium", "podman-compose",
+    "stow", "tmux", "git", "fish", "starship", "chromium", "podman-compose",
     # Rust + editors (all dnf, no rustup)
     "rustc", "cargo", "rustfmt", "rust-clippy", "rust-analyzer", "rust-src",
     "bacon",            # Terra
@@ -108,13 +108,13 @@ after = ["exec.flathub"]
 # for a per-user install instead.
 sudo = true
 names = [
-    "com.github.tchx84.Flatseal",   # manage flatpak permissions
+    # "com.github.tchx84.Flatseal",   # manage flatpak permissions
     "org.kde.kdenlive",             # video editing
     # "org.inkscape.Inkscape",      # vector manipulation
     # "com.valvesoftware.Steam",
     # "org.onlyoffice.desktopeditors",
     "com.obsproject.Studio",        # screen/stream recording
-    "io.github.mfat.sshpilot",      # SSH connection manager
+    # "io.github.mfat.sshpilot",      # SSH connection manager
 ]
 
 # ---- dotfiles ---------------------------------------------------------------
