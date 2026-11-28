@@ -32,6 +32,48 @@ src/dotfiles.rs   clone, back up what is in the way, stow
 src/main.rs       the command line and the output
 ```
 
+## Default installers
+
+A library of installers ships with the tool (`installers.toml`), so a config can
+name a package manager without defining it:
+
+```toml
+[packages.dnf]
+names = ["git", "fish"]
+
+[packages.flatpak]
+names = ["com.obsproject.Studio"]
+```
+
+Built in: `dnf`, `apt`, `pacman`, `zypper`, `flatpak`, `snap`, `brew`, `cargo`,
+`npm`, `pip`, `uv`, `bun`, `systemd` and `docker`.
+
+To change one, declare a section with the same name in your own config. It
+replaces the default as a whole — there is no field-by-field merge:
+
+```toml
+[installer.dnf]
+check = "rpm -q {package}"
+install = "sudo dnf install -y {packages}"
+```
+
+The library is looked up in this order: `$BOOTSTRAPPER_DEFAULTS`, `./installers.toml`,
+the directory holding the binary, `~/.config/bootstrapper/installers.toml`, then
+`/etc/bootstrapper/installers.toml`. If none exists, the tool works from your
+config alone.
+
+An installer may also define `available`, a command that answers whether a
+package exists in a repository. When it fails, the package is reported as a
+warning and left out of the install batch instead of failing the whole
+transaction:
+
+```toml
+[installer.dnf]
+check = "rpm -q {package}"
+available = 'test -n "$(dnf repoquery --quiet --available --latest-limit 1 {package} 2>/dev/null)"'
+install = "dnf install --assumeyes {packages}"
+```
+
 ## Lanes
 
 `parallel` puts an operation in a lane. Everything in the lowest ready lane runs
@@ -171,6 +213,8 @@ A rule marks each lane, so the wave structure is visible rather than something
 you have to reconstruct. An operation with nothing to say about its items is one
 line; one with items gets a heading and a list. `✓` is "already correct", `+` is
 "changed by this run", `✗` is a failure — for an item and for its operation.
+`!` is a warning: something worth saying that does not fail the run, such as a
+package that exists in no repository.
 
 Colour is on when output is a terminal, and off when it is a pipe or when
 `NO_COLOR` is set — colour in a log file or a `grep` result is noise. Rules are
@@ -192,7 +236,8 @@ terminal:
 They live in the system temp directory (`$TMPDIR`, usually `/tmp`) and are
 scratch: the OS clears them eventually, so copy anything you want to keep. The
 run directory is `0700` and the files `0600`, because a log can hold a secret
-until the sweep at the end. The path is printed on the last line of every run.
+until the sweep at the end. The path is printed on the last line of every run,
+and an operation that fails names the full path to its own log in the error.
 
 ## Commands
 

@@ -152,6 +152,12 @@ impl Schedule {
 pub struct Installer {
     /// Run with `{package}` substituted. Exit status is the answer.
     pub check: String,
+    /// Optional probe: does this package exist in a repository? Exit status is
+    /// the answer. When set, a missing package that fails this is reported as a
+    /// warning and left out of the install batch, so one bad name cannot sink
+    /// the whole transaction.
+    #[serde(default)]
+    pub available: Option<String>,
     /// Run with `{packages}` substituted, once, for everything missing.
     pub install: String,
     #[serde(default)]
@@ -169,6 +175,13 @@ impl Installer {
     /// `check` for one package.
     pub fn check_one(&self, package: &str) -> String {
         self.with_path(&self.check.replace("{package}", &shell_quote(package)))
+    }
+
+    /// The availability probe for one package, if this installer has one.
+    pub fn available_one(&self, package: &str) -> Option<String> {
+        self.available
+            .as_deref()
+            .map(|probe| self.with_path(&probe.replace("{package}", &shell_quote(package))))
     }
 
     /// `install` for a set of packages.
@@ -302,6 +315,18 @@ impl Config {
     /// Should this variable be kept out of the run log?
     pub fn is_secret(&self, name: &str) -> bool {
         self.secret.iter().any(|s| s == name)
+    }
+
+    /// Layer built-in installers under this configuration.
+    ///
+    /// A whole section is replaced, not merged field by field: when someone
+    /// writes `[installer.dnf]` they mean *their* dnf, not a mixture of theirs
+    /// and the default. Sections the user did not mention stay available.
+    pub fn with_defaults(mut self, defaults: Config) -> Self {
+        for (name, installer) in defaults.installer {
+            self.installer.entry(name).or_insert(installer);
+        }
+        self
     }
 
     /// Reject a key no operation type understands.
@@ -623,6 +648,48 @@ mod tests {
             Config::load("[installer.x]\ncheck = \"c {package}\"\ninstall = \"i {packages}\"\n")
                 .expect("config loads");
         assert_eq!(config.installer["x"].check_one("a"), "c a");
+    }
+
+    #[test]
+    fn an_availability_probe_quotes_the_package() {
+        let config = Config::load(
+            "[installer.x]\ncheck = \"c {package}\"\ninstall = \"i {packages}\"\navailable = \"probe {package}\"\n",
+        )
+        .expect("config loads");
+
+        assert_eq!(
+            config.installer["x"].available_one("a b").as_deref(),
+            Some("probe 'a b'")
+        );
+    }
+
+    #[test]
+    fn the_shipped_installer_library_parses() {
+        // The library is loaded at runtime, not compiled in, but a broken file
+        // must fail here rather than on a user's first apply.
+        let config = Config::load(include_str!("../installers.toml")).expect("shipped library");
+        assert!(config.installer.contains_key("dnf"));
+        assert!(config.installer.contains_key("flatpak"));
+        assert!(config.installer.contains_key("systemd"));
+    }
+
+    #[test]
+    fn a_user_installer_overrides_a_default_and_keeps_the_rest() {
+        let defaults = Config::load(
+            "[installer.dnf]\ncheck = \"default\"\ninstall = \"default\"\n\
+             [installer.apt]\ncheck = \"apt\"\ninstall = \"apt\"\n",
+        )
+        .expect("defaults load");
+        let user = Config::load("[installer.dnf]\ncheck = \"mine\"\ninstall = \"mine\"\n")
+            .expect("user loads");
+
+        let merged = user.with_defaults(defaults);
+
+        assert_eq!(merged.installer["dnf"].check, "mine", "the user wins");
+        assert!(
+            merged.installer.contains_key("apt"),
+            "unmentioned defaults survive"
+        );
     }
 
     #[test]

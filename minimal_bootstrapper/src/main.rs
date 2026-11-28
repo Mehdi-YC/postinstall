@@ -173,6 +173,29 @@ fn default_path() -> PathBuf {
     }
 }
 
+/// The shipped installer library, if there is one.
+///
+/// Checked in order: `BOOTSTRAPPER_DEFAULTS`, `./installers.toml`, the
+/// directory holding the executable, the XDG config directory, then `/etc`.
+/// A missing library is fine — the user's own config is enough on its own.
+fn defaults_path() -> Option<PathBuf> {
+    if let Some(explicit) = std::env::var_os("BOOTSTRAPPER_DEFAULTS") {
+        // Explicitly named: a typo should be an error, not a silent fallback.
+        return Some(PathBuf::from(explicit));
+    }
+    let mut candidates = vec![PathBuf::from("installers.toml")];
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            candidates.push(dir.join("installers.toml"));
+        }
+    }
+    let base =
+        std::env::var("XDG_CONFIG_HOME").map_or_else(|_| os::home().join(".config"), Into::into);
+    candidates.push(base.join("bootstrapper/installers.toml"));
+    candidates.push(PathBuf::from("/etc/bootstrapper/installers.toml"));
+    candidates.into_iter().find(|candidate| candidate.is_file())
+}
+
 fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
     let args = Args::parse(&argv).map_err(Error)?;
     if args.command == Command::Help {
@@ -186,7 +209,16 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
     let where_ = path.display();
     let text = std::fs::read_to_string(&path).map_err(|e| Error(format!("{where_}: {e}")))?;
 
-    let config = config::Config::load(&text).map_err(|e| Error(format!("{where_}: {e}")))?;
+    let mut config = config::Config::load(&text).map_err(|e| Error(format!("{where_}: {e}")))?;
+    // Ship a library of installers with the tool, but let the user replace any
+    // of them simply by writing the same `[installer.<name>]` section.
+    if let Some(defaults) = defaults_path() {
+        let text = std::fs::read_to_string(&defaults)
+            .map_err(|e| Error(format!("{}: {e}", defaults.display())))?;
+        let library = config::Config::load(&text)
+            .map_err(|e| Error(format!("{}: {e}", defaults.display())))?;
+        config = config.with_defaults(library);
+    }
     let all = plan::build(&config).map_err(|e| Error(format!("{where_}: {e}")))?;
 
     let ops = select(&all, &args).map_err(Error)?;
@@ -336,6 +368,13 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
                     );
                 }
             }
+        }
+        for warning in &report.warnings {
+            say!(
+                "      {} {}",
+                style.changed("!"),
+                style.changed(&redact_text(warning, &secrets))
+            );
         }
         if let Some(error) = &report.error {
             say!("      {}", style.failed(&redact_text(error, &secrets)));
@@ -494,6 +533,7 @@ fn summary_line(summary: Summary, mutating: bool, style: &Style) -> String {
         summary.changed,
         summary.failed,
         summary.skipped,
+        summary.warned,
     ]
     .iter()
     .map(usize::to_string)
@@ -519,9 +559,13 @@ fn summary_line(summary: Summary, mutating: bool, style: &Style) -> String {
     if summary.skipped > 0 {
         columns.push(cell(&style.dim("✓"), summary.skipped, "skipped"));
     }
+    if summary.warned > 0 {
+        columns.push(cell(&style.changed("!"), summary.warned, "warned"));
+    }
     let rendered = columns.join("   ");
 
-    let settled = summary.failed == 0 && summary.changed == 0 && summary.skipped == 0;
+    let settled =
+        summary.failed == 0 && summary.changed == 0 && summary.skipped == 0 && summary.warned == 0;
     match (mutating, settled) {
         (true, true) => format!("{rendered}\n{}", style.kept("everything is configured")),
         (false, true) => format!("{rendered}\n{}", style.dim("nothing was changed")),
@@ -663,6 +707,7 @@ mod tests {
                 changed: 2,
                 failed: 3,
                 skipped: 4,
+                warned: 5,
             },
             true,
             &plain(),
@@ -670,6 +715,7 @@ mod tests {
 
         assert!(line.contains("3 failed"), "{line}");
         assert!(line.contains("4 skipped"), "{line}");
+        assert!(line.contains("5 warned"), "{line}");
         assert!(!line.contains("everything is configured"), "{line}");
     }
 

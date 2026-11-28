@@ -51,6 +51,9 @@ pub struct Line {
 #[derive(Debug, Default)]
 pub struct Report {
     pub lines: Vec<Line>,
+    /// Non-fatal problems, e.g. a package that exists in no repository. They
+    /// are shown, but they neither fail the operation nor the run.
+    pub warnings: Vec<String>,
     /// Set when the operation failed as a whole, e.g. `dnf` exited non-zero.
     pub error: Option<String>,
     /// Set when the operation never ran, and why.
@@ -86,6 +89,11 @@ impl Report {
         self.add(State::Failed, name, note);
     }
 
+    /// A non-fatal problem worth saying out loud.
+    pub fn warn(&mut self, message: impl Into<String>) {
+        self.warnings.push(message.into());
+    }
+
     /// An operation that never ran, because something it needed failed first.
     pub fn skip(why: impl Into<String>) -> Self {
         Report {
@@ -111,6 +119,8 @@ pub struct Summary {
     pub changed: usize,
     pub failed: usize,
     pub skipped: usize,
+    /// Non-fatal warnings, counted as items.
+    pub warned: usize,
 }
 
 impl Summary {
@@ -125,6 +135,7 @@ impl Summary {
                 State::Failed => {}
             }
         }
+        self.warned += report.warnings.len();
         if report.skipped.is_some() {
             self.skipped += 1;
         } else if !report.converged() {
@@ -367,6 +378,29 @@ fn packages(op: &Op, installer: &Installer, names: &[String], ctx: &Ctx) -> Resu
     if missing.is_empty() {
         return Ok(report);
     }
+
+    // Ask the installer whether each missing name exists at all. One name that
+    // is in no repository would otherwise sink the whole transaction, so it is
+    // reported as a warning and left out; the rest still installs.
+    if installer.available.is_some() {
+        let escalate = installer.sudo && ctx.escalation;
+        let mut found = Vec::new();
+        for name in missing.drain(..) {
+            let probe = installer
+                .available_one(&name)
+                .expect("checked `available` above");
+            if os::shell_as(&probe, escalate)? {
+                found.push(name);
+            } else {
+                report.warn(format!("{name}: not available in any repository; skipped"));
+            }
+        }
+        missing = found;
+        if missing.is_empty() {
+            return Ok(report);
+        }
+    }
+
     if !ctx.mutating {
         for name in &missing {
             report.missed(name.clone(), "missing");
@@ -921,6 +955,67 @@ mod tests {
             "the warning should say the list is empty: {notes:?}"
         );
         let _ = home;
+    }
+
+    #[test]
+    fn an_unavailable_package_is_warned_about_and_left_out_of_the_batch() {
+        // One bad name must not sink the whole install transaction: it is
+        // reported, and the package that does exist still installs.
+        let (home, ctx) = scratch("unavailable");
+        let ops = plan_for(
+            &home,
+            r#"
+            [installer.guarded]
+            check = "test -f $HOME/{package}"
+            available = "test {package} != ghost"
+            install = "cd $HOME && touch {packages}"
+
+            [packages.guarded]
+            names = ["real", "ghost"]
+            "#,
+        );
+        let selected: Vec<&Op> = ops.iter().collect();
+        let mut warnings = Vec::new();
+
+        let summary = run(&selected, &ctx, |_, report| {
+            warnings.extend(report.warnings.iter().cloned());
+        });
+
+        assert!(home.join("real").exists(), "the available package installs");
+        assert!(
+            !home.join("ghost").exists(),
+            "the unavailable one is not attempted"
+        );
+        assert_eq!(summary.failed, 0, "{summary:?}");
+        assert_eq!(summary.warned, 1, "{summary:?}");
+        assert!(
+            warnings.iter().any(|warning| warning.contains("ghost")),
+            "{warnings:?}"
+        );
+    }
+
+    #[test]
+    fn a_list_of_only_unavailable_packages_warns_and_does_not_run_install() {
+        let (home, ctx) = scratch("all-unavailable");
+        let ops = plan_for(
+            &home,
+            r#"
+            [installer.guarded]
+            check = "false"
+            available = "false"
+            install = "touch $HOME/should-not-exist"
+
+            [packages.guarded]
+            names = ["ghost"]
+            "#,
+        );
+
+        let summary = run_all(&ops, &ctx);
+
+        assert!(!home.join("should-not-exist").exists());
+        assert_eq!(summary.failed, 0, "a warning is not a failure: {summary:?}");
+        assert_eq!(summary.changed, 0);
+        assert_eq!(summary.warned, 1, "{summary:?}");
     }
 
     #[test]

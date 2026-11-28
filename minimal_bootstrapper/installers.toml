@@ -1,0 +1,107 @@
+# ==============================================================================
+# Built-in installer library
+# ==============================================================================
+#
+# Loaded automatically, so a config can write:
+#
+#   [packages.dnf]
+#   names = ["git", "fish"]
+#
+# without first declaring [installer.dnf]. To change one, declare a section
+# with the same name in your own config: it replaces the default wholesale.
+#
+# Search order: $BOOTSTRAPPER_DEFAULTS, ./installers.toml, the directory of the
+# executable, ~/.config/bootstrapper/installers.toml, /etc/bootstrapper/installers.toml.
+#
+# `check` answers "is it installed?". `available` (optional) asks "does it
+# exist in a repository?", so one bad name warns instead of failing the whole
+# transaction. `install` takes everything missing at once.
+
+# ---- distribution package managers ------------------------------------------
+
+[installer.dnf]
+check = "rpm -q {package}"
+available = 'test -n "$(dnf repoquery --quiet --available --latest-limit 1 {package} 2>/dev/null)"'
+install = "dnf install --assumeyes {packages}"
+sudo = true
+resource = "rpm"
+
+[installer.apt]
+check = "dpkg-query -W -f='${Status}' {package} 2>/dev/null | grep -q 'install ok installed'"
+available = "apt-cache show {package} >/dev/null 2>&1"
+install = "apt-get install -y {packages}"
+sudo = true
+resource = "apt"
+
+[installer.pacman]
+check = "pacman -Qi {package} >/dev/null 2>&1"
+available = "pacman -Si {package} >/dev/null 2>&1"
+install = "pacman -S --noconfirm --needed {packages}"
+sudo = true
+resource = "pacman"
+
+[installer.zypper]
+check = "rpm -q {package}"
+available = "zypper --non-interactive info {package} >/dev/null 2>&1"
+install = "zypper --non-interactive install {packages}"
+sudo = true
+resource = "zypper"
+
+[installer.flatpak]
+check = "flatpak info {package} >/dev/null 2>&1"
+available = "flatpak search --columns=application {package} 2>/dev/null | grep -qx {package}"
+install = "flatpak install --assumeyes --noninteractive --system {packages}"
+sudo = true
+resource = "flatpak"
+
+[installer.snap]
+check = "snap list {package} >/dev/null 2>&1"
+available = "snap info {package} >/dev/null 2>&1"
+install = "snap install {packages}"
+sudo = true
+resource = "snap"
+
+# ---- language and user-space managers ---------------------------------------
+
+[installer.brew]
+check = "brew list --versions {package} >/dev/null 2>&1"
+install = "brew install {packages}"
+resource = "brew"
+
+[installer.cargo]
+check = "command -v {package}"
+install = "cargo install {packages}"
+path = ["$HOME/.cargo/bin"]
+resource = "cargo"
+
+[installer.npm]
+check = "npm ls -g --depth=0 {package} >/dev/null 2>&1"
+install = "npm install -g {packages}"
+resource = "npm"
+
+[installer.pip]
+check = "python3 -m pip show {package} >/dev/null 2>&1"
+install = "python3 -m pip install --user {packages}"
+
+[installer.uv]
+check = "command -v {package}"
+install = "uv tool install {packages}"
+path = ["$HOME/.local/bin"]
+
+[installer.bun]
+check = "test -e $HOME/.bun/bin/{package}"
+install = "bun install -g {packages}"
+path = ["$HOME/.bun/bin"]
+
+# ---- services and containers ------------------------------------------------
+
+[installer.systemd]
+check = "systemctl is-enabled {package} >/dev/null 2>&1"
+install = "systemctl enable --now {packages}"
+sudo = true
+resource = "systemd"
+
+[installer.docker]
+check = "docker image inspect {package} >/dev/null 2>&1"
+install = "docker pull {packages}"
+resource = "docker"
