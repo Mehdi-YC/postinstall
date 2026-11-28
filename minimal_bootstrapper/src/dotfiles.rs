@@ -133,7 +133,10 @@ pub fn run(dotfiles: &Dotfiles, home: &Path, logs: &Run) -> Result<Report, Strin
 
     let mut child = logs.spawn(&script, false, "dotfiles-git.log")?;
     if !child.wait().map_err(|e| e.to_string())?.success() {
-        return Err(format!("`{script}` failed; see dotfiles-git.log"));
+        return Err(format!(
+            "`{script}` failed; see {}",
+            logs.dir().join("dotfiles-git.log").display()
+        ));
     }
 
     let moved = back_up(home, &repo, &dotfiles.stow)?;
@@ -142,6 +145,7 @@ pub fn run(dotfiles: &Dotfiles, home: &Path, logs: &Run) -> Result<Report, Strin
     }
 
     for package in &dotfiles.stow {
+        let log = format!("stow-{}.log", log_name(package));
         let mut child = logs.spawn(
             &format!(
                 "stow --dir={} --target={} --restow {package}",
@@ -149,10 +153,13 @@ pub fn run(dotfiles: &Dotfiles, home: &Path, logs: &Run) -> Result<Report, Strin
                 home.display()
             ),
             false,
-            &format!("stow-{}.log", log_name(package)),
+            &log,
         )?;
         if !child.wait().map_err(|e| e.to_string())?.success() {
-            return Err(format!("stow failed for `{package}`; see the run log"));
+            return Err(format!(
+                "stow failed for `{package}`; see {}",
+                logs.dir().join(&log).display()
+            ));
         }
     }
 

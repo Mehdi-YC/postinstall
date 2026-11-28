@@ -33,12 +33,35 @@ pub fn is_root() -> bool {
 /// keeps that promise: without it a worker thread could open `/dev/tty` and
 /// stop on a password prompt whose text went into a log file.
 pub fn command(program: &str, sudo: bool) -> Command {
-    if !(sudo && !is_root()) {
-        return Command::new(program);
-    }
-    let mut cmd = Command::new("sudo");
-    cmd.arg("-n").arg(program);
+    let mut cmd = if !(sudo && !is_root()) {
+        Command::new(program)
+    } else {
+        let mut cmd = Command::new("sudo");
+        cmd.arg("-n").arg(program);
+        cmd
+    };
+    noninteractive(&mut cmd);
     cmd
+}
+
+/// Environment that stops a child from opening a prompt.
+///
+/// stdin is `/dev/null`, but some tools ignore it: git reads `/dev/tty` or an
+/// askpass helper, apt opens debconf, brew and pip ask their own questions.
+/// A bootstrap that hangs on a question whose text went into a log file is
+/// worse than one that fails, so these doors are closed too.
+fn noninteractive(cmd: &mut Command) {
+    cmd.env("DEBIAN_FRONTEND", "noninteractive")
+        .env("PIP_NO_INPUT", "1")
+        .env("HOMEBREW_NO_AUTO_UPDATE", "1")
+        .env("NONINTERACTIVE", "1")
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("GCM_INTERACTIVE", "never")
+        .env("SSH_ASKPASS_REQUIRE", "never");
+    // Do not stomp on a command someone set up deliberately.
+    if std::env::var_os("GIT_SSH_COMMAND").is_none() {
+        cmd.env("GIT_SSH_COMMAND", "ssh -o BatchMode=yes");
+    }
 }
 
 /// Ask for the password once, here, where the terminal is.
@@ -323,6 +346,23 @@ mod tests {
             );
         }
         let _ = fs::remove_dir_all(run.dir());
+    }
+
+    #[test]
+    fn every_command_is_started_non_interactive() {
+        // stdin is /dev/null already; these close the other doors (tty,
+        // askpass, debconf) so a question cannot hang a run.
+        let cmd = command("sh", false);
+        let env = |name: &str| {
+            cmd.get_envs()
+                .find(|(key, _)| *key == std::ffi::OsStr::new(name))
+                .and_then(|(_, value)| value.map(|v| v.to_string_lossy().into_owned()))
+        };
+
+        assert_eq!(env("GIT_TERMINAL_PROMPT").as_deref(), Some("0"));
+        assert_eq!(env("DEBIAN_FRONTEND").as_deref(), Some("noninteractive"));
+        assert_eq!(env("PIP_NO_INPUT").as_deref(), Some("1"));
+        assert_eq!(env("NONINTERACTIVE").as_deref(), Some("1"));
     }
 
     #[test]

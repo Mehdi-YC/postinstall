@@ -29,7 +29,7 @@ resource = "rpm"
 [installer.apt]
 check = "dpkg-query -W -f='${Status}' {package} 2>/dev/null | grep -q 'install ok installed'"
 available = "apt-cache show {package} >/dev/null 2>&1"
-install = "apt-get install -y {packages}"
+install = "DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold {packages}"
 sudo = true
 resource = "apt"
 
@@ -65,7 +65,7 @@ resource = "snap"
 
 [installer.brew]
 check = "brew list --versions {package} >/dev/null 2>&1"
-install = "brew install {packages}"
+install = "NONINTERACTIVE=1 HOMEBREW_NO_AUTO_UPDATE=1 brew install {packages}"
 resource = "brew"
 
 [installer.cargo]
@@ -81,7 +81,7 @@ resource = "npm"
 
 [installer.pip]
 check = "python3 -m pip show {package} >/dev/null 2>&1"
-install = "python3 -m pip install --user {packages}"
+install = "python3 -m pip install --user --no-input {packages}"
 
 [installer.uv]
 check = "command -v {package}"
