@@ -57,7 +57,11 @@ home = "$HOME"
 
 [installer.dnf]
 check = "rpm -q {package}"
-install = "dnf install -y {packages}"
+# `--assumeyes` answers dnf's GPG key-import prompt. Our commands run with
+# stdin on /dev/null, so a signature question that is not answered aborts the
+# install instead of waiting. Keys for declared repos are imported by
+# [repos.*], and Terra ships its own keys, so verification stays on.
+install = "dnf install --assumeyes {packages}"
 sudo = true
 # dnf and `rpm --import` both take the rpmdb lock, so nothing else may hold it
 # at the same time, whatever their lanes say.
@@ -65,7 +69,9 @@ resource = "rpm"
 
 [installer.flatpak]
 check = "flatpak info {package}"
-install = "flatpak install -y --system {packages}"
+# `--noninteractive` makes flatpak pick the first configured remote that has
+# the app instead of stopping to ask which source to install from.
+install = "flatpak install --assumeyes --noninteractive --system {packages}"
 sudo = true
 resource = "flatpak"
 
@@ -99,7 +105,7 @@ names = [
     # Rust + editors (all dnf, no rustup)
     "rustc", "cargo", "rustfmt", "rust-clippy", "rust-analyzer", "rust-src",
     "bacon",            # Terra
-    "helix", "hyprland", "noctalia","wayscriber"
+    "helix", "hyprland", "noctalia", "wayscriber",
     "espanso-wayland",  # Terra
     # VS Code, from [repos.vscode]
     "code",
