@@ -191,11 +191,18 @@ fn go(argv: Vec<String>) -> Result<ExitCode, Error> {
 
     let ops = select(&all, &args).map_err(Error)?;
     if ops.is_empty() {
-        return Err(Error(if args.only.is_empty() {
-            "the configuration declares no operations".into()
-        } else {
-            "nothing selected: no operation matches --only".into()
-        }));
+        // An empty selection is reported, not fatal: `--only` may legitimately
+        // match nothing while a config is being edited, and an empty file is a
+        // valid empty plan. Say so and leave the machine alone.
+        say!(
+            "warning: {}",
+            if args.only.is_empty() {
+                "the configuration declares no operations"
+            } else {
+                "nothing selected: no operation matches --only"
+            }
+        );
+        return Ok(ExitCode::SUCCESS);
     }
     // Validated against the whole plan, so a typo in `after =` is caught even
     // when `--only` happens to leave that operation out.

@@ -338,6 +338,17 @@ fn one(op: &Op, ctx: &Ctx) -> Report {
 /// look for is worse than no checker.
 fn packages(op: &Op, installer: &Installer, names: &[String], ctx: &Ctx) -> Result<Report, String> {
     let mut report = Report::new();
+
+    // An empty list is done, not broken. Say so with a warning so it is
+    // obvious why nothing happened, rather than stopping the run.
+    if names.is_empty() {
+        report.kept(
+            op.id.clone(),
+            "warning: empty package list, nothing to install",
+        );
+        return Ok(report);
+    }
+
     let mut missing = Vec::new();
 
     for name in names {
@@ -370,7 +381,7 @@ fn packages(op: &Op, installer: &Installer, names: &[String], ctx: &Ctx) -> Resu
     if !ok {
         return Err(format!(
             "installing the missing packages failed; see {}",
-            log_name(&op.id)
+            log_path(ctx, &op.id)
         ));
     }
 
@@ -412,7 +423,7 @@ fn command(op: &Op, check: Option<&str>, run: &str, ctx: &Ctx) -> Result<Report,
     }
 
     if !logged(&op.id, ctx, run, op.sudo)? {
-        return Err(format!("the command failed; see {}", log_name(&op.id)));
+        return Err(format!("the command failed; see {}", log_path(ctx, &op.id)));
     }
     report.changed(op.id.clone(), "done");
     Ok(report)
@@ -464,14 +475,17 @@ fn repo(op: &Op, repo: &Repo, ctx: &Ctx) -> Result<Report, String> {
         op.sudo,
     )?;
     if !ok {
-        return Err(format!("could not write {path}; see {}", log_name(&op.id)));
+        return Err(format!(
+            "could not write {path}; see {}",
+            log_path(ctx, &op.id)
+        ));
     }
 
     if let Some(key) = &repo.key {
         if !logged(&op.id, ctx, &format!("rpm --import {key}"), op.sudo)? {
             return Err(format!(
                 "could not import the GPG key {key}; see {}",
-                log_name(&op.id)
+                log_path(ctx, &op.id)
             ));
         }
     }
@@ -577,6 +591,14 @@ fn logged(op_id: &str, ctx: &Ctx, script: &str, sudo: bool) -> Result<bool, Stri
 /// The log file an operation's commands go to.
 fn log_name(op_id: &str) -> String {
     format!("{}.log", op_id.replace('.', "-"))
+}
+
+/// The full path to an operation's log, for an error message.
+///
+/// A basename sends the reader looking in the wrong directory; the run
+/// directory is the one place the file actually is.
+fn log_path(ctx: &Ctx, op_id: &str) -> String {
+    ctx.run.dir().join(log_name(op_id)).display().to_string()
 }
 
 /// Dependencies this run is relying on something else to have done.
@@ -863,6 +885,63 @@ mod tests {
             !home.join("written").exists(),
             "check must not change anything"
         );
+    }
+
+    #[test]
+    fn an_empty_package_list_is_skipped_with_a_warning() {
+        // Every name commented out is a normal edit, not a reason to stop the
+        // whole run. The operation is reported done, with a warning saying why.
+        let (home, ctx) = scratch("empty-list");
+        let ops = plan_for(
+            &home,
+            r#"
+            [installer.empty]
+            check = "false"
+            install = "exit 9"
+
+            [packages.empty]
+            names = []
+            "#,
+        );
+        let selected: Vec<&Op> = ops.iter().collect();
+        let mut notes = Vec::new();
+
+        let summary = run(&selected, &ctx, |_, report| {
+            notes.extend(report.lines.iter().map(|line| line.note.clone()));
+        });
+
+        assert_eq!(
+            summary.failed, 0,
+            "an empty list is not a failure: {summary:?}"
+        );
+        assert_eq!(summary.changed, 0, "nothing was installed");
+        assert_eq!(summary.kept, 1, "it counts as done: {summary:?}");
+        assert!(
+            notes.iter().any(|note| note.contains("empty")),
+            "the warning should say the list is empty: {notes:?}"
+        );
+        let _ = home;
+    }
+
+    #[test]
+    fn a_failure_names_the_full_path_of_its_log() {
+        // A basename sends the reader looking in the wrong directory. The error
+        // must point at the file that actually holds the command's output.
+        let (home, ctx) = scratch("logpath");
+        let ops = plan_for(&home, "[exec.fail]\nrun = \"exit 1\"\n");
+        let selected: Vec<&Op> = ops.iter().collect();
+        let mut error = None;
+
+        run(&selected, &ctx, |_, report| {
+            if let Some(message) = &report.error {
+                error = Some(message.clone());
+            }
+        });
+
+        let error = error.expect("the command failed");
+        let dir = ctx.run.dir().display().to_string();
+        assert!(error.contains(&dir), "{error} should name {dir}");
+        assert!(error.contains("exec-fail.log"), "{error}");
     }
 
     #[test]

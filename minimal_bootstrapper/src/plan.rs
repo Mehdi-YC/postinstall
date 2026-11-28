@@ -116,11 +116,12 @@ pub fn build(config: &Config) -> Result<Vec<Op>, Error> {
     Ok(ops)
 }
 
-/// Reject sections that would quietly do nothing, or something dangerous.
+/// Reject sections that would do something dangerous.
 ///
-/// A list with a blank entry is the dangerous shape: `names = [""]` asks the
-/// package manager about the empty string, and `stow = [""]` makes the package
-/// path the repository itself, which would walk and link `.git`.
+/// An empty list is allowed now: it becomes an operation that reports itself as
+/// done with a warning. A *blank* entry is still rejected — `names = [""]` asks
+/// the package manager about the empty string, and `stow = [""]` makes the
+/// package path the repository itself, which would walk and link `.git`.
 fn check(config: &Config) -> Result<(), Error> {
     for (name, installer) in &config.installer {
         for (field, value) in [("check", &installer.check), ("install", &installer.install)] {
@@ -132,11 +133,9 @@ fn check(config: &Config) -> Result<(), Error> {
         }
     }
     for (name, packages) in &config.packages {
-        if packages.names.is_empty() {
-            return Err(Error(format!(
-                "`packages.{name}` names no packages; remove the section or list at least one"
-            )));
-        }
+        // An empty list is not fatal: a config that is being edited often has
+        // every package commented out for a run. It is reported as done with a
+        // warning when the operation runs, rather than stopping the whole plan.
         if let Some(blank) = packages.names.iter().position(|p| p.trim().is_empty()) {
             return Err(Error(format!(
                 "`packages.{name}`: package #{} is empty",
@@ -241,15 +240,18 @@ mod tests {
     }
 
     #[test]
-    fn a_section_that_would_do_nothing_is_rejected() {
-        let empty = build(
+    fn a_section_with_no_packages_builds_an_operation_that_does_nothing() {
+        // Commenting every name out is a normal edit, not a reason to refuse the
+        // whole plan. The operation is kept, and the engine reports it as done
+        // with a warning instead.
+        let ops = build(
             &Config::load(
                 "[installer.x]\ncheck = \"true\"\ninstall = \"true\"\n[packages.x]\nnames = []\n",
             )
             .unwrap(),
         )
-        .unwrap_err();
-        assert!(empty.0.contains("names no packages"), "{empty}");
+        .unwrap();
+        assert_eq!(ops.len(), 1, "the empty section is still an operation");
 
         let blank = build(
             &Config::load("[installer.x]\ncheck = \"true\"\ninstall = \"true\"\n[packages.x]\nnames = [\"a\", \"\"]\n")
